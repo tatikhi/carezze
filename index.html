@@ -2,43 +2,47 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Ритм — Трекер цикла и состояния</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Ритм</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #F5F4F0;
+      --bg: #F5F5F7;
       --surface: #FFFFFF;
-      --surface-muted: #ECEAE3;
-      --ink: #1F2022;
-      --ink-soft: #64666B;
-      --border: #DFDDD4;
-      --sage: #526B5C;
-      --sage-soft: rgba(82, 107, 92, 0.12);
-      --terracotta: #B8644F;
-      --terracotta-soft: rgba(184, 100, 79, 0.12);
-      --sand: #B58E58;
-      --sand-soft: rgba(181, 142, 88, 0.14);
-      --slate: #53687E;
-      --radius: 16px;
-      --shadow: 0 2px 12px rgba(31, 32, 34, 0.04);
+      --surface-2: #EFEFF3;
+      --ink: #111114;
+      --ink-2: #636369;
+      --ink-3: #9898A0;
+      --border: rgba(0, 0, 0, 0.06);
+      --accent: #1B6B52;
+      --accent-soft: rgba(27, 107, 82, 0.10);
+      --rose: #C84658;
+      --rose-soft: rgba(200, 70, 88, 0.10);
+      --indigo: #3B52A8;
+      --indigo-soft: rgba(59, 82, 168, 0.10);
+      --amber: #B57822;
+      --amber-soft: rgba(181, 120, 34, 0.12);
+      --radius: 22px;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.035);
     }
 
     body.dark-mode {
-      --bg: #151517;
-      --surface: #1E1E21;
-      --surface-muted: #28282C;
-      --ink: #EAE9E4;
-      --ink-soft: #96979C;
-      --border: #2F2F34;
-      --sage: #7BA08A;
-      --sage-soft: rgba(123, 160, 138, 0.16);
-      --terracotta: #D47E68;
-      --terracotta-soft: rgba(212, 126, 104, 0.16);
-      --sand: #D2AC75;
-      --sand-soft: rgba(210, 172, 117, 0.16);
-      --slate: #7D97B2;
-      --shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+      --bg: #0A0A0C;
+      --surface: #151518;
+      --surface-2: #212126;
+      --ink: #F5F5F7;
+      --ink-2: #9C9CA4;
+      --ink-3: #63636B;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #38B890;
+      --accent-soft: rgba(56, 184, 144, 0.15);
+      --rose: #F2687A;
+      --rose-soft: rgba(242, 104, 122, 0.15);
+      --indigo: #7E96F7;
+      --indigo-soft: rgba(126, 150, 247, 0.15);
+      --amber: #E8AC52;
+      --amber-soft: rgba(232, 172, 82, 0.15);
+      --shadow: 0 8px 26px rgba(0, 0, 0, 0.4);
     }
 
     * {
@@ -48,71 +52,179 @@
       padding: 0;
     }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--ink);
-      line-height: 1.48;
-      transition: background-color 0.25s ease, color 0.25s ease;
-      padding-bottom: 92px;
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
     }
 
-    .app-container {
-      max-width: 480px;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+      background-color: var(--bg);
+      color: var(--ink);
+      font-size: 16px;
+      line-height: 1.48;
+      letter-spacing: -0.01em;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      padding-top: max(14px, env(safe-area-inset-top));
+      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .app {
+      width: 100%;
+      max-width: 440px;
       margin: 0 auto;
-      padding: 16px 16px 24px;
+      padding: 8px 16px 24px;
     }
 
     /* Header */
-    .top-bar {
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
-    .cycle-badge {
-      display: flex;
-      flex-direction: column;
+    .brand {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-2);
     }
 
-    .cycle-day-title {
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-    }
-
-    .cycle-phase-sub {
-      font-size: 13px;
-      color: var(--ink-soft);
-      margin-top: 2px;
-    }
-
-    .top-actions {
+    .header-actions {
       display: flex;
       gap: 8px;
-      align-items: center;
     }
 
-    .icon-btn {
+    .pill-btn {
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--ink);
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 500;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: var(--shadow);
+    }
+
+    .pill-btn.sos {
+      background: var(--rose-soft);
+      border-color: transparent;
+      color: var(--rose);
+    }
+
+    /* Hero Card */
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .date-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .date-arrow {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: none;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
     }
 
-    .sos-pill {
-      background: var(--terracotta-soft);
-      border: 1px solid var(--terracotta);
-      color: var(--terracotta);
+    .date-arrow:active {
+      transform: scale(0.94);
+    }
+
+    .date-center-btn {
+      flex: 1;
+      height: 38px;
+      background: var(--surface-2);
+      border: none;
+      border-radius: 999px;
+      color: var(--ink);
+      font-size: 14px;
       font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 12px;
+    }
+
+    .hero-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hero-day {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+
+    .hero-day span {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--ink-2);
+    }
+
+    .hero-phase {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+
+    .hero-meta {
+      text-align: right;
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.35;
+      flex-shrink: 0;
+    }
+
+    .cycle-track {
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .cycle-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 0.3s ease;
     }
 
     /* Cards */
@@ -120,437 +232,663 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px;
+      padding: 18px;
       margin-bottom: 14px;
       box-shadow: var(--shadow);
     }
 
-    .card-header {
+    .card-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
 
     .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--ink-2);
+      flex-shrink: 0;
+    }
+
+    /* Tactile Sliders */
+    .cc-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cc-slider {
+      position: relative;
+      height: 54px;
+      background: var(--surface-2);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+      touch-action: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+    }
+
+    .cc-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      border-radius: 16px;
+      pointer-events: none;
+      transition: width 0.05s linear;
+    }
+
+    .cc-label {
+      position: relative;
+      z-index: 2;
       font-size: 15px;
       font-weight: 600;
-      letter-spacing: -0.01em;
+      color: var(--ink);
     }
 
-    .card-meta {
-      font-size: 12px;
-      color: var(--ink-soft);
+    .cc-value {
+      position: relative;
+      z-index: 2;
+      font-size: 17px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
     }
 
-    /* Date strip */
-    .date-nav {
+    /* Accordions */
+    .accordion {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .accordion-header {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 16px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--surface-muted);
-      border-radius: 12px;
-      padding: 6px 10px;
-      margin-bottom: 14px;
-      font-size: 13px;
-    }
-
-    .date-nav button {
-      background: none;
-      border: none;
+      gap: 12px;
       color: var(--ink);
       font-size: 16px;
-      padding: 4px 10px;
+      font-weight: 600;
       cursor: pointer;
+      text-align: left;
     }
 
-    /* Cycle markers row */
-    .marker-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .marker-btn {
-      background: var(--surface-muted);
-      border: 1px solid var(--border);
-      color: var(--ink);
-      border-radius: 12px;
-      padding: 10px 10px;
+    .accordion-summary {
       font-size: 13px;
       font-weight: 500;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
+      color: var(--accent);
+      margin-top: 3px;
+      line-height: 1.35;
     }
 
-    .marker-btn.active-period {
-      background: var(--terracotta-soft);
-      border-color: var(--terracotta);
-      color: var(--terracotta);
-      font-weight: 600;
+    .accordion-chevron {
+      font-size: 20px;
+      color: var(--ink-3);
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
     }
 
-    .marker-btn.active-ovulation {
-      background: var(--sage-soft);
-      border-color: var(--sage);
-      color: var(--sage);
-      font-weight: 600;
+    .accordion.open .accordion-chevron {
+      transform: rotate(180deg);
     }
 
-    .segmented-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 8px;
+    .accordion-body {
+      display: none;
+      padding: 2px 18px 18px;
+      border-top: 1px solid var(--border);
     }
 
-    .seg-btn {
-      background: var(--surface-muted);
-      border: 1px solid transparent;
-      color: var(--ink);
-      padding: 8px 4px;
-      border-radius: 10px;
-      font-size: 12px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.15s ease;
+    .accordion.open .accordion-body {
+      display: block;
     }
 
-    .seg-btn.active {
-      background: var(--sage-soft);
-      border-color: var(--sage);
-      color: var(--sage);
-      font-weight: 600;
-    }
-
-    .seg-btn.active-heavy {
-      background: var(--terracotta-soft);
-      border-color: var(--terracotta);
-      color: var(--terracotta);
-      font-weight: 600;
-    }
-
-    /* Sliders */
-    .slider-row {
-      margin-bottom: 16px;
-    }
-
-    .slider-row:last-child {
-      margin-bottom: 4px;
-    }
-
-    .slider-label-line {
+    .sub-section-header {
       display: flex;
       justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 8px;
+      align-items: center;
+      margin: 16px 0 10px;
     }
 
-    .slider-val {
+    .field-label {
+      font-size: 13px;
       font-weight: 600;
-      font-variant-numeric: tabular-nums;
+      color: var(--ink-2);
     }
 
-    input[type="range"] {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 4px;
-      background: var(--surface-muted);
-      outline: none;
+    .field-hint {
+      font-size: 12px;
+      color: var(--ink-3);
     }
 
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--sage);
-      border: 3px solid var(--surface);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
-    }
-
-    input[type="range"].pain-slider::-webkit-slider-thumb {
-      background: var(--terracotta);
-    }
-
-    input[type="range"].libido-slider::-webkit-slider-thumb {
-      background: var(--sand);
-    }
-
-    /* Chips / Tags */
-    .chip-group {
+    /* Chips */
+    .chip-wrap {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 8px;
     }
 
     .chip {
-      background: var(--surface-muted);
-      border: 1px solid transparent;
+      background: var(--surface-2);
+      border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 7px 12px;
-      border-radius: 20px;
-      font-size: 13px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.25;
       cursor: pointer;
       transition: all 0.15s ease;
     }
 
     .chip.active {
-      background: var(--sage-soft);
-      border-color: var(--sage);
-      color: var(--sage);
-      font-weight: 500;
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
     }
 
-    .chip.active-warn {
-      background: var(--terracotta-soft);
-      border-color: var(--terracotta);
-      color: var(--terracotta);
-      font-weight: 500;
+    .chip.active-indigo {
+      background: var(--indigo-soft);
+      border-color: var(--indigo);
+      color: var(--indigo);
+      font-weight: 600;
     }
 
-    /* Buttons */
+    .chip.active-rose {
+      background: var(--rose-soft);
+      border-color: var(--rose);
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .choice-btn {
+      background: var(--surface-2);
+      border: 1.5px solid transparent;
+      color: var(--ink);
+      padding: 11px 6px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      line-height: 1.25;
+    }
+
+    .choice-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .choice-btn.active-rose {
+      background: var(--rose-soft);
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    /* Buttons & Inputs */
     .btn-primary {
       width: 100%;
-      background: var(--sage);
-      color: #FFFFFF;
+      height: 52px;
+      background: var(--ink);
+      color: var(--bg);
       border: none;
-      border-radius: 12px;
-      padding: 13px;
-      font-size: 15px;
+      border-radius: 16px;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 12px;
+      margin-top: 4px;
     }
 
-    .btn-secondary {
-      background: var(--surface-muted);
+    .btn-primary:active {
+      opacity: 0.85;
+    }
+
+    .btn-soft {
+      background: var(--surface-2);
       color: var(--ink);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 13px;
-      font-weight: 500;
+      border: none;
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
     }
 
-    .btn-outline-danger {
-      background: var(--terracotta-soft);
-      color: var(--terracotta);
-      border: 1px solid var(--terracotta);
-      border-radius: 12px;
-      padding: 9px 12px;
-      font-size: 13px;
-      font-weight: 500;
+    .btn-danger-soft {
+      background: var(--rose-soft);
+      color: var(--rose);
+      border: none;
+      padding: 13px 16px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
     }
 
-    /* Expert Advice Blocks */
-    .advice-block {
-      border-left: 3px solid var(--sage);
-      padding-left: 12px;
-      margin-bottom: 14px;
+    textarea, input[type="date"], input[type="number"] {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1.5px solid transparent;
+      color: var(--ink);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
     }
 
-    .advice-block.psych {
-      border-left-color: var(--slate);
+    textarea:focus, input:focus {
+      border-color: var(--accent);
     }
 
-    .advice-block.insight {
-      border-left-color: var(--sand);
-      margin-bottom: 0;
+    /* Structured State Breakdown */
+    .protocol-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .advice-role {
+    .protocol-item {
+      background: var(--surface-2);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    .protocol-badge {
+      display: inline-block;
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
       font-weight: 700;
-      color: var(--ink-soft);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .badge-gyn {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .badge-act {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .badge-psy {
+      background: var(--indigo-soft);
+      color: var(--indigo);
+    }
+
+    .badge-hist {
+      background: var(--rose-soft);
+      color: var(--rose);
+    }
+
+    .protocol-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
       margin-bottom: 4px;
     }
 
-    .advice-text {
+    .protocol-text {
       font-size: 14px;
-      color: var(--ink);
+      line-height: 1.48;
+      color: var(--ink-2);
     }
 
-    /* Inputs */
-    textarea, input[type="text"], input[type="date"], input[type="number"], select {
+    /* Calendar Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-sheet {
       width: 100%;
-      background: var(--surface-muted);
+      max-width: 430px;
+      background: var(--surface);
       border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .cal-month-title {
+      font-size: 17px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .cal-cell {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      border: 1.5px solid transparent;
+      background: var(--surface-2);
       color: var(--ink);
-      border-radius: 12px;
-      padding: 10px 12px;
       font-size: 14px;
-      font-family: inherit;
-      margin-top: 8px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .cal-cell.empty {
+      background: transparent;
+      cursor: default;
+    }
+
+    .cal-cell.is-period {
+      background: var(--rose-soft);
+      color: var(--rose);
+    }
+
+    .cal-cell.is-ovulation {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .cal-cell.is-today {
+      border-color: var(--ink-2);
+    }
+
+    .cal-cell.is-selected {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    .cal-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      position: absolute;
+      bottom: 5px;
+      opacity: 0.75;
+    }
+
+    .cal-legend {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--ink-2);
+      margin-top: 14px;
+    }
+
+    .cal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
     }
 
     /* Chart */
-    .chart-wrap {
-      width: 100%;
+    .filter-row {
+      display: flex;
+      gap: 6px;
       overflow-x: auto;
-      margin-top: 8px;
+      padding-bottom: 4px;
+      margin-bottom: 12px;
     }
 
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 12px;
-      color: var(--ink-soft);
-      margin-top: 10px;
+    .filter-pill {
+      background: var(--surface-2);
+      border: none;
+      color: var(--ink-2);
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 5px;
+    .filter-pill.active {
+      background: var(--ink);
+      color: var(--bg);
     }
 
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      display: inline-block;
+    .inspector-box {
+      margin-top: 12px;
+      padding: 14px 16px;
+      background: var(--surface-2);
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--ink-2);
     }
 
     .stat-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 10px;
     }
 
-    .stat-box {
-      background: var(--surface-muted);
-      border-radius: 12px;
-      padding: 12px;
+    .stat-tile {
+      background: var(--surface-2);
+      border-radius: 16px;
+      padding: 14px;
     }
 
-    .stat-num {
-      font-size: 18px;
-      font-weight: 600;
+    .stat-tile-label {
+      font-size: 13px;
+      color: var(--ink-2);
+    }
+
+    .stat-tile-val {
+      font-size: 20px;
+      font-weight: 700;
       margin-top: 4px;
     }
 
-    /* SOS Breathing */
-    .breath-box {
+    /* Breathing Flower Sanctuary */
+    .flower-stage {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 10px;
+      padding: 20px 10px 10px;
     }
 
-    .breath-circle {
-      width: 136px;
-      height: 136px;
-      border-radius: 50%;
-      background: var(--sage-soft);
-      border: 2px solid var(--sage);
+    .flower-wrapper {
+      position: relative;
+      width: 196px;
+      height: 196px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .breath-flower-svg {
+      width: 170px;
+      height: 170px;
+      transition: transform 3.8s cubic-bezier(0.37, 0, 0.63, 1);
+      transform: scale(0.92) rotate(0deg);
+    }
+
+    .breath-flower-svg.inhale {
+      transform: scale(1.22) rotate(22deg);
+    }
+
+    .breath-flower-svg.hold-in {
+      transform: scale(1.28) rotate(30deg);
+    }
+
+    .breath-flower-svg.exhale {
+      transform: scale(0.86) rotate(0deg);
+    }
+
+    .flower-prompt {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       font-size: 14px;
-      font-weight: 600;
-      color: var(--sage);
-      transition: transform 4s ease-in-out;
-    }
-
-    .breath-circle.inhale {
-      transform: scale(1.28);
-    }
-
-    .breath-circle.exhale {
-      transform: scale(0.92);
+      font-weight: 700;
+      color: var(--ink);
+      padding: 24px;
+      pointer-events: none;
     }
 
     /* Tests */
-    .question-item {
-      padding: 12px 0;
+    .q-block {
+      padding: 14px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .question-item:last-child {
+    .q-block:last-child {
       border-bottom: none;
     }
 
-    .question-text {
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 8px;
+    .q-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.4;
     }
 
-    .option-list {
+    .q-opts {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .option-btn {
+    .q-opt {
       text-align: left;
-      background: var(--surface-muted);
-      border: 1px solid transparent;
+      background: var(--surface-2);
+      border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 9px 12px;
-      border-radius: 10px;
-      font-size: 13px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      font-size: 14px;
       cursor: pointer;
     }
 
-    .option-btn.selected {
-      background: var(--sage-soft);
-      border-color: var(--sage);
-      font-weight: 500;
+    .q-opt.selected {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
     }
 
-    /* Bottom Navigation */
-    .bottom-nav {
+    /* Floating Tab Bar */
+    .tab-bar {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: max(12px, env(safe-area-inset-bottom));
+      left: 16px;
+      right: 16px;
+      max-width: 408px;
+      margin: 0 auto;
       background: var(--surface);
-      border-top: 1px solid var(--border);
+      border: 1px solid var(--border);
+      border-radius: 24px;
       display: flex;
       justify-content: space-around;
-      padding: 8px 6px calc(10px + env(safe-area-inset-bottom));
+      padding: 8px 6px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
       z-index: 100;
     }
 
-    .nav-btn {
+    .tab-item {
       background: none;
       border: none;
-      color: var(--ink-soft);
+      color: var(--ink-3);
       font-size: 11px;
-      font-weight: 500;
+      font-weight: 600;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
+      padding: 6px 12px;
+      border-radius: 16px;
       cursor: pointer;
-      padding: 4px 10px;
     }
 
-    .nav-btn.active {
-      color: var(--sage);
-      font-weight: 600;
+    .tab-item.active {
+      color: var(--ink);
     }
 
-    .nav-btn svg {
-      width: 21px;
-      height: 21px;
+    .tab-item svg {
+      width: 22px;
+      height: 22px;
       stroke: currentColor;
       fill: none;
-      stroke-width: 1.8;
+      stroke-width: 2;
     }
 
     .view {
@@ -563,15 +901,15 @@
 
     .toast {
       position: fixed;
-      top: 16px;
+      top: max(16px, env(safe-area-inset-top));
       left: 50%;
       transform: translateX(-50%);
       background: var(--ink);
       color: var(--bg);
-      padding: 10px 18px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
       z-index: 999;
       opacity: 0;
       pointer-events: none;
@@ -586,149 +924,203 @@
 <body>
   <div id="toast" class="toast">Сохранено</div>
 
-  <div class="app-container">
-    <!-- Top Header -->
-    <div class="top-bar">
-      <div class="cycle-badge">
-        <div class="cycle-day-title" id="headerCycleDay">День 1</div>
-        <div class="cycle-phase-sub" id="headerPhase">Менструация</div>
-      </div>
-      <div class="top-actions">
-        <button class="icon-btn" onclick="toggleTheme()" title="Сменить тему">Тема</button>
-        <button class="icon-btn sos-pill" onclick="switchTab('sos')">SOS</button>
+  <div class="app">
+    <!-- Top Bar -->
+    <div class="header">
+      <div class="brand">Ритм</div>
+      <div class="header-actions">
+        <button class="pill-btn" onclick="toggleTheme()" id="themeBtn">Тёмная</button>
+        <button class="pill-btn sos" onclick="switchTab('sos')">SOS</button>
       </div>
     </div>
 
     <!-- VIEW 1: TODAY -->
     <div id="view-today" class="view active">
-      <div class="date-nav">
-        <button onclick="shiftDate(-1)">←</button>
-        <span id="selectedDateLabel">Сегодня</span>
-        <button onclick="shiftDate(1)">→</button>
-      </div>
-
-      <!-- Cycle Markers & Flow -->
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Маркеры цикла и выделения</span>
-          <span class="card-meta">Месячные / Овуляция</span>
+      <!-- Hero Cycle Card -->
+      <div class="hero-card">
+        <div class="date-bar">
+          <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Предыдущий день">←</button>
+          <button class="date-center-btn" onclick="openCalendarModal()">
+            <span id="selectedDateLabel">Сегодня</span>
+            <span style="font-size:12px; opacity:0.65;">▾</span>
+          </button>
+          <button class="date-arrow" onclick="shiftDate(1)" aria-label="Следующий день">→</button>
         </div>
 
-        <div class="marker-actions">
-          <button class="marker-btn" id="btnPeriodStart" onclick="markPeriodStart()">1-й день месячных</button>
-          <button class="marker-btn" id="btnOvulation" onclick="toggleOvulation()">Овуляция (тест / ощущения)</button>
-        </div>
-
-        <div style="font-size:12px; color:var(--ink-soft);">Количество выделений (менструальных или овуляторных):</div>
-        <div class="segmented-row" id="flowSelector">
-          <div class="seg-btn active" data-val="Нет" onclick="selectFlow('Нет')">Нет</div>
-          <div class="seg-btn" data-val="Скудные" onclick="selectFlow('Скудные')">Скудные</div>
-          <div class="seg-btn" data-val="Умеренные" onclick="selectFlow('Умеренные')">Умеренные</div>
-          <div class="seg-btn" data-val="Обильные" onclick="selectFlow('Обильные')">Обильные</div>
-        </div>
-      </div>
-
-      <!-- Sliders -->
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Базовые показатели</span>
-          <span class="card-meta">Шкала 0–10</span>
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label-line">
-            <span>Настроение</span>
-            <span class="slider-val" id="valMood">6 / 10</span>
+        <div class="hero-main">
+          <div>
+            <div class="hero-day" id="heroDay">День 1 <span>/ 28</span></div>
+            <div class="hero-phase" id="heroPhase">Менструальная фаза</div>
           </div>
-          <input type="range" id="inMood" min="1" max="10" value="6" oninput="updateSliderLabels()" />
+          <div class="hero-meta" id="heroCountdown">
+            До нового цикла<br/>~27 дн.
+          </div>
         </div>
 
-        <div class="slider-row">
-          <div class="slider-label-line">
-            <span>Энергия и ресурс</span>
-            <span class="slider-val" id="valEnergy">6 / 10</span>
-          </div>
-          <input type="range" id="inEnergy" min="1" max="10" value="6" oninput="updateSliderLabels()" />
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label-line">
-            <span>Физическая боль / спазмы</span>
-            <span class="slider-val" id="valPain" style="color:var(--terracotta)">1 / 10</span>
-          </div>
-          <input type="range" class="pain-slider" id="inPain" min="0" max="10" value="1" oninput="updateSliderLabels()" />
-        </div>
-
-        <div class="slider-row">
-          <div class="slider-label-line">
-            <span>Либидо (влечение)</span>
-            <span class="slider-val" id="valLibido" style="color:var(--sand)">5 / 10</span>
-          </div>
-          <input type="range" class="libido-slider" id="inLibido" min="0" max="10" value="5" oninput="updateSliderLabels()" />
+        <div class="cycle-track">
+          <div class="cycle-fill" id="cycleProgressBar" style="width: 10%;"></div>
         </div>
       </div>
 
-      <!-- Extended Mood & Context -->
+      <!-- Tactile Sliders -->
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Фон и контекст дня</span>
-          <span class="card-meta">Для точной аналитики</span>
+        <div class="card-top">
+          <span class="card-title">Состояние сейчас</span>
+          <span class="card-sub">Потяни шкалу</span>
         </div>
 
-        <div style="font-size:12px; color:var(--ink-soft);">Доминирующее состояние:</div>
-        <div class="chip-group" id="emotionChips">
-          <div class="chip" data-val="Спокойствие">Спокойствие</div>
-          <div class="chip" data-val="Тревога">Тревога</div>
-          <div class="chip" data-val="Раздражительность">Раздражительность</div>
-          <div class="chip" data-val="Слезливость">Слезливость</div>
-          <div class="chip" data-val="Апатия">Апатия</div>
-          <div class="chip" data-val="Туман в голове">Туман в голове</div>
-          <div class="chip" data-val="Подъем">Подъем</div>
-        </div>
+        <div class="cc-group">
+          <div class="cc-slider" data-key="mood" data-min="1" data-max="10">
+            <div class="cc-fill" style="background:var(--accent-soft); width:60%;"></div>
+            <span class="cc-label">Настроение</span>
+            <span class="cc-value" id="val-mood">6</span>
+          </div>
 
-        <div style="font-size:12px; color:var(--ink-soft); margin-top:14px;">События, близость и триггеры:</div>
-        <div class="chip-group" id="contextChips">
-          <div class="chip" data-val="Близость (комфортно)">Близость (комфортно)</div>
-          <div class="chip" data-val="Близость (дискомфорт/боль)">Близость (дискомфорт)</div>
-          <div class="chip" data-val="Недосып (<6ч)">Недосып</div>
-          <div class="chip" data-val="Стресс / завал">Стресс / завал</div>
-          <div class="chip" data-val="Отеки / тяга к сладкому">Отеки / тяга к сладкому</div>
-          <div class="chip" data-val="Пила обезболивающее">Пила обезболивающее</div>
-        </div>
+          <div class="cc-slider" data-key="energy" data-min="1" data-max="10">
+            <div class="cc-fill" style="background:var(--indigo-soft); width:60%;"></div>
+            <span class="cc-label">Энергия</span>
+            <span class="cc-value" id="val-energy">6</span>
+          </div>
 
-        <div style="font-size:12px; color:var(--ink-soft); margin-top:14px;">Что помогло сегодня (личная аптечка):</div>
-        <div class="chip-group" id="helpedChips">
-          <div class="chip" data-val="Грелка / теплый душ">Грелка / душ</div>
-          <div class="chip" data-val="НПВС вовремя">НПВС вовремя</div>
-          <div class="chip" data-val="Магний / вода">Магний / вода</div>
-          <div class="chip" data-val="Отмена дел / сон">Отмена дел / сон</div>
-          <div class="chip" data-val="Дыхание / тишина">Дыхание / тишина</div>
-        </div>
+          <div class="cc-slider" data-key="pain" data-min="0" data-max="10">
+            <div class="cc-fill" style="background:var(--rose-soft); width:10%;"></div>
+            <span class="cc-label">Боль и спазмы</span>
+            <span class="cc-value" id="val-pain">1</span>
+          </div>
 
-        <textarea id="inNote" rows="2" placeholder="Короткая заметка о дне или триггере (необязательно)..."></textarea>
-        <button class="btn-primary" onclick="saveCurrentDay()">Сохранить запись и обновить разбор</button>
+          <div class="cc-slider" data-key="libido" data-min="0" data-max="10">
+            <div class="cc-fill" style="background:var(--amber-soft); width:50%;"></div>
+            <span class="cc-label">Либидо</span>
+            <span class="cc-value" id="val-libido">5</span>
+          </div>
+        </div>
       </div>
 
-      <!-- Gynecologist + Psychologist Engine -->
-      <div class="card">
-        <div class="card-header">
+      <!-- Accordion 1: Cycle & Flow -->
+      <div class="accordion" id="acc-cycle">
+        <button class="accordion-header" onclick="toggleAccordion('acc-cycle')">
+          <div>
+            <div>Цикл, овуляция и выделения</div>
+            <div class="accordion-summary" id="sum-cycle">Не отмечено</div>
+          </div>
+          <span class="accordion-chevron">⌄</span>
+        </button>
+        <div class="accordion-body">
+          <div class="grid-2">
+            <button class="choice-btn" id="btnPeriodStart" onclick="markPeriodStart()">1-й день месячных</button>
+            <button class="choice-btn" id="btnOvulation" onclick="toggleOvulation()">Овуляция</button>
+          </div>
+
+          <div class="sub-section-header">
+            <span class="field-label">Количество выделений</span>
+          </div>
+          <div class="grid-4" id="flowSelector">
+            <div class="choice-btn active" data-val="Нет" onclick="selectFlow('Нет')">Нет</div>
+            <div class="choice-btn" data-val="Скудные" onclick="selectFlow('Скудные')">Скудные</div>
+            <div class="choice-btn" data-val="Умеренные" onclick="selectFlow('Умеренные')">Умерен.</div>
+            <div class="choice-btn" data-val="Обильные" onclick="selectFlow('Обильные')">Обильные</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accordion 2: Emotions, Intimacy & Context -->
+      <div class="accordion" id="acc-context">
+        <button class="accordion-header" onclick="toggleAccordion('acc-context')">
+          <div>
+            <div>Фон, эмоции и контекст дня</div>
+            <div class="accordion-summary" id="sum-context">Спокойствие</div>
+          </div>
+          <span class="accordion-chevron">⌄</span>
+        </button>
+        <div class="accordion-body">
+          <div class="sub-section-header">
+            <span class="field-label">Базовые эмоции</span>
+            <span class="field-hint">Можно несколько</span>
+          </div>
+          <div class="chip-wrap" id="basicEmotionChips">
+            <div class="chip active" data-val="Спокойствие">Спокойствие</div>
+            <div class="chip" data-val="Подъём">Подъём</div>
+            <div class="chip" data-val="Грусть">Грусть</div>
+            <div class="chip" data-val="Тревога">Тревога</div>
+            <div class="chip" data-val="Раздражение">Раздражение</div>
+            <div class="chip" data-val="Усталость">Усталость</div>
+          </div>
+
+          <div class="sub-section-header">
+            <span class="field-label">Тонкие оттенки состояния</span>
+            <span class="field-hint">Расширенные</span>
+          </div>
+          <div class="chip-wrap" id="nuancedEmotionChips">
+            <div class="chip" data-val="Слезливость">Слезливость</div>
+            <div class="chip" data-val="Апатия">Апатия</div>
+            <div class="chip" data-val="Туман в голове">Туман в голове</div>
+            <div class="chip" data-val="Уязвимость">Уязвимость</div>
+            <div class="chip" data-val="Перегруз">Перегруз</div>
+            <div class="chip" data-val="Внутреннее напряжение">Напряжение</div>
+          </div>
+
+          <div class="sub-section-header">
+            <span class="field-label">Близость и триггеры</span>
+          </div>
+          <div class="chip-wrap" id="contextChips">
+            <div class="chip" data-val="Близость (комфортно)">Близость (комфортно)</div>
+            <div class="chip" data-val="Близость (дискомфорт)">Близость (дискомфорт)</div>
+            <div class="chip" data-val="Недосып">Недосып</div>
+            <div class="chip" data-val="Стресс">Стресс</div>
+            <div class="chip" data-val="Отёки / тяга к сладкому">Отёки / сладкое</div>
+            <div class="chip" data-val="Обезболивающее">Обезболивающее</div>
+          </div>
+
+          <div class="sub-section-header">
+            <span class="field-label">Что помогло сегодня</span>
+          </div>
+          <div class="chip-wrap" id="helpedChips">
+            <div class="chip" data-val="Тепло / душ">Тепло / душ</div>
+            <div class="chip" data-val="Нурофен вовремя">Нурофен вовремя</div>
+            <div class="chip" data-val="Магний / вода">Магний / вода</div>
+            <div class="chip" data-val="Сон / отдых">Сон / отдых</div>
+            <div class="chip" data-val="Тишина / дыхание">Тишина / дыхание</div>
+          </div>
+
+          <div class="sub-section-header">
+            <span class="field-label">Короткая заметка</span>
+          </div>
+          <textarea id="inNote" rows="2" placeholder="Что важного было сегодня..."></textarea>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="saveCurrentDay()">Сохранить день</button>
+
+      <!-- Structured State Breakdown -->
+      <div class="card" style="margin-top:14px;">
+        <div class="card-top">
           <span class="card-title">Разбор состояния</span>
-          <span class="card-meta">Гинеколог + КПТ</span>
+          <span class="card-sub" id="advicePhaseTag">Сегодня</span>
         </div>
 
-        <div class="advice-block">
-          <div class="advice-role">Физиология (Гинеколог)</div>
-          <div class="advice-text" id="adviceGyn">Сохрани сегодняшние отметки, чтобы получить разбор по фазе цикла и симптомам.</div>
-        </div>
+        <div class="protocol-stack">
+          <div class="protocol-item">
+            <span class="protocol-badge badge-gyn">Гинеколог · Тело</span>
+            <div class="protocol-title" id="gynHeadline">Физиология дня</div>
+            <div class="protocol-text" id="gynBody">Настрой шкалы выше и нажми «Сохранить день», чтобы получить точный разбор.</div>
+          </div>
 
-        <div class="advice-block psych">
-          <div class="advice-role">Опора и мышление (Психолог)</div>
-          <div class="advice-text" id="advicePsych">—</div>
-        </div>
+          <div class="protocol-item">
+            <span class="protocol-badge badge-act">Действие сейчас</span>
+            <div class="protocol-title" id="actHeadline">Бережный шаг</div>
+            <div class="protocol-text" id="actBody">Фиксация состояния занимает 10 секунд и помогает видеть реальную картину цикла.</div>
+          </div>
 
-        <div class="advice-block insight">
-          <div class="advice-role">Синтез по твоей истории</div>
-          <div class="advice-text" id="adviceHistory">—</div>
+          <div class="protocol-item">
+            <span class="protocol-badge badge-psy">Психолог · Опора</span>
+            <div class="protocol-title" id="psychHeadline">Фокус внимания</div>
+            <div class="protocol-text" id="psychBody">После сохранения здесь появится рекомендация под твоё эмоциональное состояние.</div>
+          </div>
+
+          <div class="protocol-item" id="historyItem" style="display:none;">
+            <span class="protocol-badge badge-hist">Личный паттерн</span>
+            <div class="protocol-text" id="historyBody"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -736,108 +1128,146 @@
     <!-- VIEW 2: ANALYTICS -->
     <div id="view-analytics" class="view">
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Связь цикла, эмоций и либидо</span>
-          <span class="card-meta">Последние 28 дней</span>
+        <div class="card-top">
+          <span class="card-title">Динамика цикла</span>
+          <span class="card-sub">Нажми на день</span>
         </div>
-        <div class="chart-wrap">
-          <svg id="cycleChart" width="100%" height="230" viewBox="0 0 420 230"></svg>
+
+        <div class="filter-row" id="chartFilters">
+          <button class="filter-pill active" data-mode="all" onclick="setChartFilter('all')">Все линии</button>
+          <button class="filter-pill" data-mode="mood" onclick="setChartFilter('mood')">Настроение</button>
+          <button class="filter-pill" data-mode="energy" onclick="setChartFilter('energy')">Энергия</button>
+          <button class="filter-pill" data-mode="libido" onclick="setChartFilter('libido')">Либидо</button>
         </div>
-        <div class="legend">
-          <div class="legend-item"><span class="dot" style="background:var(--sage)"></span>Настроение</div>
-          <div class="legend-item"><span class="dot" style="background:var(--slate)"></span>Энергия</div>
-          <div class="legend-item"><span class="dot" style="background:var(--sand)"></span>Либидо</div>
-          <div class="legend-item"><span class="dot" style="background:var(--terracotta)"></span>Боль</div>
-          <div class="legend-item">✦ Овуляция</div>
-          <div class="legend-item">♥ Близость</div>
+
+        <svg id="cycleChart" width="100%" height="220" viewBox="0 0 400 220"></svg>
+
+        <div style="display:flex; flex-wrap:wrap; gap:12px; font-size:12px; color:var(--ink-2); margin-top:10px;">
+          <span style="color:var(--accent)">● Настроение</span>
+          <span style="color:var(--indigo)">● Энергия</span>
+          <span style="color:var(--amber)">● Либидо</span>
+          <span style="color:var(--rose)">▮ Боль</span>
+          <span style="color:var(--accent)">✦ Овуляция</span>
+          <span style="color:var(--rose)">♥ Близость</span>
         </div>
-        <div id="chartDayInspector" style="margin-top:12px; padding:10px 12px; background:var(--surface-muted); border-radius:10px; font-size:13px; color:var(--ink-soft);">
-          Нажми на любую точку графика, чтобы увидеть детали конкретного дня.
+
+        <div class="inspector-box" id="chartInspector">
+          Коснись любой точки на графике, чтобы увидеть детали дня.
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Сравнение фаз цикла</span>
-          <span class="card-meta">Средние значения</span>
+        <div class="card-top">
+          <span class="card-title">Сравнение фаз</span>
+          <span class="card-sub">Средний балл</span>
         </div>
         <div class="stat-grid" id="phaseStatsGrid"></div>
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Паттерны и «красные флаги»</span>
-          <span class="card-meta">Сводка для тебя и врача</span>
+        <div class="card-top">
+          <span class="card-title">Сводка для врача</span>
         </div>
-        <div id="medicalSummary" style="font-size:14px; line-height:1.55;"></div>
+        <div id="medicalSummary" style="font-size:15px; line-height:1.52; color:var(--ink-2);"></div>
       </div>
     </div>
 
     <!-- VIEW 3: TESTS -->
     <div id="view-tests" class="view">
-      <div class="card" id="testPhaseNotice" style="background:var(--sage-soft); border-color:var(--sage);">
-        <div style="font-size:13px;" id="testNoticeText"></div>
+      <div class="card">
+        <div class="card-top">
+          <span class="card-title">Клинические шкалы</span>
+        </div>
+        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;" id="testNoticeText"></div>
+        <div class="grid-2" style="margin-top:0;">
+          <button class="choice-btn active" id="btnSelectHads" onclick="loadTest('hads')">Тревога / Депрессия</button>
+          <button class="choice-btn" id="btnSelectPmdd" onclick="loadTest('pmdd')">Тяжесть ПМС</button>
+        </div>
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Выбор скрининга</span>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn-secondary" style="flex:1;" onclick="loadTest('hads')">Тревога и депрессия (HADS)</button>
-          <button class="btn-secondary" style="flex:1;" onclick="loadTest('pmdd')">Тяжесть ПМС / ПМДР</button>
-        </div>
-      </div>
-
-      <div class="card" id="testContainer">
-        <div class="card-header">
-          <span class="card-title" id="testTitle">Шкала HADS (14 вопросов)</span>
-          <span class="card-meta" id="testProgress">0 / 14</span>
+        <div class="card-top">
+          <span class="card-title" id="testTitle">Шкала HADS</span>
+          <span class="card-sub" id="testProgress">0 / 14</span>
         </div>
         <div id="testQuestions"></div>
-        <button class="btn-primary" onclick="scoreCurrentTest()">Рассчитать результат</button>
-        <div id="testResultBox" style="margin-top:14px; display:none; padding:12px; background:var(--surface-muted); border-radius:12px; font-size:14px;"></div>
+        <button class="btn-primary" onclick="scoreCurrentTest()">Показать результат</button>
+        <div id="testResultBox" style="display:none; margin-top:14px; padding:14px; background:var(--accent-soft); color:var(--accent); border-radius:14px; font-size:15px; font-weight:600;"></div>
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">История тестов по дням цикла</span>
+        <div class="card-top">
+          <span class="card-title">История результатов</span>
         </div>
-        <div id="testHistoryList" style="font-size:13px; color:var(--ink-soft);">Пока нет пройденных тестов.</div>
+        <div id="testHistoryList" style="font-size:14px; color:var(--ink-2);">Пройденных тестов пока нет.</div>
       </div>
     </div>
 
     <!-- VIEW 4: SOS -->
     <div id="view-sos" class="view">
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Таймер обезболивающего</span>
-          <span class="card-meta">Контроль дозировки</span>
+        <div class="card-top">
+          <span class="card-title">Обезболивающее</span>
+          <span class="card-sub">Таймер интервала</span>
         </div>
-        <div style="font-size:13px; color:var(--ink-soft); margin-bottom:10px;">
-          НПВС лучше всего блокируют простагландины в первые 30–40 минут от начала спазма. Зафиксируй прием, чтобы не запутаться:
+        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
+          Нурофен блокирует выработку простагландинов (эффективнее в начале спазма, принимать после еды). Но-шпа снимает спазм гладкой мускулатуры.
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="logPainkiller('Ибупрофен 400 мг', 6)">Ибупрофен 400</button>
-          <button class="btn-secondary" onclick="logPainkiller('Напроксен 275 мг', 8)">Напроксен</button>
-          <button class="btn-secondary" onclick="logPainkiller('Спазмолитик', 4)">Спазмолитик</button>
+        <div class="grid-2" style="margin-top:0;">
+          <button class="btn-soft" onclick="logPainkiller('Нурофен 400 мг', 6)">Нурофен 400 мг</button>
+          <button class="btn-soft" onclick="logPainkiller('Но-шпа', 4)">Но-шпа</button>
         </div>
-        <div id="painkillerStatus" style="margin-top:12px; padding:12px; background:var(--surface-muted); border-radius:12px; font-size:14px;">
-          Прием сегодня не зафиксирован.
+        <div class="inspector-box" id="painkillerStatus">
+          Сегодня приёмов не отмечено.
         </div>
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Физиологический вздох (2 минуты)</span>
-          <span class="card-meta">Снижение спазма и паники</span>
+        <div class="card-top">
+          <span class="card-title">Дыхание от спазма и тревоги</span>
+          <span class="card-sub">Физиологический вздох</span>
         </div>
-        <div class="breath-box">
-          <div id="breathCircle" class="breath-circle">Нажми старт</div>
-          <div style="font-size:12px; color:var(--ink-soft); margin-top:14px; text-align:center;">
-            Двойной вдох носом активирует альвеолы, а длинный выдох ртом тормозит симпатическую нервную систему через блуждающий нерв.
+        <div class="flower-stage">
+          <div class="flower-wrapper">
+            <svg id="breathFlower" class="breath-flower-svg" viewBox="0 0 200 200">
+              <defs>
+                <radialGradient id="petalGradA" cx="50%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#58C7A4" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#1B6B52" stop-opacity="0.14" />
+                </radialGradient>
+                <radialGradient id="petalGradB" cx="50%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#8FA4F9" stop-opacity="0.38" />
+                  <stop offset="100%" stop-color="#3B52A8" stop-opacity="0.10" />
+                </radialGradient>
+              </defs>
+              <g transform="translate(100,100)">
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(22.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(67.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(112.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(157.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(202.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(247.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(292.5)" />
+                <ellipse cx="0" cy="-36" rx="22" ry="44" fill="url(#petalGradB)" transform="rotate(337.5)" />
+
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(0)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(45)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(90)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(135)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(180)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(225)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(270)" />
+                <ellipse cx="0" cy="-32" rx="20" ry="40" fill="url(#petalGradA)" transform="rotate(315)" />
+                <circle cx="0" cy="0" r="34" fill="var(--surface)" opacity="0.88" />
+              </g>
+            </svg>
+            <div class="flower-prompt" id="flowerPrompt">Нажми «Начать»</div>
           </div>
-          <button class="btn-secondary" style="margin-top:12px;" id="breathBtn" onclick="toggleBreathing()">Запустить ритм</button>
+
+          <div style="font-size:14px; color:var(--ink-2); text-align:center; margin-top:16px; max-width:310px;">
+            Двойной вдох носом и длинный выдох ртом активируют блуждающий нерв, замедляют пульс и снижают болевой порог.
+          </div>
+          <button class="btn-soft" style="margin-top:16px; min-width:160px;" id="breathBtn" onclick="toggleBreathing()">Начать</button>
         </div>
       </div>
     </div>
@@ -845,104 +1275,161 @@
     <!-- VIEW 5: SETTINGS -->
     <div id="view-settings" class="view">
       <div class="card">
-        <div class="card-header">
+        <div class="card-top">
           <span class="card-title">Параметры цикла</span>
         </div>
-        <label style="font-size:13px; color:var(--ink-soft);">Дата начала последних месячных:</label>
+        <div class="field-label" style="margin-bottom:8px;">Первый день последних месячных</div>
         <input type="date" id="setLastPeriod" onchange="saveSettings()" />
 
-        <label style="font-size:13px; color:var(--ink-soft); display:block; margin-top:12px;">Средняя длина цикла (дней):</label>
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Средняя длина цикла (дней)</div>
         <input type="number" id="setCycleLength" min="21" max="45" value="28" onchange="saveSettings()" />
       </div>
 
       <div class="card">
-        <div class="card-header">
-          <span class="card-title">Резервная копия и демо-режим</span>
+        <div class="card-top">
+          <span class="card-title">Данные и резервная копия</span>
         </div>
-        <div style="font-size:13px; color:var(--ink-soft); margin-bottom:10px;">
-          Все данные хранятся локально на твоем устройстве. Раз в месяц скачивай резервную копию.
-        </div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn-secondary" onclick="exportData()">Скопировать резервную копию (JSON)</button>
-          <button class="btn-secondary" onclick="importDataPrompt()">Восстановить из копии</button>
-          <button class="btn-secondary" onclick="loadDemoData()">Загрузить демо-данные за 28 дней</button>
-          <button class="btn-outline-danger" onclick="clearAllData()">Очистить все записи</button>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-soft" onclick="exportData()">Скопировать резервную копию (JSON)</button>
+          <button class="btn-soft" onclick="importDataPrompt()">Восстановить из копии</button>
+          <button class="btn-soft" onclick="loadDemoData()">Загрузить пример за 28 дней</button>
+          <button class="btn-danger-soft" onclick="clearAllData()">Удалить все данные</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-tab="today" onclick="switchTab('today')">
+  <!-- Calendar Modal Sheet -->
+  <div class="modal-backdrop" id="calendarModal" onclick="closeCalendarOnBackdrop(event)">
+    <div class="modal-sheet">
+      <div class="cal-header">
+        <button class="date-arrow" onclick="shiftCalendarMonth(-1)">←</button>
+        <div class="cal-month-title" id="calMonthTitle">Ноябрь 2026</div>
+        <button class="date-arrow" onclick="shiftCalendarMonth(1)">→</button>
+      </div>
+
+      <div class="cal-weekdays">
+        <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div class="cal-legend">
+        <span style="color:var(--rose)">● Месячные</span>
+        <span style="color:var(--accent)">● Овуляция</span>
+        <span>• Есть запись</span>
+      </div>
+
+      <div class="cal-actions">
+        <button class="btn-soft" onclick="jumpToToday()">Вернуться к сегодня</button>
+        <button class="btn-soft" onclick="closeCalendarModal()">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Bottom Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-item active" data-tab="today" onclick="switchTab('today')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       <span>Сегодня</span>
     </button>
-    <button class="nav-btn" data-tab="analytics" onclick="switchTab('analytics')">
-      <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M3 21h18"/></svg>
+    <button class="tab-item" data-tab="analytics" onclick="switchTab('analytics')">
+      <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg>
       <span>График</span>
     </button>
-    <button class="nav-btn" data-tab="tests" onclick="switchTab('tests')">
-      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+    <button class="tab-item" data-tab="tests" onclick="switchTab('tests')">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 14h5"/></svg>
       <span>Тесты</span>
     </button>
-    <button class="nav-btn" data-tab="sos" onclick="switchTab('sos')">
-      <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9-9.5C1.5 7.5 4.5 4 8 4c2 0 3.5 1 4 2.5C12.5 5 14 4 16 4c3.5 0 6.5 3.5 5 7.5-2 5-9 9.5-9 9.5z"/></svg>
-      <span>SOS</span>
-    </button>
-    <button class="nav-btn" data-tab="settings" onclick="switchTab('settings')">
+    <button class="tab-item" data-tab="settings" onclick="switchTab('settings')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Настройки</span>
     </button>
   </nav>
 
   <script>
-    // Telegram WebApp Init
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
     }
 
-    // State Management
-    const STORAGE_KEY = 'ritm_cycle_tracker_v2';
+    // Haptics Helper
+    function hapticImpact(style = 'light') {
+      try { tg?.HapticFeedback?.impactOccurred(style); } catch (e) {}
+    }
+    function hapticSelect() {
+      try { tg?.HapticFeedback?.selectionChanged(); } catch (e) {}
+    }
+    function hapticSuccess() {
+      try { tg?.HapticFeedback?.notificationOccurred('success'); } catch (e) {}
+    }
+
+    // Timezone-Safe Local Date Utilities
+    function formatLocalISO(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseLocalISO(isoStr) {
+      const [y, m, d] = isoStr.split('-').map(Number);
+      return new Date(y, m - 1, d, 12, 0, 0);
+    }
+
+    function getTodayISO(offsetDays = 0) {
+      const d = new Date();
+      d.setHours(12, 0, 0, 0);
+      d.setDate(d.getDate() + offsetDays);
+      return formatLocalISO(d);
+    }
+
+    function formatHumanDate(isoStr) {
+      const today = getTodayISO(0);
+      const yest = getTodayISO(-1);
+      const tom = getTodayISO(1);
+      const d = parseLocalISO(isoStr);
+      const short = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
+      if (isoStr === today) return `Сегодня, ${short}`;
+      if (isoStr === yest) return `Вчера, ${short}`;
+      if (isoStr === tom) return `Завтра, ${short}`;
+      return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+    }
+
+    // State
+    const STORAGE_KEY = 'ritm_cycle_tracker_v4';
     let state = {
       settings: {
         lastPeriodStart: getTodayISO(-4),
         cycleLength: 28,
         darkMode: false
       },
-      entries: {}, // keyed by YYYY-MM-DD
-      painkillers: [], // { name, timeISO, hours }
-      testHistory: [] // { date, cycleDay, testName, summary }
+      entries: {},
+      painkillers: [],
+      testHistory: []
     };
 
     let selectedDate = getTodayISO(0);
+    let calendarViewDate = parseLocalISO(selectedDate);
+    let metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
     let tempIsOvulation = false;
     let tempFlow = 'Нет';
+    let chartFilter = 'all';
     let activeTestKey = 'hads';
     let currentAnswers = {};
     let breathInterval = null;
 
-    function getTodayISO(offsetDays = 0) {
-      const d = new Date();
-      d.setDate(d.getDate() + offsetDays);
-      return d.toISOString().split('T')[0];
-    }
-
     function loadState() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('ritm_cycle_tracker_v1');
+        const raw = localStorage.getItem(STORAGE_KEY)
+          || localStorage.getItem('ritm_cycle_tracker_v3')
+          || localStorage.getItem('ritm_cycle_tracker_v2')
+          || localStorage.getItem('ritm_cycle_tracker_v1');
         if (raw) {
-          const parsed = JSON.parse(raw);
-          state = { ...state, ...parsed };
+          state = { ...state, ...JSON.parse(raw) };
         }
-      } catch (e) {
-        console.error(e);
-      }
-      if (state.settings.darkMode) {
-        document.body.classList.add('dark-mode');
-      }
+      } catch (e) {}
+      applyThemeUI();
       document.getElementById('setLastPeriod').value = state.settings.lastPeriodStart;
       document.getElementById('setCycleLength').value = state.settings.cycleLength;
     }
@@ -951,31 +1438,113 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
+    function applyThemeUI() {
+      document.body.classList.toggle('dark-mode', Boolean(state.settings.darkMode));
+      document.getElementById('themeBtn').textContent = state.settings.darkMode ? 'Светлая' : 'Тёмная';
+    }
+
+    function toggleTheme() {
+      hapticImpact('light');
+      state.settings.darkMode = !state.settings.darkMode;
+      applyThemeUI();
+      persistState();
+    }
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2200);
-      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+      setTimeout(() => t.classList.remove('show'), 2000);
+      hapticSuccess();
+    }
+
+    // Sliders with Haptics
+    function initCCSliders() {
+      document.querySelectorAll('.cc-slider').forEach(el => {
+        const key = el.dataset.key;
+        const min = Number(el.dataset.min);
+        const max = Number(el.dataset.max);
+
+        const updateFromEvent = (clientX) => {
+          const rect = el.getBoundingClientRect();
+          let ratio = (clientX - rect.left) / rect.width;
+          ratio = Math.max(0, Math.min(1, ratio));
+          const val = Math.round(min + ratio * (max - min));
+          if (metrics[key] !== val) {
+            metrics[key] = val;
+            renderCCSlider(key);
+            hapticSelect();
+          }
+        };
+
+        el.addEventListener('pointerdown', (e) => {
+          el.setPointerCapture(e.pointerId);
+          updateFromEvent(e.clientX);
+        });
+        el.addEventListener('pointermove', (e) => {
+          if (el.hasPointerCapture(e.pointerId)) {
+            updateFromEvent(e.clientX);
+          }
+        });
+      });
+    }
+
+    function renderCCSlider(key) {
+      const el = document.querySelector(`.cc-slider[data-key="${key}"]`);
+      if (!el) return;
+      const min = Number(el.dataset.min);
+      const max = Number(el.dataset.max);
+      const val = metrics[key];
+      const pct = ((val - min) / (max - min)) * 100;
+      el.querySelector('.cc-fill').style.width = `${Math.max(8, pct)}%`;
+      document.getElementById(`val-${key}`).textContent = val;
+    }
+
+    function renderAllCCSliders() {
+      ['mood', 'energy', 'pain', 'libido'].forEach(renderCCSlider);
+    }
+
+    // Accordions & Summaries
+    function toggleAccordion(id) {
+      hapticImpact('light');
+      document.getElementById(id).classList.toggle('open');
+    }
+
+    function getSelectedEmotions() {
+      const basic = Array.from(document.querySelectorAll('#basicEmotionChips .chip.active')).map(c => c.dataset.val);
+      const nuanced = Array.from(document.querySelectorAll('#nuancedEmotionChips .chip.active-indigo')).map(c => c.dataset.val);
+      return [...basic, ...nuanced];
+    }
+
+    function updateSummaries() {
+      const cycleParts = [];
+      if (selectedDate === state.settings.lastPeriodStart) cycleParts.push('1-й день цикла');
+      if (tempIsOvulation) cycleParts.push('Овуляция');
+      if (tempFlow && tempFlow !== 'Нет') cycleParts.push(`Выделения: ${tempFlow.toLowerCase()}`);
+      document.getElementById('sum-cycle').textContent = cycleParts.length ? cycleParts.join(' · ') : 'Не отмечено';
+
+      const emos = getSelectedEmotions();
+      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
+      const combined = [...emos, ...contexts];
+      document.getElementById('sum-context').textContent = combined.length ? combined.slice(0, 3).join(' · ') + (combined.length > 3 ? ` +${combined.length - 3}` : '') : 'Не выбрано';
     }
 
     // Cycle Math
     function getCycleInfo(dateISO) {
-      const start = new Date(state.settings.lastPeriodStart + 'T00:00:00');
-      const target = new Date(dateISO + 'T00:00:00');
-      const diffDays = Math.floor((target - start) / (1000 * 60 * 60 * 24));
+      const start = parseLocalISO(state.settings.lastPeriodStart);
+      const target = parseLocalISO(dateISO);
+      const diffDays = Math.round((target - start) / (1000 * 60 * 60 * 24));
       const len = Number(state.settings.cycleLength) || 28;
-      let cycleDay = ((diffDays % len) + len) % len + 1;
+      const cycleDay = ((diffDays % len) + len) % len + 1;
 
       const savedEntry = state.entries[dateISO];
       const isMarkedOvulation = (dateISO === selectedDate) ? tempIsOvulation : Boolean(savedEntry?.isOvulation);
+      const ovulationDay = Math.max(11, len - 14);
 
       let phase = '';
       let phaseCode = '';
-      const ovulationDay = Math.max(11, len - 14);
-
       if (isMarkedOvulation) {
-        phase = 'Овуляция (отмечено)';
+        phase = 'Овуляция';
         phaseCode = 'ovulation';
       } else if (cycleDay <= 5) {
         phase = 'Менструальная фаза';
@@ -987,10 +1556,10 @@
         phase = 'Овуляторное окно';
         phaseCode = 'ovulation';
       } else if (cycleDay <= len - 6) {
-        phase = 'Ранняя лютеиновая фаза';
+        phase = 'Лютеиновая фаза';
         phaseCode = 'early_luteal';
       } else {
-        phase = 'Поздняя лютеиновая (окно ПМС)';
+        phase = 'Предменструальное окно';
         phaseCode = 'late_luteal';
       }
 
@@ -999,120 +1568,213 @@
 
     function updateHeader() {
       const info = getCycleInfo(selectedDate);
-      document.getElementById('headerCycleDay').textContent = `День ${info.cycleDay} из ${info.len}`;
-      document.getElementById('headerPhase').textContent = info.phase;
+      document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>/ ${info.len}</span>`;
+      document.getElementById('heroPhase').textContent = info.phase;
+      document.getElementById('advicePhaseTag').textContent = `День ${info.cycleDay}`;
 
-      const today = getTodayISO(0);
-      const yest = getTodayISO(-1);
-      let label = selectedDate;
-      if (selectedDate === today) label = `Сегодня (${selectedDate})`;
-      else if (selectedDate === yest) label = `Вчера (${selectedDate})`;
-      document.getElementById('selectedDateLabel').textContent = label;
+      const daysLeft = Math.max(0, info.len - info.cycleDay + 1);
+      document.getElementById('heroCountdown').innerHTML = daysLeft === 1
+        ? 'Новый цикл<br/>завтра'
+        : `До нового цикла<br/>~${daysLeft} дн.`;
+      document.getElementById('cycleProgressBar').style.width = `${Math.min(100, (info.cycleDay / info.len) * 100)}%`;
 
-      const isDay1 = selectedDate === state.settings.lastPeriodStart;
-      document.getElementById('btnPeriodStart').classList.toggle('active-period', isDay1);
-      document.getElementById('btnOvulation').classList.toggle('active-ovulation', tempIsOvulation);
+      document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
+      document.getElementById('btnPeriodStart').classList.toggle('active-rose', selectedDate === state.settings.lastPeriodStart);
+      document.getElementById('btnOvulation').classList.toggle('active', tempIsOvulation);
+      updateSummaries();
     }
 
     function shiftDate(delta) {
-      const d = new Date(selectedDate + 'T00:00:00');
+      hapticImpact('light');
+      const d = parseLocalISO(selectedDate);
       d.setDate(d.getDate() + delta);
-      selectedDate = d.toISOString().split('T')[0];
+      selectedDate = formatLocalISO(d);
       loadDayForm();
     }
 
+    // Calendar Modal
+    function openCalendarModal() {
+      hapticImpact('light');
+      calendarViewDate = parseLocalISO(selectedDate);
+      renderCalendarGrid();
+      document.getElementById('calendarModal').classList.add('open');
+    }
+
+    function closeCalendarModal() {
+      hapticImpact('light');
+      document.getElementById('calendarModal').classList.remove('open');
+    }
+
+    function closeCalendarOnBackdrop(e) {
+      if (e.target.id === 'calendarModal') closeCalendarModal();
+    }
+
+    function shiftCalendarMonth(delta) {
+      hapticImpact('light');
+      calendarViewDate.setMonth(calendarViewDate.getMonth() + delta);
+      renderCalendarGrid();
+    }
+
+    function jumpToToday() {
+      hapticImpact('medium');
+      selectedDate = getTodayISO(0);
+      calendarViewDate = parseLocalISO(selectedDate);
+      loadDayForm();
+      closeCalendarModal();
+    }
+
+    function selectCalendarDate(iso) {
+      hapticImpact('medium');
+      selectedDate = iso;
+      loadDayForm();
+      closeCalendarModal();
+    }
+
+    function renderCalendarGrid() {
+      const year = calendarViewDate.getFullYear();
+      const month = calendarViewDate.getMonth();
+      const title = new Date(year, month, 1).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+      document.getElementById('calMonthTitle').textContent = title;
+
+      const firstDay = new Date(year, month, 1);
+      let startWeekday = firstDay.getDay(); // 0 is Sunday
+      startWeekday = startWeekday === 0 ? 6 : startWeekday - 1; // Monday = 0
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const todayISO = getTodayISO(0);
+
+      let html = '';
+      for (let i = 0; i < startWeekday; i++) {
+        html += `<div class="cal-cell empty"></div>`;
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const cellDate = new Date(year, month, day, 12, 0, 0);
+        const iso = formatLocalISO(cellDate);
+        const info = getCycleInfo(iso);
+        const entry = state.entries[iso];
+
+        const classes = ['cal-cell'];
+        if (info.phaseCode === 'menstrual' || (entry && entry.flow && entry.flow !== 'Нет' && info.cycleDay <= 6)) {
+          classes.push('is-period');
+        } else if (entry?.isOvulation || info.phaseCode === 'ovulation') {
+          classes.push('is-ovulation');
+        }
+        if (iso === todayISO) classes.push('is-today');
+        if (iso === selectedDate) classes.push('is-selected');
+
+        html += `
+          <button class="${classes.join(' ')}" onclick="selectCalendarDate('${iso}')">
+            <span>${day}</span>
+            ${entry ? '<span class="cal-dot"></span>' : ''}
+          </button>
+        `;
+      }
+      document.getElementById('calGrid').innerHTML = html;
+    }
+
+    // Cycle Markers & Chips
     function markPeriodStart() {
+      hapticImpact('medium');
       state.settings.lastPeriodStart = selectedDate;
       document.getElementById('setLastPeriod').value = selectedDate;
-      if (tempFlow === 'Нет') {
-        selectFlow('Умеренные');
-      }
+      if (tempFlow === 'Нет') selectFlow('Умеренные');
       persistState();
       updateHeader();
       generateExpertAdvice();
-      showToast('1-й день цикла обновлен');
+      showToast('1-й день цикла отмечен');
     }
 
     function toggleOvulation() {
+      hapticImpact('medium');
       tempIsOvulation = !tempIsOvulation;
-      if (tempIsOvulation && tempFlow === 'Нет') {
-        selectFlow('Умеренные');
-      }
+      if (tempIsOvulation && tempFlow === 'Нет') selectFlow('Умеренные');
       updateHeader();
-      showToast(tempIsOvulation ? 'Овуляция отмечена' : 'Отметка овуляции снята');
     }
 
     function selectFlow(val) {
+      hapticSelect();
       tempFlow = val;
-      document.querySelectorAll('#flowSelector .seg-btn').forEach(btn => {
-        btn.classList.remove('active', 'active-heavy');
+      document.querySelectorAll('#flowSelector .choice-btn').forEach(btn => {
+        btn.classList.remove('active', 'active-rose');
         if (btn.dataset.val === val) {
-          btn.classList.add(val === 'Обильные' ? 'active-heavy' : 'active');
+          btn.classList.add(val === 'Обильные' ? 'active-rose' : 'active');
         }
       });
+      updateSummaries();
     }
 
-    // Chip Setup
     function setupChips() {
-      document.querySelectorAll('#emotionChips .chip').forEach(chip => {
+      document.querySelectorAll('#basicEmotionChips .chip').forEach(chip => {
         chip.onclick = () => {
-          document.querySelectorAll('#emotionChips .chip').forEach(c => c.classList.remove('active'));
-          chip.classList.add('active');
+          hapticSelect();
+          chip.classList.toggle('active');
+          updateSummaries();
+        };
+      });
+      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(chip => {
+        chip.onclick = () => {
+          hapticSelect();
+          chip.classList.toggle('active-indigo');
+          updateSummaries();
         };
       });
       document.querySelectorAll('#contextChips .chip, #helpedChips .chip').forEach(chip => {
         chip.onclick = () => {
-          const isWarn = chip.dataset.val.includes('боль') || chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс');
-          chip.classList.toggle(isWarn ? 'active-warn' : 'active');
+          hapticSelect();
+          const isRose = chip.dataset.val.includes('дискомфорт') || chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс');
+          chip.classList.toggle(isRose ? 'active-rose' : 'active');
+          updateSummaries();
         };
       });
-    }
-
-    function updateSliderLabels() {
-      document.getElementById('valMood').textContent = `${document.getElementById('inMood').value} / 10`;
-      document.getElementById('valEnergy').textContent = `${document.getElementById('inEnergy').value} / 10`;
-      document.getElementById('valPain').textContent = `${document.getElementById('inPain').value} / 10`;
-      document.getElementById('valLibido').textContent = `${document.getElementById('inLibido').value} / 10`;
     }
 
     function loadDayForm() {
       const entry = state.entries[selectedDate] || {
         mood: 6, energy: 6, pain: 1, libido: 5,
         isOvulation: false, flow: 'Нет',
-        emotion: 'Спокойствие', contexts: [], helped: [], note: ''
+        emotions: ['Спокойствие'], contexts: [], helped: [], note: ''
       };
+
+      metrics = {
+        mood: entry.mood,
+        energy: entry.energy,
+        pain: entry.pain,
+        libido: entry.libido
+      };
+      renderAllCCSliders();
 
       tempIsOvulation = Boolean(entry.isOvulation);
       selectFlow(entry.flow || 'Нет');
-      updateHeader();
-
-      document.getElementById('inMood').value = entry.mood;
-      document.getElementById('inEnergy').value = entry.energy;
-      document.getElementById('inPain').value = entry.pain;
-      document.getElementById('inLibido').value = entry.libido;
       document.getElementById('inNote').value = entry.note || '';
-      updateSliderLabels();
 
-      document.querySelectorAll('#emotionChips .chip').forEach(c => {
-        c.classList.toggle('active', c.dataset.val === entry.emotion);
+      const savedEmotions = Array.isArray(entry.emotions)
+        ? entry.emotions
+        : (entry.emotion ? [entry.emotion] : ['Спокойствие']);
+
+      document.querySelectorAll('#basicEmotionChips .chip').forEach(c => {
+        c.classList.toggle('active', savedEmotions.includes(c.dataset.val));
+      });
+      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(c => {
+        c.classList.toggle('active-indigo', savedEmotions.includes(c.dataset.val));
       });
       document.querySelectorAll('#contextChips .chip').forEach(c => {
-        c.classList.remove('active', 'active-warn');
+        c.classList.remove('active', 'active-rose');
         if ((entry.contexts || []).includes(c.dataset.val)) {
-          const isWarn = c.dataset.val.includes('боль') || c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс');
-          c.classList.add(isWarn ? 'active-warn' : 'active');
+          const isRose = c.dataset.val.includes('дискомфорт') || c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс');
+          c.classList.add(isRose ? 'active-rose' : 'active');
         }
       });
       document.querySelectorAll('#helpedChips .chip').forEach(c => {
         c.classList.toggle('active', (entry.helped || []).includes(c.dataset.val));
       });
 
+      updateHeader();
       generateExpertAdvice(entry);
     }
 
     function saveCurrentDay() {
-      const emotionEl = document.querySelector('#emotionChips .chip.active');
-      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-warn')).map(c => c.dataset.val);
+      const emotions = getSelectedEmotions();
+      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
       const helped = Array.from(document.querySelectorAll('#helpedChips .chip.active')).map(c => c.dataset.val);
 
       const entry = {
@@ -1120,11 +1782,11 @@
         cycleDay: getCycleInfo(selectedDate).cycleDay,
         isOvulation: tempIsOvulation,
         flow: tempFlow,
-        mood: Number(document.getElementById('inMood').value),
-        energy: Number(document.getElementById('inEnergy').value),
-        pain: Number(document.getElementById('inPain').value),
-        libido: Number(document.getElementById('inLibido').value),
-        emotion: emotionEl ? emotionEl.dataset.val : 'Спокойствие',
+        mood: metrics.mood,
+        energy: metrics.energy,
+        pain: metrics.pain,
+        libido: metrics.libido,
+        emotions: emotions.length ? emotions : ['Спокойствие'],
         contexts,
         helped,
         note: document.getElementById('inNote').value.trim()
@@ -1137,63 +1799,92 @@
       showToast('Запись сохранена');
     }
 
-    // EXPERT SYSTEM: GYNECOLOGIST + CBT PSYCHOLOGIST
+    // Evidence-Based Gynecologist + CBT Psychologist Engine
     function generateExpertAdvice(entry) {
       if (!entry) entry = state.entries[selectedDate];
       const info = getCycleInfo(selectedDate);
-      const gynEl = document.getElementById('adviceGyn');
-      const psychEl = document.getElementById('advicePsych');
-      const histEl = document.getElementById('adviceHistory');
+
+      const gynH = document.getElementById('gynHeadline');
+      const gynB = document.getElementById('gynBody');
+      const actH = document.getElementById('actHeadline');
+      const actB = document.getElementById('actBody');
+      const psyH = document.getElementById('psychHeadline');
+      const psyB = document.getElementById('psychBody');
+      const histItem = document.getElementById('historyItem');
+      const histBody = document.getElementById('historyBody');
 
       if (!entry) {
-        gynEl.textContent = `Сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}). Отметь показатели выше и нажми «Сохранить», чтобы получить персональный протокол.`;
-        psychEl.textContent = 'Когда состояние нестабильно, внешняя опора и фиксация фактов снижают тревогу неопределенности.';
-        histEl.textContent = 'После сохранения первых записей здесь появится анализ связи с прошлыми днями.';
+        gynH.textContent = info.phase;
+        gynB.textContent = 'Настрой шкалы выше и нажми «Сохранить день», чтобы увидеть физиологию этого дня.';
+        actH.textContent = 'Быстрый чекин';
+        actB.textContent = 'Отметь уровень боли, энергии и выделений — рекомендации подстроятся автоматически.';
+        psyH.textContent = 'Опора дня';
+        psyB.textContent = 'Регулярная фиксация цифр помогает отличить влияние гормонов от реальной усталости.';
+        histItem.style.display = 'none';
         return;
       }
 
-      // 1. Gynecologist Logic
-      let gynText = '';
+      const emos = Array.isArray(entry.emotions) ? entry.emotions : [entry.emotion || 'Спокойствие'];
+      const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
+      const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
+      const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
+
+      // 1. Physiology (EBM Gynecology)
       if (entry.pain >= 6) {
-        gynText = `Боль ${entry.pain}/10 на ${info.cycleDay}-й день связана с пиковым выбросом простагландинов, вызывающих ишемию и спазм миометрия. Если еще не приняла НПВС (ибупрофен/напроксен), не терпи — таблетка работает эффективнее всего до разворачивания пика боли. Добавь сухое тепло (грелка ~40°C) на низ живота и теплую воду.`;
+        gynH.textContent = 'Пик простагландинов и спазм миометрия';
+        gynB.textContent = 'Простагландины вызывают сокращение матки и временное снижение кровотока, отсюда резкая боль и слабость.';
+        actH.textContent = 'Не терпеть спазм';
+        actB.textContent = 'Нурофен 400 мг (после еды) эффективнее всего в первые 30–40 минут от начала боли. Дополнительно — сухое тепло на низ живота.';
       } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
-        gynText = `Овуляция (день ${info.cycleDay}): пик эстрогенов и лютеинизирующего гормона. ${entry.flow && entry.flow !== 'Нет' ? `Отмеченные выделения (${entry.flow.toLowerCase()}) в эту фазу — физиологическая реакция шейки матки на высокий эстроген (фертильный секрет типа «яичного белка»).` : ''} Если есть легкое одностороннее покалывание внизу живота — это нормальный овуляторный синдром (до 24–48 часов).`;
+        gynH.textContent = 'Пик эстрогенов и овуляция';
+        gynB.textContent = 'Максимальный уровень эстрадиола и тестостерона усиливает приток крови, либидо и когнитивную ясность. Прозрачные тянущиеся выделения — норма.';
+        actH.textContent = 'Окно высокого ресурса';
+        actB.textContent = 'Если ощущается лёгкое одностороннее покалывание внизу живота до 24 часов — это физиологичный овуляторный синдром.';
       } else if (info.phaseCode === 'menstrual') {
-        gynText = `Менструальная фаза (день ${info.cycleDay}): уровень эстрогена и прогестерона на минимуме. ${entry.flow === 'Обильные' ? 'Сегодня отмечены обильные выделения — обязательно восполняй объем жидкости и добавь в рацион продукты с гемовым железом (красное мясо, печень, гречка с витамином С), чтобы не провалиться в слабость.' : 'Сделай упор на белок, сложные углеводы и гидратацию; интенсивные нагрузки лучше заменить растяжкой или спокойной прогулкой.'}`;
+        gynH.textContent = 'Снижение эстрогена и прогестерона';
+        gynB.textContent = entry.flow === 'Обильные'
+          ? 'При обильных выделениях организм теряет жидкость и железо, что напрямую снижает выносливость.'
+          : 'Гормональный фон на минимуме, закономерно снижается толерантность к физическим нагрузкам.';
+        actH.textContent = 'Щадящий физический режим';
+        actB.textContent = entry.flow === 'Обильные'
+          ? 'Пей больше воды, добавь в рацион белок и источники железа (мясо, печень, гречка с витамином С). Интенсивный спорт лучше отложить.'
+          : 'Тёплая еда, регулярное питьё и мягкая растяжка вместо силовых тренировок.';
       } else if (info.phaseCode === 'late_luteal') {
-        gynText = `Поздняя лютеиновая фаза (день ${info.cycleDay}): резкое падение прогестерона и эстрогена временно снижает синтез серотонина и чувствительность к инсулину. Урежь кофеин (он усиливает тревогу и спазм сосудов), добавь магний глицинат вечером и не пропускай приемы пищи, чтобы скачки глюкозы не имитировали панику.`;
+        gynH.textContent = 'Спад прогестерона и серотонина';
+        gynB.textContent = 'Резкое падение прогестерона и его нейростероида аллопрегнанолона снижает ГАМК-торможение в мозге и чувствительность к инсулину.';
+        actH.textContent = 'Стабилизация сахара и нервной системы';
+        actB.textContent = 'Урежь кофеин (усиливает тревогу и спазм сосудов), ешь каждые 3–4 часа со сложными углеводами и белком, вечером — магний глицинат.';
       } else {
-        gynText = `Фолликулярная / ранняя лютеиновая фаза (день ${info.cycleDay}): гормональный фон наиболее стабилен. Хорошее окно для плановых нагрузок, сложных задач и отслеживания своего базового уровня энергии вне влияния ПМС.`;
+        gynH.textContent = 'Стабильная фолликулярная фаза';
+        gynB.textContent = 'Эстроген плавно растёт без резких перепадов — это твой базовый, наиболее предсказуемый фон.';
+        actH.textContent = 'Планирование нагрузки';
+        actB.textContent = 'Хороший день для задач, требующих концентрации, и оценки своего истинного самочувствия вне ПМС.';
       }
 
-      if (entry.contexts.includes('Близость (дискомфорт/боль)')) {
-        gynText += ' Отмечен дискомфорт при близости — фиксируй день цикла: если это повторяется регулярно, стоит обсудить это с гинекологом для исключения эндометриоза или мышечного гипертонуса тазового дна.';
+      if (entry.contexts.includes('Близость (дискомфорт)')) {
+        gynB.textContent += ' Отмечен дискомфорт при близости — фиксируй день цикла, чтобы обсудить с врачом.';
       }
 
-      // 2. Psychologist Logic (CBT & Somatic)
-      let psychText = '';
-      const negMood = entry.mood <= 4 || ['Тревога', 'Раздражительность', 'Слезливость', 'Апатия'].includes(entry.emotion);
-
-      if (info.phaseCode === 'late_luteal' && negMood) {
-        psychText = `Правило карантина на 72 часа: в позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно, а префронтальная кора хуже тормозит импульсы. Любые мысли «я не справляюсь», «отношения зашли в тупик» или желание резко всё поменять сейчас окрашены биохимией. Запиши претензию в заметки и отложи решение до 5-го дня цикла.`;
-      } else if (entry.emotion === 'Тревога') {
-        psychText = `При высокой тревоге бесполезно «уговаривать» себя логикой — сначала нужно сбросить возбуждение тела. Сделай 5 циклов физиологического вздоха (во вкладке SOS) и примени технику 5-4-3-2-1: назови вслух 5 предметов вокруг, 4 тактильных ощущения и 3 звука, чтобы вернуть мозг из катастрофизации в реальность.`;
+      // 2. Psychology (CBT & ACT)
+      if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
+        psyH.textContent = 'Карантин на решения — 72 часа';
+        psyB.textContent = 'В позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно. Мысли «всё плохо» или импульс резко поменять жизнь сейчас усилены биохимией — отложи выводы до 5-го дня цикла.';
+      } else if (hasAnxiety) {
+        psyH.textContent = 'Сначала тело, потом мысли';
+        psyB.textContent = 'При тревоге логика включается только после снижения пульса. Сделай 5 циклов дыхания во вкладке SOS и назови 5 предметов вокруг, чтобы вернуть фокус в реальность.';
       } else if (entry.pain >= 6 || entry.energy <= 3) {
-        psychText = `Легализация сниженного режима: твоя батарея сейчас объективно на ${entry.energy * 10}%, а тело тратит ресурс на проживание боли. Попытка выжать из себя 100% продуктивности вызовет только чувство вины и вторичный стресс. Оставь на сегодня 1 обязательное дело, остальное перенеси без самокритики.`;
-      } else if (entry.emotion === 'Раздражительность' || entry.emotion === 'Слезливость') {
-        psychText = `Эмоциональная проницаемость сейчас повышена — это не «истеричность», а снижение серотонинового буфера. Минимизируй сенсорный шум: убери фоновые новости, приглуши свет и дай себе право побыть в тишине без сложных разговоров.`;
+        psyH.textContent = 'Легализация отдыха без вины';
+        psyB.textContent = `Твой физический ресурс сейчас около ${entry.energy * 10}%. Оставь одно ключевое дело на день, остальное перенеси без самокритики.`;
+      } else if (hasIrritability) {
+        psyH.textContent = 'Снижение сенсорного шума';
+        psyB.textContent = 'Повышенная чувствительность сейчас — не «плохой характер», а истощение серотонинового буфера. Убери фоновые уведомления и дай себе 30 минут тишины.';
       } else {
-        psychText = `Состояние ровное (настроение ${entry.mood}/10, энергия ${entry.energy}/10). Отличный момент зафиксировать в заметках, какие привычки или режим сна помогли удержать этот баланс — в дни ПМС эти записи станут твоей личной инструкцией.`;
+        psyH.textContent = 'Фиксация опоры';
+        psyB.textContent = 'Когда фон ровный, полезно записать в заметку, что именно помогло удержать баланс — в сложные дни это станет готовой подсказкой.';
       }
 
-      // 3. History & Correlations Synthesis
+      // 3. History & Personal Kit
       const allEntries = Object.values(state.entries);
-      const tips = [];
-
-      if (entry.contexts.includes('Недосып (<6ч)')) {
-        tips.push('Сегодня отмечен недосып — он самостоятельно снижает болевой порог и имитирует симптомы ПМС, даже если гормональный фон в норме.');
-      }
-
       const pastHelped = {};
       allEntries.forEach(e => {
         if ((e.pain >= 5 || e.mood <= 4) && e.helped && e.date !== selectedDate) {
@@ -1201,117 +1892,129 @@
         }
       });
       const topHelped = Object.entries(pastHelped).sort((a, b) => b[1] - a[1])[0];
+      const histNotes = [];
+
+      if (entry.contexts.includes('Недосып')) {
+        histNotes.push('Отмечен недосып — он самостоятельно снижает болевой порог и настроение, усиливая фон дня.');
+      }
       if (topHelped && (entry.pain >= 5 || entry.mood <= 4)) {
-        tips.push(`Из твоей личной аптечки в похожие тяжелые дни чаще всего помогало: «${topHelped[0]}» (отмечено ${topHelped[1]} раз).`);
+        histNotes.push(`Из твоей аптечки в похожие дни лучше всего сработало: «${topHelped[0]}».`);
       }
 
-      const prev1 = state.entries[shiftISO(selectedDate, -1)];
-      const prev2 = state.entries[shiftISO(selectedDate, -2)];
-      if (prev1 && prev2 && entry.mood < prev1.mood && prev1.mood < prev2.mood) {
-        tips.push('Наблюдается снижение настроения 3 дня подряд — стоит запланировать разгрузочный вечер.');
+      if (histNotes.length) {
+        histItem.style.display = 'block';
+        histBody.textContent = histNotes.join(' ');
+      } else {
+        histItem.style.display = 'none';
       }
-
-      histEl.textContent = tips.length ? tips.join(' ') : `В базе сохранено записей: ${allEntries.length}. Чем больше отметок овуляции, выделений и сна, тем точнее система отделит гормональные колебания от бытовой усталости.`;
-      gynEl.textContent = gynText;
-      psychEl.textContent = psychText;
     }
 
-    function shiftISO(iso, delta) {
-      const d = new Date(iso + 'T00:00:00');
-      d.setDate(d.getDate() + delta);
-      return d.toISOString().split('T')[0];
+    // Smooth Chart
+    function setChartFilter(mode) {
+      hapticSelect();
+      chartFilter = mode;
+      document.querySelectorAll('#chartFilters .filter-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.mode === mode);
+      });
+      renderAnalytics();
     }
 
-    // ANALYTICS & SVG CHART
+    function catmullRomPath(pts) {
+      if (pts.length === 0) return '';
+      if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`;
+      let d = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i === 0 ? i : i - 1];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
+        const cp1x = p1.x + (p2.x - p0.x) / 6;
+        const cp1y = p1.y + (p2.y - p0.y) / 6;
+        const cp2x = p2.x - (p3.x - p1.x) / 6;
+        const cp2y = p2.y - (p3.y - p1.y) / 6;
+        d += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+      }
+      return d;
+    }
+
     function renderAnalytics() {
       const svg = document.getElementById('cycleChart');
       const len = Number(state.settings.cycleLength) || 28;
-      const w = 420, h = 230;
-      const padL = 26, padR = 14, padT = 22, padB = 32;
+      const w = 400, h = 220;
+      const padL = 24, padR = 12, padT = 22, padB = 28;
       const plotW = w - padL - padR;
       const plotH = h - padT - padB;
 
       const byDay = {};
       Object.values(state.entries).sort((a, b) => a.date.localeCompare(b.date)).forEach(e => {
-        const cd = getCycleInfo(e.date).cycleDay;
-        byDay[cd] = e;
+        byDay[getCycleInfo(e.date).cycleDay] = e;
       });
 
       let html = '';
 
-      // Shaded Menstruation (days 1-5) & PMS (last 6 days)
-      const x1 = padL;
       const wMens = (4 / (len - 1)) * plotW;
-      html += `<rect x="${x1}" y="${padT}" width="${wMens}" height="${plotH}" fill="var(--terracotta-soft)" />`;
+      html += `<rect x="${padL}" y="${padT}" width="${wMens}" height="${plotH}" rx="6" fill="var(--rose-soft)" />`;
 
       const pmsStart = Math.max(1, len - 6);
       const xPms = padL + ((pmsStart - 1) / (len - 1)) * plotW;
       const wPms = ((len - pmsStart) / (len - 1)) * plotW;
-      html += `<rect x="${xPms}" y="${padT}" width="${wPms}" height="${plotH}" fill="var(--sand-soft)" />`;
+      html += `<rect x="${xPms}" y="${padT}" width="${wPms}" height="${plotH}" rx="6" fill="var(--amber-soft)" />`;
 
-      // Grid lines
       [0, 5, 10].forEach(v => {
         const y = padT + plotH - (v / 10) * plotH;
-        html += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="3,3" />`;
-        html += `<text x="4" y="${y + 4}" font-size="10" fill="var(--ink-soft)">${v}</text>`;
+        html += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" />`;
+        html += `<text x="4" y="${y + 4}" font-size="10" fill="var(--ink-3)">${v}</text>`;
       });
 
-      // X-axis cycle days
       for (let d = 1; d <= len; d++) {
         const x = padL + ((d - 1) / (len - 1)) * plotW;
-        if (d === 1 || d % 4 === 0 || d === len) {
-          html += `<text x="${x}" y="${h - 10}" text-anchor="middle" font-size="10" fill="var(--ink-soft)">${d}</text>`;
+        if (d === 1 || d % 5 === 0 || d === len) {
+          html += `<text x="${x}" y="${h - 8}" text-anchor="middle" font-size="10" fill="var(--ink-3)">${d}</text>`;
         }
       }
 
-      // Pain bars
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         if (e && e.pain > 0) {
           const x = padL + ((d - 1) / (len - 1)) * plotW - 3;
           const barH = (e.pain / 10) * plotH;
-          const y = padT + plotH - barH;
-          html += `<rect x="${x}" y="${y}" width="6" height="${barH}" rx="2" fill="var(--terracotta)" opacity="0.35" />`;
+          html += `<rect x="${x}" y="${padT + plotH - barH}" width="6" height="${barH}" rx="3" fill="var(--rose)" opacity="0.28" />`;
         }
       }
 
-      function buildLine(key, color) {
-        let pts = [];
+      function drawSmoothSeries(key, color) {
+        if (chartFilter !== 'all' && chartFilter !== key) return;
+        const pts = [];
         for (let d = 1; d <= len; d++) {
           if (byDay[d] && typeof byDay[d][key] === 'number') {
-            const x = padL + ((d - 1) / (len - 1)) * plotW;
-            const y = padT + plotH - (byDay[d][key] / 10) * plotH;
-            pts.push({ x, y, d, val: byDay[d][key] });
+            pts.push({
+              x: padL + ((d - 1) / (len - 1)) * plotW,
+              y: padT + plotH - (byDay[d][key] / 10) * plotH,
+              d
+            });
           }
         }
         if (pts.length > 1) {
-          const dAttr = pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-          html += `<path d="${dAttr}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />`;
+          html += `<path d="${catmullRomPath(pts)}" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" />`;
         }
         pts.forEach(p => {
-          html += `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${color}" style="cursor:pointer" onclick="inspectChartDay(${p.d})" />`;
+          html += `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${color}" />`;
         });
       }
 
-      buildLine('mood', 'var(--sage)');
-      buildLine('energy', 'var(--slate)');
-      buildLine('libido', 'var(--sand)');
+      drawSmoothSeries('mood', 'var(--accent)');
+      drawSmoothSeries('energy', 'var(--indigo)');
+      drawSmoothSeries('libido', 'var(--amber)');
 
-      // Intimacy & Ovulation markers + clickable hitboxes
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         const x = padL + ((d - 1) / (len - 1)) * plotW;
         const hasIntimacy = e && (e.contexts || []).some(c => c.includes('Близость'));
-        const hasOvulation = e && e.isOvulation;
+        const hasOv = e && e.isOvulation;
 
-        if (hasIntimacy && hasOvulation) {
-          html += `<text x="${x - 5}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--terracotta)">♥</text>`;
-          html += `<text x="${x + 5}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--sage)">✦</text>`;
-        } else if (hasIntimacy) {
-          html += `<text x="${x}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--terracotta)">♥</text>`;
-        } else if (hasOvulation) {
-          html += `<text x="${x}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--sage)">✦</text>`;
-        }
+        if (hasIntimacy) html += `<text x="${x - (hasOv ? 4 : 0)}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--rose)">♥</text>`;
+        if (hasOv) html += `<text x="${x + (hasIntimacy ? 5 : 0)}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--accent)">✦</text>`;
+
         html += `<rect x="${x - 6}" y="${padT}" width="12" height="${plotH}" fill="transparent" style="cursor:pointer" onclick="inspectChartDay(${d})" />`;
       }
 
@@ -1321,146 +2024,132 @@
     }
 
     function inspectChartDay(day) {
+      hapticSelect();
       const e = window._chartByDay?.[day];
-      const box = document.getElementById('chartDayInspector');
+      const box = document.getElementById('chartInspector');
       if (!e) {
-        box.innerHTML = `<strong>День цикла ${day}:</strong> записей пока нет.`;
+        box.innerHTML = `<strong style="color:var(--ink)">День ${day}:</strong> данных пока нет.`;
         return;
       }
-      const tags = [...(e.contexts || []), ...(e.helped || [])].join(', ');
-      const cycleExtras = [
-        e.isOvulation ? '✦ Овуляция' : '',
-        e.flow && e.flow !== 'Нет' ? `Выделения: ${e.flow.toLowerCase()}` : ''
+      const emos = Array.isArray(e.emotions) ? e.emotions.join(', ') : (e.emotion || '');
+      const extras = [
+        e.isOvulation ? 'Овуляция' : '',
+        e.flow && e.flow !== 'Нет' ? `Выделения: ${e.flow.toLowerCase()}` : '',
+        ...(e.contexts || [])
       ].filter(Boolean).join(' · ');
 
       box.innerHTML = `
-        <strong style="color:var(--ink)">День цикла ${day} (${e.date}) — ${e.emotion}</strong>
-        ${cycleExtras ? `<br/><span style="color:var(--sage); font-weight:500;">${cycleExtras}</span>` : ''}<br/>
-        Настроение: <b>${e.mood}</b> · Энергия: <b>${e.energy}</b> · Боль: <b>${e.pain}</b> · Либидо: <b>${e.libido}</b>
-        ${tags ? `<br/>Теги: ${tags}` : ''}
-        ${e.note ? `<br/>Заметка: «${e.note}»` : ''}
+        <strong style="color:var(--ink)">День ${day} · ${emos}</strong><br/>
+        Настроение ${e.mood}/10 · Энергия ${e.energy}/10 · Боль ${e.pain}/10 · Либидо ${e.libido}/10
+        ${extras ? `<div style="margin-top:4px; color:var(--accent); font-weight:600;">${extras}</div>` : ''}
       `;
     }
 
     function renderPhaseStats() {
       const entries = Object.values(state.entries);
-      const foll = entries.filter(e => {
-        const c = getCycleInfo(e.date).phaseCode;
-        return c === 'follicular' || c === 'ovulation';
-      });
+      const foll = entries.filter(e => ['follicular', 'ovulation'].includes(getCycleInfo(e.date).phaseCode));
       const lut = entries.filter(e => getCycleInfo(e.date).phaseCode === 'late_luteal');
-
       const avg = (arr, k) => arr.length ? (arr.reduce((s, x) => s + x[k], 0) / arr.length).toFixed(1) : '—';
 
       document.getElementById('phaseStatsGrid').innerHTML = `
-        <div class="stat-box">
-          <div style="font-size:12px; color:var(--ink-soft);">Настроение (Фоллик. / ПМС)</div>
-          <div class="stat-num">${avg(foll, 'mood')} <span style="font-size:13px; color:var(--ink-soft)">vs</span> ${avg(lut, 'mood')}</div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">Настроение (Фоллик / ПМС)</div>
+          <div class="stat-tile-val">${avg(foll, 'mood')} / ${avg(lut, 'mood')}</div>
         </div>
-        <div class="stat-box">
-          <div style="font-size:12px; color:var(--ink-soft);">Энергия (Фоллик. / ПМС)</div>
-          <div class="stat-num">${avg(foll, 'energy')} <span style="font-size:13px; color:var(--ink-soft)">vs</span> ${avg(lut, 'energy')}</div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">Энергия (Фоллик / ПМС)</div>
+          <div class="stat-tile-val">${avg(foll, 'energy')} / ${avg(lut, 'energy')}</div>
         </div>
-        <div class="stat-box">
-          <div style="font-size:12px; color:var(--ink-soft);">Либидо (Овуляция / ПМС)</div>
-          <div class="stat-num">${avg(foll, 'libido')} <span style="font-size:13px; color:var(--ink-soft)">vs</span> ${avg(lut, 'libido')}</div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">Либидо (Овул / ПМС)</div>
+          <div class="stat-tile-val">${avg(foll, 'libido')} / ${avg(lut, 'libido')}</div>
         </div>
-        <div class="stat-box">
-          <div style="font-size:12px; color:var(--ink-soft);">Дней с сильной болью (≥7)</div>
-          <div class="stat-num" style="color:var(--terracotta)">${entries.filter(e => e.pain >= 7).length} дн.</div>
+        <div class="stat-tile">
+          <div class="stat-tile-label">Дней с болью ≥7</div>
+          <div class="stat-tile-val" style="color:var(--rose)">${entries.filter(e => e.pain >= 7).length}</div>
         </div>
       `;
 
-      // Medical Red Flags
-      const severePainDays = entries.filter(e => e.pain >= 7).length;
-      const heavyMenstrualDays = entries.filter(e => getCycleInfo(e.date).cycleDay <= 6 && e.flow === 'Обильные').length;
-      const dyspareuniaDays = entries.filter(e => (e.contexts || []).includes('Близость (дискомфорт/боль)')).length;
-      const severePmsDays = lut.filter(e => e.mood <= 3).length;
+      const severePain = entries.filter(e => e.pain >= 7).length;
+      const heavyFlow = entries.filter(e => getCycleInfo(e.date).cycleDay <= 6 && e.flow === 'Обильные').length;
+      const dyspareunia = entries.filter(e => (e.contexts || []).includes('Близость (дискомфорт)')).length;
 
-      let summary = [];
-      if (severePainDays >= 3) {
-        summary.push(`• <b>Выраженная дисменорея:</b> зафиксировано ${severePainDays} дн. с болью 7/10 и выше. Если такая боль мешает обычной активности и повторяется каждый цикл, гинекологи рекомендуют прицельное УЗИ экспертного класса для исключения эндометриоза или аденомиоза.`);
+      const notes = [];
+      if (severePain >= 3) notes.push(`• Выраженная боль (≥7/10) отмечена ${severePain} раз — повод показать график гинекологу для исключения эндометриоза или аденомиоза.`);
+      if (heavyFlow >= 3) notes.push(`• Обильные выделения в первую фазу (${heavyFlow} дн.) — стоит периодически проверять ферритин и общий анализ крови.`);
+      if (dyspareunia >= 2) notes.push(`• Дискомфорт при близости (${dyspareunia} дн.) — важный диагностический симптом для обсуждения с врачом.`);
+      if (!notes.length) {
+        notes.push(entries.length < 5
+          ? '• Веди дневник 2–3 недели, чтобы увидеть устойчивые закономерности.'
+          : '• Критических «красных флагов» по отмеченным данным не выявлено.');
       }
-      if (heavyMenstrualDays >= 3) {
-        summary.push(`• <b>Обильные менструации:</b> отмечено ${heavyMenstrualDays} дн. с обильными выделениями в первую фазу. При таком объеме кровопотери стоит периодически проверять ферритин и общий анализ крови, чтобы исключить латентный дефицит железа.`);
-      }
-      if (dyspareuniaDays >= 2) {
-        summary.push(`• <b>Диспареуния:</b> отмечено ${dyspareuniaDays} эпизодов дискомфорта/боли при близости — важный диагностический симптом для обсуждения с врачом.`);
-      }
-      if (severePmsDays >= 3) {
-        summary.push(`• <b>Тяжелый аффективный ПМС:</b> в предменструальном окне зафиксировано ${severePmsDays} дн. с резким падением настроения (≤3/10). Пройди скрининг ПМДР во вкладке «Тесты», чтобы оценить, не требуется ли коррекция у гинеколога-эндокринолога.`);
-      }
-      if (!summary.length) {
-        summary.push(entries.length < 5
-          ? '• Продолжай вести дневник хотя бы 2–3 недели, чтобы система сформировала объективную сводку для врача.'
-          : '• Критических «красных флагов» по накопленным данным не выявлено. Продолжай фиксировать объем выделений, овуляцию и качество сна.');
-      }
-      document.getElementById('medicalSummary').innerHTML = summary.join('<br/><br/>');
+      document.getElementById('medicalSummary').innerHTML = notes.join('<br/><br/>');
     }
 
-    // CLINICAL SCREENERS (HADS + PMDD)
+    // Clinical Screeners
     const TESTS = {
       hads: {
         title: 'Шкала тревоги и депрессии HADS',
         questions: [
           { q: 'Я испытываю напряженность, мне не по себе', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда (1)', 'Часто (2)', 'Почти постоянно (3)'] },
           { q: 'То, что приносило мне большое удовольствие, и сейчас вызывает такое же чувство', sub: 'D', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь в очень малой степени (2)', 'Это совсем не так (3)'] },
-          { q: 'Я испытываю страх, кажется, будто что-то ужасное может вот-вот случиться', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда, но это не вызывает беспокойства (1)', 'Да, это так, но страх не очень сильный (2)', 'Определенно это так, и страх очень сильный (3)'] },
-          { q: 'Я способна рассмеяться и увидеть в том или ином событии смешное', sub: 'D', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь в очень малой степени (2)', 'Совсем не способна (3)'] },
-          { q: 'Беспокойные мысли крутятся у меня в голове', sub: 'A', opts: ['Только иногда (0)', 'Время от времени и не так часто (1)', 'Большую часть времени (2)', 'Постоянно (3)'] },
+          { q: 'Я испытываю страх, кажется, будто что-то ужасное может вот-вот случиться', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда, без сильного беспокойства (1)', 'Да, но страх не очень сильный (2)', 'Определенно так, и страх очень сильный (3)'] },
+          { q: 'Я способна рассмеяться и увидеть в событии смешное', sub: 'D', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь в малой степени (2)', 'Совсем не способна (3)'] },
+          { q: 'Беспокойные мысли крутятся у меня в голове', sub: 'A', opts: ['Только иногда (0)', 'Время от времени (1)', 'Большую часть времени (2)', 'Постоянно (3)'] },
           { q: 'Я испытываю бодрость', sub: 'D', opts: ['Практически все время (0)', 'Иногда (1)', 'Очень редко (2)', 'Совсем не испытываю (3)'] },
-          { q: 'Я легко могу сесть и расслабиться', sub: 'A', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь изредка это так (2)', 'Совсем не могу (3)'] },
+          { q: 'Я легко могу сесть и расслабиться', sub: 'A', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь изредка (2)', 'Совсем не могу (3)'] },
           { q: 'Мне кажется, что я стала все делать очень медленно', sub: 'D', opts: ['Совсем нет (0)', 'Иногда (1)', 'Часто (2)', 'Практически все время (3)'] },
           { q: 'Я испытываю внутреннее напряжение или дрожь', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда (1)', 'Часто (2)', 'Очень часто (3)'] },
-          { q: 'Я не слежу за своей внешностью', sub: 'D', opts: ['Я слежу за собой так же, как и раньше (0)', 'Не уделяю этому столько времени, сколько нужно (1)', 'Меньше, чем раньше (2)', 'Определенно перестала за собой следить (3)'] },
-          { q: 'Я испытываю неусидчивость, мне постоянно нужно двигаться', sub: 'A', opts: ['Совсем не испытываю (0)', 'В некоторой степени (1)', 'Определенно это так (2)', 'Очень сильно (3)'] },
-          { q: 'Я считаю, что мои дела принесут мне чувство удовлетворения', sub: 'D', opts: ['Точно так же, как и обычно (0)', 'Да, но не в той степени, как раньше (1)', 'Значительно меньше, чем обычно (2)', 'Совсем так не считаю (3)'] },
+          { q: 'Я не слежу за своей внешностью', sub: 'D', opts: ['Слежу так же, как раньше (0)', 'Уделяю меньше времени, чем нужно (1)', 'Меньше, чем раньше (2)', 'Перестала за собой следить (3)'] },
+          { q: 'Я испытываю неусидчивость, нужно постоянно двигаться', sub: 'A', opts: ['Совсем не испытываю (0)', 'В некоторой степени (1)', 'Определенно это так (2)', 'Очень сильно (3)'] },
+          { q: 'Я считаю, что мои дела принесут мне чувство удовлетворения', sub: 'D', opts: ['Точно так же, как обычно (0)', 'Не в той степени, как раньше (1)', 'Значительно меньше, чем обычно (2)', 'Совсем так не считаю (3)'] },
           { q: 'У меня бывает внезапное чувство паники', sub: 'A', opts: ['Совсем не бывает (0)', 'Не так уж часто (1)', 'Довольно часто (2)', 'Очень часто (3)'] },
-          { q: 'Я могу получить удовольствие от хорошей книги, фильма или передачи', sub: 'D', opts: ['Часто (0)', 'Иногда (1)', 'Редко (2)', 'Очень редко (3)'] }
+          { q: 'Я могу получить удовольствие от хорошей книги или фильма', sub: 'D', opts: ['Часто (0)', 'Иногда (1)', 'Редко (2)', 'Очень редко (3)'] }
         ]
       },
       pmdd: {
         title: 'Скрининг тяжести ПМС / ПМДР',
         questions: [
-          { q: 'Выраженная подавленность, безнадежность или самокритика за неделю до месячных', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Ощущение внутреннего напряжения, тревоги или «на взводе» перед циклом', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Резкие перепады настроения или внезапная слезливость без явной причины', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Сильная раздражительность или вспышки гнева, мешающие общению', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Снижение интереса к работе, хобби и общению в лютеиновую фазу', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Трудности с концентрацией внимания, «туман в голове»', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Выраженная подавленность или самокритика за неделю до месячных', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Ощущение внутреннего напряжения, тревоги перед циклом', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Резкие перепады настроения или внезапная слезливость', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Сильная раздражительность или вспышки гнева', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Снижение интереса к работе и общению в лютеиновую фазу', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Трудности с концентрацией, «туман в голове»', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
           { q: 'Выраженная утомляемость и отсутствие физических сил', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Физические симптомы: нагрубание груди, отеки, головная или суставная боль', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Эти симптомы заметно снижают твою работоспособность или качество отношений', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Облегчаются ли эти симптомы в течение 2–4 дней после начала месячных?', opts: ['Не применимо / нет (0)', 'Частично (1)', 'Заметно легче (2)', 'Полностью исчезают (3)'] }
+          { q: 'Отеки, нагрубание груди, головная или суставная боль', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Симптомы заметно снижают работоспособность или качество жизни', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
+          { q: 'Облегчаются ли симптомы через 2–4 дня после начала месячных?', opts: ['Не применимо (0)', 'Частично (1)', 'Заметно легче (2)', 'Полностью проходят (3)'] }
         ]
       }
     };
 
-    function renderTestPhaseNotice() {
+    function renderTestNotice() {
       const info = getCycleInfo(getTodayISO(0));
       const el = document.getElementById('testNoticeText');
-      if (info.phaseCode === 'late_luteal' || info.phaseCode === 'menstrual') {
-        el.innerHTML = `<strong>Подсказка эксперта:</strong> сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}). Тесты, пройденные на фоне ПМС или боли, показывают острое реактивное состояние. Для оценки истинного базового фона повтори тест на 6–12 день цикла и сравни оба результата.`;
-      } else {
-        el.innerHTML = `<strong>Оптимальное окно:</strong> сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}). Гормональный фон стабилен — результаты тестов сейчас наиболее объективны.`;
-      }
+      el.textContent = (info.phaseCode === 'late_luteal' || info.phaseCode === 'menstrual')
+        ? `Сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}). Для оценки базового фона без влияния ПМС повтори тест на 6–12 день цикла.`
+        : `Сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}) — спокойное окно, результаты сейчас наиболее объективны.`;
     }
 
     function loadTest(key) {
+      hapticSelect();
       activeTestKey = key;
       currentAnswers = {};
+      document.getElementById('btnSelectHads').classList.toggle('active', key === 'hads');
+      document.getElementById('btnSelectPmdd').classList.toggle('active', key === 'pmdd');
+
       const test = TESTS[key];
       document.getElementById('testTitle').textContent = test.title;
       document.getElementById('testResultBox').style.display = 'none';
       document.getElementById('testProgress').textContent = `0 / ${test.questions.length}`;
 
-      const container = document.getElementById('testQuestions');
-      container.innerHTML = test.questions.map((item, idx) => `
-        <div class="question-item">
-          <div class="question-text">${idx + 1}. ${item.q}</div>
-          <div class="option-list">
+      document.getElementById('testQuestions').innerHTML = test.questions.map((item, idx) => `
+        <div class="q-block">
+          <div class="q-title">${idx + 1}. ${item.q}</div>
+          <div class="q-opts">
             ${item.opts.map((opt, score) => `
-              <button class="option-btn" id="q_${idx}_${score}" onclick="selectTestOption(${idx}, ${score})">${opt}</button>
+              <button class="q-opt" id="q_${idx}_${score}" onclick="selectTestOption(${idx}, ${score})">${opt}</button>
             `).join('')}
           </div>
         </div>
@@ -1468,66 +2157,56 @@
     }
 
     function selectTestOption(qIdx, score) {
+      hapticSelect();
       currentAnswers[qIdx] = score;
-      const test = TESTS[activeTestKey];
       for (let s = 0; s < 4; s++) {
         const btn = document.getElementById(`q_${qIdx}_${s}`);
         if (btn) btn.classList.toggle('selected', s === score);
       }
-      document.getElementById('testProgress').textContent = `${Object.keys(currentAnswers).length} / ${test.questions.length}`;
+      document.getElementById('testProgress').textContent = `${Object.keys(currentAnswers).length} / ${TESTS[activeTestKey].questions.length}`;
     }
 
     function scoreCurrentTest() {
       const test = TESTS[activeTestKey];
       if (Object.keys(currentAnswers).length < test.questions.length) {
-        showToast('Ответь на все вопросы теста');
+        showToast('Ответь на все вопросы');
         return;
       }
-
       const cycleDay = getCycleInfo(getTodayISO(0)).cycleDay;
       let summary = '';
 
       if (activeTestKey === 'hads') {
-        let aScore = 0, dScore = 0;
-        test.questions.forEach((q, idx) => {
-          if (q.sub === 'A') aScore += currentAnswers[idx];
-          else dScore += currentAnswers[idx];
-        });
-        const label = (s) => s <= 7 ? 'норма' : s <= 10 ? 'субклинически выражено' : 'клинически значимый уровень';
-        summary = `Тревога: ${aScore}/21 (${label(aScore)}) · Депрессия: ${dScore}/21 (${label(dScore)})`;
+        let a = 0, d = 0;
+        test.questions.forEach((q, idx) => { if (q.sub === 'A') a += currentAnswers[idx]; else d += currentAnswers[idx]; });
+        const lbl = s => s <= 7 ? 'норма' : s <= 10 ? 'погранично' : 'выражено';
+        summary = `Тревога ${a}/21 (${lbl(a)}) · Депрессия ${d}/21 (${lbl(d)})`;
       } else {
-        const total = Object.values(currentAnswers).reduce((a, b) => a + b, 0);
-        const level = total <= 9 ? 'легкие предменструальные проявления' : total <= 19 ? 'умеренный ПМС' : 'выраженный ПМС / возможный ПМДР (повод показать дневник врачу)';
-        summary = `Индекс ПМС: ${total}/30 — ${level}`;
+        const total = Object.values(currentAnswers).reduce((x, y) => x + y, 0);
+        const lvl = total <= 9 ? 'лёгкий фон' : total <= 19 ? 'умеренный ПМС' : 'выраженный ПМС / возможный ПМДР';
+        summary = `Индекс ПМС: ${total}/30 — ${lvl}`;
       }
 
-      const resBox = document.getElementById('testResultBox');
-      resBox.style.display = 'block';
-      resBox.innerHTML = `<strong>Результат (день цикла ${cycleDay}):</strong><br/>${summary}`;
+      const box = document.getElementById('testResultBox');
+      box.style.display = 'block';
+      box.textContent = `День цикла ${cycleDay}: ${summary}`;
 
-      state.testHistory.unshift({
-        date: getTodayISO(0),
-        cycleDay,
-        testName: test.title,
-        summary
-      });
+      state.testHistory.unshift({ date: getTodayISO(0), cycleDay, testName: test.title, summary });
       persistState();
       renderTestHistory();
-      showToast('Результат сохранен');
+      showToast('Результат сохранён');
     }
 
     function renderTestHistory() {
       const box = document.getElementById('testHistoryList');
       if (!state.testHistory.length) return;
-      box.innerHTML = state.testHistory.slice(0, 8).map(t => `
-        <div style="padding:8px 0; border-bottom:1px solid var(--border);">
-          <strong style="color:var(--ink)">${t.date} (День ${t.cycleDay})</strong> — ${t.testName}<br/>
-          <span>${t.summary}</span>
+      box.innerHTML = state.testHistory.slice(0, 6).map(t => `
+        <div style="padding:10px 0; border-bottom:1px solid var(--border);">
+          <strong style="color:var(--ink)">${t.date} · День ${t.cycleDay}</strong><br/>${t.summary}
         </div>
       `).join('');
     }
 
-    // SOS TOOLS
+    // SOS: Nurofen & No-Spa + Flower Breathing
     function logPainkiller(name, hours) {
       state.painkillers.unshift({ name, timeISO: new Date().toISOString(), hours });
       persistState();
@@ -1540,72 +2219,65 @@
       if (!state.painkillers.length) return;
       const last = state.painkillers[0];
       const taken = new Date(last.timeISO);
-      const nextSafe = new Date(taken.getTime() + last.hours * 3600 * 1000);
-      const now = new Date();
-      const diffMin = Math.round((now - taken) / 60000);
-      const timeStr = taken.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const nextStr = nextSafe.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-      box.innerHTML = `
-        <strong>Последний прием:</strong> ${last.name} в ${timeStr} (${diffMin} мин. назад)<br/>
-        <span style="color:var(--ink-soft)">Следующий безопасный прием: не ранее ${nextStr}</span>
-      `;
+      const nextSafe = new Date(taken.getTime() + last.hours * 3600000);
+      const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      box.innerHTML = `<strong style="color:var(--ink)">${last.name}</strong> принята в ${tStr}.<br/>Следующий безопасный приём: не ранее <b>${nStr}</b>.`;
     }
 
     function toggleBreathing() {
-      const circle = document.getElementById('breathCircle');
+      hapticImpact('medium');
+      const flower = document.getElementById('breathFlower');
+      const prompt = document.getElementById('flowerPrompt');
       const btn = document.getElementById('breathBtn');
+
       if (breathInterval) {
         clearInterval(breathInterval);
         breathInterval = null;
-        circle.className = 'breath-circle';
-        circle.textContent = 'Нажми старт';
-        btn.textContent = 'Запустить ритм';
+        flower.className = 'breath-flower-svg';
+        prompt.textContent = 'Нажми «Начать»';
+        btn.textContent = 'Начать';
         return;
       }
 
       btn.textContent = 'Остановить';
       let step = 0;
-      const runStep = () => {
+      const tick = () => {
         if (step === 0) {
-          circle.className = 'breath-circle inhale';
-          circle.textContent = 'Вдох носом (4с)';
+          flower.className = 'breath-flower-svg inhale';
+          prompt.textContent = 'Вдох носом';
+          hapticImpact('light');
         } else if (step === 1) {
-          circle.className = 'breath-circle inhale';
-          circle.textContent = 'Довдох носом (1с)';
+          flower.className = 'breath-flower-svg hold-in';
+          prompt.textContent = 'Довдох';
+          hapticImpact('medium');
         } else {
-          circle.className = 'breath-circle exhale';
-          circle.textContent = 'Долгий выдох (6с)';
+          flower.className = 'breath-flower-svg exhale';
+          prompt.textContent = 'Долгий выдох';
+          hapticSelect();
         }
         step = (step + 1) % 3;
       };
-      runStep();
-      breathInterval = setInterval(runStep, 3800);
+      tick();
+      breathInterval = setInterval(tick, 3800);
     }
 
-    // SETTINGS & BACKUP
+    // Settings & Backup
     function saveSettings() {
       state.settings.lastPeriodStart = document.getElementById('setLastPeriod').value;
       state.settings.cycleLength = Number(document.getElementById('setCycleLength').value) || 28;
       persistState();
       updateHeader();
-      showToast('Настройки сохранены');
-    }
-
-    function toggleTheme() {
-      state.settings.darkMode = !state.settings.darkMode;
-      document.body.classList.toggle('dark-mode', state.settings.darkMode);
-      persistState();
+      showToast('Сохранено');
     }
 
     function exportData() {
-      const str = JSON.stringify(state);
-      navigator.clipboard?.writeText(str);
-      showToast('JSON-копия скопирована в буфер');
+      navigator.clipboard?.writeText(JSON.stringify(state));
+      showToast('Копия скопирована в буфер');
     }
 
     function importDataPrompt() {
-      const raw = prompt('Вставь ранее скопированный JSON-текст резервной копии:');
+      const raw = prompt('Вставь JSON-копию:');
       if (!raw) return;
       try {
         const parsed = JSON.parse(raw);
@@ -1613,104 +2285,82 @@
           state = parsed;
           persistState();
           loadDayForm();
-          showToast('Данные восстановлены');
+          showToast('Восстановлено');
         }
-      } catch (e) {
-        alert('Неверный формат данных');
-      }
+      } catch (e) { alert('Неверный формат'); }
     }
 
     function loadDemoData() {
-      const len = 28;
-      state.settings.cycleLength = len;
-      state.settings.lastPeriodStart = getTodayISO(-23); // Day 24 (PMS) today
+      state.settings.cycleLength = 28;
+      state.settings.lastPeriodStart = getTodayISO(-23);
       document.getElementById('setLastPeriod').value = state.settings.lastPeriodStart;
-      document.getElementById('setCycleLength').value = len;
+      document.getElementById('setCycleLength').value = 28;
 
-      const sampleCurve = [
-        { m: 4, e: 3, p: 8, l: 1, fl: 'Обильные', ov: false, em: 'Апатия', ctx: ['Пила обезболивающее'], hlp: ['Грелка / душ', 'НПВС вовремя'] },
-        { m: 5, e: 4, p: 7, l: 2, fl: 'Обильные', ov: false, em: 'Спокойствие', ctx: ['Пила обезболивающее'], hlp: ['Отмена дел / сон'] },
-        { m: 6, e: 5, p: 3, l: 3, fl: 'Умеренные', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 7, e: 6, p: 1, l: 4, fl: 'Скудные', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 7, e: 7, p: 0, l: 5, fl: 'Скудные', ov: false, em: 'Подъем', ctx: [], hlp: [] },
-        { m: 8, e: 8, p: 0, l: 6, fl: 'Нет', ov: false, em: 'Подъем', ctx: ['Близость (комфортно)'], hlp: [] },
-        { m: 8, e: 8, p: 0, l: 6, fl: 'Нет', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 9, e: 8, p: 0, l: 7, fl: 'Нет', ov: false, em: 'Подъем', ctx: [], hlp: [] },
-        { m: 8, e: 9, p: 0, l: 8, fl: 'Нет', ov: false, em: 'Подъем', ctx: ['Близость (комфортно)'], hlp: [] },
-        { m: 9, e: 9, p: 0, l: 8, fl: 'Нет', ov: false, em: 'Подъем', ctx: [], hlp: [] },
-        { m: 8, e: 8, p: 0, l: 9, fl: 'Скудные', ov: false, em: 'Подъем', ctx: ['Близость (комфортно)'], hlp: [] },
-        { m: 9, e: 9, p: 1, l: 9, fl: 'Умеренные', ov: false, em: 'Подъем', ctx: [], hlp: [] },
-        { m: 8, e: 8, p: 2, l: 10, fl: 'Обильные', ov: true, em: 'Подъем', ctx: ['Близость (комфортно)'], hlp: [] },
-        { m: 8, e: 8, p: 1, l: 9, fl: 'Умеренные', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 7, e: 7, p: 0, l: 7, fl: 'Нет', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 7, e: 7, p: 0, l: 6, fl: 'Нет', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 6, e: 6, p: 0, l: 5, fl: 'Нет', ov: false, em: 'Спокойствие', ctx: ['Недосып (<6ч)'], hlp: [] },
-        { m: 7, e: 6, p: 0, l: 5, fl: 'Нет', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 6, e: 6, p: 1, l: 4, fl: 'Нет', ov: false, em: 'Туман в голове', ctx: ['Стресс / завал'], hlp: [] },
-        { m: 6, e: 5, p: 1, l: 4, fl: 'Нет', ov: false, em: 'Спокойствие', ctx: [], hlp: [] },
-        { m: 5, e: 5, p: 2, l: 3, fl: 'Нет', ov: false, em: 'Раздражительность', ctx: ['Отеки / тяга к сладкому'], hlp: ['Магний / вода'] },
-        { m: 4, e: 4, p: 3, l: 3, fl: 'Нет', ov: false, em: 'Тревога', ctx: ['Недосып (<6ч)', 'Отеки / тяга к сладкому'], hlp: ['Дыхание / тишина'] },
-        { m: 3, e: 3, p: 4, l: 2, fl: 'Скудные', ov: false, em: 'Слезливость', ctx: ['Отеки / тяга к сладкому'], hlp: ['Отмена дел / сон'] },
-        { m: 3, e: 3, p: 4, l: 2, fl: 'Нет', ov: false, em: 'Тревога', ctx: ['Стресс / завал'], hlp: [] }
+      const curve = [
+        { m: 4, e: 3, p: 8, l: 1, fl: 'Обильные', ov: false, em: ['Усталость', 'Апатия'], ctx: ['Обезболивающее'], hlp: ['Тепло / душ', 'Нурофен вовремя'] },
+        { m: 5, e: 4, p: 7, l: 2, fl: 'Обильные', ov: false, em: ['Спокойствие'], ctx: ['Обезболивающее'], hlp: ['Сон / отдых'] },
+        { m: 6, e: 5, p: 3, l: 3, fl: 'Умеренные', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 7, e: 6, p: 1, l: 4, fl: 'Скудные', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 8, e: 7, p: 0, l: 5, fl: 'Нет', ov: false, em: ['Подъём'], ctx: [], hlp: [] },
+        { m: 8, e: 8, p: 0, l: 6, fl: 'Нет', ov: false, em: ['Подъём'], ctx: ['Близость (комфортно)'], hlp: [] },
+        { m: 8, e: 8, p: 0, l: 7, fl: 'Нет', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 9, e: 9, p: 0, l: 7, fl: 'Нет', ov: false, em: ['Подъём'], ctx: [], hlp: [] },
+        { m: 8, e: 9, p: 0, l: 8, fl: 'Нет', ov: false, em: ['Подъём'], ctx: ['Близость (комфортно)'], hlp: [] },
+        { m: 9, e: 9, p: 0, l: 9, fl: 'Нет', ov: false, em: ['Подъём'], ctx: [], hlp: [] },
+        { m: 8, e: 8, p: 0, l: 9, fl: 'Скудные', ov: false, em: ['Подъём'], ctx: ['Близость (комфортно)'], hlp: [] },
+        { m: 9, e: 9, p: 1, l: 9, fl: 'Умеренные', ov: false, em: ['Подъём'], ctx: [], hlp: [] },
+        { m: 8, e: 8, p: 2, l: 10, fl: 'Обильные', ov: true, em: ['Подъём', 'Спокойствие'], ctx: ['Близость (комфортно)'], hlp: [] },
+        { m: 8, e: 8, p: 1, l: 9, fl: 'Умеренные', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 7, e: 7, p: 0, l: 7, fl: 'Нет', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 7, e: 7, p: 0, l: 6, fl: 'Нет', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 6, e: 6, p: 0, l: 5, fl: 'Нет', ov: false, em: ['Усталость'], ctx: ['Недосып'], hlp: [] },
+        { m: 7, e: 6, p: 0, l: 5, fl: 'Нет', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 6, e: 6, p: 1, l: 4, fl: 'Нет', ov: false, em: ['Туман в голове'], ctx: ['Стресс'], hlp: [] },
+        { m: 6, e: 5, p: 1, l: 4, fl: 'Нет', ov: false, em: ['Спокойствие'], ctx: [], hlp: [] },
+        { m: 5, e: 5, p: 2, l: 3, fl: 'Нет', ov: false, em: ['Раздражение', 'Уязвимость'], ctx: ['Отеки / тяга к сладкому'], hlp: ['Магний / вода'] },
+        { m: 4, e: 4, p: 3, l: 3, fl: 'Нет', ov: false, em: ['Тревога', 'Внутреннее напряжение'], ctx: ['Недосып'], hlp: ['Тишина / дыхание'] },
+        { m: 3, e: 3, p: 4, l: 2, fl: 'Скудные', ov: false, em: ['Грусть', 'Слезливость'], ctx: ['Отеки / тяга к сладкому'], hlp: ['Сон / отдых'] },
+        { m: 3, e: 3, p: 4, l: 2, fl: 'Нет', ov: false, em: ['Тревога', 'Перегруз'], ctx: ['Стресс'], hlp: [] }
       ];
 
-      sampleCurve.forEach((item, idx) => {
-        const dISO = getTodayISO(-(sampleCurve.length - 1 - idx));
+      curve.forEach((item, idx) => {
+        const dISO = getTodayISO(-(curve.length - 1 - idx));
         state.entries[dISO] = {
-          date: dISO,
-          cycleDay: idx + 1,
-          isOvulation: item.ov,
-          flow: item.fl,
-          mood: item.m,
-          energy: item.e,
-          pain: item.p,
-          libido: item.l,
-          emotion: item.em,
-          contexts: item.ctx,
-          helped: item.hlp,
-          note: idx === 23 ? 'Накрыло перед циклом, отменила лишние встречи' : ''
+          date: dISO, cycleDay: idx + 1, isOvulation: item.ov, flow: item.fl,
+          mood: item.m, energy: item.e, pain: item.p, libido: item.l,
+          emotions: item.em, contexts: item.ctx, helped: item.hlp, note: ''
         };
       });
 
       selectedDate = getTodayISO(0);
       persistState();
       loadDayForm();
-      showToast('Демо-данные загружены (24-й день цикла)');
+      showToast('Пример загружен');
     }
 
     function clearAllData() {
-      if (!confirm('Удалить все сохраненные записи?')) return;
+      if (!confirm('Удалить все записи?')) return;
       state.entries = {};
       state.painkillers = [];
       state.testHistory = [];
       persistState();
       loadDayForm();
-      showToast('База очищена');
+      showToast('Данные удалены');
     }
 
-    // Navigation
     function switchTab(tab) {
+      hapticImpact('light');
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${tab}`).classList.add('active');
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
 
       if (tab === 'analytics') renderAnalytics();
-      if (tab === 'tests') {
-        renderTestPhaseNotice();
-        renderTestHistory();
-      }
-      if (tab === 'sos') {
-        updatePainkillerUI();
-        if (!state.settings.darkMode) {
-          document.body.classList.add('dark-mode');
-        }
-      } else if (!state.settings.darkMode) {
-        document.body.classList.remove('dark-mode');
-      }
+      if (tab === 'tests') { renderTestNotice(); renderTestHistory(); }
+      if (tab === 'sos') updatePainkillerUI();
     }
 
-    // Boot
     loadState();
+    initCCSliders();
     setupChips();
     loadDayForm();
     loadTest('hads');
