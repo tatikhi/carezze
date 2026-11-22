@@ -99,7 +99,6 @@
       padding: 8px 16px 24px;
     }
 
-    /* Onboarding Screen */
     .onboarding-overlay {
       position: fixed;
       inset: 0;
@@ -117,31 +116,6 @@
     .onboarding-box {
       max-width: 420px;
       margin: 0 auto;
-    }
-
-    .ob-badge {
-      display: inline-block;
-      background: var(--accent-tint);
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 999px;
-      margin-bottom: 14px;
-    }
-
-    .ob-title {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.18;
-      margin-bottom: 10px;
-    }
-
-    .ob-sub {
-      font-size: 15px;
-      color: var(--ink-2);
-      margin-bottom: 24px;
     }
 
     .stepper-row {
@@ -172,7 +146,6 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Header */
     .header {
       display: flex;
       justify-content: space-between;
@@ -215,7 +188,6 @@
       color: var(--rose);
     }
 
-    /* Hero Card */
     .hero-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -334,7 +306,6 @@
       transition: width 0.3s ease, background-color 0.3s ease;
     }
 
-    /* Apple Health Style Period Action Strip */
     .period-strip {
       display: flex;
       gap: 8px;
@@ -378,7 +349,6 @@
       white-space: nowrap;
     }
 
-    /* Cards */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -413,7 +383,6 @@
       flex-shrink: 0;
     }
 
-    /* Saved Locked Accordion Card */
     .saved-card {
       background: var(--surface);
       border: 1.5px solid var(--accent-bg);
@@ -504,7 +473,6 @@
       gap: 4px;
     }
 
-    /* Tactile Sliders (Scroll-Safe) */
     .cc-group {
       display: flex;
       flex-direction: column;
@@ -553,7 +521,6 @@
       color: var(--ink);
     }
 
-    /* Grids & Buttons */
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -605,12 +572,6 @@
       color: var(--ink-2);
     }
 
-    .field-hint {
-      font-size: 12px;
-      color: var(--ink-3);
-    }
-
-    /* Accordion */
     .accordion {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -665,7 +626,6 @@
       display: block;
     }
 
-    /* Chips */
     .chip-wrap {
       display: flex;
       flex-wrap: wrap;
@@ -706,7 +666,6 @@
       font-weight: 600;
     }
 
-    /* Buttons & Inputs */
     .btn-primary {
       width: 100%;
       height: 52px;
@@ -794,7 +753,6 @@
       border-color: var(--accent);
     }
 
-    /* Structured State Breakdown (Tab 2) */
     .protocol-stack {
       display: flex;
       flex-direction: column;
@@ -819,7 +777,6 @@
     }
 
     .badge-gyn { background: var(--accent-bg); color: var(--accent); }
-    .badge-act { background: var(--amber-bg); color: var(--amber); }
     .badge-psy { background: var(--indigo-bg); color: var(--indigo); }
     .badge-hist { background: var(--rose-bg); color: var(--rose); }
 
@@ -836,7 +793,6 @@
       color: var(--ink-2);
     }
 
-    /* Actionable Tips -> "Помогло" Feedback Loop */
     .tip-action-card {
       background: var(--surface-2);
       border-radius: 16px;
@@ -880,7 +836,6 @@
       color: #FFFFFF;
     }
 
-    /* PIN-Protected Private Notes */
     .pin-screen {
       display: flex;
       flex-direction: column;
@@ -976,7 +931,6 @@
       white-space: pre-wrap;
     }
 
-    /* Calendar Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -1063,12 +1017,18 @@
     .cal-cell.is-predicted-period {
       background: var(--rose-tint);
       color: var(--rose);
-      border: 1px dashed var(--rose);
+      border: 1.5px dashed var(--rose);
     }
 
     .cal-cell.is-ovulation {
       background: var(--accent-tint);
       color: var(--accent);
+    }
+
+    .cal-cell.is-predicted-ovulation {
+      background: var(--accent-tint);
+      color: var(--accent);
+      border: 1.5px dashed var(--accent);
     }
 
     .cal-cell.is-today {
@@ -1107,7 +1067,6 @@
       margin-top: 16px;
     }
 
-    /* Chart */
     .filter-row {
       display: flex;
       gap: 6px;
@@ -1166,7 +1125,6 @@
       margin-top: 4px;
     }
 
-    /* Breathing Flower */
     .flower-stage {
       display: flex;
       flex-direction: column;
@@ -1231,7 +1189,6 @@
       margin-top: 2px;
     }
 
-    /* Floating Tab Bar (5 Clean Tabs) */
     .tab-bar {
       position: fixed;
       bottom: max(12px, env(safe-area-inset-bottom));
@@ -1309,25 +1266,21 @@
 <body>
   <div id="toast" class="toast">Сохранено</div>
 
-  <!-- FIRST-RUN ONBOARDING -->
+  <!-- ONBOARDING -->
   <div id="onboardingScreen" class="onboarding-overlay">
     <div class="onboarding-box">
-      <div class="ob-badge">Первичная настройка</div>
-      <div class="ob-title">Настроим твой ритм цикла</div>
-      <div class="ob-sub">Эти данные нужны для расчёта фаз, окна овуляции и задержки. Записи хранятся в твоём облаке Telegram и на устройстве.</div>
-
       <div class="card">
-        <div class="field-label" style="margin-bottom:8px;">Когда начались последние месячные?</div>
+        <div class="field-label" style="margin-bottom:8px;">Начало последнего цикла</div>
         <input type="date" id="obLastPeriod" />
 
-        <div class="field-label" style="margin-top:18px; margin-bottom:8px;">Средняя длина цикла (дней)</div>
+        <div class="field-label" style="margin-top:18px; margin-bottom:8px;">Длина цикла</div>
         <div class="stepper-row">
           <button class="stepper-btn" type="button" onclick="stepObValue('obCycleLen', -1, 21, 45)">−</button>
           <span class="stepper-val" id="obCycleLenVal">28</span>
           <button class="stepper-btn" type="button" onclick="stepObValue('obCycleLen', 1, 21, 45)">+</button>
         </div>
 
-        <div class="field-label" style="margin-top:18px; margin-bottom:8px;">Сколько дней обычно идут месячные?</div>
+        <div class="field-label" style="margin-top:18px; margin-bottom:8px;">Длительность месячных</div>
         <div class="stepper-row">
           <button class="stepper-btn" type="button" onclick="stepObValue('obPeriodLen', -1, 2, 10)">−</button>
           <span class="stepper-val" id="obPeriodLenVal">5</span>
@@ -1335,12 +1288,11 @@
         </div>
       </div>
 
-      <button class="btn-accent" onclick="completeOnboarding()">Сохранить и начать</button>
+      <button class="btn-accent" onclick="completeOnboarding()">Сохранить</button>
     </div>
   </div>
 
   <div class="app">
-    <!-- Top Bar -->
     <div class="header">
       <div class="brand">Ритм</div>
       <div class="header-actions">
@@ -1351,21 +1303,20 @@
 
     <!-- VIEW 1: TODAY -->
     <div id="view-today" class="view active">
-      <!-- Hero Cycle Card -->
       <div class="hero-card" id="heroCard">
         <div class="date-bar">
-          <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Предыдущий день">←</button>
+          <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Назад">←</button>
           <button class="date-center-btn" onclick="openCalendarModal()">
             <span id="selectedDateLabel">Сегодня</span>
             <span style="font-size:12px; opacity:0.65;">▾</span>
           </button>
-          <button class="date-arrow" onclick="shiftDate(1)" aria-label="Следующий день">→</button>
+          <button class="date-arrow" onclick="shiftDate(1)" aria-label="Вперёд">→</button>
         </div>
 
         <div class="hero-main">
           <div>
             <div class="hero-day" id="heroDay">День 1 <span>/ 28</span></div>
-            <div class="hero-phase" id="heroPhase">Менструальная фаза</div>
+            <div class="hero-phase" id="heroPhase">Фолликулярная фаза</div>
           </div>
           <div class="hero-meta" id="heroCountdown">
             До нового цикла<br/>~27 дн.
@@ -1376,11 +1327,10 @@
           <div class="cycle-fill" id="cycleProgressBar" style="width: 10%;"></div>
         </div>
 
-        <!-- Apple Health Style Period Logging Strip -->
         <div class="period-strip">
           <button class="btn-period-apple" id="btnPeriodDay" onclick="togglePeriodDay()">
             <span id="periodBtnIcon">●</span>
-            <span id="periodBtnText">Отметить месячные</span>
+            <span id="periodBtnText">Месячные</span>
           </button>
           <button class="btn-new-cycle" id="btnNewCycle" onclick="startNewCycleHere()" style="display:none;">
             1-й день цикла
@@ -1388,10 +1338,9 @@
         </div>
       </div>
 
-      <!-- SAVED LOCKED ACCORDION -->
       <div id="savedSummaryCard" class="saved-card" style="display:none;">
         <div class="saved-header">
-          <div class="saved-badge">✓ День сохранён</div>
+          <div class="saved-badge">✓ Сохранено</div>
           <button class="btn-edit-small" onclick="unlockDayEditing()">Изменить</button>
         </div>
 
@@ -1417,18 +1366,15 @@
         <div class="saved-tags-line" id="savedTagsLine"></div>
 
         <div class="saved-cta-row">
-          <span style="font-size:13px; color:var(--ink-2);">Разбор и советы готовы</span>
-          <button class="link-btn" onclick="switchTab('analytics_advice')">Открыть разбор →</button>
+          <span style="font-size:13px; color:var(--ink-2);">Разбор</span>
+          <button class="link-btn" onclick="switchTab('analytics_advice')">Открыть →</button>
         </div>
       </div>
 
-      <!-- EDITABLE FORM CONTAINER -->
       <div id="editableDayForm">
-        <!-- Tactile Sliders -->
         <div class="card">
           <div class="card-top">
-            <span class="card-title">Состояние сейчас</span>
-            <span class="card-sub">Потяни вбок или нажми</span>
+            <span class="card-title">Состояние</span>
           </div>
 
           <div class="cc-group">
@@ -1458,26 +1404,25 @@
           </div>
         </div>
 
-        <!-- Body, Intimacy & Context-Aware Ovulation/Discharge -->
         <div class="card">
           <div class="card-top">
-            <span class="card-title">Близость и телесные маркеры</span>
+            <span class="card-title">Близость и выделения</span>
           </div>
 
           <div class="grid-2" id="intimacyBlock">
-            <button class="choice-btn active" id="btnIntimacyNo" onclick="setIntimacy(false)">Близости не было</button>
-            <button class="choice-btn" id="btnIntimacyYes" onclick="setIntimacy(true)">Была близость ♥</button>
+            <button class="choice-btn active" id="btnIntimacyNo" onclick="setIntimacy(false)">Без близости</button>
+            <button class="choice-btn" id="btnIntimacyYes" onclick="setIntimacy(true)">Близость ♥</button>
           </div>
 
           <div id="ovulationBlock" style="display:none; margin-top:10px;">
             <button class="choice-btn" style="width:100%;" id="btnOvulation" onclick="toggleOvulation()">
-              ✦ Отметить овуляцию
+              ✦ Овуляция
             </button>
           </div>
 
           <div id="menstrualDischargeBlock" style="display:none;">
             <div class="sub-section-header">
-              <span class="field-label">Интенсивность месячных</span>
+              <span class="field-label">Выделения</span>
             </div>
             <div class="grid-3" id="menstrualFlowSelector">
               <div class="choice-btn" data-val="Скудные" onclick="selectDischarge('Скудные')">Скудные</div>
@@ -1488,7 +1433,7 @@
 
           <div id="ovulatoryDischargeBlock" style="display:none;">
             <div class="sub-section-header">
-              <span class="field-label">Характер выделений (середина цикла)</span>
+              <span class="field-label">Выделения</span>
             </div>
             <div class="grid-3" id="ovulatoryFlowSelector">
               <div class="choice-btn active" data-val="Обычные" onclick="selectDischarge('Обычные')">Обычные</div>
@@ -1498,19 +1443,17 @@
           </div>
         </div>
 
-        <!-- Accordion: Emotions & Factors -->
         <div class="accordion" id="acc-context">
           <button class="accordion-header" onclick="toggleAccordion('acc-context')">
             <div>
-              <div>Эмоции и факторы дня</div>
+              <div>Эмоции и факторы</div>
               <div class="accordion-summary" id="sum-context">Спокойствие</div>
             </div>
             <span class="accordion-chevron">⌄</span>
           </button>
           <div class="accordion-body">
             <div class="sub-section-header">
-              <span class="field-label">Базовые эмоции</span>
-              <span class="field-hint">Можно несколько</span>
+              <span class="field-label">Эмоции</span>
             </div>
             <div class="chip-wrap" id="basicEmotionChips">
               <div class="chip active" data-val="Спокойствие">Спокойствие</div>
@@ -1522,8 +1465,7 @@
             </div>
 
             <div class="sub-section-header">
-              <span class="field-label">Тонкие оттенки состояния</span>
-              <span class="field-hint">Расширенные</span>
+              <span class="field-label">Оттенки</span>
             </div>
             <div class="chip-wrap" id="nuancedEmotionChips">
               <div class="chip" data-val="Слезливость">Слезливость</div>
@@ -1535,7 +1477,7 @@
             </div>
 
             <div class="sub-section-header">
-              <span class="field-label">Факторы дня</span>
+              <span class="field-label">Факторы</span>
             </div>
             <div class="chip-wrap" id="contextChips">
               <div class="chip" data-val="Недосып">Недосып</div>
@@ -1550,71 +1492,52 @@
       </div>
     </div>
 
-    <!-- VIEW 2: STATE BREAKDOWN & GEMINI AI + SELF-CARE FEEDBACK LOOP ("Разбор") -->
+    <!-- VIEW 2: ANALYSIS ("Разбор") -->
     <div id="view-analytics_advice" class="view">
-      <!-- AI Setup Prompt Banner (shown only if no Gemini key is added) -->
-      <div id="aiNoKeyBanner" class="card" style="display:none;">
-        <div class="card-top">
-          <span class="card-title">✨ Усилить разбор через Gemini</span>
-          <span class="card-sub">Бесплатно</span>
-        </div>
-        <div style="font-size:14px; color:var(--ink-2); margin-bottom:12px;">
-          Подключи свой бесплатный ключ Google AI Studio в настройках, чтобы ИИ анализировал связки симптомов и сравнивал день с прошлыми циклами.
-        </div>
-        <button class="btn-soft" style="width:100%;" onclick="switchTab('settings')">Добавить ключ в настройках →</button>
-      </div>
-
-      <!-- Main Breakdown Card -->
       <div class="card" id="breakdownMainCard">
         <div class="card-top">
-          <span class="card-title" id="breakdownCardTitle">Разбор состояния</span>
+          <span class="card-title" id="breakdownCardTitle">Разбор</span>
           <span class="card-sub" id="advicePhaseTag">Сегодня</span>
         </div>
 
-        <!-- AI Action / Refresh Bar (when key is configured) -->
         <div id="aiControlRow" style="display:none; margin-bottom:12px;">
           <button class="btn-indigo" id="btnRunAi" onclick="runGeminiAnalysis(true)">
-            <span>✨ Сделать глубокий ИИ-разбор</span>
+            <span>ИИ-разбор</span>
           </button>
           <div id="aiStatusNote" style="font-size:12px; color:var(--ink-2); margin-top:6px; text-align:center;"></div>
         </div>
 
         <div class="protocol-stack">
           <div class="protocol-item">
-            <span class="protocol-badge badge-gyn">Гинеколог · Физиология</span>
-            <div class="protocol-title" id="gynHeadline">Физиология дня</div>
-            <div class="protocol-text" id="gynBody">Отметь состояние на вкладке «Сегодня», чтобы увидеть точный разбор.</div>
+            <span class="protocol-badge badge-gyn">Физиология</span>
+            <div class="protocol-title" id="gynHeadline"></div>
+            <div class="protocol-text" id="gynBody"></div>
           </div>
 
           <div class="protocol-item" id="aiPatternsBox" style="display:none;">
-            <span class="protocol-badge badge-hist">История · Личные закономерности</span>
-            <div class="protocol-title">Сравнение с прошлыми днями</div>
+            <span class="protocol-badge badge-hist">История</span>
+            <div class="protocol-title">Динамика</div>
             <div class="protocol-text" id="patternsBody"></div>
           </div>
 
           <div class="protocol-item">
-            <span class="protocol-badge badge-psy">Психолог · Фокус</span>
-            <div class="protocol-title" id="psychHeadline">Опора дня</div>
-            <div class="protocol-text" id="psychBody">Рекомендации подстроятся под фазу цикла и твои эмоции.</div>
+            <span class="protocol-badge badge-psy">Фокус</span>
+            <div class="protocol-title" id="psychHeadline"></div>
+            <div class="protocol-text" id="psychBody"></div>
           </div>
         </div>
       </div>
 
-      <!-- Smart Advice -> "Помогло" Loop -->
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Что попробовать сейчас</span>
-          <span class="card-sub">Отметь, если помогло</span>
-        </div>
-        <div style="font-size:13px; color:var(--ink-2); margin-bottom:12px;">
-          Подборка под твои сегодняшние симптомы. Нажимай <b>«Помогло ✓»</b> на том, что реально сработало — приложение запомнит это для будущих циклов.
+          <span class="card-title">Рекомендации</span>
         </div>
 
         <div id="actionableTipsList"></div>
 
         <div style="display:flex; gap:8px; margin-top:12px;">
-          <input type="text" id="customHelpInput" placeholder="Или впиши свой способ..." />
-          <button class="btn-soft" style="white-space:nowrap;" onclick="addCustomHelped()">+ Помогло</button>
+          <input type="text" id="customHelpInput" placeholder="" />
+          <button class="btn-soft" style="white-space:nowrap;" onclick="addCustomHelped()">Помогло</button>
         </div>
 
         <div class="inspector-box" id="learnedHelpStats" style="display:none;"></div>
@@ -1625,12 +1548,11 @@
     <div id="view-analytics" class="view">
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Динамика цикла</span>
-          <span class="card-sub">Нажми на день</span>
+          <span class="card-title">График</span>
         </div>
 
         <div class="filter-row" id="chartFilters">
-          <button class="filter-pill active" data-mode="all" onclick="setChartFilter('all')">Все линии</button>
+          <button class="filter-pill active" data-mode="all" onclick="setChartFilter('all')">Все</button>
           <button class="filter-pill" data-mode="mood" onclick="setChartFilter('mood')">Настроение</button>
           <button class="filter-pill" data-mode="energy" onclick="setChartFilter('energy')">Энергия</button>
           <button class="filter-pill" data-mode="libido" onclick="setChartFilter('libido')">Либидо</button>
@@ -1647,36 +1569,29 @@
           <span style="color:var(--rose)">♥ Близость</span>
         </div>
 
-        <div class="inspector-box" id="chartInspector">
-          Коснись любой точки на графике, чтобы увидеть детали дня.
-        </div>
+        <div class="inspector-box" id="chartInspector"></div>
       </div>
 
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Сравнение фаз</span>
-          <span class="card-sub">Средний балл</span>
+          <span class="card-title">Фазы</span>
         </div>
         <div class="stat-grid" id="phaseStatsGrid"></div>
       </div>
 
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Сводка для врача</span>
+          <span class="card-title">Сводка</span>
         </div>
         <div id="medicalSummary" style="font-size:15px; line-height:1.52; color:var(--ink-2);"></div>
       </div>
     </div>
 
-    <!-- VIEW 4: PIN-LOCKED PRIVATE NOTES ("Заметки") -->
+    <!-- VIEW 4: PRIVATE NOTES ("Заметки") -->
     <div id="view-notes" class="view">
       <div id="notesPinGate" class="card">
         <div class="pin-screen">
-          <div style="font-size:28px; margin-bottom:8px;">🔒</div>
-          <div class="card-title" id="pinTitle">Личные заметки</div>
-          <div style="font-size:14px; color:var(--ink-2); margin-top:4px;" id="pinSubtitle">
-            Введи 4-значный код доступа
-          </div>
+          <div class="card-title" id="pinTitle">Заметки</div>
 
           <div class="pin-dots" id="pinDots">
             <div class="pin-dot"></div>
@@ -1705,14 +1620,12 @@
       <div id="notesUnlockedArea" style="display:none;">
         <div class="card">
           <div class="card-top">
-            <span class="card-title">Личный дневник</span>
-            <button class="btn-edit-small" onclick="lockPrivateNotes()">🔒 Закрыть</button>
+            <span class="card-title">Заметки</span>
+            <button class="btn-edit-small" onclick="lockPrivateNotes()">Закрыть</button>
           </div>
-          <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px;" id="newNoteContextLabel">
-            Сегодня · День 1
-          </div>
-          <textarea id="privateNoteInput" rows="4" placeholder="Запиши личные мысли, чувства или переживания — этот раздел защищён твоим кодом и не отправляется в ИИ..."></textarea>
-          <button class="btn-accent" style="margin-top:12px;" onclick="savePrivateNote()">Сохранить заметку</button>
+          <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px;" id="newNoteContextLabel"></div>
+          <textarea id="privateNoteInput" rows="4" placeholder=""></textarea>
+          <button class="btn-accent" style="margin-top:12px;" onclick="savePrivateNote()">Сохранить</button>
         </div>
 
         <div id="privateNotesList"></div>
@@ -1724,24 +1637,17 @@
       <div class="card">
         <div class="card-top">
           <span class="card-title">Обезболивающее</span>
-          <span class="card-sub">Таймер интервала</span>
-        </div>
-        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
-          Нурофен блокирует выработку простагландинов (эффективнее в начале спазма, принимать после еды). Но-шпа снимает спазм гладкой мускулатуры.
         </div>
         <div class="grid-2">
           <button class="btn-soft" onclick="logPainkiller('Нурофен 400 мг', 6)">Нурофен 400 мг</button>
           <button class="btn-soft" onclick="logPainkiller('Но-шпа', 4)">Но-шпа</button>
         </div>
-        <div class="inspector-box" id="painkillerStatus">
-          Сегодня приёмов не отмечено.
-        </div>
+        <div class="inspector-box" id="painkillerStatus"></div>
       </div>
 
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Дыхание от спазма и тревоги</span>
-          <span class="card-sub">Физиологический вздох</span>
+          <span class="card-title">Дыхание</span>
         </div>
         <div class="flower-stage">
           <div class="flower-viewport">
@@ -1781,14 +1687,11 @@
               </svg>
             </div>
             <div class="flower-prompt">
-              <span id="flowerPrompt">Нажми «Начать»</span>
+              <span id="flowerPrompt"></span>
               <span class="flower-subprompt" id="flowerSubPrompt"></span>
             </div>
           </div>
 
-          <div style="font-size:14px; color:var(--ink-2); text-align:center; margin-top:16px; max-width:310px;">
-            Двойной вдох носом и длинный выдох ртом активируют блуждающий нерв, замедляют пульс и снижают болевой порог.
-          </div>
           <button class="btn-soft" style="margin-top:16px; min-width:160px;" id="breathBtn" onclick="toggleBreathing()">Начать</button>
         </div>
       </div>
@@ -1796,21 +1699,17 @@
 
     <!-- VIEW 6: SETTINGS ("Настройки") -->
     <div id="view-settings" class="view">
-      <!-- Gemini API Key Settings Card -->
       <div class="card ai-highlight">
         <div class="card-top">
-          <span class="card-title">✨ ИИ-аналитик (Gemini)</span>
-          <span class="card-sub" id="geminiKeyStatusBadge">Не подключён</span>
+          <span class="card-title">Gemini</span>
+          <span class="card-sub" id="geminiKeyStatusBadge"></span>
         </div>
-        <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px; line-height:1.45;">
-          Вставь API-ключ из <b>aistudio.google.com</b> (поддерживаются ключи <code>AQ.</code> и <code>AIza</code>). Ключ хранится только у тебя в Telegram Cloud и на устройстве. Личные заметки под паролем в ИИ не отправляются.
-        </div>
-        <input type="password" id="setGeminiKey" placeholder="AQ.Ab8... или AIzaSy..." autocomplete="off" />
+        <input type="password" id="setGeminiKey" placeholder="" autocomplete="off" />
         <div class="grid-2" style="margin-top:10px;">
           <button class="btn-indigo" style="height:44px; font-size:14px;" onclick="saveAndTestGeminiKey()" id="btnTestGemini">
             Сохранить и проверить
           </button>
-          <button class="btn-soft" style="height:44px;" onclick="removeGeminiKey()">Удалить ключ</button>
+          <button class="btn-soft" style="height:44px;" onclick="removeGeminiKey()">Удалить</button>
         </div>
         <div id="geminiTestFeedback" style="display:none; margin-top:10px; font-size:13px; line-height:1.4; padding:10px 12px; border-radius:12px; background:var(--surface-2);"></div>
       </div>
@@ -1819,52 +1718,46 @@
         <div class="card-top">
           <span class="card-title">Параметры цикла</span>
         </div>
-        <div class="field-label" style="margin-bottom:8px;">Первый день последних месячных</div>
+        <div class="field-label" style="margin-bottom:8px;">Начало последнего цикла</div>
         <input type="date" id="setLastPeriod" />
 
-        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Средняя длина цикла (дней)</div>
-        <input type="number" id="setCycleLength" min="21" max="45" value="28" />
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Длина цикла</div>
+        <input type="number" id="setCycleLength" min="21" max="45" />
 
-        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Длительность месячных (дней)</div>
-        <input type="number" id="setPeriodLength" min="2" max="10" value="5" />
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Длительность месячных</div>
+        <input type="number" id="setPeriodLength" min="2" max="10" />
 
-        <button class="btn-accent" style="margin-top:18px;" onclick="saveSettings()">Сохранить параметры</button>
+        <button class="btn-accent" style="margin-top:18px;" onclick="saveSettings()">Сохранить</button>
       </div>
 
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Код доступа к заметкам</span>
+          <span class="card-title">Заметки</span>
         </div>
-        <div style="font-size:14px; color:var(--ink-2); margin-bottom:12px;">
-          Если захочешь сменить 4-значный пароль от вкладки «Заметки», сбрось текущий код и задай новый при следующем входе.
-        </div>
-        <button class="btn-soft" style="width:100%;" onclick="resetNotesPin()">Сменить 4-значный код заметок</button>
+        <button class="btn-soft" style="width:100%;" onclick="resetNotesPin()">Сменить код</button>
       </div>
 
       <div class="card">
         <div class="card-top">
-          <span class="card-title">Облако и резервная копия</span>
-          <span class="card-sub" id="cloudSyncBadge">Локально</span>
-        </div>
-        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
-          Записи автоматически сохраняются в твоём аккаунте Telegram Cloud и в памяти этого устройства.
+          <span class="card-title">Данные</span>
+          <span class="card-sub" id="cloudSyncBadge"></span>
         </div>
         <div style="display:flex; flex-direction:column; gap:10px;">
-          <button class="btn-soft" onclick="forceCloudSync()">Синхронизировать с Telegram Cloud</button>
-          <button class="btn-soft" onclick="exportData()">Скопировать резервную копию (JSON)</button>
-          <button class="btn-soft" onclick="importDataPrompt()">Восстановить из копии</button>
-          <button class="btn-danger-soft" onclick="clearAllData()">Сбросить все данные и начать заново</button>
+          <button class="btn-soft" onclick="forceCloudSync()">Синхронизировать</button>
+          <button class="btn-soft" onclick="exportData()">Экспорт</button>
+          <button class="btn-soft" onclick="importDataPrompt()">Импорт</button>
+          <button class="btn-danger-soft" onclick="clearAllData()">Сбросить</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Calendar Modal Sheet -->
+  <!-- Calendar Modal -->
   <div class="modal-backdrop" id="calendarModal" onclick="closeCalendarOnBackdrop(event)">
     <div class="modal-sheet">
       <div class="cal-header">
         <button class="date-arrow" onclick="shiftCalendarMonth(-1)">←</button>
-        <div class="cal-month-title" id="calMonthTitle">Ноябрь 2026</div>
+        <div class="cal-month-title" id="calMonthTitle"></div>
         <button class="date-arrow" onclick="shiftCalendarMonth(1)">→</button>
       </div>
 
@@ -1875,18 +1768,19 @@
 
       <div class="cal-legend">
         <span style="color:var(--rose-solid)">● Месячные</span>
+        <span style="color:var(--rose)">◌ Примерно</span>
         <span style="color:var(--accent)">● Овуляция</span>
-        <span>• Есть запись</span>
+        <span>• Запись</span>
       </div>
 
       <div class="cal-actions">
-        <button class="btn-soft" onclick="jumpToToday()">Вернуться к сегодня</button>
+        <button class="btn-soft" onclick="jumpToToday()">Сегодня</button>
         <button class="btn-soft" onclick="closeCalendarModal()">Закрыть</button>
       </div>
     </div>
   </div>
 
-  <!-- Floating Bottom Tab Bar (5 Clean Tabs) -->
+  <!-- Bottom Tab Bar -->
   <nav class="tab-bar">
     <button class="tab-item active" data-tab="today" onclick="switchTab('today')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -1917,7 +1811,6 @@
       tg.expand();
     }
 
-    // Haptics
     function hapticImpact(style = 'light') {
       try { tg?.HapticFeedback?.impactOccurred(style); } catch (e) {}
     }
@@ -1931,7 +1824,6 @@
       try { tg?.HapticFeedback?.notificationOccurred('error'); } catch (e) {}
     }
 
-    // Local Date Helpers
     function formatLocalISO(dateObj) {
       const y = dateObj.getFullYear();
       const m = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -1963,8 +1855,7 @@
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     }
 
-    // State Schema v6
-    const STORAGE_KEY = 'ritm_clean_v6';
+    const STORAGE_KEY = 'ritm_clean_v7';
     let state = {
       onboarded: false,
       notesPin: null,
@@ -1985,7 +1876,6 @@
     let selectedDate = getTodayISO(0);
     let calendarViewDate = parseLocalISO(selectedDate);
 
-    // Day Editing & Form State
     let isEditingDay = true;
     let metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
     let tempIsPeriod = false;
@@ -1993,21 +1883,17 @@
     let tempIntimacy = false;
     let tempDischarge = '';
 
-    // PIN State
     let isNotesUnlocked = false;
     let pinBuffer = '';
     let pinSetupFirst = '';
     let pinMode = 'enter';
 
-    // AI Loading Flag
     let isAiGenerating = false;
 
-    // Other UI State
     let chartFilter = 'all';
     let breathTimer = null;
     let isBreathing = false;
 
-    // Telegram CloudStorage + LocalStorage Hybrid Layer
     function hasTelegramCloud() {
       try {
         return Boolean(tg && tg.CloudStorage && typeof tg.CloudStorage.getItem === 'function');
@@ -2062,10 +1948,10 @@
 
     async function syncToCloud(specificMonthKey = null) {
       if (!hasTelegramCloud()) {
-        document.getElementById('cloudSyncBadge').textContent = 'Только устройство';
+        document.getElementById('cloudSyncBadge').textContent = '';
         return;
       }
-      document.getElementById('cloudSyncBadge').textContent = 'TG Cloud ✓';
+      document.getElementById('cloudSyncBadge').textContent = 'Cloud';
 
       const metaPayload = JSON.stringify({
         onboarded: state.onboarded,
@@ -2073,8 +1959,8 @@
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 15)
       });
-      await cloudSet('ritm6_meta', metaPayload);
-      await cloudSet('ritm6_notes', JSON.stringify(state.privateNotes.slice(0, 30)));
+      await cloudSet('ritm7_meta', metaPayload);
+      await cloudSet('ritm7_notes', JSON.stringify(state.privateNotes.slice(0, 30)));
 
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
@@ -2095,7 +1981,7 @@
       });
 
       for (const [ym, monthEntries] of Object.entries(byMonth)) {
-        await cloudSet(`ritm6_m_${ym}`, JSON.stringify(monthEntries));
+        await cloudSet(`ritm7_m_${ym}`, JSON.stringify(monthEntries));
       }
     }
 
@@ -2108,8 +1994,8 @@
       } catch (e) {}
 
       if (hasTelegramCloud()) {
-        document.getElementById('cloudSyncBadge').textContent = 'TG Cloud ✓';
-        const metaRaw = await cloudGet('ritm6_meta');
+        document.getElementById('cloudSyncBadge').textContent = 'Cloud';
+        const metaRaw = await cloudGet('ritm7_meta');
         if (metaRaw) {
           try {
             const meta = JSON.parse(metaRaw);
@@ -2118,13 +2004,13 @@
             state.settings = { ...state.settings, ...(meta.settings || {}) };
             state.painkillers = meta.painkillers || state.painkillers;
 
-            const notesRaw = await cloudGet('ritm6_notes');
+            const notesRaw = await cloudGet('ritm7_notes');
             if (notesRaw) {
               state.privateNotes = JSON.parse(notesRaw);
             }
 
             const keys = await cloudGetKeys();
-            const monthKeys = keys.filter(k => k.startsWith('ritm6_m_'));
+            const monthKeys = keys.filter(k => k.startsWith('ritm7_m_'));
             for (const mk of monthKeys) {
               const mRaw = await cloudGet(mk);
               if (mRaw) {
@@ -2135,8 +2021,6 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
           } catch (e) {}
         }
-      } else {
-        document.getElementById('cloudSyncBadge').textContent = 'Локально';
       }
 
       applyThemeUI();
@@ -2158,10 +2042,9 @@
     async function forceCloudSync() {
       hapticImpact('medium');
       await syncToCloud(null);
-      showToast('Синхронизировано с Telegram Cloud');
+      showToast('Сохранено');
     }
 
-    // Onboarding
     function stepObValue(type, delta, min, max) {
       hapticSelect();
       if (type === 'obCycleLen') {
@@ -2173,6 +2056,7 @@
       }
     }
 
+    // No synthetic pre-filled days before onboarding
     function completeOnboarding() {
       const pickedDate = document.getElementById('obLastPeriod').value || getTodayISO(0);
       state.onboarded = true;
@@ -2180,32 +2064,11 @@
       state.settings.cycleLength = obCycleLen;
       state.settings.periodLength = obPeriodLen;
 
-      const startObj = parseLocalISO(pickedDate);
-      const todayISO = getTodayISO(0);
-      for (let i = 0; i < obPeriodLen; i++) {
-        const d = new Date(startObj);
-        d.setDate(d.getDate() + i);
-        const iso = formatLocalISO(d);
-        if (iso <= todayISO) {
-          state.entries[iso] = {
-            date: iso,
-            isPeriod: true,
-            isOvulation: false,
-            intimacy: false,
-            discharge: 'Умеренные',
-            mood: 6, energy: 5, pain: 2, libido: 4,
-            emotions: ['Спокойствие'],
-            contexts: [],
-            helped: []
-          };
-        }
-      }
-
       syncSettingsInputs();
       persistLocalAndCloud(null);
       document.getElementById('onboardingScreen').classList.remove('active');
       loadDayForm();
-      showToast('Настройки сохранены');
+      showToast('Сохранено');
     }
 
     function syncSettingsInputs() {
@@ -2216,11 +2079,10 @@
 
       const badge = document.getElementById('geminiKeyStatusBadge');
       if (state.settings.geminiApiKey) {
-        badge.textContent = 'Подключён ✓';
+        badge.textContent = '✓';
         badge.style.color = 'var(--accent)';
       } else {
-        badge.textContent = 'Не подключён';
-        badge.style.color = 'var(--ink-2)';
+        badge.textContent = '';
       }
     }
 
@@ -2244,11 +2106,11 @@
       hapticSuccess();
     }
 
-    // GEMINI API CLIENT (Supports both AQ. Express Keys and AIza Keys)
+    // GEMINI API CLIENT (gemini-3.8-flash + fallbacks)
     async function callGeminiAPI(apiKey, promptText) {
       const isExpressKey = apiKey.startsWith('AQ.');
-      const models = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash'];
-      let lastError = 'Не удалось связаться с Gemini API';
+      const models = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite'];
+      let lastError = 'Ошибка запроса';
 
       const payload = {
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
@@ -2303,18 +2165,12 @@
       const fb = document.getElementById('geminiTestFeedback');
       const btn = document.getElementById('btnTestGemini');
 
-      if (!key) {
-        fb.style.display = 'block';
-        fb.style.color = 'var(--rose)';
-        fb.textContent = 'Вставь API-ключ из Google AI Studio.';
-        return;
-      }
+      if (!key) return;
 
       btn.disabled = true;
-      btn.textContent = 'Проверяю...';
       fb.style.display = 'block';
       fb.style.color = 'var(--ink-2)';
-      fb.textContent = 'Отправляю тестовый запрос в Google Gemini...';
+      fb.textContent = '...';
 
       try {
         await callGeminiAPI(key, 'Верни строго JSON: {"ok": true}');
@@ -2322,23 +2178,15 @@
         persistLocalAndCloud(null);
         syncSettingsInputs();
         fb.style.color = 'var(--accent)';
-        fb.textContent = 'Подключено ✓ Теперь во вкладке «Разбор» доступен глубокий ИИ-анализ.';
+        fb.textContent = '✓';
         hapticSuccess();
-        showToast('Gemini подключён');
+        showToast('Сохранено');
       } catch (e) {
         fb.style.color = 'var(--rose)';
-        const msg = String(e.message || e);
-        if (msg.toLowerCase().includes('location') || msg.toLowerCase().includes('region')) {
-          fb.textContent = 'Ошибка региона: проверь, что включён VPN (США или Европа).';
-        } else if (msg.toLowerCase().includes('api key') || msg.includes('400') || msg.includes('403')) {
-          fb.textContent = 'Неверный API-ключ. Проверь, что скопировала его целиком из aistudio.google.com.';
-        } else {
-          fb.textContent = `Ошибка: ${msg}`;
-        }
+        fb.textContent = String(e.message || e);
         hapticError();
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Сохранить и проверить';
       }
     }
 
@@ -2347,10 +2195,9 @@
       persistLocalAndCloud(null);
       syncSettingsInputs();
       document.getElementById('geminiTestFeedback').style.display = 'none';
-      showToast('Ключ удалён');
+      showToast('Удалено');
     }
 
-    // Scroll-Safe Sliders
     function initCCSliders() {
       document.querySelectorAll('.cc-slider').forEach(el => {
         const key = el.dataset.key;
@@ -2425,7 +2272,7 @@
       ['mood', 'energy', 'pain', 'libido'].forEach(renderCCSlider);
     }
 
-    // Cycle Math with Delay ("Задержка") & Actual Period Days
+    // Cycle Math with clean unmarking of period days
     function getCycleInfo(dateISO) {
       const start = parseLocalISO(state.settings.lastPeriodStart);
       const target = parseLocalISO(dateISO);
@@ -2449,12 +2296,28 @@
       let delayDays = 0;
       let cycleDay = 1;
 
-      if (diffDays >= 0 && diffDays >= len && target <= today && !isMarkedPeriod) {
+      const hasExplicitPeriodOnDate = Boolean(savedEntry && savedEntry.isPeriod) || (dateISO === selectedDate && tempIsPeriod);
+      const hasExplicitPeriodAfterStart = Object.values(state.entries).some(
+        e => e.isPeriod && e.date > state.settings.lastPeriodStart && e.date <= dateISO
+      );
+
+      if (diffDays >= 0 && diffDays >= len && target <= today && !hasExplicitPeriodOnDate && !hasExplicitPeriodAfterStart) {
         isDelay = true;
         cycleDay = diffDays + 1;
         delayDays = cycleDay - len;
       } else {
         cycleDay = ((diffDays % len) + len) % len + 1;
+      }
+
+      let isPredictedPeriod = false;
+      let isPredictedOvulation = false;
+
+      if (target > today && !isMarkedPeriod) {
+        if (cycleDay <= pLen) {
+          isPredictedPeriod = true;
+        } else if (Math.abs(cycleDay - ovulationDay) <= 1) {
+          isPredictedOvulation = true;
+        }
       }
 
       let phase = '';
@@ -2469,11 +2332,10 @@
       } else if (isMarkedOvulation) {
         phase = 'Овуляция';
         phaseCode = 'ovulation';
-      } else if (cycleDay <= pLen && diffDays >= 0 && diffDays < pLen) {
-        phase = 'Менструальная фаза';
-        phaseCode = 'menstrual';
-      } else if (cycleDay < ovulationDay - 1) {
-        phase = 'Фолликулярная фаза';
+      } else if (cycleDay <= ovulationDay - 1) {
+        phase = cycleDay <= pLen && diffDays >= 0 && diffDays < pLen
+          ? 'Менструальная фаза'
+          : 'Фолликулярная фаза';
         phaseCode = 'follicular';
       } else if (cycleDay <= ovulationDay + 1) {
         phase = 'Овуляторное окно';
@@ -2495,6 +2357,8 @@
         isDelay,
         delayDays,
         isMarkedPeriod,
+        isPredictedPeriod,
+        isPredictedOvulation,
         ovulationDay,
         showOvulationOption: isMidCycleWindow(cycleDay) || isMarkedOvulation
       };
@@ -2509,7 +2373,7 @@
       heroCard.classList.toggle('is-period-day', tempIsPeriod);
 
       if (info.isDelay) {
-        document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>(норма ${info.len})</span>`;
+        document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>/ ${info.len}</span>`;
         heroPhase.textContent = info.phase;
         heroPhase.className = 'hero-phase is-delay';
         document.getElementById('heroCountdown').innerHTML = `Задержка<br/>+${info.delayDays} дн.`;
@@ -2534,14 +2398,14 @@
       const newCycleBtn = document.getElementById('btnNewCycle');
 
       pBtn.classList.toggle('active', tempIsPeriod);
-      pText.textContent = tempIsPeriod ? 'Месячные отмечены ✓' : 'Отметить месячные';
+      pText.textContent = tempIsPeriod ? 'Месячные ✓' : 'Месячные';
 
       const showNewCycleBtn = (info.cycleDay >= 15 || info.isDelay) && selectedDate !== state.settings.lastPeriodStart;
       newCycleBtn.style.display = showNewCycleBtn ? 'block' : 'none';
 
       document.getElementById('ovulationBlock').style.display = info.showOvulationOption ? 'block' : 'none';
       document.getElementById('btnOvulation').classList.toggle('active', tempIsOvulation);
-      document.getElementById('btnOvulation').textContent = tempIsOvulation ? '✦ Овуляция отмечена' : '✦ Отметить овуляцию';
+      document.getElementById('btnOvulation').textContent = tempIsOvulation ? '✦ Овуляция ✓' : '✦ Овуляция';
 
       const mensBlock = document.getElementById('menstrualDischargeBlock');
       const ovulBlock = document.getElementById('ovulatoryDischargeBlock');
@@ -2578,7 +2442,6 @@
       });
     }
 
-    // Apple Health Period Toggles
     function togglePeriodDay() {
       hapticImpact('medium');
       tempIsPeriod = !tempIsPeriod;
@@ -2587,6 +2450,8 @@
         if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) {
           tempDischarge = 'Умеренные';
         }
+      } else {
+        tempDischarge = '';
       }
       if (!isEditingDay && state.entries[selectedDate]) {
         state.entries[selectedDate].isPeriod = tempIsPeriod;
@@ -2595,7 +2460,7 @@
         delete state.entries[selectedDate].aiAnalysis;
         persistLocalAndCloud(selectedDate.slice(0, 7));
         renderSavedSummaryCard(state.entries[selectedDate]);
-        showToast(tempIsPeriod ? 'День месячных отмечен' : 'Отметка снята');
+        showToast('Сохранено');
       }
       updateHeaderAndContextControls();
     }
@@ -2632,7 +2497,7 @@
       persistLocalAndCloud(selectedDate.slice(0, 7));
       updateHeaderAndContextControls();
       if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
-      showToast('Новый цикл начат с этого дня');
+      showToast('Сохранено');
     }
 
     function setIntimacy(val) {
@@ -2658,7 +2523,6 @@
       renderDischargeButtons();
     }
 
-    // Accordions & Chips
     function toggleAccordion(id) {
       hapticImpact('light');
       document.getElementById(id).classList.toggle('open');
@@ -2676,7 +2540,7 @@
       const combined = [...emos, ...contexts];
       document.getElementById('sum-context').textContent = combined.length
         ? combined.slice(0, 3).join(' · ') + (combined.length > 3 ? ` +${combined.length - 3}` : '')
-        : 'Не выбрано';
+        : '';
     }
 
     function setupChips() {
@@ -2704,7 +2568,6 @@
       });
     }
 
-    // Day Form Load / Save / Lock
     function shiftDate(delta) {
       hapticImpact('light');
       const d = parseLocalISO(selectedDate);
@@ -2715,7 +2578,6 @@
 
     function loadDayForm() {
       const existing = state.entries[selectedDate];
-      const info = getCycleInfo(selectedDate);
 
       if (existing) {
         isEditingDay = false;
@@ -2737,10 +2599,10 @@
       } else {
         isEditingDay = true;
         metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
-        tempIsPeriod = info.phaseCode === 'menstrual';
+        tempIsPeriod = false;
         tempIsOvulation = false;
         tempIntimacy = false;
-        tempDischarge = tempIsPeriod ? 'Умеренные' : '';
+        tempDischarge = '';
 
         populateEditableInputs({
           mood: 6, energy: 6, pain: 1, libido: 5,
@@ -2788,7 +2650,7 @@
       if (entry.emotions?.length) tags.push(entry.emotions.join(', '));
       if (entry.contexts?.length) tags.push(entry.contexts.join(', '));
 
-      document.getElementById('savedTagsLine').textContent = tags.length ? tags.join(' · ') : 'Базовый чекин сохранён';
+      document.getElementById('savedTagsLine').textContent = tags.join(' · ');
     }
 
     function unlockDayEditing() {
@@ -2809,7 +2671,7 @@
         isPeriod: tempIsPeriod,
         isOvulation: tempIsOvulation,
         intimacy: tempIntimacy,
-        discharge: tempDischarge,
+        discharge: tempIsPeriod ? tempDischarge : (getCycleInfo(selectedDate).showOvulationOption ? tempDischarge : ''),
         mood: metrics.mood,
         energy: metrics.energy,
         pain: metrics.pain,
@@ -2828,10 +2690,9 @@
       document.getElementById('editableDayForm').style.display = 'none';
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab(false);
-      showToast('День сохранён');
+      showToast('Сохранено');
     }
 
-    // Calendar Modal
     function openCalendarModal() {
       hapticImpact('light');
       calendarViewDate = parseLocalISO(selectedDate);
@@ -2895,10 +2756,12 @@
         const classes = ['cal-cell'];
         if (entry?.isPeriod) {
           classes.push('is-period');
-        } else if (info.phaseCode === 'menstrual' && iso > todayISO) {
+        } else if (info.isPredictedPeriod) {
           classes.push('is-predicted-period');
-        } else if (entry?.isOvulation || info.phaseCode === 'ovulation') {
+        } else if (entry?.isOvulation) {
           classes.push('is-ovulation');
+        } else if (info.isPredictedOvulation) {
+          classes.push('is-predicted-ovulation');
         }
         if (iso === todayISO) classes.push('is-today');
         if (iso === selectedDate) classes.push('is-selected');
@@ -2913,7 +2776,6 @@
       document.getElementById('calGrid').innerHTML = html;
     }
 
-    // TAB 2: STATE BREAKDOWN + GEMINI AI + SELF-CARE FEEDBACK LOOP
     function getCurrentWorkingEntry() {
       return state.entries[selectedDate] || {
         date: selectedDate,
@@ -2937,7 +2799,6 @@
       const hasApiKey = Boolean(state.settings.geminiApiKey);
 
       document.getElementById('advicePhaseTag').textContent = `${formatHumanDate(selectedDate)} · День ${info.cycleDay}`;
-      document.getElementById('aiNoKeyBanner').style.display = hasApiKey ? 'none' : 'block';
       document.getElementById('aiControlRow').style.display = hasApiKey ? 'block' : 'none';
       document.getElementById('breakdownMainCard').classList.toggle('ai-highlight', hasApiKey && Boolean(entry.aiAnalysis));
 
@@ -2951,8 +2812,7 @@
       const aiNote = document.getElementById('aiStatusNote');
 
       if (hasApiKey && entry.aiAnalysis) {
-        document.getElementById('breakdownCardTitle').textContent = '✨ ИИ-разбор состояния';
-        gynH.textContent = 'Физиология и гормональный фон';
+        gynH.textContent = info.phase;
         gynB.textContent = entry.aiAnalysis.physiology || '';
 
         if (entry.aiAnalysis.patterns) {
@@ -2962,17 +2822,16 @@
           patBox.style.display = 'none';
         }
 
-        psyH.textContent = 'Фокус и психологическая опора';
+        psyH.textContent = '';
         psyB.textContent = entry.aiAnalysis.focus || '';
 
-        btnRunAi.innerHTML = '<span>↻ Обновить ИИ-разбор</span>';
-        aiNote.textContent = 'Анализ построен по твоим симптомам и истории цикла';
+        btnRunAi.innerHTML = '<span>Обновить</span>';
+        aiNote.textContent = '';
       } else {
-        document.getElementById('breakdownCardTitle').textContent = 'Разбор состояния';
         patBox.style.display = 'none';
         if (hasApiKey) {
-          btnRunAi.innerHTML = '<span>✨ Сделать глубокий ИИ-разбор дня</span>';
-          aiNote.textContent = 'Нажми, чтобы Gemini сравнил день с твоей историей';
+          btnRunAi.innerHTML = '<span>ИИ-разбор</span>';
+          aiNote.textContent = '';
         }
 
         const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
@@ -2981,47 +2840,47 @@
         const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
 
         if (info.isDelay) {
-          gynH.textContent = `Задержка менструации (+${info.delayDays} дн.)`;
+          gynH.textContent = info.phase;
           gynB.textContent = info.delayDays <= 7
-            ? 'Задержка до 5–7 дней чаще всего связана с более поздней овуляцией на фоне стресса, недосыпа или смены нагрузки. Если в этом цикле была близость, сделай утренний тест на беременность.'
-            : 'Задержка более 7 дней при отрицательном тесте на беременность — повод планово сделать УЗИ органов малого таза, чтобы оценить толщину эндометрия.';
+            ? 'Возможен сдвиг овуляции на фоне нагрузки. При близости в цикле актуален тест.'
+            : 'Задержка более 7 дней — повод обратиться к гинекологу и сделать УЗИ.';
         } else if (entry.pain >= 6) {
-          gynH.textContent = 'Пик простагландинов и спазм миометрия';
-          gynB.textContent = 'Простагландины вызывают сокращение матки и временное снижение кровотока, отсюда резкая тянущая боль и слабость.';
+          gynH.textContent = 'Спазм';
+          gynB.textContent = 'Повышен уровень простагландинов и спазм гладкой мускулатуры.';
         } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
-          gynH.textContent = 'Пик эстрогенов и овуляторное окно';
-          gynB.textContent = 'Максимальный уровень эстрадиола усиливает приток крови, либидо и концентрацию. Прозрачные тянущиеся выделения и лёгкое покалывание с одной стороны до 24 часов — норма.';
+          gynH.textContent = info.phase;
+          gynB.textContent = 'Пик эстрогенов, возможны тянущие ощущения и прозрачные выделения.';
         } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
-          gynH.textContent = 'Менструальная фаза: минимум эстрогена и прогестерона';
+          gynH.textContent = info.phase;
           gynB.textContent = entry.discharge === 'Обильные'
-            ? 'При обильных выделениях организм теряет жидкость и железо, что напрямую снижает физическую выносливость.'
-            : 'Гормональный фон на минимальной отметке, закономерно снижается толерантность к интенсивным тренировкам.';
+            ? 'Обильные выделения — выше расход жидкости и железа.'
+            : 'Низкий уровень эстрогена и прогестерона.';
         } else if (info.phaseCode === 'late_luteal') {
-          gynH.textContent = 'Спад прогестерона и серотонина';
-          gynB.textContent = 'Резкое падение прогестерона и аллопрегнанолона снижает ГАМК-торможение в нервной системе и чувствительность к инсулину.';
+          gynH.textContent = info.phase;
+          gynB.textContent = 'Снижение прогестерона перед началом нового цикла.';
         } else {
-          gynH.textContent = 'Стабильная фолликулярная фаза';
-          gynB.textContent = 'Эстроген плавно растёт без резких перепадов — это твой базовый, наиболее ровный гормональный фон.';
+          gynH.textContent = info.phase;
+          gynB.textContent = 'Рост эстрогена в первой половине цикла.';
         }
 
         if (info.isDelay) {
-          psyH.textContent = 'Снижение неопределённости';
-          psyB.textContent = 'Неопределённость усиливает тревогу сильнее любого факта. Вместо прокручивания сценариев сделай один конкретный шаг: тест или запись к врачу, если задержка затянется.';
+          psyH.textContent = '';
+          psyB.textContent = 'Меньше домыслов — конкретный шаг снимет напряжение.';
         } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
-          psyH.textContent = 'Карантин на решения — 72 часа';
-          psyB.textContent = 'В позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно. Мысли «всё плохо» или импульс резко поменять планы сейчас усилены биохимией — отложи выводы до 5-го дня цикла.';
+          psyH.textContent = '';
+          psyB.textContent = 'Крупные решения и резкие выводы лучше отложить на несколько дней.';
         } else if (hasAnxiety) {
-          psyH.textContent = 'Сначала тело, потом мысли';
-          psyB.textContent = 'При тревоге логика включается только после замедления пульса. Сделай 5 циклов физиологического вздоха во вкладке SOS и верни внимание в физические опоры.';
+          psyH.textContent = '';
+          psyB.textContent = 'Поможет медленное дыхание и снижение темпа.';
         } else if (entry.pain >= 6 || entry.energy <= 3) {
-          psyH.textContent = 'Легализация отдыха без вины';
-          psyB.textContent = `Твой физический ресурс сейчас около ${entry.energy * 10}%. Оставь одно ключевое дело на день, остальное перенеси без самокритики.`;
+          psyH.textContent = '';
+          psyB.textContent = 'Снизь нагрузку и оставь только главное на сегодня.';
         } else if (hasIrritability) {
-          psyH.textContent = 'Снижение сенсорного шума';
-          psyB.textContent = 'Повышенная чувствительность сейчас — не «плохой характер», а истощение серотонинового буфера. Убери фоновые уведомления и дай себе 30 минут тишины.';
+          psyH.textContent = '';
+          psyB.textContent = 'Меньше лишних стимулов и больше тишины.';
         } else {
-          psyH.textContent = 'Фиксация опоры';
-          psyB.textContent = 'Когда фон ровный, полезно отметить, что именно помогает удерживать баланс — в сложные дни это станет готовой подсказкой.';
+          psyH.textContent = '';
+          psyB.textContent = 'Ровный фон.';
         }
       }
 
@@ -3044,27 +2903,27 @@
         tips = entry.aiAnalysis.tips.map(t => ({
           id: t.title,
           title: t.title,
-          sub: t.sub || 'Персональный совет Gemini'
+          sub: t.sub || ''
         }));
       } else {
         if (entry.pain >= 4) {
-          tips.push({ id: 'Тепло / грелка', title: 'Сухое тепло или тёплый душ 15 мин', sub: 'Расслабляет гладкую мускулатуру и улучшает местный кровоток' });
-          tips.push({ id: 'Нурофен 400 мг', title: 'Нурофен 400 мг после еды', sub: 'Блокирует синтез простагландинов — эффективнее в начале боли' });
-          tips.push({ id: 'Но-шпа', title: 'Но-шпа при спазме', sub: 'Снимает спазм, если боль носит сжимающий характер' });
+          tips.push({ id: 'Тепло', title: 'Тепло', sub: '' });
+          tips.push({ id: 'Нурофен 400 мг', title: 'Нурофен 400 мг', sub: '' });
+          tips.push({ id: 'Но-шпа', title: 'Но-шпа', sub: '' });
         }
         if (hasAnxiety || entry.pain >= 5) {
-          tips.push({ id: 'Дыхание (вздох)', title: 'Физиологический вздох (во вкладке SOS)', sub: 'Двойной вдох + длинный выдох снижают пульс за 1–2 минуты' });
+          tips.push({ id: 'Дыхание', title: 'Дыхание', sub: '' });
         }
         if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
-          tips.push({ id: 'Белок + сложные углеводы', title: 'Плотный приём пищи каждые 3–4 часа', sub: 'Сглаживает скачки сахара и снижает раздражительность' });
-          tips.push({ id: 'Тишина без экрана 30 мин', title: '30 минут без уведомлений и ленты', sub: 'Разгружает перегретую нервную систему в ПМС' });
+          tips.push({ id: 'Режим питания', title: 'Режим питания', sub: '' });
+          tips.push({ id: 'Пауза от экрана', title: 'Пауза от экрана', sub: '' });
         }
         if (info.isDelay) {
-          tips.push({ id: 'Тест / чекап', title: 'Утренний тест или план визита к врачу', sub: 'Убирает фоновую тревогу от неизвестности' });
+          tips.push({ id: 'Тест / врач', title: 'Тест / врач', sub: '' });
         }
         if (tips.length < 3) {
-          tips.push({ id: 'Прогулка 15–20 мин', title: 'Спокойная прогулка на свежем воздухе', sub: 'Мягко повышает уровень эндорфинов и дофамина' });
-          tips.push({ id: 'Ранний сон', title: 'Лечь спать на 40 минут раньше', sub: 'Базовое восстановление гормонального баланса' });
+          tips.push({ id: 'Прогулка', title: 'Прогулка', sub: '' });
+          tips.push({ id: 'Сон', title: 'Сон', sub: '' });
         }
       }
 
@@ -3072,7 +2931,7 @@
       const allDisplayed = [...tips];
       currentHelped.forEach(hId => {
         if (!allDisplayed.some(t => t.id === hId)) {
-          allDisplayed.push({ id: hId, title: hId, sub: 'Отмечено тобой как эффективное' });
+          allDisplayed.push({ id: hId, title: hId, sub: '' });
         }
       });
 
@@ -3082,7 +2941,7 @@
           <div class="tip-action-card">
             <div>
               <div class="tip-action-title">${escapeHtml(t.title)}</div>
-              <div class="tip-action-sub">${escapeHtml(t.sub)}</div>
+              ${t.sub ? `<div class="tip-action-sub">${escapeHtml(t.sub)}</div>` : ''}
             </div>
             <button class="btn-helped-toggle ${isChecked ? 'checked' : ''}" onclick="toggleHelpedTip('${t.id.replace(/'/g, "\\'")}')">
               ${isChecked ? 'Помогло ✓' : 'Помогло'}
@@ -3102,8 +2961,8 @@
       const btn = document.getElementById('btnRunAi');
       const note = document.getElementById('aiStatusNote');
       btn.disabled = true;
-      btn.innerHTML = '<span>⏳ Анализирую цикл и симптомы...</span>';
-      note.textContent = 'Сверяю показатели с предыдущими днями...';
+      btn.innerHTML = '<span>...</span>';
+      note.textContent = '';
 
       const info = getCycleInfo(selectedDate);
       const current = getCurrentWorkingEntry();
@@ -3138,42 +2997,40 @@
         });
       });
 
-      const prompt = `Ты — внимательный, доказательный врач-гинеколог и клинический психолог. Проанализируй текущее состояние женщины в дневнике менструального цикла.
-Говори на русском языке, обращаясь на «ты», спокойно, структурно, без воды и общих банальностей. Не ставь диагнозы, но подсвечивай реальные физиологические и поведенческие закономерности.
+      const prompt = `Ты — врач-гинеколог и психолог. Проанализируй текущее состояние по дневнику цикла. Отвечай на русском, на «ты», кратко и по делу.
 
 ПАРАМЕТРЫ ЦИКЛА:
-- Средняя длина цикла: ${info.len} дн., обычная длительность месячных: ${info.pLen} дн.
-- Выбранная дата: ${selectedDate}
+- Длина цикла: ${info.len} дн., длительность месячных: ${info.pLen} дн.
+- Дата: ${selectedDate}
 - День цикла: ${info.cycleDay} (${info.phase}${info.isDelay ? `, задержка ${info.delayDays} дн.` : ''})
 
-ПОКАЗАТЕЛИ СЕГОДНЯ:
+СЕГОДНЯ:
 - Настроение: ${current.mood}/10
 - Энергия: ${current.energy}/10
-- Боль и спазмы: ${current.pain}/10
+- Боль: ${current.pain}/10
 - Либидо: ${current.libido}/10
-- Месячные отмечены: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
-- Овуляция отмечена: ${current.isOvulation ? 'да' : 'нет'}
-- Выделения: ${current.discharge || 'не отмечены'}
-- Близость: ${current.intimacy ? 'была' : 'не было'}
-- Эмоции: ${(current.emotions || []).join(', ') || 'не указаны'}
-- Контекст/факторы: ${(current.contexts || []).join(', ') || 'нет'}
+- Месячные: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
+- Овуляция: ${current.isOvulation ? 'да' : 'нет'}
+- Выделения: ${current.discharge || ''}
+- Близость: ${current.intimacy ? 'да' : 'нет'}
+- Эмоции: ${(current.emotions || []).join(', ')}
+- Факторы: ${(current.contexts || []).join(', ')}
 
-ЛИЧНАЯ СТАТИСТИКА «ЧТО ПОМОГАЛО РАНЬШЕ»:
-${Object.keys(helpedCounts).length ? JSON.stringify(helpedCounts) : 'пока не накоплена'}
+ПОМОГЛО РАНЬШЕ:
+${JSON.stringify(helpedCounts)}
 
-ИСТОРИЯ ПРЕДЫДУЩИХ ЗАПИСЕЙ (до 25 дней):
-${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только первый день наблюдений'}
+ИСТОРИЯ (до 25 дней):
+${JSON.stringify(recentHistory)}
 
-Верни строго валидный JSON без markdown-обёртки со следующими 4 полями:
+Верни строго JSON:
 {
-  "physiology": "2-3 ёмких предложения: что именно происходит в организме сегодня (гормоны, простагландины, кровоток, влияние недосыпа/стресса или задержки).",
-  "patterns": "2-3 предложения: сравнение сегодняшнего дня с её личной историей в этой же фазе/дне цикла (если истории мало — так и скажи, отметив отправную точку для будущих циклов).",
-  "focus": "2 предложения: точная психологическая и поведенческая рекомендация на сегодня с учётом уровня энергии и эмоций.",
+  "physiology": "2-3 коротких предложения по физиологии дня.",
+  "patterns": "2-3 коротких предложения по сравнению с предыдущими днями.",
+  "focus": "1-2 коротких предложения по фокусу дня.",
   "tips": [
-    { "title": "Короткое название действия (до 45 символов)", "sub": "Почему это сработает именно сегодня (1 короткое предложение)" }
+    { "title": "Короткое действие", "sub": "Короткое пояснение" }
   ]
-}
-В массиве tips дай ровно 3 конкретных, применимых сегодня действия (учитывая то, что ей уже помогало в прошлом).`;
+}`;
 
       try {
         const result = await callGeminiAPI(apiKey, prompt);
@@ -3184,14 +3041,14 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
           physiology: result.physiology || '',
           patterns: result.patterns || '',
           focus: result.focus || '',
-          tips: Array.isArray(result.tips) ? result.tips.slice(0, 4) : []
+          tips: Array.isArray(result.tips) ? result.tips.slice(0, 3) : []
         };
         persistLocalAndCloud(selectedDate.slice(0, 7));
         renderAdviceAndSelfCareTab(false);
-        if (isManualClick) showToast('ИИ-разбор готов');
+        if (isManualClick) showToast('Готово');
       } catch (e) {
         note.style.color = 'var(--rose)';
-        note.textContent = `Не удалось получить ответ Gemini (${e.message}). Проверь VPN или ключ в настройках.`;
+        note.textContent = String(e.message || e);
         if (isManualClick) hapticError();
       } finally {
         isAiGenerating = false;
@@ -3210,7 +3067,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
         list.splice(idx, 1);
       } else {
         list.push(tipId);
-        showToast('Отмечено в личную аптечку');
+        showToast('Сохранено');
       }
       state.entries[selectedDate].helped = list;
       persistLocalAndCloud(selectedDate.slice(0, 7));
@@ -3239,11 +3096,9 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
         return;
       }
       box.style.display = 'block';
-      box.innerHTML = `<strong style="color:var(--ink)">Твоя проверенная статистика помощи:</strong><br/>` +
-        sorted.map(([name, cnt]) => `• ${escapeHtml(name)} — сработало ${cnt} ${cnt === 1 ? 'раз' : (cnt < 5 ? 'раза' : 'раз')}`).join('<br/>');
+      box.innerHTML = sorted.map(([name, cnt]) => `${escapeHtml(name)} · ${cnt}`).join('<br/>');
     }
 
-    // PIN-LOCKED PRIVATE NOTES ("Заметки")
     function initPinScreen() {
       if (isNotesUnlocked) {
         document.getElementById('notesPinGate').style.display = 'none';
@@ -3256,16 +3111,8 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       document.getElementById('notesUnlockedArea').style.display = 'none';
       pinBuffer = '';
       pinSetupFirst = '';
-
-      if (!state.notesPin) {
-        pinMode = 'create';
-        document.getElementById('pinTitle').textContent = 'Задай 4-значный код';
-        document.getElementById('pinSubtitle').textContent = 'Этот пароль защитит твои личные заметки';
-      } else {
-        pinMode = 'enter';
-        document.getElementById('pinTitle').textContent = 'Личные заметки';
-        document.getElementById('pinSubtitle').textContent = 'Введи 4-значный код доступа';
-      }
+      pinMode = !state.notesPin ? 'create' : 'enter';
+      document.getElementById('pinTitle').textContent = !state.notesPin ? 'Новый код' : 'Заметки';
       updatePinDots(false);
     }
 
@@ -3300,8 +3147,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
         pinSetupFirst = pinBuffer;
         pinBuffer = '';
         pinMode = 'confirm';
-        document.getElementById('pinTitle').textContent = 'Повтори код';
-        document.getElementById('pinSubtitle').textContent = 'Введи те же 4 цифры для подтверждения';
+        document.getElementById('pinTitle').textContent = 'Повтор';
         updatePinDots(false);
         return;
       }
@@ -3312,7 +3158,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
           persistLocalAndCloud(null);
           isNotesUnlocked = true;
           hapticSuccess();
-          showToast('Код установлен');
+          showToast('Сохранено');
           initPinScreen();
         } else {
           hapticError();
@@ -3321,8 +3167,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
             pinBuffer = '';
             pinSetupFirst = '';
             pinMode = 'create';
-            document.getElementById('pinTitle').textContent = 'Коды не совпали';
-            document.getElementById('pinSubtitle').textContent = 'Задай 4 цифры заново';
+            document.getElementById('pinTitle').textContent = 'Новый код';
             updatePinDots(false);
           }, 550);
         }
@@ -3337,7 +3182,6 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
         } else {
           hapticError();
           updatePinDots(true);
-          document.getElementById('pinSubtitle').textContent = 'Неверный код, попробуй ещё раз';
           setTimeout(() => {
             pinBuffer = '';
             updatePinDots(false);
@@ -3354,18 +3198,13 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
     }
 
     function resetNotesPin() {
-      if (!state.notesPin) {
-        showToast('Код ещё не задан — открой вкладку «Заметки»');
-        return;
-      }
-      const old = prompt('Введи текущий 4-значный код для сброса:');
+      if (!state.notesPin) return;
+      const old = prompt('');
       if (old === state.notesPin) {
         state.notesPin = null;
         isNotesUnlocked = false;
         persistLocalAndCloud(null);
-        showToast('Код сброшен — задай новый во вкладке «Заметки»');
-      } else if (old !== null) {
-        alert('Неверный текущий код');
+        showToast('Сброшено');
       }
     }
 
@@ -3387,11 +3226,10 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       inp.value = '';
       persistLocalAndCloud(null);
       renderPrivateNotesList();
-      showToast('Заметка сохранена');
+      showToast('Сохранено');
     }
 
     function deletePrivateNote(id) {
-      if (!confirm('Удалить эту заметку?')) return;
       state.privateNotes = state.privateNotes.filter(n => n.id !== id);
       persistLocalAndCloud(null);
       renderPrivateNotesList();
@@ -3400,11 +3238,11 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
     function renderPrivateNotesList() {
       const todayISO = getTodayISO(0);
       const info = getCycleInfo(todayISO);
-      document.getElementById('newNoteContextLabel').textContent = `${formatHumanDate(todayISO)} · День ${info.cycleDay} (${info.phase.toLowerCase()})`;
+      document.getElementById('newNoteContextLabel').textContent = `${formatHumanDate(todayISO)} · День ${info.cycleDay}`;
 
       const box = document.getElementById('privateNotesList');
       if (!state.privateNotes.length) {
-        box.innerHTML = `<div style="text-align:center; font-size:14px; color:var(--ink-3); padding:20px;">Здесь пока пусто. Всё написанное видно только после ввода твоего кода.</div>`;
+        box.innerHTML = '';
         return;
       }
 
@@ -3423,7 +3261,6 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    // Smooth Chart ("График")
     function setChartFilter(mode) {
       hapticSelect();
       chartFilter = mode;
@@ -3544,7 +3381,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       const e = window._chartByDay?.[day];
       const box = document.getElementById('chartInspector');
       if (!e) {
-        box.innerHTML = `<strong style="color:var(--ink)">День ${day}:</strong> данных пока нет.`;
+        box.innerHTML = `День ${day}`;
         return;
       }
       const emos = Array.isArray(e.emotions) ? e.emotions.join(', ') : '';
@@ -3552,13 +3389,13 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
         e.isPeriod ? 'Месячные' : '',
         e.isOvulation ? 'Овуляция' : '',
         e.intimacy ? 'Близость ♥' : '',
-        e.discharge ? `Выделения: ${e.discharge.toLowerCase()}` : '',
+        e.discharge ? e.discharge.toLowerCase() : '',
         ...(e.contexts || [])
       ].filter(Boolean).join(' · ');
 
       box.innerHTML = `
-        <strong style="color:var(--ink)">День ${day} · ${emos}</strong><br/>
-        Настроение ${e.mood}/10 · Энергия ${e.energy}/10 · Боль ${e.pain}/10 · Либидо ${e.libido}/10
+        <strong style="color:var(--ink)">День ${day}</strong> · ${emos}<br/>
+        Настр. ${e.mood} · Энергия ${e.energy} · Боль ${e.pain} · Либидо ${e.libido}
         ${extras ? `<div style="margin-top:4px; color:var(--accent); font-weight:600;">${extras}</div>` : ''}
       `;
     }
@@ -3571,54 +3408,50 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
 
       document.getElementById('phaseStatsGrid').innerHTML = `
         <div class="stat-tile">
-          <div class="stat-tile-label">Настроение (Фоллик / ПМС)</div>
+          <div class="stat-tile-label">Настроение</div>
           <div class="stat-tile-val">${avg(foll, 'mood')} / ${avg(lut, 'mood')}</div>
         </div>
         <div class="stat-tile">
-          <div class="stat-tile-label">Энергия (Фоллик / ПМС)</div>
+          <div class="stat-tile-label">Энергия</div>
           <div class="stat-tile-val">${avg(foll, 'energy')} / ${avg(lut, 'energy')}</div>
         </div>
         <div class="stat-tile">
-          <div class="stat-tile-label">Либидо (Овул / ПМС)</div>
+          <div class="stat-tile-label">Либидо</div>
           <div class="stat-tile-val">${avg(foll, 'libido')} / ${avg(lut, 'libido')}</div>
         </div>
         <div class="stat-tile">
-          <div class="stat-tile-label">Дней с болью ≥7</div>
+          <div class="stat-tile-label">Боль ≥7</div>
           <div class="stat-tile-val" style="color:var(--rose)">${entries.filter(e => e.pain >= 7).length}</div>
         </div>
       `;
 
       const severePain = entries.filter(e => e.pain >= 7).length;
       const heavyFlow = entries.filter(e => e.isPeriod && e.discharge === 'Обильные').length;
-
       const notes = [];
-      if (severePain >= 3) notes.push(`• Выраженная боль (≥7/10) отмечена ${severePain} раз — повод показать график гинекологу для исключения эндометриоза или аденомиоза.`);
-      if (heavyFlow >= 3) notes.push(`• Обильные месячные (${heavyFlow} дн.) — стоит периодически проверять ферритин и общий анализ крови.`);
-      if (!notes.length) {
-        notes.push(entries.length < 5
-          ? '• Веди дневник 2–3 недели, чтобы увидеть устойчивые закономерности.'
-          : '• Критических «красных флагов» по отмеченным данным не выявлено.');
-      }
-      document.getElementById('medicalSummary').innerHTML = notes.join('<br/><br/>');
+      if (severePain >= 3) notes.push(`Боль ≥7: ${severePain}`);
+      if (heavyFlow >= 3) notes.push(`Обильные: ${heavyFlow}`);
+      document.getElementById('medicalSummary').innerHTML = notes.join(' · ');
     }
 
-    // SOS: Nurofen & No-Spa + Hardware-Accelerated Flower Breathing
     function logPainkiller(name, hours) {
       state.painkillers.unshift({ name, timeISO: new Date().toISOString(), hours });
       persistLocalAndCloud(null);
       updatePainkillerUI();
-      showToast(`Записано: ${name}`);
+      showToast('Сохранено');
     }
 
     function updatePainkillerUI() {
       const box = document.getElementById('painkillerStatus');
-      if (!state.painkillers.length) return;
+      if (!state.painkillers.length) {
+        box.innerHTML = '';
+        return;
+      }
       const last = state.painkillers[0];
       const taken = new Date(last.timeISO);
       const nextSafe = new Date(taken.getTime() + last.hours * 3600000);
       const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
       const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      box.innerHTML = `<strong style="color:var(--ink)">${last.name}</strong> принята в ${tStr}.<br/>Следующий безопасный приём: не ранее <b>${nStr}</b>.`;
+      box.innerHTML = `${last.name} · ${tStr} → ${nStr}`;
     }
 
     function stopBreathing() {
@@ -3632,7 +3465,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       const sub = document.getElementById('flowerSubPrompt');
       const btn = document.getElementById('breathBtn');
       motion.className = 'flower-motion';
-      prompt.textContent = 'Нажми «Начать»';
+      prompt.textContent = '';
       sub.textContent = '';
       btn.textContent = 'Начать';
     }
@@ -3645,7 +3478,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       }
 
       isBreathing = true;
-      document.getElementById('breathBtn').textContent = 'Остановить';
+      document.getElementById('breathBtn').textContent = 'Стоп';
       const motion = document.getElementById('flowerMotion');
       const prompt = document.getElementById('flowerPrompt');
       const sub = document.getElementById('flowerSubPrompt');
@@ -3653,22 +3486,22 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       const runCycle = () => {
         if (!isBreathing) return;
         motion.className = 'flower-motion phase-inhale';
-        prompt.textContent = 'Вдох носом';
-        sub.textContent = 'плавно и глубоко';
+        prompt.textContent = 'Вдох';
+        sub.textContent = '';
         hapticImpact('light');
 
         breathTimer = setTimeout(() => {
           if (!isBreathing) return;
           motion.className = 'flower-motion phase-topup';
           prompt.textContent = 'Довдох';
-          sub.textContent = 'коротко носом';
+          sub.textContent = '';
           hapticImpact('medium');
 
           breathTimer = setTimeout(() => {
             if (!isBreathing) return;
             motion.className = 'flower-motion phase-exhale';
-            prompt.textContent = 'Долгий выдох';
-            sub.textContent = 'расслабь плечи';
+            prompt.textContent = 'Выдох';
+            sub.textContent = '';
             hapticSelect();
 
             breathTimer = setTimeout(runCycle, 5500);
@@ -3679,7 +3512,6 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       runCycle();
     }
 
-    // Settings & Backup
     function saveSettings() {
       const lp = document.getElementById('setLastPeriod').value;
       const cl = Number(document.getElementById('setCycleLength').value) || 28;
@@ -3692,16 +3524,16 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       syncSettingsInputs();
       persistLocalAndCloud(null);
       loadDayForm();
-      showToast('Параметры цикла сохранены');
+      showToast('Сохранено');
     }
 
     function exportData() {
       navigator.clipboard?.writeText(JSON.stringify(state));
-      showToast('Копия скопирована в буфер');
+      showToast('Скопировано');
     }
 
     function importDataPrompt() {
-      const raw = prompt('Вставь JSON-копию:');
+      const raw = prompt('');
       if (!raw) return;
       try {
         const parsed = JSON.parse(raw);
@@ -3710,19 +3542,16 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
           syncSettingsInputs();
           persistLocalAndCloud(null);
           loadDayForm();
-          showToast('Данные восстановлены');
+          showToast('Сохранено');
         }
-      } catch (e) {
-        alert('Неверный формат данных');
-      }
+      } catch (e) {}
     }
 
     async function clearAllData() {
-      if (!confirm('Удалить все записи и заметки из устройства и Telegram Cloud?')) return;
       localStorage.removeItem(STORAGE_KEY);
       if (hasTelegramCloud()) {
         const keys = await cloudGetKeys();
-        const ourKeys = keys.filter(k => k.startsWith('ritm6_'));
+        const ourKeys = keys.filter(k => k.startsWith('ritm7_'));
         await cloudRemove(ourKeys);
       }
       state = {
@@ -3742,7 +3571,7 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       isNotesUnlocked = false;
       document.getElementById('obLastPeriod').value = getTodayISO(0);
       document.getElementById('onboardingScreen').classList.add('active');
-      showToast('Все данные очищены');
+      showToast('Сброшено');
     }
 
     function switchTab(tab) {
@@ -3760,7 +3589,6 @@ ${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только 
       if (tab === 'sos') updatePainkillerUI();
     }
 
-    // Boot
     initCCSliders();
     setupChips();
     loadFromCloudAndLocal().then(() => {
