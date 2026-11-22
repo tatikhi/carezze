@@ -556,12 +556,6 @@
       color: var(--rose);
     }
 
-    .choice-btn.active-indigo {
-      background: var(--indigo-tint);
-      border-color: var(--indigo);
-      color: var(--indigo);
-    }
-
     .icon-stealth-btn {
       width: 44px;
       min-width: 44px;
@@ -1409,7 +1403,7 @@
         <div class="accordion" id="acc-context">
           <button class="accordion-header" onclick="toggleAccordion('acc-context')">
             <div>
-              <div>Эмоции и факторы</div>
+              <div>Эмоции и ощущения</div>
               <div class="accordion-summary" id="sum-context">Спокойствие</div>
             </div>
             <span class="accordion-chevron">⌄</span>
@@ -1440,9 +1434,10 @@
             </div>
 
             <div class="sub-section-header">
-              <span class="field-label">Факторы</span>
+              <span class="field-label">Ощущения и факторы</span>
             </div>
             <div class="chip-grid" id="contextChips">
+              <div class="chip" data-val="Болезненность груди">Грудь</div>
               <div class="chip" data-val="Недосып">Недосып</div>
               <div class="chip" data-val="Стресс">Стресс</div>
               <div class="chip" data-val="Отёки / тяга к сладкому">Отёки / сладкое</div>
@@ -1463,15 +1458,12 @@
           <span class="card-sub" id="advicePhaseTag">Сегодня</span>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr auto; gap:8px; margin-bottom:12px;" id="aiControlRow">
-          <button class="btn-indigo" id="btnRunAi" onclick="runGeminiAnalysis(true)" style="display:none;">
+        <div id="aiControlRow" style="display:none; margin-bottom:12px;">
+          <button class="btn-indigo" id="btnRunAi" onclick="runGeminiAnalysis(true)">
             <span>ИИ-разбор</span>
           </button>
-          <button class="btn-soft" id="btnBreathShortcut" onclick="openBreathFromAdvice()" style="height:48px; white-space:nowrap;">
-            Дыхание
-          </button>
+          <div id="aiStatusNote" style="font-size:12px; color:var(--ink-2); margin-top:6px; text-align:center;"></div>
         </div>
-        <div id="aiStatusNote" style="font-size:12px; color:var(--ink-2); margin:-6px 0 10px; text-align:center;"></div>
 
         <div class="protocol-stack">
           <div class="protocol-item">
@@ -1782,8 +1774,8 @@
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     }
 
-    const STORAGE_KEY = 'ritm_clean_v8';
-    const LEGACY_KEYS = ['ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+    const STORAGE_KEY = 'ritm_clean_v9';
+    const LEGACY_KEYS = ['ritm_clean_v8', 'ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
 
     let state = {
       onboarded: false,
@@ -1881,7 +1873,7 @@
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 15)
       });
-      await cloudSet('ritm8_meta', metaPayload);
+      await cloudSet('ritm9_meta', metaPayload);
 
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
@@ -1903,7 +1895,7 @@
       });
 
       for (const [ym, monthEntries] of Object.entries(byMonth)) {
-        await cloudSet(`ritm8_m_${ym}`, JSON.stringify(monthEntries));
+        await cloudSet(`ritm9_m_${ym}`, JSON.stringify(monthEntries));
       }
     }
 
@@ -1943,7 +1935,9 @@
 
       if (hasTelegramCloud()) {
         document.getElementById('cloudSyncBadge').textContent = 'Cloud';
-        const metaRaw = (await cloudGet('ritm8_meta')) || (await cloudGet('ritm7_meta'));
+        const metaRaw = (await cloudGet('ritm9_meta'))
+          || (await cloudGet('ritm8_meta'))
+          || (await cloudGet('ritm7_meta'));
         if (metaRaw) {
           try {
             const meta = JSON.parse(metaRaw);
@@ -1952,7 +1946,9 @@
             state.painkillers = meta.painkillers || state.painkillers;
 
             const keys = await cloudGetKeys();
-            const monthKeys = keys.filter(k => k.startsWith('ritm8_m_') || k.startsWith('ritm7_m_'));
+            const monthKeys = keys.filter(k =>
+              k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_') || k.startsWith('ritm7_m_')
+            );
             for (const mk of monthKeys) {
               const mRaw = await cloudGet(mk);
               if (mRaw) {
@@ -1978,6 +1974,7 @@
     }
 
     function persistLocalAndCloud(monthKey = null) {
+      state.onboarded = true;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       syncToCloud(monthKey);
     }
@@ -2056,7 +2053,7 @@
       const payload = {
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         generationConfig: {
-          temperature: 0.45,
+          temperature: 0.5,
           responseMimeType: 'application/json'
         }
       };
@@ -2384,7 +2381,6 @@
       });
     }
 
-    // Toggle period and reset stale AI analysis so recommendations match current phase
     function togglePeriodDay() {
       hapticImpact('medium');
       tempIsPeriod = !tempIsPeriod;
@@ -2409,7 +2405,7 @@
       }
 
       updateHeaderAndContextControls();
-      renderAdviceAndSelfCareTab(false);
+      renderAdviceAndSelfCareTab();
     }
 
     function startNewCycleHere() {
@@ -2434,7 +2430,7 @@
           pain: metrics.pain,
           libido: metrics.libido,
           emotions: getSelectedEmotions(),
-          contexts: [],
+          contexts: getSelectedContexts(),
           helped: []
         };
       } else {
@@ -2446,7 +2442,7 @@
       persistLocalAndCloud(selectedDate.slice(0, 7));
       updateHeaderAndContextControls();
       if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
-      renderAdviceAndSelfCareTab(false);
+      renderAdviceAndSelfCareTab();
       showToast('Сохранено');
     }
 
@@ -2462,7 +2458,6 @@
       btn.textContent = tempIntimacy ? 'Близость ♥ ✓' : 'Близость ♥';
     }
 
-    // Discreet icon-only toggle for personal tension release
     function toggleSoloReset() {
       hapticSelect();
       tempSoloReset = !tempSoloReset;
@@ -2487,7 +2482,7 @@
         delete state.entries[selectedDate].aiAnalysis;
       }
       updateHeaderAndContextControls();
-      renderAdviceAndSelfCareTab(false);
+      renderAdviceAndSelfCareTab();
     }
 
     function selectDischarge(val) {
@@ -2507,9 +2502,13 @@
       return [...basic, ...nuanced];
     }
 
+    function getSelectedContexts() {
+      return Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
+    }
+
     function updateSummaries() {
       const emos = getSelectedEmotions();
-      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
+      const contexts = getSelectedContexts();
       const combined = [...emos, ...contexts];
       document.getElementById('sum-context').textContent = combined.length
         ? combined.slice(0, 3).join(' · ') + (combined.length > 3 ? ` +${combined.length - 3}` : '')
@@ -2534,7 +2533,7 @@
       document.querySelectorAll('#contextChips .chip').forEach(chip => {
         chip.onclick = () => {
           hapticSelect();
-          const isRose = chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс');
+          const isRose = chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс') || chip.dataset.val.includes('груди');
           chip.classList.toggle(isRose ? 'active-rose' : 'active');
           updateSummaries();
         };
@@ -2588,7 +2587,7 @@
       }
 
       updateHeaderAndContextControls();
-      renderAdviceAndSelfCareTab(false);
+      renderAdviceAndSelfCareTab();
     }
 
     function populateEditableInputs(data) {
@@ -2608,7 +2607,7 @@
       document.querySelectorAll('#contextChips .chip').forEach(c => {
         c.classList.remove('active', 'active-rose');
         if ((data.contexts || []).includes(c.dataset.val)) {
-          const isRose = c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс');
+          const isRose = c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс') || c.dataset.val.includes('груди');
           c.classList.add(isRose ? 'active-rose' : 'active');
         }
       });
@@ -2642,8 +2641,9 @@
 
     function saveCurrentDay() {
       const emotions = getSelectedEmotions();
-      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
+      const contexts = getSelectedContexts();
       const prevHelped = state.entries[selectedDate]?.helped || [];
+      const prevAi = state.entries[selectedDate]?.aiAnalysis;
 
       const entry = {
         date: selectedDate,
@@ -2658,7 +2658,8 @@
         libido: metrics.libido,
         emotions: emotions.length ? emotions : ['Спокойствие'],
         contexts,
-        helped: prevHelped
+        helped: prevHelped,
+        ...(prevAi ? { aiAnalysis: prevAi } : {})
       };
 
       state.onboarded = true;
@@ -2670,7 +2671,7 @@
       document.getElementById('savedSummaryCard').style.display = 'block';
       document.getElementById('editableDayForm').style.display = 'none';
       updateHeaderAndContextControls();
-      renderAdviceAndSelfCareTab(false);
+      renderAdviceAndSelfCareTab();
       showToast('Сохранено');
     }
 
@@ -2770,17 +2771,25 @@
         soloReset: tempSoloReset,
         discharge: tempDischarge,
         emotions: getSelectedEmotions(),
-        contexts: Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val),
+        contexts: getSelectedContexts(),
         helped: []
       };
     }
 
     function buildDefaultSteps(entry, info) {
+      const hasBreast = (entry.contexts || []).includes('Болезненность груди');
       if (entry.isPeriod || info.phaseCode === 'menstrual') {
         return [
           'Создай тепло для живота или поясницы и сними лишнюю нагрузку на первые часы.',
           'Выпей тёплую воду и добавь еду с железом и белком.',
           'Оставь только самые важные дела и заложи пораньше отдых.'
+        ];
+      }
+      if (hasBreast) {
+        return [
+          'Надень мягкий топ или бюстгальтер без жёстких косточек на остаток дня.',
+          'Снизь количество кофеина и слишком солёной пищи до вечера.',
+          'Дай груди покой от лишнего давления и проверь динамику завтра.'
         ];
       }
       if (info.isDelay) {
@@ -2811,14 +2820,13 @@
       ];
     }
 
-    function renderAdviceAndSelfCareTab(autoTriggerAi = false) {
+    function renderAdviceAndSelfCareTab() {
       const info = getCycleInfo(selectedDate);
       const entry = getCurrentWorkingEntry();
       const hasApiKey = Boolean(state.settings.geminiApiKey);
 
       document.getElementById('advicePhaseTag').textContent = `${formatHumanDate(selectedDate)} · День ${info.cycleDay}`;
-      const btnRunAi = document.getElementById('btnRunAi');
-      btnRunAi.style.display = hasApiKey ? 'inline-flex' : 'none';
+      document.getElementById('aiControlRow').style.display = hasApiKey ? 'block' : 'none';
       document.getElementById('breakdownMainCard').classList.toggle('ai-highlight', hasApiKey && Boolean(entry.aiAnalysis));
 
       const gynH = document.getElementById('gynHeadline');
@@ -2828,9 +2836,12 @@
       const patBox = document.getElementById('aiPatternsBox');
       const patBody = document.getElementById('patternsBody');
       const stepsEl = document.getElementById('stepByStepList');
+      const btnRunAi = document.getElementById('btnRunAi');
       const aiNote = document.getElementById('aiStatusNote');
 
       const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
+      const contexts = Array.isArray(entry.contexts) ? entry.contexts : [];
+      const hasBreast = contexts.includes('Болезненность груди');
       const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
       const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
       const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
@@ -2865,31 +2876,35 @@
           aiNote.textContent = '';
         }
 
+        const breastNote = hasBreast
+          ? ' Чувствительность и болезненность груди часто связаны с гормональными колебаниями (эстроген/прогестерон) или задержкой жидкости — полезно выбрать мягкую посадку без давления.'
+          : '';
+
         if (info.isDelay) {
           gynH.textContent = `${info.phase} — тело и цикл`;
-          gynB.textContent = info.delayDays <= 7
+          gynB.textContent = (info.delayDays <= 7
             ? 'Цикл сместился: такое бывает при стрессе, недосыпе или сдвиге овуляции. Если была близость, полезно сделать тест и понаблюдать за самочувствием.'
-            : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ, чтобы проверить причину.';
+            : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ, чтобы проверить причину.') + breastNote;
         } else if (entry.pain >= 6) {
           gynH.textContent = 'Выраженные спазмы и боль';
-          gynB.textContent = 'Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают снять спазм.';
+          gynB.textContent = ('Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают снять спазм.') + breastNote;
         } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
           gynH.textContent = 'Овуляторное окно';
-          gynB.textContent = 'Эстрогены на пике, возможны короткие тянущие ощущения с одного бока, чувствительность груди и более прозрачные выделения. Тело часто легче откликается на движение и близость.';
+          gynB.textContent = ('Эстрогены на пике, возможны короткие тянущие ощущения с одного бока, чувствительность груди и более прозрачные выделения. Тело часто легче откликается на движение и близость.') + breastNote;
         } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
           gynH.textContent = `${info.phase} · День ${info.cycleDay}`;
-          gynB.textContent = entry.discharge === 'Обильные'
+          gynB.textContent = (entry.discharge === 'Обильные'
             ? 'Уровень эстрогена и прогестерона низкий, организм обновляет эндометрий. При обильных выделениях важно пить больше воды, следить за железом и не перегружать себя с утра.'
-            : 'Гормональный фон на минимуме, телу нужно больше восстановления и тепла. Даже если сил немного, мягкая разминка или прогулка без спешки обычно улучшают самочувствие.';
+            : 'Гормональный фон на минимуме, телу нужно больше восстановления и тепла. Даже если сил немного, мягкая разминка или прогулка без спешки обычно улучшают самочувствие.') + breastNote;
         } else if (info.phaseCode === 'late_luteal') {
           gynH.textContent = 'Предменструальное окно';
-          gynB.textContent = 'Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому и скачки энергии. Организму проще переносить ровный режим без резких скачков сахара.';
+          gynB.textContent = ('Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому и скачки энергии. Организму проще переносить ровный режим без резких скачков сахара.') + breastNote;
         } else if (info.phaseCode === 'early_luteal') {
           gynH.textContent = 'Лютеиновая фаза';
-          gynB.textContent = 'Преобладает прогестерон: обмен веществ немного замедляется, а потребность в спокойном ритме и регулярном питании растёт. Хорошее время для планомерных дел без рывков.';
+          gynB.textContent = ('Преобладает прогестерон: обмен веществ немного замедляется, а потребность в спокойном ритме и регулярном питании растёт. Хорошее время для планомерных дел без рывков.') + breastNote;
         } else {
           gynH.textContent = 'Фолликулярная фаза';
-          gynB.textContent = 'Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся активность, новые задачи и смена обстановки.';
+          gynB.textContent = ('Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся активность, новые задачи и смена обстановки.') + breastNote;
         }
 
         psyH.textContent = emos.join(' · ');
@@ -2920,14 +2935,12 @@
       }
 
       renderActionableTipsList(entry, info);
-
-      if (autoTriggerAi && hasApiKey && state.entries[selectedDate] && !state.entries[selectedDate].aiAnalysis && !isAiGenerating) {
-        runGeminiAnalysis(false);
-      }
     }
 
     function renderActionableTipsList(entry, info) {
       const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
+      const contexts = Array.isArray(entry.contexts) ? entry.contexts : [];
+      const hasBreast = contexts.includes('Болезненность груди');
       const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
       const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
       const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
@@ -2941,6 +2954,13 @@
           sub: t.sub || ''
         }));
       } else {
+        if (hasBreast) {
+          tips.push({
+            id: 'Мягкий топ без косточек и меньше кофеина',
+            title: 'Мягкий топ без косточек и меньше кофеина',
+            sub: 'Снижает давление и чувствительность груди при гормональных колебаниях.'
+          });
+        }
         if (entry.pain >= 4 || entry.isPeriod) {
           tips.push({
             id: 'Тепло на низ живота или поясницу',
@@ -3026,14 +3046,6 @@
       renderLearnedHelpStats();
     }
 
-    function openBreathFromAdvice() {
-      hapticImpact('medium');
-      switchTab('sos');
-      setTimeout(() => {
-        if (!isBreathing) toggleBreathing();
-      }, 150);
-    }
-
     async function runGeminiAnalysis(isManualClick = false) {
       const apiKey = state.settings.geminiApiKey;
       if (!apiKey || isAiGenerating) return;
@@ -3065,6 +3077,7 @@
             isPeriod: Boolean(e.isPeriod),
             isOvulation: Boolean(e.isOvulation),
             tensionRelief: Boolean(e.soloReset),
+            breastTenderness: (e.contexts || []).includes('Болезненность груди'),
             discharge: e.discharge || '',
             emotions: e.emotions || [],
             contexts: e.contexts || [],
@@ -3079,7 +3092,10 @@
         });
       });
 
-      const prompt = `Ты — внимательный врач-гинеколог и психолог. Дай подробный, бережный и живой разбор состояния по дневнику цикла. Отвечай на русском, на «ты», без воды, но содержательно. Если tensionRelief=true, учитывай мягкую телесную разрядку для снятия напряжения, но называй её нейтрально ("телесная разрядка", "снятие напряжения") без явных слов.
+      const prompt = `Ты пишешь как живой, внимательный человек — врач-гинеколог и психолог в одном лице, который общается просто и по делу, на «ты».
+Строго запрещены ИИ-штампы, канцелярит и пустые фразы: не пиши «важно помнить», «в заключение», «комплексный подход», «не стоит забывать», «прислушайся к своему телу», «начни с малого» как общую заглушку. Говори конкретно про факты этого дня и цикла, живым разговорным языком.
+Если tensionRelief=true, учитывай мягкую телесную разрядку для снятия напряжения, но называй её нейтрально ("телесная разрядка", "снятие напряжения") без прямых слов.
+Если в факторах есть «Болезненность груди» или breastTenderness=true в истории, обязательно разбери это телесно и дай практичный шаг.
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.len} дн., длительность месячных: ${info.pLen} дн.
@@ -3097,7 +3113,7 @@
 - Близость: ${current.intimacy ? 'да' : 'нет'}
 - tensionRelief: ${Boolean(current.soloReset)}
 - Эмоции: ${(current.emotions || []).join(', ')}
-- Факторы: ${(current.contexts || []).join(', ')}
+- Факторы и ощущения: ${(current.contexts || []).join(', ')}
 
 ПОМОГЛО РАНЬШЕ:
 ${JSON.stringify(helpedCounts)}
@@ -3107,16 +3123,16 @@ ${JSON.stringify(recentHistory)}
 
 Верни строго JSON:
 {
-  "physiology": "3-4 содержательных предложения про тело, гормоны и физиологию текущего дня.",
-  "patterns": "2-4 предложения о том, как сегодняшний день отличается от прошлых дней и фаз в истории.",
-  "focus": "2-3 предложения про моральное состояние и как бережно поддержать себя сегодня.",
+  "physiology": "3-4 живых предложения про тело, гормоны, грудь/боль/цикл без шаблонных фраз.",
+  "patterns": "2-4 конкретных предложения о том, что отличается от прошлых дней и фаз в истории.",
+  "focus": "2-3 живых предложения про моральное состояние и поддержку сегодня.",
   "steps": [
-    "Шаг 1: конкретное действие",
-    "Шаг 2: конкретное действие",
-    "Шаг 3: конкретное действие"
+    "Конкретное действие 1",
+    "Конкретное действие 2",
+    "Конкретное действие 3"
   ],
   "tips": [
-    { "title": "Конкретная рекомендация", "sub": "Короткое практическое пояснение зачем это сейчас" }
+    { "title": "Короткая рекомендация", "sub": "Зачем это именно сейчас" }
   ]
 }`;
 
@@ -3133,7 +3149,7 @@ ${JSON.stringify(recentHistory)}
           tips: Array.isArray(result.tips) ? result.tips.slice(0, 4) : []
         };
         persistLocalAndCloud(selectedDate.slice(0, 7));
-        renderAdviceAndSelfCareTab(false);
+        renderAdviceAndSelfCareTab();
         if (isManualClick) showToast('Готово');
       } catch (e) {
         note.style.color = 'var(--rose)';
@@ -3160,7 +3176,7 @@ ${JSON.stringify(recentHistory)}
       }
       state.entries[selectedDate].helped = list;
       persistLocalAndCloud(selectedDate.slice(0, 7));
-      renderAdviceAndSelfCareTab(false);
+      renderAdviceAndSelfCareTab();
     }
 
     function addCustomHelped() {
@@ -3364,9 +3380,11 @@ ${JSON.stringify(recentHistory)}
 
       const severePain = entries.filter(e => e.pain >= 7).length;
       const heavyFlow = entries.filter(e => e.isPeriod && e.discharge === 'Обильные').length;
+      const breastDays = entries.filter(e => (e.contexts || []).includes('Болезненность груди')).length;
       const notes = [];
       if (severePain >= 3) notes.push(`Боль ≥7: ${severePain}`);
       if (heavyFlow >= 3) notes.push(`Обильные: ${heavyFlow}`);
+      if (breastDays >= 2) notes.push(`Грудь: ${breastDays}`);
       document.getElementById('medicalSummary').innerHTML = notes.join(' · ');
     }
 
@@ -3490,7 +3508,9 @@ ${JSON.stringify(recentHistory)}
       LEGACY_KEYS.forEach(k => localStorage.removeItem(k));
       if (hasTelegramCloud()) {
         const keys = await cloudGetKeys();
-        const ourKeys = keys.filter(k => k.startsWith('ritm8_') || k.startsWith('ritm7_'));
+        const ourKeys = keys.filter(k =>
+          k.startsWith('ritm9_') || k.startsWith('ritm8_') || k.startsWith('ritm7_')
+        );
         await cloudRemove(ourKeys);
       }
       state = {
@@ -3518,7 +3538,7 @@ ${JSON.stringify(recentHistory)}
       document.getElementById(`view-${tab}`).classList.add('active');
       document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
 
-      if (tab === 'analytics_advice') renderAdviceAndSelfCareTab(true);
+      if (tab === 'analytics_advice') renderAdviceAndSelfCareTab();
       if (tab === 'analytics') renderAnalytics();
       if (tab === 'sos') updatePainkillerUI();
     }
