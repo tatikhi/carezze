@@ -388,6 +388,11 @@
       box-shadow: var(--shadow);
     }
 
+    .card.ai-highlight {
+      border-color: var(--indigo-bg);
+      background: linear-gradient(180deg, var(--indigo-tint) 0%, var(--surface) 45%);
+    }
+
     .card-top {
       display: flex;
       justify-content: space-between;
@@ -730,6 +735,27 @@
       cursor: pointer;
     }
 
+    .btn-indigo {
+      width: 100%;
+      height: 48px;
+      background: var(--indigo);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-indigo:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
     .btn-soft {
       background: var(--surface-2);
       color: var(--ink);
@@ -752,7 +778,7 @@
       cursor: pointer;
     }
 
-    textarea, input[type="date"], input[type="number"], input[type="text"] {
+    textarea, input[type="date"], input[type="number"], input[type="text"], input[type="password"] {
       width: 100%;
       background: var(--surface-2);
       border: 1.5px solid transparent;
@@ -1362,7 +1388,7 @@
         </div>
       </div>
 
-      <!-- SAVED LOCKED ACCORDION (Shown when day is saved and locked) -->
+      <!-- SAVED LOCKED ACCORDION -->
       <div id="savedSummaryCard" class="saved-card" style="display:none;">
         <div class="saved-header">
           <div class="saved-badge">✓ День сохранён</div>
@@ -1391,12 +1417,12 @@
         <div class="saved-tags-line" id="savedTagsLine"></div>
 
         <div class="saved-cta-row">
-          <span style="font-size:13px; color:var(--ink-2);">Рекомендации готовы</span>
+          <span style="font-size:13px; color:var(--ink-2);">Разбор и советы готовы</span>
           <button class="link-btn" onclick="switchTab('analytics_advice')">Открыть разбор →</button>
         </div>
       </div>
 
-      <!-- EDITABLE FORM CONTAINER (Hidden when day is saved & locked) -->
+      <!-- EDITABLE FORM CONTAINER -->
       <div id="editableDayForm">
         <!-- Tactile Sliders -->
         <div class="card">
@@ -1438,20 +1464,17 @@
             <span class="card-title">Близость и телесные маркеры</span>
           </div>
 
-          <!-- Simple Intimacy Toggle -->
           <div class="grid-2" id="intimacyBlock">
             <button class="choice-btn active" id="btnIntimacyNo" onclick="setIntimacy(false)">Близости не было</button>
             <button class="choice-btn" id="btnIntimacyYes" onclick="setIntimacy(true)">Была близость ♥</button>
           </div>
 
-          <!-- Ovulation Button (Visible ONLY in mid-cycle window or if marked) -->
           <div id="ovulationBlock" style="display:none; margin-top:10px;">
             <button class="choice-btn" style="width:100%;" id="btnOvulation" onclick="toggleOvulation()">
               ✦ Отметить овуляцию
             </button>
           </div>
 
-          <!-- Discharge tied to Menstruation -->
           <div id="menstrualDischargeBlock" style="display:none;">
             <div class="sub-section-header">
               <span class="field-label">Интенсивность месячных</span>
@@ -1463,7 +1486,6 @@
             </div>
           </div>
 
-          <!-- Discharge tied to Ovulation / Mid-cycle -->
           <div id="ovulatoryDischargeBlock" style="display:none;">
             <div class="sub-section-header">
               <span class="field-label">Характер выделений (середина цикла)</span>
@@ -1528,12 +1550,33 @@
       </div>
     </div>
 
-    <!-- VIEW 2: STATE BREAKDOWN & SELF-CARE FEEDBACK LOOP ("Разбор") -->
+    <!-- VIEW 2: STATE BREAKDOWN & GEMINI AI + SELF-CARE FEEDBACK LOOP ("Разбор") -->
     <div id="view-analytics_advice" class="view">
-      <div class="card">
+      <!-- AI Setup Prompt Banner (shown only if no Gemini key is added) -->
+      <div id="aiNoKeyBanner" class="card" style="display:none;">
         <div class="card-top">
-          <span class="card-title">Разбор состояния</span>
+          <span class="card-title">✨ Усилить разбор через Gemini</span>
+          <span class="card-sub">Бесплатно</span>
+        </div>
+        <div style="font-size:14px; color:var(--ink-2); margin-bottom:12px;">
+          Подключи свой бесплатный ключ Google AI Studio в настройках, чтобы ИИ анализировал связки симптомов и сравнивал день с прошлыми циклами.
+        </div>
+        <button class="btn-soft" style="width:100%;" onclick="switchTab('settings')">Добавить ключ в настройках →</button>
+      </div>
+
+      <!-- Main Breakdown Card -->
+      <div class="card" id="breakdownMainCard">
+        <div class="card-top">
+          <span class="card-title" id="breakdownCardTitle">Разбор состояния</span>
           <span class="card-sub" id="advicePhaseTag">Сегодня</span>
+        </div>
+
+        <!-- AI Action / Refresh Bar (when key is configured) -->
+        <div id="aiControlRow" style="display:none; margin-bottom:12px;">
+          <button class="btn-indigo" id="btnRunAi" onclick="runGeminiAnalysis(true)">
+            <span>✨ Сделать глубокий ИИ-разбор</span>
+          </button>
+          <div id="aiStatusNote" style="font-size:12px; color:var(--ink-2); margin-top:6px; text-align:center;"></div>
         </div>
 
         <div class="protocol-stack">
@@ -1541,6 +1584,12 @@
             <span class="protocol-badge badge-gyn">Гинеколог · Физиология</span>
             <div class="protocol-title" id="gynHeadline">Физиология дня</div>
             <div class="protocol-text" id="gynBody">Отметь состояние на вкладке «Сегодня», чтобы увидеть точный разбор.</div>
+          </div>
+
+          <div class="protocol-item" id="aiPatternsBox" style="display:none;">
+            <span class="protocol-badge badge-hist">История · Личные закономерности</span>
+            <div class="protocol-title">Сравнение с прошлыми днями</div>
+            <div class="protocol-text" id="patternsBody"></div>
           </div>
 
           <div class="protocol-item">
@@ -1563,13 +1612,11 @@
 
         <div id="actionableTipsList"></div>
 
-        <!-- Custom Remedy Input -->
         <div style="display:flex; gap:8px; margin-top:12px;">
           <input type="text" id="customHelpInput" placeholder="Или впиши свой способ..." />
           <button class="btn-soft" style="white-space:nowrap;" onclick="addCustomHelped()">+ Помогло</button>
         </div>
 
-        <!-- Learned Pattern Box -->
         <div class="inspector-box" id="learnedHelpStats" style="display:none;"></div>
       </div>
     </div>
@@ -1623,7 +1670,6 @@
 
     <!-- VIEW 4: PIN-LOCKED PRIVATE NOTES ("Заметки") -->
     <div id="view-notes" class="view">
-      <!-- Locked / Setup Keypad State -->
       <div id="notesPinGate" class="card">
         <div class="pin-screen">
           <div style="font-size:28px; margin-bottom:8px;">🔒</div>
@@ -1656,7 +1702,6 @@
         </div>
       </div>
 
-      <!-- Unlocked Private Notes Content -->
       <div id="notesUnlockedArea" style="display:none;">
         <div class="card">
           <div class="card-top">
@@ -1666,7 +1711,7 @@
           <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px;" id="newNoteContextLabel">
             Сегодня · День 1
           </div>
-          <textarea id="privateNoteInput" rows="4" placeholder="Запиши личные мысли, чувства или переживания — этот раздел защищён твоим кодом..."></textarea>
+          <textarea id="privateNoteInput" rows="4" placeholder="Запиши личные мысли, чувства или переживания — этот раздел защищён твоим кодом и не отправляется в ИИ..."></textarea>
           <button class="btn-accent" style="margin-top:12px;" onclick="savePrivateNote()">Сохранить заметку</button>
         </div>
 
@@ -1751,6 +1796,25 @@
 
     <!-- VIEW 6: SETTINGS ("Настройки") -->
     <div id="view-settings" class="view">
+      <!-- Gemini API Key Settings Card -->
+      <div class="card ai-highlight">
+        <div class="card-top">
+          <span class="card-title">✨ ИИ-аналитик (Gemini)</span>
+          <span class="card-sub" id="geminiKeyStatusBadge">Не подключён</span>
+        </div>
+        <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px; line-height:1.45;">
+          Вставь API-ключ из <b>aistudio.google.com</b> (поддерживаются ключи <code>AQ.</code> и <code>AIza</code>). Ключ хранится только у тебя в Telegram Cloud и на устройстве. Личные заметки под паролем в ИИ не отправляются.
+        </div>
+        <input type="password" id="setGeminiKey" placeholder="AQ.Ab8... или AIzaSy..." autocomplete="off" />
+        <div class="grid-2" style="margin-top:10px;">
+          <button class="btn-indigo" style="height:44px; font-size:14px;" onclick="saveAndTestGeminiKey()" id="btnTestGemini">
+            Сохранить и проверить
+          </button>
+          <button class="btn-soft" style="height:44px;" onclick="removeGeminiKey()">Удалить ключ</button>
+        </div>
+        <div id="geminiTestFeedback" style="display:none; margin-top:10px; font-size:13px; line-height:1.4; padding:10px 12px; border-radius:12px; background:var(--surface-2);"></div>
+      </div>
+
       <div class="card">
         <div class="card-top">
           <span class="card-title">Параметры цикла</span>
@@ -1908,7 +1972,8 @@
         lastPeriodStart: getTodayISO(0),
         cycleLength: 28,
         periodLength: 5,
-        darkMode: false
+        darkMode: false,
+        geminiApiKey: ''
       },
       entries: {},
       privateNotes: [],
@@ -1932,7 +1997,10 @@
     let isNotesUnlocked = false;
     let pinBuffer = '';
     let pinSetupFirst = '';
-    let pinMode = 'enter'; // 'enter' | 'create' | 'confirm'
+    let pinMode = 'enter';
+
+    // AI Loading Flag
+    let isAiGenerating = false;
 
     // Other UI State
     let chartFilter = 'all';
@@ -2006,17 +2074,23 @@
         painkillers: state.painkillers.slice(0, 15)
       });
       await cloudSet('ritm6_meta', metaPayload);
-
-      // Sync private notes
       await cloudSet('ritm6_notes', JSON.stringify(state.privateNotes.slice(0, 30)));
 
-      // Group entries by YYYY-MM
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
         const ym = iso.slice(0, 7);
         if (!specificMonthKey || ym === specificMonthKey) {
           if (!byMonth[ym]) byMonth[ym] = {};
-          byMonth[ym][iso] = entry;
+          const clone = { ...entry };
+          if (clone.aiAnalysis) {
+            clone.aiAnalysis = {
+              physiology: (clone.aiAnalysis.physiology || '').slice(0, 420),
+              patterns: (clone.aiAnalysis.patterns || '').slice(0, 420),
+              focus: (clone.aiAnalysis.focus || '').slice(0, 320),
+              tips: (clone.aiAnalysis.tips || []).slice(0, 3)
+            };
+          }
+          byMonth[ym][iso] = clone;
         }
       });
 
@@ -2106,7 +2180,6 @@
       state.settings.cycleLength = obCycleLen;
       state.settings.periodLength = obPeriodLen;
 
-      // Mark initial period days up to today if within periodLength
       const startObj = parseLocalISO(pickedDate);
       const todayISO = getTodayISO(0);
       for (let i = 0; i < obPeriodLen; i++) {
@@ -2139,6 +2212,16 @@
       document.getElementById('setLastPeriod').value = state.settings.lastPeriodStart;
       document.getElementById('setCycleLength').value = state.settings.cycleLength;
       document.getElementById('setPeriodLength').value = state.settings.periodLength || 5;
+      document.getElementById('setGeminiKey').value = state.settings.geminiApiKey || '';
+
+      const badge = document.getElementById('geminiKeyStatusBadge');
+      if (state.settings.geminiApiKey) {
+        badge.textContent = 'Подключён ✓';
+        badge.style.color = 'var(--accent)';
+      } else {
+        badge.textContent = 'Не подключён';
+        badge.style.color = 'var(--ink-2)';
+      }
     }
 
     function applyThemeUI() {
@@ -2159,6 +2242,112 @@
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 2100);
       hapticSuccess();
+    }
+
+    // GEMINI API CLIENT (Supports both AQ. Express Keys and AIza Keys)
+    async function callGeminiAPI(apiKey, promptText) {
+      const isExpressKey = apiKey.startsWith('AQ.');
+      const models = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.0-flash'];
+      let lastError = 'Не удалось связаться с Gemini API';
+
+      const payload = {
+        contents: [{ role: 'user', parts: [{ text: promptText }] }],
+        generationConfig: {
+          temperature: 0.45,
+          responseMimeType: 'application/json'
+        }
+      };
+
+      for (const model of models) {
+        const endpoints = isExpressKey
+          ? [
+              `https://aiplatform.googleapis.com/v1/publishers/google/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+              `https://aiplatform.googleapis.com/v1beta1/publishers/google/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
+              `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`
+            ]
+          : [
+              `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`
+            ];
+
+        for (const url of endpoints) {
+          try {
+            const res = await fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+              const errMsg = data?.error?.message || `HTTP ${res.status}`;
+              lastError = errMsg;
+              if (res.status === 404 || res.status === 400 || res.status === 403) {
+                continue;
+              }
+              throw new Error(errMsg);
+            }
+
+            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const cleaned = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
+            return JSON.parse(cleaned);
+          } catch (e) {
+            lastError = e.message || String(e);
+          }
+        }
+      }
+      throw new Error(lastError);
+    }
+
+    async function saveAndTestGeminiKey() {
+      const key = document.getElementById('setGeminiKey').value.trim();
+      const fb = document.getElementById('geminiTestFeedback');
+      const btn = document.getElementById('btnTestGemini');
+
+      if (!key) {
+        fb.style.display = 'block';
+        fb.style.color = 'var(--rose)';
+        fb.textContent = 'Вставь API-ключ из Google AI Studio.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Проверяю...';
+      fb.style.display = 'block';
+      fb.style.color = 'var(--ink-2)';
+      fb.textContent = 'Отправляю тестовый запрос в Google Gemini...';
+
+      try {
+        await callGeminiAPI(key, 'Верни строго JSON: {"ok": true}');
+        state.settings.geminiApiKey = key;
+        persistLocalAndCloud(null);
+        syncSettingsInputs();
+        fb.style.color = 'var(--accent)';
+        fb.textContent = 'Подключено ✓ Теперь во вкладке «Разбор» доступен глубокий ИИ-анализ.';
+        hapticSuccess();
+        showToast('Gemini подключён');
+      } catch (e) {
+        fb.style.color = 'var(--rose)';
+        const msg = String(e.message || e);
+        if (msg.toLowerCase().includes('location') || msg.toLowerCase().includes('region')) {
+          fb.textContent = 'Ошибка региона: проверь, что включён VPN (США или Европа).';
+        } else if (msg.toLowerCase().includes('api key') || msg.includes('400') || msg.includes('403')) {
+          fb.textContent = 'Неверный API-ключ. Проверь, что скопировала его целиком из aistudio.google.com.';
+        } else {
+          fb.textContent = `Ошибка: ${msg}`;
+        }
+        hapticError();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Сохранить и проверить';
+      }
+    }
+
+    function removeGeminiKey() {
+      state.settings.geminiApiKey = '';
+      persistLocalAndCloud(null);
+      syncSettingsInputs();
+      document.getElementById('geminiTestFeedback').style.display = 'none';
+      showToast('Ключ удалён');
     }
 
     // Scroll-Safe Sliders
@@ -2256,7 +2445,6 @@
       const ovulationDay = Math.max(pLen + 2, len - 14);
       const isMidCycleWindow = (cycleD) => cycleD >= Math.max(8, ovulationDay - 4) && cycleD <= ovulationDay + 3;
 
-      // Check for Delay (Задержка) in current active cycle
       let isDelay = false;
       let delayDays = 0;
       let cycleDay = 1;
@@ -2341,7 +2529,6 @@
 
       document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
 
-      // Apple Health Period Button State
       const pBtn = document.getElementById('btnPeriodDay');
       const pText = document.getElementById('periodBtnText');
       const newCycleBtn = document.getElementById('btnNewCycle');
@@ -2349,16 +2536,13 @@
       pBtn.classList.toggle('active', tempIsPeriod);
       pText.textContent = tempIsPeriod ? 'Месячные отмечены ✓' : 'Отметить месячные';
 
-      // Show "1-й день цикла" button if off-schedule (day >= 15 or delay) and not already day 1
       const showNewCycleBtn = (info.cycleDay >= 15 || info.isDelay) && selectedDate !== state.settings.lastPeriodStart;
       newCycleBtn.style.display = showNewCycleBtn ? 'block' : 'none';
 
-      // Context-Aware Ovulation & Discharge Visibility
       document.getElementById('ovulationBlock').style.display = info.showOvulationOption ? 'block' : 'none';
       document.getElementById('btnOvulation').classList.toggle('active', tempIsOvulation);
       document.getElementById('btnOvulation').textContent = tempIsOvulation ? '✦ Овуляция отмечена' : '✦ Отметить овуляцию';
 
-      // Discharge tied separately to Menstruation vs Ovulation
       const mensBlock = document.getElementById('menstrualDischargeBlock');
       const ovulBlock = document.getElementById('ovulatoryDischargeBlock');
 
@@ -2404,11 +2588,11 @@
           tempDischarge = 'Умеренные';
         }
       }
-      // If day was locked, save immediately so pink state persists just like Apple Health
       if (!isEditingDay && state.entries[selectedDate]) {
         state.entries[selectedDate].isPeriod = tempIsPeriod;
         state.entries[selectedDate].isOvulation = tempIsOvulation;
         state.entries[selectedDate].discharge = tempIsPeriod ? tempDischarge : '';
+        delete state.entries[selectedDate].aiAnalysis;
         persistLocalAndCloud(selectedDate.slice(0, 7));
         renderSavedSummaryCard(state.entries[selectedDate]);
         showToast(tempIsPeriod ? 'День месячных отмечен' : 'Отметка снята');
@@ -2442,6 +2626,7 @@
       } else {
         state.entries[selectedDate].isPeriod = true;
         state.entries[selectedDate].discharge = 'Умеренные';
+        delete state.entries[selectedDate].aiAnalysis;
       }
 
       persistLocalAndCloud(selectedDate.slice(0, 7));
@@ -2566,7 +2751,7 @@
       }
 
       updateHeaderAndContextControls();
-      renderAdviceAndSelfCareTab();
+      renderAdviceAndSelfCareTab(false);
     }
 
     function populateEditableInputs(data) {
@@ -2642,7 +2827,7 @@
       document.getElementById('savedSummaryCard').style.display = 'block';
       document.getElementById('editableDayForm').style.display = 'none';
       updateHeaderAndContextControls();
-      renderAdviceAndSelfCareTab();
+      renderAdviceAndSelfCareTab(false);
       showToast('День сохранён');
     }
 
@@ -2728,10 +2913,10 @@
       document.getElementById('calGrid').innerHTML = html;
     }
 
-    // TAB 2: STATE BREAKDOWN & ACTIONABLE SELF-CARE FEEDBACK LOOP
-    function renderAdviceAndSelfCareTab() {
-      const info = getCycleInfo(selectedDate);
-      const entry = state.entries[selectedDate] || {
+    // TAB 2: STATE BREAKDOWN + GEMINI AI + SELF-CARE FEEDBACK LOOP
+    function getCurrentWorkingEntry() {
+      return state.entries[selectedDate] || {
+        date: selectedDate,
         mood: metrics.mood,
         energy: metrics.energy,
         pain: metrics.pain,
@@ -2741,95 +2926,153 @@
         intimacy: tempIntimacy,
         discharge: tempDischarge,
         emotions: getSelectedEmotions(),
-        contexts: [],
+        contexts: Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val),
         helped: []
       };
+    }
+
+    function renderAdviceAndSelfCareTab(autoTriggerAi = false) {
+      const info = getCycleInfo(selectedDate);
+      const entry = getCurrentWorkingEntry();
+      const hasApiKey = Boolean(state.settings.geminiApiKey);
 
       document.getElementById('advicePhaseTag').textContent = `${formatHumanDate(selectedDate)} · День ${info.cycleDay}`;
+      document.getElementById('aiNoKeyBanner').style.display = hasApiKey ? 'none' : 'block';
+      document.getElementById('aiControlRow').style.display = hasApiKey ? 'block' : 'none';
+      document.getElementById('breakdownMainCard').classList.toggle('ai-highlight', hasApiKey && Boolean(entry.aiAnalysis));
 
       const gynH = document.getElementById('gynHeadline');
       const gynB = document.getElementById('gynBody');
       const psyH = document.getElementById('psychHeadline');
       const psyB = document.getElementById('psychBody');
+      const patBox = document.getElementById('aiPatternsBox');
+      const patBody = document.getElementById('patternsBody');
+      const btnRunAi = document.getElementById('btnRunAi');
+      const aiNote = document.getElementById('aiStatusNote');
 
+      if (hasApiKey && entry.aiAnalysis) {
+        document.getElementById('breakdownCardTitle').textContent = '✨ ИИ-разбор состояния';
+        gynH.textContent = 'Физиология и гормональный фон';
+        gynB.textContent = entry.aiAnalysis.physiology || '';
+
+        if (entry.aiAnalysis.patterns) {
+          patBox.style.display = 'block';
+          patBody.textContent = entry.aiAnalysis.patterns;
+        } else {
+          patBox.style.display = 'none';
+        }
+
+        psyH.textContent = 'Фокус и психологическая опора';
+        psyB.textContent = entry.aiAnalysis.focus || '';
+
+        btnRunAi.innerHTML = '<span>↻ Обновить ИИ-разбор</span>';
+        aiNote.textContent = 'Анализ построен по твоим симптомам и истории цикла';
+      } else {
+        document.getElementById('breakdownCardTitle').textContent = 'Разбор состояния';
+        patBox.style.display = 'none';
+        if (hasApiKey) {
+          btnRunAi.innerHTML = '<span>✨ Сделать глубокий ИИ-разбор дня</span>';
+          aiNote.textContent = 'Нажми, чтобы Gemini сравнил день с твоей историей';
+        }
+
+        const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
+        const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
+        const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
+        const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
+
+        if (info.isDelay) {
+          gynH.textContent = `Задержка менструации (+${info.delayDays} дн.)`;
+          gynB.textContent = info.delayDays <= 7
+            ? 'Задержка до 5–7 дней чаще всего связана с более поздней овуляцией на фоне стресса, недосыпа или смены нагрузки. Если в этом цикле была близость, сделай утренний тест на беременность.'
+            : 'Задержка более 7 дней при отрицательном тесте на беременность — повод планово сделать УЗИ органов малого таза, чтобы оценить толщину эндометрия.';
+        } else if (entry.pain >= 6) {
+          gynH.textContent = 'Пик простагландинов и спазм миометрия';
+          gynB.textContent = 'Простагландины вызывают сокращение матки и временное снижение кровотока, отсюда резкая тянущая боль и слабость.';
+        } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
+          gynH.textContent = 'Пик эстрогенов и овуляторное окно';
+          gynB.textContent = 'Максимальный уровень эстрадиола усиливает приток крови, либидо и концентрацию. Прозрачные тянущиеся выделения и лёгкое покалывание с одной стороны до 24 часов — норма.';
+        } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
+          gynH.textContent = 'Менструальная фаза: минимум эстрогена и прогестерона';
+          gynB.textContent = entry.discharge === 'Обильные'
+            ? 'При обильных выделениях организм теряет жидкость и железо, что напрямую снижает физическую выносливость.'
+            : 'Гормональный фон на минимальной отметке, закономерно снижается толерантность к интенсивным тренировкам.';
+        } else if (info.phaseCode === 'late_luteal') {
+          gynH.textContent = 'Спад прогестерона и серотонина';
+          gynB.textContent = 'Резкое падение прогестерона и аллопрегнанолона снижает ГАМК-торможение в нервной системе и чувствительность к инсулину.';
+        } else {
+          gynH.textContent = 'Стабильная фолликулярная фаза';
+          gynB.textContent = 'Эстроген плавно растёт без резких перепадов — это твой базовый, наиболее ровный гормональный фон.';
+        }
+
+        if (info.isDelay) {
+          psyH.textContent = 'Снижение неопределённости';
+          psyB.textContent = 'Неопределённость усиливает тревогу сильнее любого факта. Вместо прокручивания сценариев сделай один конкретный шаг: тест или запись к врачу, если задержка затянется.';
+        } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
+          psyH.textContent = 'Карантин на решения — 72 часа';
+          psyB.textContent = 'В позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно. Мысли «всё плохо» или импульс резко поменять планы сейчас усилены биохимией — отложи выводы до 5-го дня цикла.';
+        } else if (hasAnxiety) {
+          psyH.textContent = 'Сначала тело, потом мысли';
+          psyB.textContent = 'При тревоге логика включается только после замедления пульса. Сделай 5 циклов физиологического вздоха во вкладке SOS и верни внимание в физические опоры.';
+        } else if (entry.pain >= 6 || entry.energy <= 3) {
+          psyH.textContent = 'Легализация отдыха без вины';
+          psyB.textContent = `Твой физический ресурс сейчас около ${entry.energy * 10}%. Оставь одно ключевое дело на день, остальное перенеси без самокритики.`;
+        } else if (hasIrritability) {
+          psyH.textContent = 'Снижение сенсорного шума';
+          psyB.textContent = 'Повышенная чувствительность сейчас — не «плохой характер», а истощение серотонинового буфера. Убери фоновые уведомления и дай себе 30 минут тишины.';
+        } else {
+          psyH.textContent = 'Фиксация опоры';
+          psyB.textContent = 'Когда фон ровный, полезно отметить, что именно помогает удерживать баланс — в сложные дни это станет готовой подсказкой.';
+        }
+      }
+
+      renderActionableTipsList(entry, info);
+
+      if (autoTriggerAi && hasApiKey && state.entries[selectedDate] && !state.entries[selectedDate].aiAnalysis && !isAiGenerating) {
+        runGeminiAnalysis(false);
+      }
+    }
+
+    function renderActionableTipsList(entry, info) {
       const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
       const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
       const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
       const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
 
-      // 1. Physiology (including Delay!)
-      if (info.isDelay) {
-        gynH.textContent = `Задержка менструации (+${info.delayDays} дн.)`;
-        gynB.textContent = info.delayDays <= 7
-          ? 'Задержка до 5–7 дней чаще всего связана с более поздней овуляцией на фоне стресса, недосыпа или смены нагрузки. Если в этом цикле была близость, сделай утренний тест на беременность.'
-          : 'Задержка более 7 дней при отрицательном тесте на беременность — повод планово сделать УЗИ органов малого таза, чтобы оценить толщину эндометрия.';
-      } else if (entry.pain >= 6) {
-        gynH.textContent = 'Пик простагландинов и спазм миометрия';
-        gynB.textContent = 'Простагландины вызывают сокращение матки и временное снижение кровотока, отсюда резкая тянущая боль и слабость.';
-      } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
-        gynH.textContent = 'Пик эстрогенов и овуляторное окно';
-        gynB.textContent = 'Максимальный уровень эстрадиола усиливает приток крови, либидо и концентрацию. Прозрачные тянущиеся выделения и лёгкое покалывание с одной стороны до 24 часов — норма.';
-      } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
-        gynH.textContent = 'Менструальная фаза: минимум эстрогена и прогестерона';
-        gynB.textContent = entry.discharge === 'Обильные'
-          ? 'При обильных выделениях организм теряет жидкость и железо, что напрямую снижает физическую выносливость.'
-          : 'Гормональный фон на минимальной отметке, закономерно снижается толерантность к интенсивным тренировкам.';
-      } else if (info.phaseCode === 'late_luteal') {
-        gynH.textContent = 'Спад прогестерона и серотонина';
-        gynB.textContent = 'Резкое падение прогестерона и аллопрегнанолона снижает ГАМК-торможение в нервной системе и чувствительность к инсулину.';
-      } else {
-        gynH.textContent = 'Стабильная фолликулярная фаза';
-        gynB.textContent = 'Эстроген плавно растёт без резких перепадов — это твой базовый, наиболее ровный гормональный фон.';
-      }
+      let tips = [];
 
-      // 2. Psychology
-      if (info.isDelay) {
-        psyH.textContent = 'Снижение неопределённости';
-        psyB.textContent = 'Неопределённость усиливает тревогу сильнее любого факта. Вместо прокручивания сценариев сделай один конкретный шаг: тест или запись к врачу, если задержка затянется.';
-      } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
-        psyH.textContent = 'Карантин на решения — 72 часа';
-        psyB.textContent = 'В позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно. Мысли «всё плохо» или импульс резко поменять планы сейчас усилены биохимией — отложи выводы до 5-го дня цикла.';
-      } else if (hasAnxiety) {
-        psyH.textContent = 'Сначала тело, потом мысли';
-        psyB.textContent = 'При тревоге логика включается только после замедления пульса. Сделай 5 циклов физиологического вздоха во вкладке SOS и верни внимание в физические опоры.';
-      } else if (entry.pain >= 6 || entry.energy <= 3) {
-        psyH.textContent = 'Легализация отдыха без вины';
-        psyB.textContent = `Твой физический ресурс сейчас около ${entry.energy * 10}%. Оставь одно ключевое дело на день, остальное перенеси без самокритики.`;
-      } else if (hasIrritability) {
-        psyH.textContent = 'Снижение сенсорного шума';
-        psyB.textContent = 'Повышенная чувствительность сейчас — не «плохой характер», а истощение серотонинового буфера. Убери фоновые уведомления и дай себе 30 минут тишины.';
+      if (entry.aiAnalysis?.tips?.length) {
+        tips = entry.aiAnalysis.tips.map(t => ({
+          id: t.title,
+          title: t.title,
+          sub: t.sub || 'Персональный совет Gemini'
+        }));
       } else {
-        psyH.textContent = 'Фиксация опоры';
-        psyB.textContent = 'Когда фон ровный, полезно отметить, что именно помогает удерживать баланс — в сложные дни это станет готовой подсказкой.';
-      }
-
-      // 3. Tailored Actionable Tips -> "Помогло" Loop
-      const tips = [];
-      if (entry.pain >= 4) {
-        tips.push({ id: 'Тепло / грелка', title: 'Сухое тепло или тёплый душ 15 мин', sub: 'Расслабляет гладкую мускулатуру и улучшает местный кровоток' });
-        tips.push({ id: 'Нурофен 400 мг', title: 'Нурофен 400 мг после еды', sub: 'Блокирует синтез простагландинов — эффективнее в начале боли' });
-        tips.push({ id: 'Но-шпа', title: 'Но-шпа при спазме', sub: 'Снимает спазм, если боль носит сжимающий характер' });
-      }
-      if (hasAnxiety || entry.pain >= 5) {
-        tips.push({ id: 'Дыхание (вздох)', title: 'Физиологический вздох (во вкладке SOS)', sub: 'Двойной вдох + длинный выдох снижают пульс за 1–2 минуты' });
-      }
-      if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
-        tips.push({ id: 'Белок + сложные углеводы', title: 'Плотный приём пищи каждые 3–4 часа', sub: 'Сглаживает скачки сахара и снижает раздражительность' });
-        tips.push({ id: 'Тишина без экрана 30 мин', title: '30 минут без уведомлений и ленты', sub: 'Разгружает перегретую нервную систему в ПМС' });
-      }
-      if (info.isDelay) {
-        tips.push({ id: 'Тест / чекап', title: 'Утренний тест или план визита к врачу', sub: 'Убирает фоновую тревогу от неизвестности' });
-      }
-      if (tips.length < 3) {
-        tips.push({ id: 'Прогулка 15–20 мин', title: 'Спокойная прогулка на свежем воздухе', sub: 'Мягко повышает уровень эндорфинов и дофамина' });
-        tips.push({ id: 'Ранний сон', title: 'Лечь спать на 40 минут раньше', sub: 'Базовое восстановление гормонального баланса' });
+        if (entry.pain >= 4) {
+          tips.push({ id: 'Тепло / грелка', title: 'Сухое тепло или тёплый душ 15 мин', sub: 'Расслабляет гладкую мускулатуру и улучшает местный кровоток' });
+          tips.push({ id: 'Нурофен 400 мг', title: 'Нурофен 400 мг после еды', sub: 'Блокирует синтез простагландинов — эффективнее в начале боли' });
+          tips.push({ id: 'Но-шпа', title: 'Но-шпа при спазме', sub: 'Снимает спазм, если боль носит сжимающий характер' });
+        }
+        if (hasAnxiety || entry.pain >= 5) {
+          tips.push({ id: 'Дыхание (вздох)', title: 'Физиологический вздох (во вкладке SOS)', sub: 'Двойной вдох + длинный выдох снижают пульс за 1–2 минуты' });
+        }
+        if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
+          tips.push({ id: 'Белок + сложные углеводы', title: 'Плотный приём пищи каждые 3–4 часа', sub: 'Сглаживает скачки сахара и снижает раздражительность' });
+          tips.push({ id: 'Тишина без экрана 30 мин', title: '30 минут без уведомлений и ленты', sub: 'Разгружает перегретую нервную систему в ПМС' });
+        }
+        if (info.isDelay) {
+          tips.push({ id: 'Тест / чекап', title: 'Утренний тест или план визита к врачу', sub: 'Убирает фоновую тревогу от неизвестности' });
+        }
+        if (tips.length < 3) {
+          tips.push({ id: 'Прогулка 15–20 мин', title: 'Спокойная прогулка на свежем воздухе', sub: 'Мягко повышает уровень эндорфинов и дофамина' });
+          tips.push({ id: 'Ранний сон', title: 'Лечь спать на 40 минут раньше', sub: 'Базовое восстановление гормонального баланса' });
+        }
       }
 
       const currentHelped = state.entries[selectedDate]?.helped || [];
       const allDisplayed = [...tips];
       currentHelped.forEach(hId => {
         if (!allDisplayed.some(t => t.id === hId)) {
-          allDisplayed.push({ id: hId, title: hId, sub: 'Твой личный способ' });
+          allDisplayed.push({ id: hId, title: hId, sub: 'Отмечено тобой как эффективное' });
         }
       });
 
@@ -2838,8 +3081,8 @@
         return `
           <div class="tip-action-card">
             <div>
-              <div class="tip-action-title">${t.title}</div>
-              <div class="tip-action-sub">${t.sub}</div>
+              <div class="tip-action-title">${escapeHtml(t.title)}</div>
+              <div class="tip-action-sub">${escapeHtml(t.sub)}</div>
             </div>
             <button class="btn-helped-toggle ${isChecked ? 'checked' : ''}" onclick="toggleHelpedTip('${t.id.replace(/'/g, "\\'")}')">
               ${isChecked ? 'Помогло ✓' : 'Помогло'}
@@ -2851,23 +3094,115 @@
       renderLearnedHelpStats();
     }
 
+    async function runGeminiAnalysis(isManualClick = false) {
+      const apiKey = state.settings.geminiApiKey;
+      if (!apiKey || isAiGenerating) return;
+
+      isAiGenerating = true;
+      const btn = document.getElementById('btnRunAi');
+      const note = document.getElementById('aiStatusNote');
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳ Анализирую цикл и симптомы...</span>';
+      note.textContent = 'Сверяю показатели с предыдущими днями...';
+
+      const info = getCycleInfo(selectedDate);
+      const current = getCurrentWorkingEntry();
+
+      const recentHistory = Object.values(state.entries)
+        .filter(e => e.date !== selectedDate)
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 25)
+        .map(e => {
+          const ci = getCycleInfo(e.date);
+          return {
+            date: e.date,
+            cycleDay: ci.cycleDay,
+            phase: ci.phase,
+            mood: e.mood,
+            energy: e.energy,
+            pain: e.pain,
+            libido: e.libido,
+            isPeriod: Boolean(e.isPeriod),
+            isOvulation: Boolean(e.isOvulation),
+            discharge: e.discharge || '',
+            emotions: e.emotions || [],
+            contexts: e.contexts || [],
+            helped: e.helped || []
+          };
+        });
+
+      const helpedCounts = {};
+      Object.values(state.entries).forEach(e => {
+        (e.helped || []).forEach(h => {
+          helpedCounts[h] = (helpedCounts[h] || 0) + 1;
+        });
+      });
+
+      const prompt = `Ты — внимательный, доказательный врач-гинеколог и клинический психолог. Проанализируй текущее состояние женщины в дневнике менструального цикла.
+Говори на русском языке, обращаясь на «ты», спокойно, структурно, без воды и общих банальностей. Не ставь диагнозы, но подсвечивай реальные физиологические и поведенческие закономерности.
+
+ПАРАМЕТРЫ ЦИКЛА:
+- Средняя длина цикла: ${info.len} дн., обычная длительность месячных: ${info.pLen} дн.
+- Выбранная дата: ${selectedDate}
+- День цикла: ${info.cycleDay} (${info.phase}${info.isDelay ? `, задержка ${info.delayDays} дн.` : ''})
+
+ПОКАЗАТЕЛИ СЕГОДНЯ:
+- Настроение: ${current.mood}/10
+- Энергия: ${current.energy}/10
+- Боль и спазмы: ${current.pain}/10
+- Либидо: ${current.libido}/10
+- Месячные отмечены: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
+- Овуляция отмечена: ${current.isOvulation ? 'да' : 'нет'}
+- Выделения: ${current.discharge || 'не отмечены'}
+- Близость: ${current.intimacy ? 'была' : 'не было'}
+- Эмоции: ${(current.emotions || []).join(', ') || 'не указаны'}
+- Контекст/факторы: ${(current.contexts || []).join(', ') || 'нет'}
+
+ЛИЧНАЯ СТАТИСТИКА «ЧТО ПОМОГАЛО РАНЬШЕ»:
+${Object.keys(helpedCounts).length ? JSON.stringify(helpedCounts) : 'пока не накоплена'}
+
+ИСТОРИЯ ПРЕДЫДУЩИХ ЗАПИСЕЙ (до 25 дней):
+${recentHistory.length ? JSON.stringify(recentHistory) : 'пока только первый день наблюдений'}
+
+Верни строго валидный JSON без markdown-обёртки со следующими 4 полями:
+{
+  "physiology": "2-3 ёмких предложения: что именно происходит в организме сегодня (гормоны, простагландины, кровоток, влияние недосыпа/стресса или задержки).",
+  "patterns": "2-3 предложения: сравнение сегодняшнего дня с её личной историей в этой же фазе/дне цикла (если истории мало — так и скажи, отметив отправную точку для будущих циклов).",
+  "focus": "2 предложения: точная психологическая и поведенческая рекомендация на сегодня с учётом уровня энергии и эмоций.",
+  "tips": [
+    { "title": "Короткое название действия (до 45 символов)", "sub": "Почему это сработает именно сегодня (1 короткое предложение)" }
+  ]
+}
+В массиве tips дай ровно 3 конкретных, применимых сегодня действия (учитывая то, что ей уже помогало в прошлом).`;
+
+      try {
+        const result = await callGeminiAPI(apiKey, prompt);
+        if (!state.entries[selectedDate]) {
+          state.entries[selectedDate] = { ...current };
+        }
+        state.entries[selectedDate].aiAnalysis = {
+          physiology: result.physiology || '',
+          patterns: result.patterns || '',
+          focus: result.focus || '',
+          tips: Array.isArray(result.tips) ? result.tips.slice(0, 4) : []
+        };
+        persistLocalAndCloud(selectedDate.slice(0, 7));
+        renderAdviceAndSelfCareTab(false);
+        if (isManualClick) showToast('ИИ-разбор готов');
+      } catch (e) {
+        note.style.color = 'var(--rose)';
+        note.textContent = `Не удалось получить ответ Gemini (${e.message}). Проверь VPN или ключ в настройках.`;
+        if (isManualClick) hapticError();
+      } finally {
+        isAiGenerating = false;
+        btn.disabled = false;
+      }
+    }
+
     function toggleHelpedTip(tipId) {
       hapticImpact('medium');
       if (!state.entries[selectedDate]) {
-        state.entries[selectedDate] = {
-          date: selectedDate,
-          isPeriod: tempIsPeriod,
-          isOvulation: tempIsOvulation,
-          intimacy: tempIntimacy,
-          discharge: tempDischarge,
-          mood: metrics.mood,
-          energy: metrics.energy,
-          pain: metrics.pain,
-          libido: metrics.libido,
-          emotions: getSelectedEmotions(),
-          contexts: [],
-          helped: []
-        };
+        state.entries[selectedDate] = getCurrentWorkingEntry();
       }
       const list = state.entries[selectedDate].helped || [];
       const idx = list.indexOf(tipId);
@@ -2879,7 +3214,7 @@
       }
       state.entries[selectedDate].helped = list;
       persistLocalAndCloud(selectedDate.slice(0, 7));
-      renderAdviceAndSelfCareTab();
+      renderAdviceAndSelfCareTab(false);
     }
 
     function addCustomHelped() {
@@ -2905,7 +3240,7 @@
       }
       box.style.display = 'block';
       box.innerHTML = `<strong style="color:var(--ink)">Твоя проверенная статистика помощи:</strong><br/>` +
-        sorted.map(([name, cnt]) => `• ${name} — сработало ${cnt} ${cnt === 1 ? 'раз' : (cnt < 5 ? 'раза' : 'раз')}`).join('<br/>');
+        sorted.map(([name, cnt]) => `• ${escapeHtml(name)} — сработало ${cnt} ${cnt === 1 ? 'раз' : (cnt < 5 ? 'раза' : 'раз')}`).join('<br/>');
     }
 
     // PIN-LOCKED PRIVATE NOTES ("Заметки")
@@ -3085,7 +3420,7 @@
     }
 
     function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     // Smooth Chart ("График")
@@ -3397,7 +3732,8 @@
           lastPeriodStart: getTodayISO(0),
           cycleLength: 28,
           periodLength: 5,
-          darkMode: state.settings.darkMode
+          darkMode: state.settings.darkMode,
+          geminiApiKey: ''
         },
         entries: {},
         privateNotes: [],
@@ -3418,7 +3754,7 @@
       document.getElementById(`view-${tab}`).classList.add('active');
       document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
 
-      if (tab === 'analytics_advice') renderAdviceAndSelfCareTab();
+      if (tab === 'analytics_advice') renderAdviceAndSelfCareTab(true);
       if (tab === 'analytics') renderAnalytics();
       if (tab === 'notes') initPinScreen();
       if (tab === 'sos') updatePainkillerUI();
