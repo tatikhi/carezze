@@ -521,12 +521,6 @@
       color: var(--ink);
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -537,14 +531,17 @@
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 12px 8px;
+      padding: 12px 10px;
       border-radius: 14px;
       font-size: 13px;
       font-weight: 600;
       text-align: center;
       cursor: pointer;
       line-height: 1.25;
-      transition: all 0.15s ease;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .choice-btn.active {
@@ -626,9 +623,10 @@
       display: block;
     }
 
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
+    /* Stable grid so chips never jump lines when selected */
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 8px;
     }
 
@@ -636,34 +634,41 @@
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 8px 13px;
-      border-radius: 999px;
+      padding: 9px 12px;
+      border-radius: 14px;
       font-size: 14px;
       font-weight: 500;
       line-height: 1.25;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       cursor: pointer;
-      transition: all 0.15s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .chip.active {
       background: var(--accent-tint);
       border-color: var(--accent);
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .chip.active-indigo {
       background: var(--indigo-tint);
       border-color: var(--indigo);
       color: var(--indigo);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .chip.active-rose {
       background: var(--rose-tint);
       border-color: var(--rose);
       color: var(--rose);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     .btn-primary {
@@ -737,7 +742,7 @@
       cursor: pointer;
     }
 
-    textarea, input[type="date"], input[type="number"], input[type="text"], input[type="password"] {
+    input[type="date"], input[type="number"], input[type="text"], input[type="password"] {
       width: 100%;
       background: var(--surface-2);
       border: 1.5px solid transparent;
@@ -749,7 +754,7 @@
       outline: none;
     }
 
-    textarea:focus, input:focus {
+    input:focus {
       border-color: var(--accent);
     }
 
@@ -789,7 +794,7 @@
 
     .protocol-text {
       font-size: 14px;
-      line-height: 1.48;
+      line-height: 1.52;
       color: var(--ink-2);
     }
 
@@ -814,7 +819,7 @@
       font-size: 13px;
       color: var(--ink-2);
       margin-top: 2px;
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .btn-helped-toggle {
@@ -827,108 +832,12 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s ease;
     }
 
     .btn-helped-toggle.checked {
       background: var(--accent);
       border-color: var(--accent);
       color: #FFFFFF;
-    }
-
-    .pin-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 20px 10px;
-    }
-
-    .pin-dots {
-      display: flex;
-      gap: 16px;
-      margin: 22px 0 28px;
-    }
-
-    .pin-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid var(--ink-3);
-      background: transparent;
-      transition: all 0.15s ease;
-    }
-
-    .pin-dot.filled {
-      background: var(--accent);
-      border-color: var(--accent);
-      transform: scale(1.1);
-    }
-
-    .pin-dot.error {
-      background: var(--rose);
-      border-color: var(--rose);
-    }
-
-    .keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 76px);
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .key-btn {
-      width: 76px;
-      height: 62px;
-      border-radius: 18px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--ink);
-      font-size: 24px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .key-btn:active {
-      background: var(--surface-2);
-      transform: scale(0.95);
-    }
-
-    .key-btn.empty {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      cursor: default;
-    }
-
-    .note-entry-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow);
-    }
-
-    .note-entry-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 6px;
-    }
-
-    .note-entry-body {
-      font-size: 15px;
-      line-height: 1.52;
-      color: var(--ink);
-      white-space: pre-wrap;
     }
 
     .modal-backdrop {
@@ -1216,7 +1125,7 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      padding: 6px 8px;
+      padding: 6px 10px;
       border-radius: 16px;
       cursor: pointer;
     }
@@ -1409,15 +1318,9 @@
             <span class="card-title">Близость и выделения</span>
           </div>
 
-          <div class="grid-2" id="intimacyBlock">
-            <button class="choice-btn active" id="btnIntimacyNo" onclick="setIntimacy(false)">Без близости</button>
-            <button class="choice-btn" id="btnIntimacyYes" onclick="setIntimacy(true)">Близость ♥</button>
-          </div>
-
-          <div id="ovulationBlock" style="display:none; margin-top:10px;">
-            <button class="choice-btn" style="width:100%;" id="btnOvulation" onclick="toggleOvulation()">
-              ✦ Овуляция
-            </button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;" id="intimacyBlock">
+            <button class="choice-btn" id="btnIntimacyToggle" onclick="toggleIntimacy()">Близость ♥</button>
+            <button class="choice-btn" id="btnOvulation" onclick="toggleOvulation()" style="display:none;">✦ Овуляция</button>
           </div>
 
           <div id="menstrualDischargeBlock" style="display:none;">
@@ -1455,7 +1358,7 @@
             <div class="sub-section-header">
               <span class="field-label">Эмоции</span>
             </div>
-            <div class="chip-wrap" id="basicEmotionChips">
+            <div class="chip-grid" id="basicEmotionChips">
               <div class="chip active" data-val="Спокойствие">Спокойствие</div>
               <div class="chip" data-val="Подъём">Подъём</div>
               <div class="chip" data-val="Грусть">Грусть</div>
@@ -1467,7 +1370,7 @@
             <div class="sub-section-header">
               <span class="field-label">Оттенки</span>
             </div>
-            <div class="chip-wrap" id="nuancedEmotionChips">
+            <div class="chip-grid" id="nuancedEmotionChips">
               <div class="chip" data-val="Слезливость">Слезливость</div>
               <div class="chip" data-val="Апатия">Апатия</div>
               <div class="chip" data-val="Туман в голове">Туман в голове</div>
@@ -1479,7 +1382,7 @@
             <div class="sub-section-header">
               <span class="field-label">Факторы</span>
             </div>
-            <div class="chip-wrap" id="contextChips">
+            <div class="chip-grid" id="contextChips">
               <div class="chip" data-val="Недосып">Недосып</div>
               <div class="chip" data-val="Стресс">Стресс</div>
               <div class="chip" data-val="Отёки / тяга к сладкому">Отёки / сладкое</div>
@@ -1509,19 +1412,19 @@
 
         <div class="protocol-stack">
           <div class="protocol-item">
-            <span class="protocol-badge badge-gyn">Физиология</span>
+            <span class="protocol-badge badge-gyn">Тело и физиология</span>
             <div class="protocol-title" id="gynHeadline"></div>
             <div class="protocol-text" id="gynBody"></div>
           </div>
 
           <div class="protocol-item" id="aiPatternsBox" style="display:none;">
-            <span class="protocol-badge badge-hist">История</span>
-            <div class="protocol-title">Динамика</div>
+            <span class="protocol-badge badge-hist">Динамика</span>
+            <div class="protocol-title">Что меняется по дням</div>
             <div class="protocol-text" id="patternsBody"></div>
           </div>
 
           <div class="protocol-item">
-            <span class="protocol-badge badge-psy">Фокус</span>
+            <span class="protocol-badge badge-psy">Моральное состояние</span>
             <div class="protocol-title" id="psychHeadline"></div>
             <div class="protocol-text" id="psychBody"></div>
           </div>
@@ -1587,58 +1490,13 @@
       </div>
     </div>
 
-    <!-- VIEW 4: PRIVATE NOTES ("Заметки") -->
-    <div id="view-notes" class="view">
-      <div id="notesPinGate" class="card">
-        <div class="pin-screen">
-          <div class="card-title" id="pinTitle">Заметки</div>
-
-          <div class="pin-dots" id="pinDots">
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-          </div>
-
-          <div class="keypad">
-            <button class="key-btn" onclick="pressPinKey('1')">1</button>
-            <button class="key-btn" onclick="pressPinKey('2')">2</button>
-            <button class="key-btn" onclick="pressPinKey('3')">3</button>
-            <button class="key-btn" onclick="pressPinKey('4')">4</button>
-            <button class="key-btn" onclick="pressPinKey('5')">5</button>
-            <button class="key-btn" onclick="pressPinKey('6')">6</button>
-            <button class="key-btn" onclick="pressPinKey('7')">7</button>
-            <button class="key-btn" onclick="pressPinKey('8')">8</button>
-            <button class="key-btn" onclick="pressPinKey('9')">9</button>
-            <div class="key-btn empty"></div>
-            <button class="key-btn" onclick="pressPinKey('0')">0</button>
-            <button class="key-btn" onclick="backspacePinKey()">⌫</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="notesUnlockedArea" style="display:none;">
-        <div class="card">
-          <div class="card-top">
-            <span class="card-title">Заметки</span>
-            <button class="btn-edit-small" onclick="lockPrivateNotes()">Закрыть</button>
-          </div>
-          <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px;" id="newNoteContextLabel"></div>
-          <textarea id="privateNoteInput" rows="4" placeholder=""></textarea>
-          <button class="btn-accent" style="margin-top:12px;" onclick="savePrivateNote()">Сохранить</button>
-        </div>
-
-        <div id="privateNotesList"></div>
-      </div>
-    </div>
-
-    <!-- VIEW 5: SOS -->
+    <!-- VIEW 4: SOS -->
     <div id="view-sos" class="view">
       <div class="card">
         <div class="card-top">
           <span class="card-title">Обезболивающее</span>
         </div>
-        <div class="grid-2">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <button class="btn-soft" onclick="logPainkiller('Нурофен 400 мг', 6)">Нурофен 400 мг</button>
           <button class="btn-soft" onclick="logPainkiller('Но-шпа', 4)">Но-шпа</button>
         </div>
@@ -1697,7 +1555,7 @@
       </div>
     </div>
 
-    <!-- VIEW 6: SETTINGS ("Настройки") -->
+    <!-- VIEW 5: SETTINGS ("Настройки") -->
     <div id="view-settings" class="view">
       <div class="card ai-highlight">
         <div class="card-top">
@@ -1705,7 +1563,7 @@
           <span class="card-sub" id="geminiKeyStatusBadge"></span>
         </div>
         <input type="password" id="setGeminiKey" placeholder="" autocomplete="off" />
-        <div class="grid-2" style="margin-top:10px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
           <button class="btn-indigo" style="height:44px; font-size:14px;" onclick="saveAndTestGeminiKey()" id="btnTestGemini">
             Сохранить и проверить
           </button>
@@ -1728,13 +1586,6 @@
         <input type="number" id="setPeriodLength" min="2" max="10" />
 
         <button class="btn-accent" style="margin-top:18px;" onclick="saveSettings()">Сохранить</button>
-      </div>
-
-      <div class="card">
-        <div class="card-top">
-          <span class="card-title">Заметки</span>
-        </div>
-        <button class="btn-soft" style="width:100%;" onclick="resetNotesPin()">Сменить код</button>
       </div>
 
       <div class="card">
@@ -1794,10 +1645,6 @@
       <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg>
       <span>График</span>
     </button>
-    <button class="tab-item" data-tab="notes" onclick="switchTab('notes')">
-      <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-      <span>Заметки</span>
-    </button>
     <button class="tab-item" data-tab="settings" onclick="switchTab('settings')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Настройки</span>
@@ -1856,9 +1703,10 @@
     }
 
     const STORAGE_KEY = 'ritm_clean_v7';
+    const LEGACY_KEYS = ['ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+
     let state = {
       onboarded: false,
-      notesPin: null,
       settings: {
         lastPeriodStart: getTodayISO(0),
         cycleLength: 28,
@@ -1867,7 +1715,6 @@
         geminiApiKey: ''
       },
       entries: {},
-      privateNotes: [],
       painkillers: []
     };
 
@@ -1882,11 +1729,6 @@
     let tempIsOvulation = false;
     let tempIntimacy = false;
     let tempDischarge = '';
-
-    let isNotesUnlocked = false;
-    let pinBuffer = '';
-    let pinSetupFirst = '';
-    let pinMode = 'enter';
 
     let isAiGenerating = false;
 
@@ -1955,12 +1797,10 @@
 
       const metaPayload = JSON.stringify({
         onboarded: state.onboarded,
-        notesPin: state.notesPin,
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 15)
       });
       await cloudSet('ritm7_meta', metaPayload);
-      await cloudSet('ritm7_notes', JSON.stringify(state.privateNotes.slice(0, 30)));
 
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
@@ -1970,10 +1810,10 @@
           const clone = { ...entry };
           if (clone.aiAnalysis) {
             clone.aiAnalysis = {
-              physiology: (clone.aiAnalysis.physiology || '').slice(0, 420),
-              patterns: (clone.aiAnalysis.patterns || '').slice(0, 420),
-              focus: (clone.aiAnalysis.focus || '').slice(0, 320),
-              tips: (clone.aiAnalysis.tips || []).slice(0, 3)
+              physiology: (clone.aiAnalysis.physiology || '').slice(0, 520),
+              patterns: (clone.aiAnalysis.patterns || '').slice(0, 520),
+              focus: (clone.aiAnalysis.focus || '').slice(0, 420),
+              tips: (clone.aiAnalysis.tips || []).slice(0, 4)
             };
           }
           byMonth[ym][iso] = clone;
@@ -1985,11 +1825,37 @@
       }
     }
 
+    function ensureOnboardedFlagIfDataExists() {
+      const hasEntries = Object.keys(state.entries || {}).length > 0;
+      const hasCustomCycle = Boolean(state.settings?.lastPeriodStart && state.settings.lastPeriodStart !== getTodayISO(0))
+        || Boolean(state.settings?.geminiApiKey);
+      if (hasEntries || hasCustomCycle) {
+        state.onboarded = true;
+      }
+    }
+
     async function loadFromCloudAndLocal() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        let raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          for (const lk of LEGACY_KEYS) {
+            const legacyRaw = localStorage.getItem(lk);
+            if (legacyRaw) {
+              raw = legacyRaw;
+              break;
+            }
+          }
+        }
         if (raw) {
-          state = { ...state, ...JSON.parse(raw) };
+          const parsed = JSON.parse(raw);
+          state = {
+            ...state,
+            ...parsed,
+            settings: { ...state.settings, ...(parsed.settings || {}) },
+            entries: parsed.entries || {},
+            painkillers: parsed.painkillers || []
+          };
+          ensureOnboardedFlagIfDataExists();
         }
       } catch (e) {}
 
@@ -1999,15 +1865,9 @@
         if (metaRaw) {
           try {
             const meta = JSON.parse(metaRaw);
-            state.onboarded = Boolean(meta.onboarded);
-            state.notesPin = meta.notesPin || state.notesPin;
+            state.onboarded = Boolean(meta.onboarded) || state.onboarded;
             state.settings = { ...state.settings, ...(meta.settings || {}) };
             state.painkillers = meta.painkillers || state.painkillers;
-
-            const notesRaw = await cloudGet('ritm7_notes');
-            if (notesRaw) {
-              state.privateNotes = JSON.parse(notesRaw);
-            }
 
             const keys = await cloudGetKeys();
             const monthKeys = keys.filter(k => k.startsWith('ritm7_m_'));
@@ -2018,6 +1878,7 @@
                 state.entries = { ...mEntries, ...state.entries };
               }
             }
+            ensureOnboardedFlagIfDataExists();
             localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
           } catch (e) {}
         }
@@ -2056,7 +1917,6 @@
       }
     }
 
-    // No synthetic pre-filled days before onboarding
     function completeOnboarding() {
       const pickedDate = document.getElementById('obLastPeriod').value || getTodayISO(0);
       state.onboarded = true;
@@ -2106,7 +1966,6 @@
       hapticSuccess();
     }
 
-    // GEMINI API CLIENT (gemini-3.8-flash + fallbacks)
     async function callGeminiAPI(apiKey, promptText) {
       const isExpressKey = apiKey.startsWith('AQ.');
       const models = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite'];
@@ -2175,6 +2034,7 @@
       try {
         await callGeminiAPI(key, 'Верни строго JSON: {"ok": true}');
         state.settings.geminiApiKey = key;
+        state.onboarded = true;
         persistLocalAndCloud(null);
         syncSettingsInputs();
         fb.style.color = 'var(--accent)';
@@ -2272,7 +2132,6 @@
       ['mood', 'energy', 'pain', 'libido'].forEach(renderCCSlider);
     }
 
-    // Cycle Math with clean unmarking of period days
     function getCycleInfo(dateISO) {
       const start = parseLocalISO(state.settings.lastPeriodStart);
       const target = parseLocalISO(dateISO);
@@ -2403,9 +2262,10 @@
       const showNewCycleBtn = (info.cycleDay >= 15 || info.isDelay) && selectedDate !== state.settings.lastPeriodStart;
       newCycleBtn.style.display = showNewCycleBtn ? 'block' : 'none';
 
-      document.getElementById('ovulationBlock').style.display = info.showOvulationOption ? 'block' : 'none';
-      document.getElementById('btnOvulation').classList.toggle('active', tempIsOvulation);
-      document.getElementById('btnOvulation').textContent = tempIsOvulation ? '✦ Овуляция ✓' : '✦ Овуляция';
+      const ovBtn = document.getElementById('btnOvulation');
+      ovBtn.style.display = info.showOvulationOption ? 'inline-flex' : 'none';
+      ovBtn.classList.toggle('active', tempIsOvulation);
+      ovBtn.textContent = tempIsOvulation ? '✦ Овуляция ✓' : '✦ Овуляция';
 
       const mensBlock = document.getElementById('menstrualDischargeBlock');
       const ovulBlock = document.getElementById('ovulatoryDischargeBlock');
@@ -2468,6 +2328,7 @@
     function startNewCycleHere() {
       hapticImpact('heavy');
       state.settings.lastPeriodStart = selectedDate;
+      state.onboarded = true;
       tempIsPeriod = true;
       tempIsOvulation = false;
       tempDischarge = 'Умеренные';
@@ -2500,11 +2361,16 @@
       showToast('Сохранено');
     }
 
-    function setIntimacy(val) {
+    function toggleIntimacy() {
       hapticSelect();
-      tempIntimacy = val;
-      document.getElementById('btnIntimacyNo').classList.toggle('active', !val);
-      document.getElementById('btnIntimacyYes').classList.toggle('active-rose', val);
+      tempIntimacy = !tempIntimacy;
+      renderIntimacyButton();
+    }
+
+    function renderIntimacyButton() {
+      const btn = document.getElementById('btnIntimacyToggle');
+      btn.classList.toggle('active-rose', tempIntimacy);
+      btn.textContent = tempIntimacy ? 'Близость ♥ ✓' : 'Близость ♥';
     }
 
     function toggleOvulation() {
@@ -2618,7 +2484,8 @@
 
     function populateEditableInputs(data) {
       renderAllCCSliders();
-      setIntimacy(Boolean(data.intimacy));
+      tempIntimacy = Boolean(data.intimacy);
+      renderIntimacyButton();
 
       const savedEmotions = Array.isArray(data.emotions) ? data.emotions : ['Спокойствие'];
       document.querySelectorAll('#basicEmotionChips .chip').forEach(c => {
@@ -2681,6 +2548,7 @@
         helped: prevHelped
       };
 
+      state.onboarded = true;
       state.entries[selectedDate] = entry;
       isEditingDay = false;
       persistLocalAndCloud(selectedDate.slice(0, 7));
@@ -2822,10 +2690,10 @@
           patBox.style.display = 'none';
         }
 
-        psyH.textContent = '';
+        psyH.textContent = (entry.emotions || []).join(' · ');
         psyB.textContent = entry.aiAnalysis.focus || '';
 
-        btnRunAi.innerHTML = '<span>Обновить</span>';
+        btnRunAi.innerHTML = '<span>Обновить ИИ-разбор</span>';
         aiNote.textContent = '';
       } else {
         patBox.style.display = 'none';
@@ -2838,49 +2706,50 @@
         const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
         const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
         const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
+        const hasBrainFog = emos.some(e => ['Туман в голове', 'Усталость'].includes(e));
 
         if (info.isDelay) {
-          gynH.textContent = info.phase;
+          gynH.textContent = `${info.phase} — тело и цикл`;
           gynB.textContent = info.delayDays <= 7
-            ? 'Возможен сдвиг овуляции на фоне нагрузки. При близости в цикле актуален тест.'
-            : 'Задержка более 7 дней — повод обратиться к гинекологу и сделать УЗИ.';
+            ? 'Цикл сместился: такое бывает при стрессе, недосыпе или сдвиге овуляции. Если была близость, полезно сделать тест и понаблюдать за самочувствием.'
+            : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ, чтобы проверить причину.';
         } else if (entry.pain >= 6) {
-          gynH.textContent = 'Спазм';
-          gynB.textContent = 'Повышен уровень простагландинов и спазм гладкой мускулатуры.';
+          gynH.textContent = 'Выраженные спазмы и боль';
+          gynB.textContent = 'В дни месячных или перед ними простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают снять спазм.';
         } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
-          gynH.textContent = info.phase;
-          gynB.textContent = 'Пик эстрогенов, возможны тянущие ощущения и прозрачные выделения.';
+          gynH.textContent = 'Овуляторное окно';
+          gynB.textContent = 'Эстрогены на пике, возможны короткие тянущие ощущения с одного бока, чувствительность груди и более прозрачные тянущиеся выделения. Тело часто легче откликается на движение и близость.';
         } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
-          gynH.textContent = info.phase;
+          gynH.textContent = `${info.phase} · День ${info.cycleDay}`;
           gynB.textContent = entry.discharge === 'Обильные'
-            ? 'Обильные выделения — выше расход жидкости и железа.'
-            : 'Низкий уровень эстрогена и прогестерона.';
+            ? 'Уровень эстрогена и прогестерона низкий, организм обновляет эндометрий. При обильных выделениях важно пить больше воды, следить за железом и не перегружать себя с утра.'
+            : 'Гормональный фон на минимуме, телу нужно больше восстановления и тепла. Даже если сил немного, мягкая разминка или прогулка без спешки обычно улучшают самочувствие.';
         } else if (info.phaseCode === 'late_luteal') {
-          gynH.textContent = info.phase;
-          gynB.textContent = 'Снижение прогестерона перед началом нового цикла.';
+          gynH.textContent = 'Предменструальное окно';
+          gynB.textContent = 'Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому или простым углеводам и скачки энергии. Организму проще переносить ровный режим без резких скачков сахара.';
+        } else if (info.phaseCode === 'early_luteal') {
+          gynH.textContent = 'Лютеиновая фаза';
+          gynB.textContent = 'Преобладает прогестерон: обмен веществ немного замедляется, а потребность в спокойном ритме и регулярном питании растёт. Хорошее время для планомерных дел без рывков.';
         } else {
-          gynH.textContent = info.phase;
-          gynB.textContent = 'Рост эстрогена в первой половине цикла.';
+          gynH.textContent = 'Фолликулярная фаза';
+          gynB.textContent = 'Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся активность, новые задачи и смена обстановки.';
         }
 
+        psyH.textContent = emos.join(' · ');
         if (info.isDelay) {
-          psyH.textContent = '';
-          psyB.textContent = 'Меньше домыслов — конкретный шаг снимет напряжение.';
+          psyB.textContent = 'Неопределённость сама по себе выматывает. Постарайся не прокручивать худшие сценарии по кругу и опереться на конкретные шаги.';
         } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
-          psyH.textContent = '';
-          psyB.textContent = 'Крупные решения и резкие выводы лучше отложить на несколько дней.';
+          psyB.textContent = 'В предменструальные дни эмоции часто ощущаются острее, чем есть на самом деле. Важные решения, сложные разговоры и строгие оценки себя лучше отложить на несколько дней.';
         } else if (hasAnxiety) {
-          psyH.textContent = '';
-          psyB.textContent = 'Поможет медленное дыхание и снижение темпа.';
+          psyB.textContent = 'Внутреннее напряжение держит нервную систему в тонусе. Замедли темп, выдохни глубже вдоха и сними часть фоновых задач, которые не горят сегодня.';
         } else if (entry.pain >= 6 || entry.energy <= 3) {
-          psyH.textContent = '';
-          psyB.textContent = 'Снизь нагрузку и оставь только главное на сегодня.';
+          psyB.textContent = 'Когда тело болит или нет сил, требовать от себя прежней продуктивности тяжело. Разреши себе сделать меньше и беречь ресурс.';
         } else if (hasIrritability) {
-          psyH.textContent = '';
-          psyB.textContent = 'Меньше лишних стимулов и больше тишины.';
+          psyB.textContent = 'Раздражительность и уязвимость часто говорят об усталости или переизбытке шума и общения. Полезно дать себе личное пространство и снизить число внешних триггеров.';
+        } else if (hasLowMood) {
+          psyB.textContent = 'Сниженный фон или апатия не обязательно означают проблему — иногда психике просто нужно время на перезагрузку. Не подгоняй себя через чувство вины.';
         } else {
-          psyH.textContent = '';
-          psyB.textContent = 'Ровный фон.';
+          psyB.textContent = 'Эмоциональный фон относительно ровный. Хороший момент, чтобы замечать, что именно поддерживает твоё спокойствие и энергию.';
         }
       }
 
@@ -2907,23 +2776,59 @@
         }));
       } else {
         if (entry.pain >= 4) {
-          tips.push({ id: 'Тепло', title: 'Тепло', sub: '' });
-          tips.push({ id: 'Нурофен 400 мг', title: 'Нурофен 400 мг', sub: '' });
-          tips.push({ id: 'Но-шпа', title: 'Но-шпа', sub: '' });
+          tips.push({
+            id: 'Тепло на низ живота или поясницу',
+            title: 'Тепло на низ живота или поясницу',
+            sub: 'Грелка или тёплый душ помогают расслабить спазмированные мышцы.'
+          });
+          tips.push({
+            id: 'Нурофен 400 мг',
+            title: 'Нурофен 400 мг',
+            sub: 'Снимает боль и воспаление при спазмах — лучше принять до того, как боль станет сильной.'
+          });
+          tips.push({
+            id: 'Но-шпа',
+            title: 'Но-шпа',
+            sub: 'Мягкий спазмолитик, если хочется снять мышечный спазм.'
+          });
         }
         if (hasAnxiety || entry.pain >= 5) {
-          tips.push({ id: 'Дыхание', title: 'Дыхание', sub: '' });
+          tips.push({
+            id: 'Медленное дыхание (раздел SOS)',
+            title: 'Медленное дыхание',
+            sub: 'Удлинённый выдох успокаивает нервную систему и снижает телесный зажим.'
+          });
         }
         if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
-          tips.push({ id: 'Режим питания', title: 'Режим питания', sub: '' });
-          tips.push({ id: 'Пауза от экрана', title: 'Пауза от экрана', sub: '' });
+          tips.push({
+            id: 'Регулярный приём пищи с белком',
+            title: 'Регулярный приём пищи с белком',
+            sub: 'Ровный уровень сахара в крови помогает меньше срываться и не проваливаться в усталость.'
+          });
+          tips.push({
+            id: 'Меньше экранов и новостей вечером',
+            title: 'Меньше экранов и новостей вечером',
+            sub: 'Снижает перевозбуждение и помогает спокойнее уснуть.'
+          });
         }
         if (info.isDelay) {
-          tips.push({ id: 'Тест / врач', title: 'Тест / врач', sub: '' });
+          tips.push({
+            id: 'Тест и запись к врачу при задержке',
+            title: 'Тест и запись к врачу',
+            sub: 'Даёт ясность и убирает лишнюю тревогу из-за неизвестности.'
+          });
         }
         if (tips.length < 3) {
-          tips.push({ id: 'Прогулка', title: 'Прогулка', sub: '' });
-          tips.push({ id: 'Сон', title: 'Сон', sub: '' });
+          tips.push({
+            id: 'Короткая прогулка на свежем воздухе',
+            title: 'Короткая прогулка на свежем воздухе',
+            sub: 'Помогает проветрить голову и слегка поднять тонус без перегрузки.'
+          });
+          tips.push({
+            id: 'Ранний отход ко сну',
+            title: 'Ранний отход ко сну',
+            sub: 'Сон остаётся самой надёжной опорой для гормонального и эмоционального баланса.'
+          });
         }
       }
 
@@ -2997,7 +2902,7 @@
         });
       });
 
-      const prompt = `Ты — врач-гинеколог и психолог. Проанализируй текущее состояние по дневнику цикла. Отвечай на русском, на «ты», кратко и по делу.
+      const prompt = `Ты — внимательный врач-гинеколог и психолог. Дай подробный, бережный и живой разбор состояния по дневнику цикла. Отвечай на русском, на «ты», без воды, но содержательно.
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.len} дн., длительность месячных: ${info.pLen} дн.
@@ -3024,11 +2929,11 @@ ${JSON.stringify(recentHistory)}
 
 Верни строго JSON:
 {
-  "physiology": "2-3 коротких предложения по физиологии дня.",
-  "patterns": "2-3 коротких предложения по сравнению с предыдущими днями.",
-  "focus": "1-2 коротких предложения по фокусу дня.",
+  "physiology": "3-4 содержательных предложения про тело, гормоны и физиологию текущего дня.",
+  "patterns": "2-4 предложения о том, как сегодняшний день отличается от прошлых дней и фаз в истории.",
+  "focus": "2-3 предложения про моральное состояние и как бережно поддержать себя сегодня.",
   "tips": [
-    { "title": "Короткое действие", "sub": "Короткое пояснение" }
+    { "title": "Конкретная рекомендация", "sub": "Короткое практическое пояснение зачем это сейчас" }
   ]
 }`;
 
@@ -3041,7 +2946,7 @@ ${JSON.stringify(recentHistory)}
           physiology: result.physiology || '',
           patterns: result.patterns || '',
           focus: result.focus || '',
-          tips: Array.isArray(result.tips) ? result.tips.slice(0, 3) : []
+          tips: Array.isArray(result.tips) ? result.tips.slice(0, 4) : []
         };
         persistLocalAndCloud(selectedDate.slice(0, 7));
         renderAdviceAndSelfCareTab(false);
@@ -3089,7 +2994,7 @@ ${JSON.stringify(recentHistory)}
           counts[h] = (counts[h] || 0) + 1;
         });
       });
-      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 4);
       const box = document.getElementById('learnedHelpStats');
       if (!sorted.length) {
         box.style.display = 'none';
@@ -3097,164 +3002,6 @@ ${JSON.stringify(recentHistory)}
       }
       box.style.display = 'block';
       box.innerHTML = sorted.map(([name, cnt]) => `${escapeHtml(name)} · ${cnt}`).join('<br/>');
-    }
-
-    function initPinScreen() {
-      if (isNotesUnlocked) {
-        document.getElementById('notesPinGate').style.display = 'none';
-        document.getElementById('notesUnlockedArea').style.display = 'block';
-        renderPrivateNotesList();
-        return;
-      }
-
-      document.getElementById('notesPinGate').style.display = 'block';
-      document.getElementById('notesUnlockedArea').style.display = 'none';
-      pinBuffer = '';
-      pinSetupFirst = '';
-      pinMode = !state.notesPin ? 'create' : 'enter';
-      document.getElementById('pinTitle').textContent = !state.notesPin ? 'Новый код' : 'Заметки';
-      updatePinDots(false);
-    }
-
-    function updatePinDots(isError = false) {
-      const dots = document.querySelectorAll('#pinDots .pin-dot');
-      dots.forEach((d, idx) => {
-        d.classList.toggle('filled', idx < pinBuffer.length);
-        d.classList.toggle('error', isError);
-      });
-    }
-
-    function pressPinKey(digit) {
-      if (pinBuffer.length >= 4) return;
-      hapticImpact('light');
-      pinBuffer += digit;
-      updatePinDots(false);
-
-      if (pinBuffer.length === 4) {
-        setTimeout(handlePinComplete, 140);
-      }
-    }
-
-    function backspacePinKey() {
-      if (!pinBuffer.length) return;
-      hapticSelect();
-      pinBuffer = pinBuffer.slice(0, -1);
-      updatePinDots(false);
-    }
-
-    function handlePinComplete() {
-      if (pinMode === 'create') {
-        pinSetupFirst = pinBuffer;
-        pinBuffer = '';
-        pinMode = 'confirm';
-        document.getElementById('pinTitle').textContent = 'Повтор';
-        updatePinDots(false);
-        return;
-      }
-
-      if (pinMode === 'confirm') {
-        if (pinBuffer === pinSetupFirst) {
-          state.notesPin = pinBuffer;
-          persistLocalAndCloud(null);
-          isNotesUnlocked = true;
-          hapticSuccess();
-          showToast('Сохранено');
-          initPinScreen();
-        } else {
-          hapticError();
-          updatePinDots(true);
-          setTimeout(() => {
-            pinBuffer = '';
-            pinSetupFirst = '';
-            pinMode = 'create';
-            document.getElementById('pinTitle').textContent = 'Новый код';
-            updatePinDots(false);
-          }, 550);
-        }
-        return;
-      }
-
-      if (pinMode === 'enter') {
-        if (pinBuffer === state.notesPin) {
-          isNotesUnlocked = true;
-          hapticSuccess();
-          initPinScreen();
-        } else {
-          hapticError();
-          updatePinDots(true);
-          setTimeout(() => {
-            pinBuffer = '';
-            updatePinDots(false);
-          }, 550);
-        }
-      }
-    }
-
-    function lockPrivateNotes() {
-      hapticImpact('light');
-      isNotesUnlocked = false;
-      pinBuffer = '';
-      initPinScreen();
-    }
-
-    function resetNotesPin() {
-      if (!state.notesPin) return;
-      const old = prompt('');
-      if (old === state.notesPin) {
-        state.notesPin = null;
-        isNotesUnlocked = false;
-        persistLocalAndCloud(null);
-        showToast('Сброшено');
-      }
-    }
-
-    function savePrivateNote() {
-      const inp = document.getElementById('privateNoteInput');
-      const text = inp.value.trim();
-      if (!text) return;
-
-      const todayISO = getTodayISO(0);
-      const info = getCycleInfo(todayISO);
-      state.privateNotes.unshift({
-        id: String(Date.now()),
-        dateISO: todayISO,
-        cycleDay: info.cycleDay,
-        phase: info.phase,
-        body: text
-      });
-
-      inp.value = '';
-      persistLocalAndCloud(null);
-      renderPrivateNotesList();
-      showToast('Сохранено');
-    }
-
-    function deletePrivateNote(id) {
-      state.privateNotes = state.privateNotes.filter(n => n.id !== id);
-      persistLocalAndCloud(null);
-      renderPrivateNotesList();
-    }
-
-    function renderPrivateNotesList() {
-      const todayISO = getTodayISO(0);
-      const info = getCycleInfo(todayISO);
-      document.getElementById('newNoteContextLabel').textContent = `${formatHumanDate(todayISO)} · День ${info.cycleDay}`;
-
-      const box = document.getElementById('privateNotesList');
-      if (!state.privateNotes.length) {
-        box.innerHTML = '';
-        return;
-      }
-
-      box.innerHTML = state.privateNotes.map(n => `
-        <div class="note-entry-card">
-          <div class="note-entry-meta">
-            <span>${formatHumanDate(n.dateISO)} · День ${n.cycleDay}</span>
-            <button style="background:none; border:none; color:var(--ink-3); font-size:12px; cursor:pointer;" onclick="deletePrivateNote('${n.id}')">Удалить</button>
-          </div>
-          <div class="note-entry-body">${escapeHtml(n.body)}</div>
-        </div>
-      `).join('');
     }
 
     function escapeHtml(str) {
@@ -3520,6 +3267,7 @@ ${JSON.stringify(recentHistory)}
       if (lp) state.settings.lastPeriodStart = lp;
       state.settings.cycleLength = Math.max(21, Math.min(45, cl));
       state.settings.periodLength = Math.max(2, Math.min(10, pl));
+      state.onboarded = true;
 
       syncSettingsInputs();
       persistLocalAndCloud(null);
@@ -3549,6 +3297,7 @@ ${JSON.stringify(recentHistory)}
 
     async function clearAllData() {
       localStorage.removeItem(STORAGE_KEY);
+      LEGACY_KEYS.forEach(k => localStorage.removeItem(k));
       if (hasTelegramCloud()) {
         const keys = await cloudGetKeys();
         const ourKeys = keys.filter(k => k.startsWith('ritm7_'));
@@ -3556,7 +3305,6 @@ ${JSON.stringify(recentHistory)}
       }
       state = {
         onboarded: false,
-        notesPin: null,
         settings: {
           lastPeriodStart: getTodayISO(0),
           cycleLength: 28,
@@ -3565,10 +3313,8 @@ ${JSON.stringify(recentHistory)}
           geminiApiKey: ''
         },
         entries: {},
-        privateNotes: [],
         painkillers: []
       };
-      isNotesUnlocked = false;
       document.getElementById('obLastPeriod').value = getTodayISO(0);
       document.getElementById('onboardingScreen').classList.add('active');
       showToast('Сброшено');
@@ -3577,7 +3323,6 @@ ${JSON.stringify(recentHistory)}
     function switchTab(tab) {
       hapticImpact('light');
       if (tab !== 'sos' && isBreathing) stopBreathing();
-      if (tab !== 'notes') isNotesUnlocked = false;
 
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${tab}`).classList.add('active');
@@ -3585,7 +3330,6 @@ ${JSON.stringify(recentHistory)}
 
       if (tab === 'analytics_advice') renderAdviceAndSelfCareTab(true);
       if (tab === 'analytics') renderAnalytics();
-      if (tab === 'notes') initPinScreen();
       if (tab === 'sos') updatePainkillerUI();
     }
 
