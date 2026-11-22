@@ -20,6 +20,7 @@
       --accent-tint: #F0FDFA;
 
       --rose: #E11D48;
+      --rose-solid: #F43F5E;
       --rose-bg: #FFE4E6;
       --rose-tint: #FFF1F2;
 
@@ -49,6 +50,7 @@
       --accent-tint: #0E2926;
 
       --rose: #FB7185;
+      --rose-solid: #E11D48;
       --rose-bg: #3B1520;
       --rose-tint: #2B1119;
 
@@ -221,6 +223,12 @@
       padding: 20px;
       margin-bottom: 14px;
       box-shadow: var(--shadow);
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .hero-card.is-period-day {
+      border-color: var(--rose-bg);
+      background: linear-gradient(180deg, var(--rose-tint) 0%, var(--surface) 58%);
     }
 
     .date-bar {
@@ -273,11 +281,11 @@
       justify-content: space-between;
       align-items: flex-end;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .hero-day {
-      font-size: 34px;
+      font-size: 32px;
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.08;
@@ -294,6 +302,14 @@
       font-weight: 600;
       color: var(--accent);
       margin-top: 6px;
+    }
+
+    .hero-phase.is-delay {
+      color: var(--amber);
+    }
+
+    .hero-phase.is-period {
+      color: var(--rose);
     }
 
     .hero-meta {
@@ -315,7 +331,51 @@
       height: 100%;
       background: var(--accent);
       border-radius: 999px;
-      transition: width 0.3s ease;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Apple Health Style Period Action Strip */
+    .period-strip {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn-period-apple {
+      flex: 1;
+      height: 44px;
+      border-radius: 14px;
+      border: 1.5px solid var(--rose-bg);
+      background: var(--rose-tint);
+      color: var(--rose);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.18s ease;
+    }
+
+    .btn-period-apple.active {
+      background: var(--rose-solid);
+      border-color: var(--rose-solid);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.28);
+    }
+
+    .btn-new-cycle {
+      height: 44px;
+      padding: 0 13px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
     /* Cards */
@@ -348,7 +408,98 @@
       flex-shrink: 0;
     }
 
-    /* Tactile Sliders (Clean Solid Pastel Tints) */
+    /* Saved Locked Accordion Card */
+    .saved-card {
+      background: var(--surface);
+      border: 1.5px solid var(--accent-bg);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .saved-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .saved-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .btn-edit-small {
+      background: var(--surface-2);
+      border: none;
+      color: var(--ink);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .saved-metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .saved-metric-pill {
+      background: var(--surface-2);
+      border-radius: 12px;
+      padding: 8px 6px;
+      text-align: center;
+    }
+
+    .saved-metric-pill span {
+      display: block;
+      font-size: 11px;
+      color: var(--ink-2);
+    }
+
+    .saved-metric-pill strong {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .saved-tags-line {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--ink-2);
+      line-height: 1.4;
+    }
+
+    .saved-cta-row {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Tactile Sliders (Scroll-Safe) */
     .cc-group {
       display: flex;
       flex-direction: column;
@@ -363,7 +514,7 @@
       overflow: hidden;
       cursor: pointer;
       user-select: none;
-      touch-action: none;
+      touch-action: pan-y;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -377,7 +528,7 @@
       bottom: 0;
       border-radius: 16px;
       pointer-events: none;
-      transition: width 0.05s linear;
+      transition: width 0.08s ease-out;
     }
 
     .cc-label {
@@ -397,7 +548,7 @@
       color: var(--ink);
     }
 
-    /* Quick Body & Intimacy Controls */
+    /* Grids & Buttons */
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -410,17 +561,11 @@
       gap: 6px;
     }
 
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-    }
-
     .choice-btn {
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 11px 6px;
+      padding: 12px 8px;
       border-radius: 14px;
       font-size: 13px;
       font-weight: 600;
@@ -440,12 +585,6 @@
       background: var(--rose-tint);
       border-color: var(--rose);
       color: var(--rose);
-    }
-
-    .choice-btn.active-amber {
-      background: var(--amber-tint);
-      border-color: var(--amber);
-      color: var(--amber);
     }
 
     .sub-section-header {
@@ -613,7 +752,7 @@
       cursor: pointer;
     }
 
-    textarea, input[type="date"], input[type="number"] {
+    textarea, input[type="date"], input[type="number"], input[type="text"] {
       width: 100%;
       background: var(--surface-2);
       border: 1.5px solid transparent;
@@ -629,7 +768,7 @@
       border-color: var(--accent);
     }
 
-    /* Structured State Breakdown */
+    /* Structured State Breakdown (Tab 2) */
     .protocol-stack {
       display: flex;
       flex-direction: column;
@@ -669,6 +808,146 @@
       font-size: 14px;
       line-height: 1.48;
       color: var(--ink-2);
+    }
+
+    /* Actionable Tips -> "Помогло" Feedback Loop */
+    .tip-action-card {
+      background: var(--surface-2);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .tip-action-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .tip-action-sub {
+      font-size: 13px;
+      color: var(--ink-2);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .btn-helped-toggle {
+      flex-shrink: 0;
+      padding: 9px 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-helped-toggle.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    /* PIN-Protected Private Notes */
+    .pin-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px 10px;
+    }
+
+    .pin-dots {
+      display: flex;
+      gap: 16px;
+      margin: 22px 0 28px;
+    }
+
+    .pin-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--ink-3);
+      background: transparent;
+      transition: all 0.15s ease;
+    }
+
+    .pin-dot.filled {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .pin-dot.error {
+      background: var(--rose);
+      border-color: var(--rose);
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 76px);
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .key-btn {
+      width: 76px;
+      height: 62px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 24px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .key-btn:active {
+      background: var(--surface-2);
+      transform: scale(0.95);
+    }
+
+    .key-btn.empty {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .note-entry-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .note-entry-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .note-entry-body {
+      font-size: 15px;
+      line-height: 1.52;
+      color: var(--ink);
+      white-space: pre-wrap;
     }
 
     /* Calendar Modal */
@@ -751,8 +1030,14 @@
     }
 
     .cal-cell.is-period {
+      background: var(--rose-solid);
+      color: #FFFFFF;
+    }
+
+    .cal-cell.is-predicted-period {
       background: var(--rose-tint);
       color: var(--rose);
+      border: 1px dashed var(--rose);
     }
 
     .cal-cell.is-ovulation {
@@ -761,13 +1046,12 @@
     }
 
     .cal-cell.is-today {
-      border-color: var(--ink-2);
+      box-shadow: inset 0 0 0 2px var(--ink);
     }
 
     .cal-cell.is-selected {
-      background: var(--ink);
-      color: var(--bg);
-      border-color: var(--ink);
+      outline: 2.5px solid var(--accent);
+      outline-offset: 1px;
     }
 
     .cal-dot {
@@ -776,14 +1060,15 @@
       border-radius: 50%;
       background: currentColor;
       position: absolute;
-      bottom: 5px;
-      opacity: 0.8;
+      bottom: 4px;
+      opacity: 0.85;
     }
 
     .cal-legend {
       display: flex;
       justify-content: center;
-      gap: 14px;
+      flex-wrap: wrap;
+      gap: 12px;
       font-size: 12px;
       color: var(--ink-2);
       margin-top: 14px;
@@ -855,7 +1140,7 @@
       margin-top: 4px;
     }
 
-    /* Hardware-Accelerated Breathing Flower */
+    /* Breathing Flower */
     .flower-stage {
       display: flex;
       flex-direction: column;
@@ -920,61 +1205,20 @@
       margin-top: 2px;
     }
 
-    /* Tests */
-    .q-block {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .q-block:last-child {
-      border-bottom: none;
-    }
-
-    .q-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
-
-    .q-opts {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .q-opt {
-      text-align: left;
-      background: var(--surface-2);
-      border: 1.5px solid transparent;
-      color: var(--ink);
-      padding: 11px 14px;
-      border-radius: 12px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .q-opt.selected {
-      background: var(--accent-tint);
-      border-color: var(--accent);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* Floating Tab Bar */
+    /* Floating Tab Bar (5 Clean Tabs) */
     .tab-bar {
       position: fixed;
       bottom: max(12px, env(safe-area-inset-bottom));
-      left: 16px;
-      right: 16px;
-      max-width: 408px;
+      left: 12px;
+      right: 12px;
+      max-width: 416px;
       margin: 0 auto;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 24px;
       display: flex;
       justify-content: space-around;
-      padding: 8px 6px;
+      padding: 8px 4px;
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
       z-index: 100;
     }
@@ -989,7 +1233,7 @@
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      padding: 6px 12px;
+      padding: 6px 8px;
       border-radius: 16px;
       cursor: pointer;
     }
@@ -999,8 +1243,8 @@
     }
 
     .tab-item svg {
-      width: 22px;
-      height: 22px;
+      width: 21px;
+      height: 21px;
       stroke: currentColor;
       fill: none;
       stroke-width: 2;
@@ -1044,7 +1288,7 @@
     <div class="onboarding-box">
       <div class="ob-badge">Первичная настройка</div>
       <div class="ob-title">Настроим твой ритм цикла</div>
-      <div class="ob-sub">Эти данные нужны для расчёта фаз и прогноза. Все записи будут надёжно храниться в твоём облаке Telegram и на устройстве.</div>
+      <div class="ob-sub">Эти данные нужны для расчёта фаз, окна овуляции и задержки. Записи хранятся в твоём облаке Telegram и на устройстве.</div>
 
       <div class="card">
         <div class="field-label" style="margin-bottom:8px;">Когда начались последние месячные?</div>
@@ -1082,7 +1326,7 @@
     <!-- VIEW 1: TODAY -->
     <div id="view-today" class="view active">
       <!-- Hero Cycle Card -->
-      <div class="hero-card">
+      <div class="hero-card" id="heroCard">
         <div class="date-bar">
           <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Предыдущий день">←</button>
           <button class="date-center-btn" onclick="openCalendarModal()">
@@ -1105,141 +1349,188 @@
         <div class="cycle-track">
           <div class="cycle-fill" id="cycleProgressBar" style="width: 10%;"></div>
         </div>
+
+        <!-- Apple Health Style Period Logging Strip -->
+        <div class="period-strip">
+          <button class="btn-period-apple" id="btnPeriodDay" onclick="togglePeriodDay()">
+            <span id="periodBtnIcon">●</span>
+            <span id="periodBtnText">Отметить месячные</span>
+          </button>
+          <button class="btn-new-cycle" id="btnNewCycle" onclick="startNewCycleHere()" style="display:none;">
+            1-й день цикла
+          </button>
+        </div>
       </div>
 
-      <!-- Tactile Sliders -->
+      <!-- SAVED LOCKED ACCORDION (Shown when day is saved and locked) -->
+      <div id="savedSummaryCard" class="saved-card" style="display:none;">
+        <div class="saved-header">
+          <div class="saved-badge">✓ День сохранён</div>
+          <button class="btn-edit-small" onclick="unlockDayEditing()">Изменить</button>
+        </div>
+
+        <div class="saved-metrics-row">
+          <div class="saved-metric-pill">
+            <span>Настр.</span>
+            <strong id="sum-m">6</strong>
+          </div>
+          <div class="saved-metric-pill">
+            <span>Энергия</span>
+            <strong id="sum-e">6</strong>
+          </div>
+          <div class="saved-metric-pill">
+            <span>Боль</span>
+            <strong id="sum-p">1</strong>
+          </div>
+          <div class="saved-metric-pill">
+            <span>Либидо</span>
+            <strong id="sum-l">5</strong>
+          </div>
+        </div>
+
+        <div class="saved-tags-line" id="savedTagsLine"></div>
+
+        <div class="saved-cta-row">
+          <span style="font-size:13px; color:var(--ink-2);">Рекомендации готовы</span>
+          <button class="link-btn" onclick="switchTab('analytics_advice')">Открыть разбор →</button>
+        </div>
+      </div>
+
+      <!-- EDITABLE FORM CONTAINER (Hidden when day is saved & locked) -->
+      <div id="editableDayForm">
+        <!-- Tactile Sliders -->
+        <div class="card">
+          <div class="card-top">
+            <span class="card-title">Состояние сейчас</span>
+            <span class="card-sub">Потяни вбок или нажми</span>
+          </div>
+
+          <div class="cc-group">
+            <div class="cc-slider" data-key="mood" data-min="1" data-max="10">
+              <div class="cc-fill" style="background:var(--accent-bg); width:60%;"></div>
+              <span class="cc-label">Настроение</span>
+              <span class="cc-value" id="val-mood">6</span>
+            </div>
+
+            <div class="cc-slider" data-key="energy" data-min="1" data-max="10">
+              <div class="cc-fill" style="background:var(--indigo-bg); width:60%;"></div>
+              <span class="cc-label">Энергия</span>
+              <span class="cc-value" id="val-energy">6</span>
+            </div>
+
+            <div class="cc-slider" data-key="pain" data-min="0" data-max="10">
+              <div class="cc-fill" style="background:var(--rose-bg); width:10%;"></div>
+              <span class="cc-label">Боль и спазмы</span>
+              <span class="cc-value" id="val-pain">1</span>
+            </div>
+
+            <div class="cc-slider" data-key="libido" data-min="0" data-max="10">
+              <div class="cc-fill" style="background:var(--amber-bg); width:50%;"></div>
+              <span class="cc-label">Либидо</span>
+              <span class="cc-value" id="val-libido">5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Body, Intimacy & Context-Aware Ovulation/Discharge -->
+        <div class="card">
+          <div class="card-top">
+            <span class="card-title">Близость и телесные маркеры</span>
+          </div>
+
+          <!-- Simple Intimacy Toggle -->
+          <div class="grid-2" id="intimacyBlock">
+            <button class="choice-btn active" id="btnIntimacyNo" onclick="setIntimacy(false)">Близости не было</button>
+            <button class="choice-btn" id="btnIntimacyYes" onclick="setIntimacy(true)">Была близость ♥</button>
+          </div>
+
+          <!-- Ovulation Button (Visible ONLY in mid-cycle window or if marked) -->
+          <div id="ovulationBlock" style="display:none; margin-top:10px;">
+            <button class="choice-btn" style="width:100%;" id="btnOvulation" onclick="toggleOvulation()">
+              ✦ Отметить овуляцию
+            </button>
+          </div>
+
+          <!-- Discharge tied to Menstruation -->
+          <div id="menstrualDischargeBlock" style="display:none;">
+            <div class="sub-section-header">
+              <span class="field-label">Интенсивность месячных</span>
+            </div>
+            <div class="grid-3" id="menstrualFlowSelector">
+              <div class="choice-btn" data-val="Скудные" onclick="selectDischarge('Скудные')">Скудные</div>
+              <div class="choice-btn active-rose" data-val="Умеренные" onclick="selectDischarge('Умеренные')">Умеренные</div>
+              <div class="choice-btn" data-val="Обильные" onclick="selectDischarge('Обильные')">Обильные</div>
+            </div>
+          </div>
+
+          <!-- Discharge tied to Ovulation / Mid-cycle -->
+          <div id="ovulatoryDischargeBlock" style="display:none;">
+            <div class="sub-section-header">
+              <span class="field-label">Характер выделений (середина цикла)</span>
+            </div>
+            <div class="grid-3" id="ovulatoryFlowSelector">
+              <div class="choice-btn active" data-val="Обычные" onclick="selectDischarge('Обычные')">Обычные</div>
+              <div class="choice-btn" data-val="Кремовые" onclick="selectDischarge('Кремовые')">Кремовые</div>
+              <div class="choice-btn" data-val="Прозрачные" onclick="selectDischarge('Прозрачные')">Прозрачные</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: Emotions & Factors -->
+        <div class="accordion" id="acc-context">
+          <button class="accordion-header" onclick="toggleAccordion('acc-context')">
+            <div>
+              <div>Эмоции и факторы дня</div>
+              <div class="accordion-summary" id="sum-context">Спокойствие</div>
+            </div>
+            <span class="accordion-chevron">⌄</span>
+          </button>
+          <div class="accordion-body">
+            <div class="sub-section-header">
+              <span class="field-label">Базовые эмоции</span>
+              <span class="field-hint">Можно несколько</span>
+            </div>
+            <div class="chip-wrap" id="basicEmotionChips">
+              <div class="chip active" data-val="Спокойствие">Спокойствие</div>
+              <div class="chip" data-val="Подъём">Подъём</div>
+              <div class="chip" data-val="Грусть">Грусть</div>
+              <div class="chip" data-val="Тревога">Тревога</div>
+              <div class="chip" data-val="Раздражение">Раздражение</div>
+              <div class="chip" data-val="Усталость">Усталость</div>
+            </div>
+
+            <div class="sub-section-header">
+              <span class="field-label">Тонкие оттенки состояния</span>
+              <span class="field-hint">Расширенные</span>
+            </div>
+            <div class="chip-wrap" id="nuancedEmotionChips">
+              <div class="chip" data-val="Слезливость">Слезливость</div>
+              <div class="chip" data-val="Апатия">Апатия</div>
+              <div class="chip" data-val="Туман в голове">Туман в голове</div>
+              <div class="chip" data-val="Уязвимость">Уязвимость</div>
+              <div class="chip" data-val="Перегруз">Перегруз</div>
+              <div class="chip" data-val="Внутреннее напряжение">Напряжение</div>
+            </div>
+
+            <div class="sub-section-header">
+              <span class="field-label">Факторы дня</span>
+            </div>
+            <div class="chip-wrap" id="contextChips">
+              <div class="chip" data-val="Недосып">Недосып</div>
+              <div class="chip" data-val="Стресс">Стресс</div>
+              <div class="chip" data-val="Отёки / тяга к сладкому">Отёки / сладкое</div>
+              <div class="chip" data-val="Обезболивающее">Обезболивающее</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="saveCurrentDay()">Сохранить день</button>
+      </div>
+    </div>
+
+    <!-- VIEW 2: STATE BREAKDOWN & SELF-CARE FEEDBACK LOOP ("Разбор") -->
+    <div id="view-analytics_advice" class="view">
       <div class="card">
-        <div class="card-top">
-          <span class="card-title">Состояние сейчас</span>
-          <span class="card-sub">Потяни шкалу</span>
-        </div>
-
-        <div class="cc-group">
-          <div class="cc-slider" data-key="mood" data-min="1" data-max="10">
-            <div class="cc-fill" style="background:var(--accent-bg); width:60%;"></div>
-            <span class="cc-label">Настроение</span>
-            <span class="cc-value" id="val-mood">6</span>
-          </div>
-
-          <div class="cc-slider" data-key="energy" data-min="1" data-max="10">
-            <div class="cc-fill" style="background:var(--indigo-bg); width:60%;"></div>
-            <span class="cc-label">Энергия</span>
-            <span class="cc-value" id="val-energy">6</span>
-          </div>
-
-          <div class="cc-slider" data-key="pain" data-min="0" data-max="10">
-            <div class="cc-fill" style="background:var(--rose-bg); width:10%;"></div>
-            <span class="cc-label">Боль и спазмы</span>
-            <span class="cc-value" id="val-pain">1</span>
-          </div>
-
-          <div class="cc-slider" data-key="libido" data-min="0" data-max="10">
-            <div class="cc-fill" style="background:var(--amber-bg); width:50%;"></div>
-            <span class="cc-label">Либидо</span>
-            <span class="cc-value" id="val-libido">5</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Direct Body, Cycle & Intimacy Card -->
-      <div class="card">
-        <div class="card-top">
-          <span class="card-title">Цикл, близость и тело</span>
-        </div>
-
-        <div class="grid-2">
-          <button class="choice-btn" id="btnPeriodStart" onclick="markPeriodStart()">1-й день месячных</button>
-          <button class="choice-btn" id="btnOvulation" onclick="toggleOvulation()">Овуляция</button>
-        </div>
-
-        <div class="sub-section-header">
-          <span class="field-label">Близость</span>
-        </div>
-        <div class="grid-3" id="intimacySelector">
-          <div class="choice-btn active" data-val="none" onclick="selectIntimacy('none')">Нет</div>
-          <div class="choice-btn" data-val="comfort" onclick="selectIntimacy('comfort')">Комфортно</div>
-          <div class="choice-btn" data-val="discomfort" onclick="selectIntimacy('discomfort')">Дискомфорт</div>
-        </div>
-
-        <div class="sub-section-header">
-          <span class="field-label">Количество выделений</span>
-        </div>
-        <div class="grid-4" id="flowSelector">
-          <div class="choice-btn active" data-val="Нет" onclick="selectFlow('Нет')">Нет</div>
-          <div class="choice-btn" data-val="Скудные" onclick="selectFlow('Скудные')">Скудные</div>
-          <div class="choice-btn" data-val="Умеренные" onclick="selectFlow('Умеренные')">Умерен.</div>
-          <div class="choice-btn" data-val="Обильные" onclick="selectFlow('Обильные')">Обильные</div>
-        </div>
-      </div>
-
-      <!-- Accordion: Emotions & Context -->
-      <div class="accordion" id="acc-context">
-        <button class="accordion-header" onclick="toggleAccordion('acc-context')">
-          <div>
-            <div>Эмоции, триггеры и заметка</div>
-            <div class="accordion-summary" id="sum-context">Спокойствие</div>
-          </div>
-          <span class="accordion-chevron">⌄</span>
-        </button>
-        <div class="accordion-body">
-          <div class="sub-section-header">
-            <span class="field-label">Базовые эмоции</span>
-            <span class="field-hint">Можно несколько</span>
-          </div>
-          <div class="chip-wrap" id="basicEmotionChips">
-            <div class="chip active" data-val="Спокойствие">Спокойствие</div>
-            <div class="chip" data-val="Подъём">Подъём</div>
-            <div class="chip" data-val="Грусть">Грусть</div>
-            <div class="chip" data-val="Тревога">Тревога</div>
-            <div class="chip" data-val="Раздражение">Раздражение</div>
-            <div class="chip" data-val="Усталость">Усталость</div>
-          </div>
-
-          <div class="sub-section-header">
-            <span class="field-label">Тонкие оттенки состояния</span>
-            <span class="field-hint">Расширенные</span>
-          </div>
-          <div class="chip-wrap" id="nuancedEmotionChips">
-            <div class="chip" data-val="Слезливость">Слезливость</div>
-            <div class="chip" data-val="Апатия">Апатия</div>
-            <div class="chip" data-val="Туман в голове">Туман в голове</div>
-            <div class="chip" data-val="Уязвимость">Уязвимость</div>
-            <div class="chip" data-val="Перегруз">Перегруз</div>
-            <div class="chip" data-val="Внутреннее напряжение">Напряжение</div>
-          </div>
-
-          <div class="sub-section-header">
-            <span class="field-label">Факторы дня</span>
-          </div>
-          <div class="chip-wrap" id="contextChips">
-            <div class="chip" data-val="Недосып">Недосып</div>
-            <div class="chip" data-val="Стресс">Стресс</div>
-            <div class="chip" data-val="Отёки / тяга к сладкому">Отёки / сладкое</div>
-            <div class="chip" data-val="Обезболивающее">Обезболивающее</div>
-          </div>
-
-          <div class="sub-section-header">
-            <span class="field-label">Что помогло сегодня</span>
-          </div>
-          <div class="chip-wrap" id="helpedChips">
-            <div class="chip" data-val="Тепло / душ">Тепло / душ</div>
-            <div class="chip" data-val="Нурофен вовремя">Нурофен вовремя</div>
-            <div class="chip" data-val="Магний / вода">Магний / вода</div>
-            <div class="chip" data-val="Сон / отдых">Сон / отдых</div>
-            <div class="chip" data-val="Тишина / дыхание">Тишина / дыхание</div>
-          </div>
-
-          <div class="sub-section-header">
-            <span class="field-label">Короткая заметка</span>
-          </div>
-          <textarea id="inNote" rows="2" placeholder="Что важного было сегодня..."></textarea>
-        </div>
-      </div>
-
-      <button class="btn-primary" onclick="saveCurrentDay()">Сохранить день</button>
-
-      <!-- Structured State Breakdown -->
-      <div class="card" style="margin-top:14px;">
         <div class="card-top">
           <span class="card-title">Разбор состояния</span>
           <span class="card-sub" id="advicePhaseTag">Сегодня</span>
@@ -1247,32 +1538,43 @@
 
         <div class="protocol-stack">
           <div class="protocol-item">
-            <span class="protocol-badge badge-gyn">Гинеколог · Тело</span>
+            <span class="protocol-badge badge-gyn">Гинеколог · Физиология</span>
             <div class="protocol-title" id="gynHeadline">Физиология дня</div>
-            <div class="protocol-text" id="gynBody">Настрой шкалы выше и нажми «Сохранить день», чтобы увидеть физиологию этого дня.</div>
+            <div class="protocol-text" id="gynBody">Отметь состояние на вкладке «Сегодня», чтобы увидеть точный разбор.</div>
           </div>
 
           <div class="protocol-item">
-            <span class="protocol-badge badge-act">Действие сейчас</span>
-            <div class="protocol-title" id="actHeadline">Бережный шаг</div>
-            <div class="protocol-text" id="actBody">Фиксация состояния занимает 10 секунд и помогает видеть реальную картину цикла.</div>
-          </div>
-
-          <div class="protocol-item">
-            <span class="protocol-badge badge-psy">Психолог · Опора</span>
-            <div class="protocol-title" id="psychHeadline">Фокус внимания</div>
-            <div class="protocol-text" id="psychBody">После сохранения здесь появится рекомендация под твоё эмоциональное состояние.</div>
-          </div>
-
-          <div class="protocol-item" id="historyItem" style="display:none;">
-            <span class="protocol-badge badge-hist">Личный паттерн</span>
-            <div class="protocol-text" id="historyBody"></div>
+            <span class="protocol-badge badge-psy">Психолог · Фокус</span>
+            <div class="protocol-title" id="psychHeadline">Опора дня</div>
+            <div class="protocol-text" id="psychBody">Рекомендации подстроятся под фазу цикла и твои эмоции.</div>
           </div>
         </div>
       </div>
+
+      <!-- Smart Advice -> "Помогло" Loop -->
+      <div class="card">
+        <div class="card-top">
+          <span class="card-title">Что попробовать сейчас</span>
+          <span class="card-sub">Отметь, если помогло</span>
+        </div>
+        <div style="font-size:13px; color:var(--ink-2); margin-bottom:12px;">
+          Подборка под твои сегодняшние симптомы. Нажимай <b>«Помогло ✓»</b> на том, что реально сработало — приложение запомнит это для будущих циклов.
+        </div>
+
+        <div id="actionableTipsList"></div>
+
+        <!-- Custom Remedy Input -->
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <input type="text" id="customHelpInput" placeholder="Или впиши свой способ..." />
+          <button class="btn-soft" style="white-space:nowrap;" onclick="addCustomHelped()">+ Помогло</button>
+        </div>
+
+        <!-- Learned Pattern Box -->
+        <div class="inspector-box" id="learnedHelpStats" style="display:none;"></div>
+      </div>
     </div>
 
-    <!-- VIEW 2: ANALYTICS -->
+    <!-- VIEW 3: ANALYTICS ("График") -->
     <div id="view-analytics" class="view">
       <div class="card">
         <div class="card-top">
@@ -1319,38 +1621,60 @@
       </div>
     </div>
 
-    <!-- VIEW 3: TESTS -->
-    <div id="view-tests" class="view">
-      <div class="card">
-        <div class="card-top">
-          <span class="card-title">Клинические шкалы</span>
-        </div>
-        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;" id="testNoticeText"></div>
-        <div class="grid-2">
-          <button class="choice-btn active" id="btnSelectHads" onclick="loadTest('hads')">Тревога / Депрессия</button>
-          <button class="choice-btn" id="btnSelectPmdd" onclick="loadTest('pmdd')">Тяжесть ПМС</button>
+    <!-- VIEW 4: PIN-LOCKED PRIVATE NOTES ("Заметки") -->
+    <div id="view-notes" class="view">
+      <!-- Locked / Setup Keypad State -->
+      <div id="notesPinGate" class="card">
+        <div class="pin-screen">
+          <div style="font-size:28px; margin-bottom:8px;">🔒</div>
+          <div class="card-title" id="pinTitle">Личные заметки</div>
+          <div style="font-size:14px; color:var(--ink-2); margin-top:4px;" id="pinSubtitle">
+            Введи 4-значный код доступа
+          </div>
+
+          <div class="pin-dots" id="pinDots">
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+            <div class="pin-dot"></div>
+          </div>
+
+          <div class="keypad">
+            <button class="key-btn" onclick="pressPinKey('1')">1</button>
+            <button class="key-btn" onclick="pressPinKey('2')">2</button>
+            <button class="key-btn" onclick="pressPinKey('3')">3</button>
+            <button class="key-btn" onclick="pressPinKey('4')">4</button>
+            <button class="key-btn" onclick="pressPinKey('5')">5</button>
+            <button class="key-btn" onclick="pressPinKey('6')">6</button>
+            <button class="key-btn" onclick="pressPinKey('7')">7</button>
+            <button class="key-btn" onclick="pressPinKey('8')">8</button>
+            <button class="key-btn" onclick="pressPinKey('9')">9</button>
+            <div class="key-btn empty"></div>
+            <button class="key-btn" onclick="pressPinKey('0')">0</button>
+            <button class="key-btn" onclick="backspacePinKey()">⌫</button>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-top">
-          <span class="card-title" id="testTitle">Шкала HADS</span>
-          <span class="card-sub" id="testProgress">0 / 14</span>
+      <!-- Unlocked Private Notes Content -->
+      <div id="notesUnlockedArea" style="display:none;">
+        <div class="card">
+          <div class="card-top">
+            <span class="card-title">Личный дневник</span>
+            <button class="btn-edit-small" onclick="lockPrivateNotes()">🔒 Закрыть</button>
+          </div>
+          <div style="font-size:13px; color:var(--ink-2); margin-bottom:10px;" id="newNoteContextLabel">
+            Сегодня · День 1
+          </div>
+          <textarea id="privateNoteInput" rows="4" placeholder="Запиши личные мысли, чувства или переживания — этот раздел защищён твоим кодом..."></textarea>
+          <button class="btn-accent" style="margin-top:12px;" onclick="savePrivateNote()">Сохранить заметку</button>
         </div>
-        <div id="testQuestions"></div>
-        <button class="btn-primary" style="margin-top:14px;" onclick="scoreCurrentTest()">Показать результат</button>
-        <div id="testResultBox" style="display:none; margin-top:14px; padding:14px; background:var(--accent-tint); color:var(--accent); border-radius:14px; font-size:15px; font-weight:600;"></div>
-      </div>
 
-      <div class="card">
-        <div class="card-top">
-          <span class="card-title">История результатов</span>
-        </div>
-        <div id="testHistoryList" style="font-size:14px; color:var(--ink-2);">Пройденных тестов пока нет.</div>
+        <div id="privateNotesList"></div>
       </div>
     </div>
 
-    <!-- VIEW 4: SOS -->
+    <!-- VIEW 5: SOS -->
     <div id="view-sos" class="view">
       <div class="card">
         <div class="card-top">
@@ -1425,7 +1749,7 @@
       </div>
     </div>
 
-    <!-- VIEW 5: SETTINGS -->
+    <!-- VIEW 6: SETTINGS ("Настройки") -->
     <div id="view-settings" class="view">
       <div class="card">
         <div class="card-top">
@@ -1445,10 +1769,20 @@
 
       <div class="card">
         <div class="card-top">
+          <span class="card-title">Код доступа к заметкам</span>
+        </div>
+        <div style="font-size:14px; color:var(--ink-2); margin-bottom:12px;">
+          Если захочешь сменить 4-значный пароль от вкладки «Заметки», сбрось текущий код и задай новый при следующем входе.
+        </div>
+        <button class="btn-soft" style="width:100%;" onclick="resetNotesPin()">Сменить 4-значный код заметок</button>
+      </div>
+
+      <div class="card">
+        <div class="card-top">
           <span class="card-title">Облако и резервная копия</span>
           <span class="card-sub" id="cloudSyncBadge">Локально</span>
         </div>
-        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;" id="cloudSyncDesc">
+        <div style="font-size:14px; color:var(--ink-2); margin-bottom:14px;">
           Записи автоматически сохраняются в твоём аккаунте Telegram Cloud и в памяти этого устройства.
         </div>
         <div style="display:flex; flex-direction:column; gap:10px;">
@@ -1476,7 +1810,7 @@
       <div class="cal-grid" id="calGrid"></div>
 
       <div class="cal-legend">
-        <span style="color:var(--rose)">● Месячные</span>
+        <span style="color:var(--rose-solid)">● Месячные</span>
         <span style="color:var(--accent)">● Овуляция</span>
         <span>• Есть запись</span>
       </div>
@@ -1488,19 +1822,23 @@
     </div>
   </div>
 
-  <!-- Floating Bottom Tab Bar -->
+  <!-- Floating Bottom Tab Bar (5 Clean Tabs) -->
   <nav class="tab-bar">
     <button class="tab-item active" data-tab="today" onclick="switchTab('today')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       <span>Сегодня</span>
     </button>
+    <button class="tab-item" data-tab="analytics_advice" onclick="switchTab('analytics_advice')">
+      <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+      <span>Разбор</span>
+    </button>
     <button class="tab-item" data-tab="analytics" onclick="switchTab('analytics')">
       <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg>
       <span>График</span>
     </button>
-    <button class="tab-item" data-tab="tests" onclick="switchTab('tests')">
-      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9h8M8 14h5"/></svg>
-      <span>Тесты</span>
+    <button class="tab-item" data-tab="notes" onclick="switchTab('notes')">
+      <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <span>Заметки</span>
     </button>
     <button class="tab-item" data-tab="settings" onclick="switchTab('settings')">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -1524,6 +1862,9 @@
     }
     function hapticSuccess() {
       try { tg?.HapticFeedback?.notificationOccurred('success'); } catch (e) {}
+    }
+    function hapticError() {
+      try { tg?.HapticFeedback?.notificationOccurred('error'); } catch (e) {}
     }
 
     // Local Date Helpers
@@ -1558,10 +1899,11 @@
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     }
 
-    // Fresh Storage Key (ignores any previous test runs)
-    const STORAGE_KEY = 'ritm_clean_v5';
+    // State Schema v6
+    const STORAGE_KEY = 'ritm_clean_v6';
     let state = {
       onboarded: false,
+      notesPin: null,
       settings: {
         lastPeriodStart: getTodayISO(0),
         cycleLength: 28,
@@ -1569,21 +1911,31 @@
         darkMode: false
       },
       entries: {},
-      painkillers: [],
-      testHistory: []
+      privateNotes: [],
+      painkillers: []
     };
 
     let obCycleLen = 28;
     let obPeriodLen = 5;
     let selectedDate = getTodayISO(0);
     let calendarViewDate = parseLocalISO(selectedDate);
+
+    // Day Editing & Form State
+    let isEditingDay = true;
     let metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
+    let tempIsPeriod = false;
     let tempIsOvulation = false;
-    let tempIntimacy = 'none';
-    let tempFlow = 'Нет';
+    let tempIntimacy = false;
+    let tempDischarge = '';
+
+    // PIN State
+    let isNotesUnlocked = false;
+    let pinBuffer = '';
+    let pinSetupFirst = '';
+    let pinMode = 'enter'; // 'enter' | 'create' | 'confirm'
+
+    // Other UI State
     let chartFilter = 'all';
-    let activeTestKey = 'hads';
-    let currentAnswers = {};
     let breathTimer = null;
     let isBreathing = false;
 
@@ -1649,13 +2001,16 @@
 
       const metaPayload = JSON.stringify({
         onboarded: state.onboarded,
+        notesPin: state.notesPin,
         settings: state.settings,
-        painkillers: state.painkillers.slice(0, 15),
-        testHistory: state.testHistory.slice(0, 15)
+        painkillers: state.painkillers.slice(0, 15)
       });
-      await cloudSet('ritm5_meta', metaPayload);
+      await cloudSet('ritm6_meta', metaPayload);
 
-      // Group entries by YYYY-MM so each key stays well below Telegram's 4096-byte limit
+      // Sync private notes
+      await cloudSet('ritm6_notes', JSON.stringify(state.privateNotes.slice(0, 30)));
+
+      // Group entries by YYYY-MM
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
         const ym = iso.slice(0, 7);
@@ -1666,12 +2021,11 @@
       });
 
       for (const [ym, monthEntries] of Object.entries(byMonth)) {
-        await cloudSet(`ritm5_m_${ym}`, JSON.stringify(monthEntries));
+        await cloudSet(`ritm6_m_${ym}`, JSON.stringify(monthEntries));
       }
     }
 
     async function loadFromCloudAndLocal() {
-      // 1. Check localStorage first
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
@@ -1679,20 +2033,24 @@
         }
       } catch (e) {}
 
-      // 2. Check Telegram CloudStorage and merge/restore if available
       if (hasTelegramCloud()) {
         document.getElementById('cloudSyncBadge').textContent = 'TG Cloud ✓';
-        const metaRaw = await cloudGet('ritm5_meta');
+        const metaRaw = await cloudGet('ritm6_meta');
         if (metaRaw) {
           try {
             const meta = JSON.parse(metaRaw);
             state.onboarded = Boolean(meta.onboarded);
+            state.notesPin = meta.notesPin || state.notesPin;
             state.settings = { ...state.settings, ...(meta.settings || {}) };
             state.painkillers = meta.painkillers || state.painkillers;
-            state.testHistory = meta.testHistory || state.testHistory;
+
+            const notesRaw = await cloudGet('ritm6_notes');
+            if (notesRaw) {
+              state.privateNotes = JSON.parse(notesRaw);
+            }
 
             const keys = await cloudGetKeys();
-            const monthKeys = keys.filter(k => k.startsWith('ritm5_m_'));
+            const monthKeys = keys.filter(k => k.startsWith('ritm6_m_'));
             for (const mk of monthKeys) {
               const mRaw = await cloudGet(mk);
               if (mRaw) {
@@ -1729,7 +2087,7 @@
       showToast('Синхронизировано с Telegram Cloud');
     }
 
-    // Onboarding Logic
+    // Onboarding
     function stepObValue(type, delta, min, max) {
       hapticSelect();
       if (type === 'obCycleLen') {
@@ -1747,6 +2105,28 @@
       state.settings.lastPeriodStart = pickedDate;
       state.settings.cycleLength = obCycleLen;
       state.settings.periodLength = obPeriodLen;
+
+      // Mark initial period days up to today if within periodLength
+      const startObj = parseLocalISO(pickedDate);
+      const todayISO = getTodayISO(0);
+      for (let i = 0; i < obPeriodLen; i++) {
+        const d = new Date(startObj);
+        d.setDate(d.getDate() + i);
+        const iso = formatLocalISO(d);
+        if (iso <= todayISO) {
+          state.entries[iso] = {
+            date: iso,
+            isPeriod: true,
+            isOvulation: false,
+            intimacy: false,
+            discharge: 'Умеренные',
+            mood: 6, energy: 5, pain: 2, libido: 4,
+            emotions: ['Спокойствие'],
+            contexts: [],
+            helped: []
+          };
+        }
+      }
 
       syncSettingsInputs();
       persistLocalAndCloud(null);
@@ -1781,12 +2161,15 @@
       hapticSuccess();
     }
 
-    // Sliders
+    // Scroll-Safe Sliders
     function initCCSliders() {
       document.querySelectorAll('.cc-slider').forEach(el => {
         const key = el.dataset.key;
         const min = Number(el.dataset.min);
         const max = Number(el.dataset.max);
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
 
         const updateFromEvent = (clientX) => {
           const rect = el.getBoundingClientRect();
@@ -1801,13 +2184,39 @@
         };
 
         el.addEventListener('pointerdown', (e) => {
-          el.setPointerCapture(e.pointerId);
-          updateFromEvent(e.clientX);
+          if (!isEditingDay) return;
+          startX = e.clientX;
+          startY = e.clientY;
+          isDragging = false;
         });
+
         el.addEventListener('pointermove', (e) => {
-          if (el.hasPointerCapture(e.pointerId)) {
+          if (!isEditingDay || startX === 0) return;
+          const dx = Math.abs(e.clientX - startX);
+          const dy = Math.abs(e.clientY - startY);
+          if (!isDragging && dx > 10 && dx > dy * 1.3) {
+            isDragging = true;
+            el.setPointerCapture(e.pointerId);
+          }
+          if (isDragging) {
             updateFromEvent(e.clientX);
           }
+        });
+
+        el.addEventListener('pointerup', (e) => {
+          if (!isEditingDay) return;
+          const dx = Math.abs(e.clientX - startX);
+          const dy = Math.abs(e.clientY - startY);
+          if (!isDragging && dx < 6 && dy < 6) {
+            updateFromEvent(e.clientX);
+          }
+          isDragging = false;
+          startX = 0;
+        });
+
+        el.addEventListener('pointercancel', () => {
+          isDragging = false;
+          startX = 0;
         });
       });
     }
@@ -1825,6 +2234,243 @@
 
     function renderAllCCSliders() {
       ['mood', 'energy', 'pain', 'libido'].forEach(renderCCSlider);
+    }
+
+    // Cycle Math with Delay ("Задержка") & Actual Period Days
+    function getCycleInfo(dateISO) {
+      const start = parseLocalISO(state.settings.lastPeriodStart);
+      const target = parseLocalISO(dateISO);
+      const today = parseLocalISO(getTodayISO(0));
+      const diffDays = Math.round((target - start) / (1000 * 60 * 60 * 24));
+      const len = Number(state.settings.cycleLength) || 28;
+      const pLen = Number(state.settings.periodLength) || 5;
+
+      const savedEntry = state.entries[dateISO];
+      const isMarkedPeriod = (dateISO === selectedDate)
+        ? tempIsPeriod
+        : Boolean(savedEntry?.isPeriod);
+      const isMarkedOvulation = (dateISO === selectedDate)
+        ? tempIsOvulation
+        : Boolean(savedEntry?.isOvulation);
+
+      const ovulationDay = Math.max(pLen + 2, len - 14);
+      const isMidCycleWindow = (cycleD) => cycleD >= Math.max(8, ovulationDay - 4) && cycleD <= ovulationDay + 3;
+
+      // Check for Delay (Задержка) in current active cycle
+      let isDelay = false;
+      let delayDays = 0;
+      let cycleDay = 1;
+
+      if (diffDays >= 0 && diffDays >= len && target <= today && !isMarkedPeriod) {
+        isDelay = true;
+        cycleDay = diffDays + 1;
+        delayDays = cycleDay - len;
+      } else {
+        cycleDay = ((diffDays % len) + len) % len + 1;
+      }
+
+      let phase = '';
+      let phaseCode = '';
+
+      if (isMarkedPeriod) {
+        phase = 'Менструация';
+        phaseCode = 'menstrual';
+      } else if (isDelay) {
+        phase = `Задержка · ${delayDays} дн.`;
+        phaseCode = 'delay';
+      } else if (isMarkedOvulation) {
+        phase = 'Овуляция';
+        phaseCode = 'ovulation';
+      } else if (cycleDay <= pLen && diffDays >= 0 && diffDays < pLen) {
+        phase = 'Менструальная фаза';
+        phaseCode = 'menstrual';
+      } else if (cycleDay < ovulationDay - 1) {
+        phase = 'Фолликулярная фаза';
+        phaseCode = 'follicular';
+      } else if (cycleDay <= ovulationDay + 1) {
+        phase = 'Овуляторное окно';
+        phaseCode = 'ovulation';
+      } else if (cycleDay <= len - 6) {
+        phase = 'Лютеиновая фаза';
+        phaseCode = 'early_luteal';
+      } else {
+        phase = 'Предменструальное окно';
+        phaseCode = 'late_luteal';
+      }
+
+      return {
+        cycleDay,
+        phase,
+        phaseCode,
+        len,
+        pLen,
+        isDelay,
+        delayDays,
+        isMarkedPeriod,
+        ovulationDay,
+        showOvulationOption: isMidCycleWindow(cycleDay) || isMarkedOvulation
+      };
+    }
+
+    function updateHeaderAndContextControls() {
+      const info = getCycleInfo(selectedDate);
+      const heroCard = document.getElementById('heroCard');
+      const heroPhase = document.getElementById('heroPhase');
+      const bar = document.getElementById('cycleProgressBar');
+
+      heroCard.classList.toggle('is-period-day', tempIsPeriod);
+
+      if (info.isDelay) {
+        document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>(норма ${info.len})</span>`;
+        heroPhase.textContent = info.phase;
+        heroPhase.className = 'hero-phase is-delay';
+        document.getElementById('heroCountdown').innerHTML = `Задержка<br/>+${info.delayDays} дн.`;
+        bar.style.width = '100%';
+        bar.style.background = 'var(--amber)';
+      } else {
+        document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>/ ${info.len}</span>`;
+        heroPhase.textContent = info.phase;
+        heroPhase.className = tempIsPeriod ? 'hero-phase is-period' : 'hero-phase';
+        const daysLeft = Math.max(0, info.len - info.cycleDay + 1);
+        document.getElementById('heroCountdown').innerHTML = daysLeft === 1
+          ? 'Новый цикл<br/>завтра'
+          : `До нового цикла<br/>~${daysLeft} дн.`;
+        bar.style.width = `${Math.min(100, (info.cycleDay / info.len) * 100)}%`;
+        bar.style.background = tempIsPeriod ? 'var(--rose-solid)' : 'var(--accent)';
+      }
+
+      document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
+
+      // Apple Health Period Button State
+      const pBtn = document.getElementById('btnPeriodDay');
+      const pText = document.getElementById('periodBtnText');
+      const newCycleBtn = document.getElementById('btnNewCycle');
+
+      pBtn.classList.toggle('active', tempIsPeriod);
+      pText.textContent = tempIsPeriod ? 'Месячные отмечены ✓' : 'Отметить месячные';
+
+      // Show "1-й день цикла" button if off-schedule (day >= 15 or delay) and not already day 1
+      const showNewCycleBtn = (info.cycleDay >= 15 || info.isDelay) && selectedDate !== state.settings.lastPeriodStart;
+      newCycleBtn.style.display = showNewCycleBtn ? 'block' : 'none';
+
+      // Context-Aware Ovulation & Discharge Visibility
+      document.getElementById('ovulationBlock').style.display = info.showOvulationOption ? 'block' : 'none';
+      document.getElementById('btnOvulation').classList.toggle('active', tempIsOvulation);
+      document.getElementById('btnOvulation').textContent = tempIsOvulation ? '✦ Овуляция отмечена' : '✦ Отметить овуляцию';
+
+      // Discharge tied separately to Menstruation vs Ovulation
+      const mensBlock = document.getElementById('menstrualDischargeBlock');
+      const ovulBlock = document.getElementById('ovulatoryDischargeBlock');
+
+      if (tempIsPeriod) {
+        mensBlock.style.display = 'block';
+        ovulBlock.style.display = 'none';
+        if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) {
+          tempDischarge = 'Умеренные';
+        }
+        renderDischargeButtons();
+      } else if (info.showOvulationOption) {
+        mensBlock.style.display = 'none';
+        ovulBlock.style.display = 'block';
+        if (!['Обычные', 'Кремовые', 'Прозрачные'].includes(tempDischarge)) {
+          tempDischarge = 'Обычные';
+        }
+        renderDischargeButtons();
+      } else {
+        mensBlock.style.display = 'none';
+        ovulBlock.style.display = 'none';
+        tempDischarge = '';
+      }
+
+      updateSummaries();
+    }
+
+    function renderDischargeButtons() {
+      document.querySelectorAll('#menstrualFlowSelector .choice-btn').forEach(btn => {
+        btn.classList.toggle('active-rose', btn.dataset.val === tempDischarge);
+      });
+      document.querySelectorAll('#ovulatoryFlowSelector .choice-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.val === tempDischarge);
+      });
+    }
+
+    // Apple Health Period Toggles
+    function togglePeriodDay() {
+      hapticImpact('medium');
+      tempIsPeriod = !tempIsPeriod;
+      if (tempIsPeriod) {
+        tempIsOvulation = false;
+        if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) {
+          tempDischarge = 'Умеренные';
+        }
+      }
+      // If day was locked, save immediately so pink state persists just like Apple Health
+      if (!isEditingDay && state.entries[selectedDate]) {
+        state.entries[selectedDate].isPeriod = tempIsPeriod;
+        state.entries[selectedDate].isOvulation = tempIsOvulation;
+        state.entries[selectedDate].discharge = tempIsPeriod ? tempDischarge : '';
+        persistLocalAndCloud(selectedDate.slice(0, 7));
+        renderSavedSummaryCard(state.entries[selectedDate]);
+        showToast(tempIsPeriod ? 'День месячных отмечен' : 'Отметка снята');
+      }
+      updateHeaderAndContextControls();
+    }
+
+    function startNewCycleHere() {
+      hapticImpact('heavy');
+      state.settings.lastPeriodStart = selectedDate;
+      tempIsPeriod = true;
+      tempIsOvulation = false;
+      tempDischarge = 'Умеренные';
+      syncSettingsInputs();
+
+      if (!state.entries[selectedDate]) {
+        state.entries[selectedDate] = {
+          date: selectedDate,
+          isPeriod: true,
+          isOvulation: false,
+          intimacy: tempIntimacy,
+          discharge: 'Умеренные',
+          mood: metrics.mood,
+          energy: metrics.energy,
+          pain: metrics.pain,
+          libido: metrics.libido,
+          emotions: getSelectedEmotions(),
+          contexts: [],
+          helped: []
+        };
+      } else {
+        state.entries[selectedDate].isPeriod = true;
+        state.entries[selectedDate].discharge = 'Умеренные';
+      }
+
+      persistLocalAndCloud(selectedDate.slice(0, 7));
+      updateHeaderAndContextControls();
+      if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
+      showToast('Новый цикл начат с этого дня');
+    }
+
+    function setIntimacy(val) {
+      hapticSelect();
+      tempIntimacy = val;
+      document.getElementById('btnIntimacyNo').classList.toggle('active', !val);
+      document.getElementById('btnIntimacyYes').classList.toggle('active-rose', val);
+    }
+
+    function toggleOvulation() {
+      hapticImpact('medium');
+      tempIsOvulation = !tempIsOvulation;
+      if (tempIsOvulation) {
+        tempIsPeriod = false;
+        tempDischarge = 'Прозрачные';
+      }
+      updateHeaderAndContextControls();
+    }
+
+    function selectDischarge(val) {
+      hapticSelect();
+      tempDischarge = val;
+      renderDischargeButtons();
     }
 
     // Accordions & Chips
@@ -1848,68 +2494,156 @@
         : 'Не выбрано';
     }
 
-    // Cycle Calculation
-    function getCycleInfo(dateISO) {
-      const start = parseLocalISO(state.settings.lastPeriodStart);
-      const target = parseLocalISO(dateISO);
-      const diffDays = Math.round((target - start) / (1000 * 60 * 60 * 24));
-      const len = Number(state.settings.cycleLength) || 28;
-      const pLen = Number(state.settings.periodLength) || 5;
-      const cycleDay = ((diffDays % len) + len) % len + 1;
-
-      const savedEntry = state.entries[dateISO];
-      const isMarkedOvulation = (dateISO === selectedDate) ? tempIsOvulation : Boolean(savedEntry?.isOvulation);
-      const ovulationDay = Math.max(pLen + 2, len - 14);
-
-      let phase = '';
-      let phaseCode = '';
-      if (isMarkedOvulation) {
-        phase = 'Овуляция';
-        phaseCode = 'ovulation';
-      } else if (cycleDay <= pLen) {
-        phase = 'Менструальная фаза';
-        phaseCode = 'menstrual';
-      } else if (cycleDay < ovulationDay - 1) {
-        phase = 'Фолликулярная фаза';
-        phaseCode = 'follicular';
-      } else if (cycleDay <= ovulationDay + 1) {
-        phase = 'Овуляторное окно';
-        phaseCode = 'ovulation';
-      } else if (cycleDay <= len - 6) {
-        phase = 'Лютеиновая фаза';
-        phaseCode = 'early_luteal';
-      } else {
-        phase = 'Предменструальное окно';
-        phaseCode = 'late_luteal';
-      }
-
-      return { cycleDay, phase, phaseCode, len, pLen };
+    function setupChips() {
+      document.querySelectorAll('#basicEmotionChips .chip').forEach(chip => {
+        chip.onclick = () => {
+          hapticSelect();
+          chip.classList.toggle('active');
+          updateSummaries();
+        };
+      });
+      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(chip => {
+        chip.onclick = () => {
+          hapticSelect();
+          chip.classList.toggle('active-indigo');
+          updateSummaries();
+        };
+      });
+      document.querySelectorAll('#contextChips .chip').forEach(chip => {
+        chip.onclick = () => {
+          hapticSelect();
+          const isRose = chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс');
+          chip.classList.toggle(isRose ? 'active-rose' : 'active');
+          updateSummaries();
+        };
+      });
     }
 
-    function updateHeader() {
-      const info = getCycleInfo(selectedDate);
-      document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>/ ${info.len}</span>`;
-      document.getElementById('heroPhase').textContent = info.phase;
-      document.getElementById('advicePhaseTag').textContent = `День ${info.cycleDay}`;
-
-      const daysLeft = Math.max(0, info.len - info.cycleDay + 1);
-      document.getElementById('heroCountdown').innerHTML = daysLeft === 1
-        ? 'Новый цикл<br/>завтра'
-        : `До нового цикла<br/>~${daysLeft} дн.`;
-      document.getElementById('cycleProgressBar').style.width = `${Math.min(100, (info.cycleDay / info.len) * 100)}%`;
-
-      document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
-      document.getElementById('btnPeriodStart').classList.toggle('active-rose', selectedDate === state.settings.lastPeriodStart);
-      document.getElementById('btnOvulation').classList.toggle('active', tempIsOvulation);
-      updateSummaries();
-    }
-
+    // Day Form Load / Save / Lock
     function shiftDate(delta) {
       hapticImpact('light');
       const d = parseLocalISO(selectedDate);
       d.setDate(d.getDate() + delta);
       selectedDate = formatLocalISO(d);
       loadDayForm();
+    }
+
+    function loadDayForm() {
+      const existing = state.entries[selectedDate];
+      const info = getCycleInfo(selectedDate);
+
+      if (existing) {
+        isEditingDay = false;
+        metrics = {
+          mood: existing.mood,
+          energy: existing.energy,
+          pain: existing.pain,
+          libido: existing.libido
+        };
+        tempIsPeriod = Boolean(existing.isPeriod);
+        tempIsOvulation = Boolean(existing.isOvulation);
+        tempIntimacy = Boolean(existing.intimacy);
+        tempDischarge = existing.discharge || '';
+
+        populateEditableInputs(existing);
+        renderSavedSummaryCard(existing);
+        document.getElementById('savedSummaryCard').style.display = 'block';
+        document.getElementById('editableDayForm').style.display = 'none';
+      } else {
+        isEditingDay = true;
+        metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
+        tempIsPeriod = info.phaseCode === 'menstrual';
+        tempIsOvulation = false;
+        tempIntimacy = false;
+        tempDischarge = tempIsPeriod ? 'Умеренные' : '';
+
+        populateEditableInputs({
+          mood: 6, energy: 6, pain: 1, libido: 5,
+          intimacy: false, emotions: ['Спокойствие'], contexts: []
+        });
+        document.getElementById('savedSummaryCard').style.display = 'none';
+        document.getElementById('editableDayForm').style.display = 'block';
+      }
+
+      updateHeaderAndContextControls();
+      renderAdviceAndSelfCareTab();
+    }
+
+    function populateEditableInputs(data) {
+      renderAllCCSliders();
+      setIntimacy(Boolean(data.intimacy));
+
+      const savedEmotions = Array.isArray(data.emotions) ? data.emotions : ['Спокойствие'];
+      document.querySelectorAll('#basicEmotionChips .chip').forEach(c => {
+        c.classList.toggle('active', savedEmotions.includes(c.dataset.val));
+      });
+      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(c => {
+        c.classList.toggle('active-indigo', savedEmotions.includes(c.dataset.val));
+      });
+      document.querySelectorAll('#contextChips .chip').forEach(c => {
+        c.classList.remove('active', 'active-rose');
+        if ((data.contexts || []).includes(c.dataset.val)) {
+          const isRose = c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс');
+          c.classList.add(isRose ? 'active-rose' : 'active');
+        }
+      });
+    }
+
+    function renderSavedSummaryCard(entry) {
+      document.getElementById('sum-m').textContent = entry.mood;
+      document.getElementById('sum-e').textContent = entry.energy;
+      document.getElementById('sum-p').textContent = entry.pain;
+      document.getElementById('sum-l').textContent = entry.libido;
+
+      const tags = [];
+      if (entry.isPeriod) tags.push(`Месячные (${(entry.discharge || 'умеренные').toLowerCase()})`);
+      if (entry.isOvulation) tags.push(`Овуляция${entry.discharge ? ` · ${entry.discharge.toLowerCase()}` : ''}`);
+      if (!entry.isPeriod && !entry.isOvulation && entry.discharge) tags.push(`Выделения: ${entry.discharge.toLowerCase()}`);
+      if (entry.intimacy) tags.push('Близость ♥');
+      if (entry.emotions?.length) tags.push(entry.emotions.join(', '));
+      if (entry.contexts?.length) tags.push(entry.contexts.join(', '));
+
+      document.getElementById('savedTagsLine').textContent = tags.length ? tags.join(' · ') : 'Базовый чекин сохранён';
+    }
+
+    function unlockDayEditing() {
+      hapticImpact('medium');
+      isEditingDay = true;
+      document.getElementById('savedSummaryCard').style.display = 'none';
+      document.getElementById('editableDayForm').style.display = 'block';
+      updateHeaderAndContextControls();
+    }
+
+    function saveCurrentDay() {
+      const emotions = getSelectedEmotions();
+      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
+      const prevHelped = state.entries[selectedDate]?.helped || [];
+
+      const entry = {
+        date: selectedDate,
+        isPeriod: tempIsPeriod,
+        isOvulation: tempIsOvulation,
+        intimacy: tempIntimacy,
+        discharge: tempDischarge,
+        mood: metrics.mood,
+        energy: metrics.energy,
+        pain: metrics.pain,
+        libido: metrics.libido,
+        emotions: emotions.length ? emotions : ['Спокойствие'],
+        contexts,
+        helped: prevHelped
+      };
+
+      state.entries[selectedDate] = entry;
+      isEditingDay = false;
+      persistLocalAndCloud(selectedDate.slice(0, 7));
+
+      renderSavedSummaryCard(entry);
+      document.getElementById('savedSummaryCard').style.display = 'block';
+      document.getElementById('editableDayForm').style.display = 'none';
+      updateHeaderAndContextControls();
+      renderAdviceAndSelfCareTab();
+      showToast('День сохранён');
     }
 
     // Calendar Modal
@@ -1974,8 +2708,10 @@
         const entry = state.entries[iso];
 
         const classes = ['cal-cell'];
-        if (info.phaseCode === 'menstrual' || (entry && entry.flow && entry.flow !== 'Нет' && info.cycleDay <= info.pLen + 1)) {
+        if (entry?.isPeriod) {
           classes.push('is-period');
+        } else if (info.phaseCode === 'menstrual' && iso > todayISO) {
+          classes.push('is-predicted-period');
         } else if (entry?.isOvulation || info.phaseCode === 'ovulation') {
           classes.push('is-ovulation');
         }
@@ -1992,215 +2728,70 @@
       document.getElementById('calGrid').innerHTML = html;
     }
 
-    // Body, Intimacy & Cycle Markers
-    function markPeriodStart() {
-      hapticImpact('medium');
-      state.settings.lastPeriodStart = selectedDate;
-      syncSettingsInputs();
-      if (tempFlow === 'Нет') selectFlow('Умеренные');
-      persistLocalAndCloud(null);
-      updateHeader();
-      generateExpertAdvice();
-      showToast('1-й день цикла отмечен');
-    }
-
-    function toggleOvulation() {
-      hapticImpact('medium');
-      tempIsOvulation = !tempIsOvulation;
-      if (tempIsOvulation && tempFlow === 'Нет') selectFlow('Умеренные');
-      updateHeader();
-    }
-
-    function selectIntimacy(val) {
-      hapticSelect();
-      tempIntimacy = val;
-      document.querySelectorAll('#intimacySelector .choice-btn').forEach(btn => {
-        btn.classList.remove('active', 'active-rose', 'active-amber');
-        if (btn.dataset.val === val) {
-          if (val === 'comfort') btn.classList.add('active-amber');
-          else if (val === 'discomfort') btn.classList.add('active-rose');
-          else btn.classList.add('active');
-        }
-      });
-    }
-
-    function selectFlow(val) {
-      hapticSelect();
-      tempFlow = val;
-      document.querySelectorAll('#flowSelector .choice-btn').forEach(btn => {
-        btn.classList.remove('active', 'active-rose');
-        if (btn.dataset.val === val) {
-          btn.classList.add(val === 'Обильные' ? 'active-rose' : 'active');
-        }
-      });
-    }
-
-    function setupChips() {
-      document.querySelectorAll('#basicEmotionChips .chip').forEach(chip => {
-        chip.onclick = () => {
-          hapticSelect();
-          chip.classList.toggle('active');
-          updateSummaries();
-        };
-      });
-      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(chip => {
-        chip.onclick = () => {
-          hapticSelect();
-          chip.classList.toggle('active-indigo');
-          updateSummaries();
-        };
-      });
-      document.querySelectorAll('#contextChips .chip, #helpedChips .chip').forEach(chip => {
-        chip.onclick = () => {
-          hapticSelect();
-          const isRose = chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс');
-          chip.classList.toggle(isRose ? 'active-rose' : 'active');
-          updateSummaries();
-        };
-      });
-    }
-
-    function loadDayForm() {
+    // TAB 2: STATE BREAKDOWN & ACTIONABLE SELF-CARE FEEDBACK LOOP
+    function renderAdviceAndSelfCareTab() {
+      const info = getCycleInfo(selectedDate);
       const entry = state.entries[selectedDate] || {
-        mood: 6, energy: 6, pain: 1, libido: 5,
-        isOvulation: false, intimacy: 'none', flow: 'Нет',
-        emotions: ['Спокойствие'], contexts: [], helped: [], note: ''
-      };
-
-      metrics = {
-        mood: entry.mood,
-        energy: entry.energy,
-        pain: entry.pain,
-        libido: entry.libido
-      };
-      renderAllCCSliders();
-
-      tempIsOvulation = Boolean(entry.isOvulation);
-      selectIntimacy(entry.intimacy || 'none');
-      selectFlow(entry.flow || 'Нет');
-      document.getElementById('inNote').value = entry.note || '';
-
-      const savedEmotions = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
-      document.querySelectorAll('#basicEmotionChips .chip').forEach(c => {
-        c.classList.toggle('active', savedEmotions.includes(c.dataset.val));
-      });
-      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(c => {
-        c.classList.toggle('active-indigo', savedEmotions.includes(c.dataset.val));
-      });
-      document.querySelectorAll('#contextChips .chip').forEach(c => {
-        c.classList.remove('active', 'active-rose');
-        if ((entry.contexts || []).includes(c.dataset.val)) {
-          const isRose = c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс');
-          c.classList.add(isRose ? 'active-rose' : 'active');
-        }
-      });
-      document.querySelectorAll('#helpedChips .chip').forEach(c => {
-        c.classList.toggle('active', (entry.helped || []).includes(c.dataset.val));
-      });
-
-      updateHeader();
-      generateExpertAdvice(entry);
-    }
-
-    function saveCurrentDay() {
-      const emotions = getSelectedEmotions();
-      const contexts = Array.from(document.querySelectorAll('#contextChips .chip.active, #contextChips .chip.active-rose')).map(c => c.dataset.val);
-      const helped = Array.from(document.querySelectorAll('#helpedChips .chip.active')).map(c => c.dataset.val);
-
-      const entry = {
-        date: selectedDate,
-        cycleDay: getCycleInfo(selectedDate).cycleDay,
-        isOvulation: tempIsOvulation,
-        intimacy: tempIntimacy,
-        flow: tempFlow,
         mood: metrics.mood,
         energy: metrics.energy,
         pain: metrics.pain,
         libido: metrics.libido,
-        emotions: emotions.length ? emotions : ['Спокойствие'],
-        contexts,
-        helped,
-        note: document.getElementById('inNote').value.trim()
+        isPeriod: tempIsPeriod,
+        isOvulation: tempIsOvulation,
+        intimacy: tempIntimacy,
+        discharge: tempDischarge,
+        emotions: getSelectedEmotions(),
+        contexts: [],
+        helped: []
       };
 
-      state.entries[selectedDate] = entry;
-      persistLocalAndCloud(selectedDate.slice(0, 7));
-      updateHeader();
-      generateExpertAdvice(entry);
-      showToast('Запись сохранена');
-    }
-
-    // Evidence-Based Gynecologist + CBT Psychologist Engine
-    function generateExpertAdvice(entry) {
-      if (!entry) entry = state.entries[selectedDate];
-      const info = getCycleInfo(selectedDate);
+      document.getElementById('advicePhaseTag').textContent = `${formatHumanDate(selectedDate)} · День ${info.cycleDay}`;
 
       const gynH = document.getElementById('gynHeadline');
       const gynB = document.getElementById('gynBody');
-      const actH = document.getElementById('actHeadline');
-      const actB = document.getElementById('actBody');
       const psyH = document.getElementById('psychHeadline');
       const psyB = document.getElementById('psychBody');
-      const histItem = document.getElementById('historyItem');
-      const histBody = document.getElementById('historyBody');
-
-      if (!entry) {
-        gynH.textContent = info.phase;
-        gynB.textContent = 'Настрой шкалы выше и нажми «Сохранить день», чтобы увидеть физиологию этого дня.';
-        actH.textContent = 'Быстрый чекин';
-        actB.textContent = 'Отметь уровень боли, близость и выделения — рекомендации подстроятся автоматически.';
-        psyH.textContent = 'Опора дня';
-        psyB.textContent = 'Регулярная фиксация цифр помогает отличить влияние гормонов от реальной усталости.';
-        histItem.style.display = 'none';
-        return;
-      }
 
       const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
       const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
       const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
       const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
 
-      if (entry.pain >= 6) {
+      // 1. Physiology (including Delay!)
+      if (info.isDelay) {
+        gynH.textContent = `Задержка менструации (+${info.delayDays} дн.)`;
+        gynB.textContent = info.delayDays <= 7
+          ? 'Задержка до 5–7 дней чаще всего связана с более поздней овуляцией на фоне стресса, недосыпа или смены нагрузки. Если в этом цикле была близость, сделай утренний тест на беременность.'
+          : 'Задержка более 7 дней при отрицательном тесте на беременность — повод планово сделать УЗИ органов малого таза, чтобы оценить толщину эндометрия.';
+      } else if (entry.pain >= 6) {
         gynH.textContent = 'Пик простагландинов и спазм миометрия';
-        gynB.textContent = 'Простагландины вызывают сокращение матки и временное снижение кровотока, отсюда резкая боль и слабость.';
-        actH.textContent = 'Не терпеть спазм';
-        actB.textContent = 'Нурофен 400 мг (после еды) эффективнее всего в первые 30–40 минут от начала боли. Дополнительно — сухое тепло на низ живота.';
+        gynB.textContent = 'Простагландины вызывают сокращение матки и временное снижение кровотока, отсюда резкая тянущая боль и слабость.';
       } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
-        gynH.textContent = 'Пик эстрогенов и овуляция';
-        gynB.textContent = 'Максимальный уровень эстрадиола и тестостерона усиливает приток крови, либидо и когнитивную ясность. Прозрачные тянущиеся выделения — норма.';
-        actH.textContent = 'Окно высокого ресурса';
-        actB.textContent = 'Если ощущается лёгкое одностороннее покалывание внизу живота до 24 часов — это физиологичный овуляторный синдром.';
-      } else if (info.phaseCode === 'menstrual') {
-        gynH.textContent = 'Снижение эстрогена и прогестерона';
-        gynB.textContent = entry.flow === 'Обильные'
-          ? 'При обильных выделениях организм теряет жидкость и железо, что напрямую снижает выносливость.'
-          : 'Гормональный фон на минимуме, закономерно снижается толерантность к физическим нагрузкам.';
-        actH.textContent = 'Щадящий физический режим';
-        actB.textContent = entry.flow === 'Обильные'
-          ? 'Пей больше воды, добавь в рацион белок и источники железа (мясо, печень, гречка с витамином С). Интенсивный спорт лучше отложить.'
-          : 'Тёплая еда, регулярное питьё и мягкая растяжка вместо силовых тренировок.';
+        gynH.textContent = 'Пик эстрогенов и овуляторное окно';
+        gynB.textContent = 'Максимальный уровень эстрадиола усиливает приток крови, либидо и концентрацию. Прозрачные тянущиеся выделения и лёгкое покалывание с одной стороны до 24 часов — норма.';
+      } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
+        gynH.textContent = 'Менструальная фаза: минимум эстрогена и прогестерона';
+        gynB.textContent = entry.discharge === 'Обильные'
+          ? 'При обильных выделениях организм теряет жидкость и железо, что напрямую снижает физическую выносливость.'
+          : 'Гормональный фон на минимальной отметке, закономерно снижается толерантность к интенсивным тренировкам.';
       } else if (info.phaseCode === 'late_luteal') {
         gynH.textContent = 'Спад прогестерона и серотонина';
-        gynB.textContent = 'Резкое падение прогестерона и его нейростероида аллопрегнанолона снижает ГАМК-торможение в мозге и чувствительность к инсулину.';
-        actH.textContent = 'Стабилизация сахара и нервной системы';
-        actB.textContent = 'Урежь кофеин (усиливает тревогу и спазм сосудов), ешь каждые 3–4 часа со сложными углеводами и белком, вечером — магний глицинат.';
+        gynB.textContent = 'Резкое падение прогестерона и аллопрегнанолона снижает ГАМК-торможение в нервной системе и чувствительность к инсулину.';
       } else {
         gynH.textContent = 'Стабильная фолликулярная фаза';
-        gynB.textContent = 'Эстроген плавно растёт без резких перепадов — это твой базовый, наиболее предсказуемый фон.';
-        actH.textContent = 'Планирование нагрузки';
-        actB.textContent = 'Хороший день для задач, требующих концентрации, и оценки своего истинного самочувствия вне ПМС.';
+        gynB.textContent = 'Эстроген плавно растёт без резких перепадов — это твой базовый, наиболее ровный гормональный фон.';
       }
 
-      if (entry.intimacy === 'discomfort') {
-        gynB.textContent += ' Отмечен дискомфорт при близости — фиксируй день цикла, чтобы обсудить с врачом.';
-      }
-
-      if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
+      // 2. Psychology
+      if (info.isDelay) {
+        psyH.textContent = 'Снижение неопределённости';
+        psyB.textContent = 'Неопределённость усиливает тревогу сильнее любого факта. Вместо прокручивания сценариев сделай один конкретный шаг: тест или запись к врачу, если задержка затянется.';
+      } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
         psyH.textContent = 'Карантин на решения — 72 часа';
-        psyB.textContent = 'В позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно. Мысли «всё плохо» или импульс резко поменять жизнь сейчас усилены биохимией — отложи выводы до 5-го дня цикла.';
+        psyB.textContent = 'В позднюю лютеиновую фазу миндалевидное тело мозга гиперреактивно. Мысли «всё плохо» или импульс резко поменять планы сейчас усилены биохимией — отложи выводы до 5-го дня цикла.';
       } else if (hasAnxiety) {
         psyH.textContent = 'Сначала тело, потом мысли';
-        psyB.textContent = 'При тревоге логика включается только после снижения пульса. Сделай 5 циклов дыхания во вкладке SOS и назови 5 предметов вокруг, чтобы вернуть фокус в реальность.';
+        psyB.textContent = 'При тревоге логика включается только после замедления пульса. Сделай 5 циклов физиологического вздоха во вкладке SOS и верни внимание в физические опоры.';
       } else if (entry.pain >= 6 || entry.energy <= 3) {
         psyH.textContent = 'Легализация отдыха без вины';
         psyB.textContent = `Твой физический ресурс сейчас около ${entry.energy * 10}%. Оставь одно ключевое дело на день, остальное перенеси без самокритики.`;
@@ -2209,35 +2800,295 @@
         psyB.textContent = 'Повышенная чувствительность сейчас — не «плохой характер», а истощение серотонинового буфера. Убери фоновые уведомления и дай себе 30 минут тишины.';
       } else {
         psyH.textContent = 'Фиксация опоры';
-        psyB.textContent = 'Когда фон ровный, полезно записать в заметку, что именно помогло удержать баланс — в сложные дни это станет готовой подсказкой.';
+        psyB.textContent = 'Когда фон ровный, полезно отметить, что именно помогает удерживать баланс — в сложные дни это станет готовой подсказкой.';
       }
 
-      const allEntries = Object.values(state.entries);
-      const pastHelped = {};
-      allEntries.forEach(e => {
-        if ((e.pain >= 5 || e.mood <= 4) && e.helped && e.date !== selectedDate) {
-          e.helped.forEach(h => { pastHelped[h] = (pastHelped[h] || 0) + 1; });
+      // 3. Tailored Actionable Tips -> "Помогло" Loop
+      const tips = [];
+      if (entry.pain >= 4) {
+        tips.push({ id: 'Тепло / грелка', title: 'Сухое тепло или тёплый душ 15 мин', sub: 'Расслабляет гладкую мускулатуру и улучшает местный кровоток' });
+        tips.push({ id: 'Нурофен 400 мг', title: 'Нурофен 400 мг после еды', sub: 'Блокирует синтез простагландинов — эффективнее в начале боли' });
+        tips.push({ id: 'Но-шпа', title: 'Но-шпа при спазме', sub: 'Снимает спазм, если боль носит сжимающий характер' });
+      }
+      if (hasAnxiety || entry.pain >= 5) {
+        tips.push({ id: 'Дыхание (вздох)', title: 'Физиологический вздох (во вкладке SOS)', sub: 'Двойной вдох + длинный выдох снижают пульс за 1–2 минуты' });
+      }
+      if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
+        tips.push({ id: 'Белок + сложные углеводы', title: 'Плотный приём пищи каждые 3–4 часа', sub: 'Сглаживает скачки сахара и снижает раздражительность' });
+        tips.push({ id: 'Тишина без экрана 30 мин', title: '30 минут без уведомлений и ленты', sub: 'Разгружает перегретую нервную систему в ПМС' });
+      }
+      if (info.isDelay) {
+        tips.push({ id: 'Тест / чекап', title: 'Утренний тест или план визита к врачу', sub: 'Убирает фоновую тревогу от неизвестности' });
+      }
+      if (tips.length < 3) {
+        tips.push({ id: 'Прогулка 15–20 мин', title: 'Спокойная прогулка на свежем воздухе', sub: 'Мягко повышает уровень эндорфинов и дофамина' });
+        tips.push({ id: 'Ранний сон', title: 'Лечь спать на 40 минут раньше', sub: 'Базовое восстановление гормонального баланса' });
+      }
+
+      const currentHelped = state.entries[selectedDate]?.helped || [];
+      const allDisplayed = [...tips];
+      currentHelped.forEach(hId => {
+        if (!allDisplayed.some(t => t.id === hId)) {
+          allDisplayed.push({ id: hId, title: hId, sub: 'Твой личный способ' });
         }
       });
-      const topHelped = Object.entries(pastHelped).sort((a, b) => b[1] - a[1])[0];
-      const histNotes = [];
 
-      if (entry.contexts.includes('Недосып')) {
-        histNotes.push('Отмечен недосып — он самостоятельно снижает болевой порог и настроение, усиливая фон дня.');
-      }
-      if (topHelped && (entry.pain >= 5 || entry.mood <= 4)) {
-        histNotes.push(`Из твоей аптечки в похожие дни лучше всего сработало: «${topHelped[0]}».`);
-      }
+      document.getElementById('actionableTipsList').innerHTML = allDisplayed.map(t => {
+        const isChecked = currentHelped.includes(t.id);
+        return `
+          <div class="tip-action-card">
+            <div>
+              <div class="tip-action-title">${t.title}</div>
+              <div class="tip-action-sub">${t.sub}</div>
+            </div>
+            <button class="btn-helped-toggle ${isChecked ? 'checked' : ''}" onclick="toggleHelpedTip('${t.id.replace(/'/g, "\\'")}')">
+              ${isChecked ? 'Помогло ✓' : 'Помогло'}
+            </button>
+          </div>
+        `;
+      }).join('');
 
-      if (histNotes.length) {
-        histItem.style.display = 'block';
-        histBody.textContent = histNotes.join(' ');
+      renderLearnedHelpStats();
+    }
+
+    function toggleHelpedTip(tipId) {
+      hapticImpact('medium');
+      if (!state.entries[selectedDate]) {
+        state.entries[selectedDate] = {
+          date: selectedDate,
+          isPeriod: tempIsPeriod,
+          isOvulation: tempIsOvulation,
+          intimacy: tempIntimacy,
+          discharge: tempDischarge,
+          mood: metrics.mood,
+          energy: metrics.energy,
+          pain: metrics.pain,
+          libido: metrics.libido,
+          emotions: getSelectedEmotions(),
+          contexts: [],
+          helped: []
+        };
+      }
+      const list = state.entries[selectedDate].helped || [];
+      const idx = list.indexOf(tipId);
+      if (idx >= 0) {
+        list.splice(idx, 1);
       } else {
-        histItem.style.display = 'none';
+        list.push(tipId);
+        showToast('Отмечено в личную аптечку');
+      }
+      state.entries[selectedDate].helped = list;
+      persistLocalAndCloud(selectedDate.slice(0, 7));
+      renderAdviceAndSelfCareTab();
+    }
+
+    function addCustomHelped() {
+      const inp = document.getElementById('customHelpInput');
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = '';
+      toggleHelpedTip(val);
+    }
+
+    function renderLearnedHelpStats() {
+      const counts = {};
+      Object.values(state.entries).forEach(e => {
+        (e.helped || []).forEach(h => {
+          counts[h] = (counts[h] || 0) + 1;
+        });
+      });
+      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+      const box = document.getElementById('learnedHelpStats');
+      if (!sorted.length) {
+        box.style.display = 'none';
+        return;
+      }
+      box.style.display = 'block';
+      box.innerHTML = `<strong style="color:var(--ink)">Твоя проверенная статистика помощи:</strong><br/>` +
+        sorted.map(([name, cnt]) => `• ${name} — сработало ${cnt} ${cnt === 1 ? 'раз' : (cnt < 5 ? 'раза' : 'раз')}`).join('<br/>');
+    }
+
+    // PIN-LOCKED PRIVATE NOTES ("Заметки")
+    function initPinScreen() {
+      if (isNotesUnlocked) {
+        document.getElementById('notesPinGate').style.display = 'none';
+        document.getElementById('notesUnlockedArea').style.display = 'block';
+        renderPrivateNotesList();
+        return;
+      }
+
+      document.getElementById('notesPinGate').style.display = 'block';
+      document.getElementById('notesUnlockedArea').style.display = 'none';
+      pinBuffer = '';
+      pinSetupFirst = '';
+
+      if (!state.notesPin) {
+        pinMode = 'create';
+        document.getElementById('pinTitle').textContent = 'Задай 4-значный код';
+        document.getElementById('pinSubtitle').textContent = 'Этот пароль защитит твои личные заметки';
+      } else {
+        pinMode = 'enter';
+        document.getElementById('pinTitle').textContent = 'Личные заметки';
+        document.getElementById('pinSubtitle').textContent = 'Введи 4-значный код доступа';
+      }
+      updatePinDots(false);
+    }
+
+    function updatePinDots(isError = false) {
+      const dots = document.querySelectorAll('#pinDots .pin-dot');
+      dots.forEach((d, idx) => {
+        d.classList.toggle('filled', idx < pinBuffer.length);
+        d.classList.toggle('error', isError);
+      });
+    }
+
+    function pressPinKey(digit) {
+      if (pinBuffer.length >= 4) return;
+      hapticImpact('light');
+      pinBuffer += digit;
+      updatePinDots(false);
+
+      if (pinBuffer.length === 4) {
+        setTimeout(handlePinComplete, 140);
       }
     }
 
-    // Smooth Chart
+    function backspacePinKey() {
+      if (!pinBuffer.length) return;
+      hapticSelect();
+      pinBuffer = pinBuffer.slice(0, -1);
+      updatePinDots(false);
+    }
+
+    function handlePinComplete() {
+      if (pinMode === 'create') {
+        pinSetupFirst = pinBuffer;
+        pinBuffer = '';
+        pinMode = 'confirm';
+        document.getElementById('pinTitle').textContent = 'Повтори код';
+        document.getElementById('pinSubtitle').textContent = 'Введи те же 4 цифры для подтверждения';
+        updatePinDots(false);
+        return;
+      }
+
+      if (pinMode === 'confirm') {
+        if (pinBuffer === pinSetupFirst) {
+          state.notesPin = pinBuffer;
+          persistLocalAndCloud(null);
+          isNotesUnlocked = true;
+          hapticSuccess();
+          showToast('Код установлен');
+          initPinScreen();
+        } else {
+          hapticError();
+          updatePinDots(true);
+          setTimeout(() => {
+            pinBuffer = '';
+            pinSetupFirst = '';
+            pinMode = 'create';
+            document.getElementById('pinTitle').textContent = 'Коды не совпали';
+            document.getElementById('pinSubtitle').textContent = 'Задай 4 цифры заново';
+            updatePinDots(false);
+          }, 550);
+        }
+        return;
+      }
+
+      if (pinMode === 'enter') {
+        if (pinBuffer === state.notesPin) {
+          isNotesUnlocked = true;
+          hapticSuccess();
+          initPinScreen();
+        } else {
+          hapticError();
+          updatePinDots(true);
+          document.getElementById('pinSubtitle').textContent = 'Неверный код, попробуй ещё раз';
+          setTimeout(() => {
+            pinBuffer = '';
+            updatePinDots(false);
+          }, 550);
+        }
+      }
+    }
+
+    function lockPrivateNotes() {
+      hapticImpact('light');
+      isNotesUnlocked = false;
+      pinBuffer = '';
+      initPinScreen();
+    }
+
+    function resetNotesPin() {
+      if (!state.notesPin) {
+        showToast('Код ещё не задан — открой вкладку «Заметки»');
+        return;
+      }
+      const old = prompt('Введи текущий 4-значный код для сброса:');
+      if (old === state.notesPin) {
+        state.notesPin = null;
+        isNotesUnlocked = false;
+        persistLocalAndCloud(null);
+        showToast('Код сброшен — задай новый во вкладке «Заметки»');
+      } else if (old !== null) {
+        alert('Неверный текущий код');
+      }
+    }
+
+    function savePrivateNote() {
+      const inp = document.getElementById('privateNoteInput');
+      const text = inp.value.trim();
+      if (!text) return;
+
+      const todayISO = getTodayISO(0);
+      const info = getCycleInfo(todayISO);
+      state.privateNotes.unshift({
+        id: String(Date.now()),
+        dateISO: todayISO,
+        cycleDay: info.cycleDay,
+        phase: info.phase,
+        body: text
+      });
+
+      inp.value = '';
+      persistLocalAndCloud(null);
+      renderPrivateNotesList();
+      showToast('Заметка сохранена');
+    }
+
+    function deletePrivateNote(id) {
+      if (!confirm('Удалить эту заметку?')) return;
+      state.privateNotes = state.privateNotes.filter(n => n.id !== id);
+      persistLocalAndCloud(null);
+      renderPrivateNotesList();
+    }
+
+    function renderPrivateNotesList() {
+      const todayISO = getTodayISO(0);
+      const info = getCycleInfo(todayISO);
+      document.getElementById('newNoteContextLabel').textContent = `${formatHumanDate(todayISO)} · День ${info.cycleDay} (${info.phase.toLowerCase()})`;
+
+      const box = document.getElementById('privateNotesList');
+      if (!state.privateNotes.length) {
+        box.innerHTML = `<div style="text-align:center; font-size:14px; color:var(--ink-3); padding:20px;">Здесь пока пусто. Всё написанное видно только после ввода твоего кода.</div>`;
+        return;
+      }
+
+      box.innerHTML = state.privateNotes.map(n => `
+        <div class="note-entry-card">
+          <div class="note-entry-meta">
+            <span>${formatHumanDate(n.dateISO)} · День ${n.cycleDay}</span>
+            <button style="background:none; border:none; color:var(--ink-3); font-size:12px; cursor:pointer;" onclick="deletePrivateNote('${n.id}')">Удалить</button>
+          </div>
+          <div class="note-entry-body">${escapeHtml(n.body)}</div>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Smooth Chart ("График")
     function setChartFilter(mode) {
       hapticSelect();
       chartFilter = mode;
@@ -2276,7 +3127,8 @@
 
       const byDay = {};
       Object.values(state.entries).sort((a, b) => a.date.localeCompare(b.date)).forEach(e => {
-        byDay[getCycleInfo(e.date).cycleDay] = e;
+        const d = getCycleInfo(e.date).cycleDay;
+        if (d <= len) byDay[d] = e;
       });
 
       let html = '';
@@ -2338,8 +3190,8 @@
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         const x = padL + ((d - 1) / (len - 1)) * plotW;
-        const hasIntimacy = e && (e.intimacy === 'comfort' || e.intimacy === 'discomfort');
-        const hasOv = e && e.isOvulation;
+        const hasIntimacy = e && Boolean(e.intimacy);
+        const hasOv = e && Boolean(e.isOvulation);
 
         if (hasIntimacy) html += `<text x="${x - (hasOv ? 4 : 0)}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--rose)">♥</text>`;
         if (hasOv) html += `<text x="${x + (hasIntimacy ? 5 : 0)}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--accent)">✦</text>`;
@@ -2361,11 +3213,11 @@
         return;
       }
       const emos = Array.isArray(e.emotions) ? e.emotions.join(', ') : '';
-      const intimacyText = e.intimacy === 'comfort' ? 'Близость (комфортно)' : (e.intimacy === 'discomfort' ? 'Близость (дискомфорт)' : '');
       const extras = [
+        e.isPeriod ? 'Месячные' : '',
         e.isOvulation ? 'Овуляция' : '',
-        intimacyText,
-        e.flow && e.flow !== 'Нет' ? `Выделения: ${e.flow.toLowerCase()}` : '',
+        e.intimacy ? 'Близость ♥' : '',
+        e.discharge ? `Выделения: ${e.discharge.toLowerCase()}` : '',
         ...(e.contexts || [])
       ].filter(Boolean).join(' · ');
 
@@ -2402,139 +3254,17 @@
       `;
 
       const severePain = entries.filter(e => e.pain >= 7).length;
-      const heavyFlow = entries.filter(e => getCycleInfo(e.date).cycleDay <= 6 && e.flow === 'Обильные').length;
-      const dyspareunia = entries.filter(e => e.intimacy === 'discomfort').length;
+      const heavyFlow = entries.filter(e => e.isPeriod && e.discharge === 'Обильные').length;
 
       const notes = [];
       if (severePain >= 3) notes.push(`• Выраженная боль (≥7/10) отмечена ${severePain} раз — повод показать график гинекологу для исключения эндометриоза или аденомиоза.`);
-      if (heavyFlow >= 3) notes.push(`• Обильные выделения в первую фазу (${heavyFlow} дн.) — стоит периодически проверять ферритин и общий анализ крови.`);
-      if (dyspareunia >= 2) notes.push(`• Дискомфорт при близости (${dyspareunia} дн.) — важный диагностический симптом для обсуждения с врачом.`);
+      if (heavyFlow >= 3) notes.push(`• Обильные месячные (${heavyFlow} дн.) — стоит периодически проверять ферритин и общий анализ крови.`);
       if (!notes.length) {
         notes.push(entries.length < 5
           ? '• Веди дневник 2–3 недели, чтобы увидеть устойчивые закономерности.'
           : '• Критических «красных флагов» по отмеченным данным не выявлено.');
       }
       document.getElementById('medicalSummary').innerHTML = notes.join('<br/><br/>');
-    }
-
-    // Clinical Screeners
-    const TESTS = {
-      hads: {
-        title: 'Шкала тревоги и депрессии HADS',
-        questions: [
-          { q: 'Я испытываю напряженность, мне не по себе', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда (1)', 'Часто (2)', 'Почти постоянно (3)'] },
-          { q: 'То, что приносило мне большое удовольствие, и сейчас вызывает такое же чувство', sub: 'D', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь в очень малой степени (2)', 'Это совсем не так (3)'] },
-          { q: 'Я испытываю страх, кажется, будто что-то ужасное может вот-вот случиться', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда, без сильного беспокойства (1)', 'Да, но страх не очень сильный (2)', 'Определенно так, и страх очень сильный (3)'] },
-          { q: 'Я способна рассмеяться и увидеть в событии смешное', sub: 'D', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь в малой степени (2)', 'Совсем не способна (3)'] },
-          { q: 'Беспокойные мысли крутятся у меня в голове', sub: 'A', opts: ['Только иногда (0)', 'Время от времени (1)', 'Большую часть времени (2)', 'Постоянно (3)'] },
-          { q: 'Я испытываю бодрость', sub: 'D', opts: ['Практически все время (0)', 'Иногда (1)', 'Очень редко (2)', 'Совсем не испытываю (3)'] },
-          { q: 'Я легко могу сесть и расслабиться', sub: 'A', opts: ['Определенно это так (0)', 'Наверное, это так (1)', 'Лишь изредка (2)', 'Совсем не могу (3)'] },
-          { q: 'Мне кажется, что я стала все делать очень медленно', sub: 'D', opts: ['Совсем нет (0)', 'Иногда (1)', 'Часто (2)', 'Практически все время (3)'] },
-          { q: 'Я испытываю внутреннее напряжение или дрожь', sub: 'A', opts: ['Совсем не испытываю (0)', 'Иногда (1)', 'Часто (2)', 'Очень часто (3)'] },
-          { q: 'Я не слежу за своей внешностью', sub: 'D', opts: ['Слежу так же, как раньше (0)', 'Уделяю меньше времени, чем нужно (1)', 'Меньше, чем раньше (2)', 'Перестала за собой следить (3)'] },
-          { q: 'Я испытываю неусидчивость, нужно постоянно двигаться', sub: 'A', opts: ['Совсем не испытываю (0)', 'В некоторой степени (1)', 'Определенно это так (2)', 'Очень сильно (3)'] },
-          { q: 'Я считаю, что мои дела принесут мне чувство удовлетворения', sub: 'D', opts: ['Точно так же, как обычно (0)', 'Не в той степени, как раньше (1)', 'Значительно меньше, чем обычно (2)', 'Совсем так не считаю (3)'] },
-          { q: 'У меня бывает внезапное чувство паники', sub: 'A', opts: ['Совсем не бывает (0)', 'Не так уж часто (1)', 'Довольно часто (2)', 'Очень часто (3)'] },
-          { q: 'Я могу получить удовольствие от хорошей книги или фильма', sub: 'D', opts: ['Часто (0)', 'Иногда (1)', 'Редко (2)', 'Очень редко (3)'] }
-        ]
-      },
-      pmdd: {
-        title: 'Скрининг тяжести ПМС / ПМДР',
-        questions: [
-          { q: 'Выраженная подавленность или самокритика за неделю до месячных', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Ощущение внутреннего напряжения, тревоги перед циклом', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Резкие перепады настроения или внезапная слезливость', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Сильная раздражительность или вспышки гнева', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Снижение интереса к работе и общению в лютеиновую фазу', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Трудности с концентрацией, «туман в голове»', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Выраженная утомляемость и отсутствие физических сил', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Отеки, нагрубание груди, головная или суставная боль', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Симптомы заметно снижают работоспособность или качество жизни', opts: ['Нет (0)', 'Слабо (1)', 'Умеренно (2)', 'Тяжело (3)'] },
-          { q: 'Облегчаются ли симптомы через 2–4 дня после начала месячных?', opts: ['Не применимо (0)', 'Частично (1)', 'Заметно легче (2)', 'Полностью проходят (3)'] }
-        ]
-      }
-    };
-
-    function renderTestNotice() {
-      const info = getCycleInfo(getTodayISO(0));
-      const el = document.getElementById('testNoticeText');
-      el.textContent = (info.phaseCode === 'late_luteal' || info.phaseCode === 'menstrual')
-        ? `Сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}). Для оценки базового фона без влияния ПМС повтори тест на 6–12 день цикла.`
-        : `Сейчас ${info.cycleDay}-й день (${info.phase.toLowerCase()}) — спокойное окно, результаты сейчас наиболее объективны.`;
-    }
-
-    function loadTest(key) {
-      hapticSelect();
-      activeTestKey = key;
-      currentAnswers = {};
-      document.getElementById('btnSelectHads').classList.toggle('active', key === 'hads');
-      document.getElementById('btnSelectPmdd').classList.toggle('active', key === 'pmdd');
-
-      const test = TESTS[key];
-      document.getElementById('testTitle').textContent = test.title;
-      document.getElementById('testResultBox').style.display = 'none';
-      document.getElementById('testProgress').textContent = `0 / ${test.questions.length}`;
-
-      document.getElementById('testQuestions').innerHTML = test.questions.map((item, idx) => `
-        <div class="q-block">
-          <div class="q-title">${idx + 1}. ${item.q}</div>
-          <div class="q-opts">
-            ${item.opts.map((opt, score) => `
-              <button class="q-opt" id="q_${idx}_${score}" onclick="selectTestOption(${idx}, ${score})">${opt}</button>
-            `).join('')}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function selectTestOption(qIdx, score) {
-      hapticSelect();
-      currentAnswers[qIdx] = score;
-      for (let s = 0; s < 4; s++) {
-        const btn = document.getElementById(`q_${qIdx}_${s}`);
-        if (btn) btn.classList.toggle('selected', s === score);
-      }
-      document.getElementById('testProgress').textContent = `${Object.keys(currentAnswers).length} / ${TESTS[activeTestKey].questions.length}`;
-    }
-
-    function scoreCurrentTest() {
-      const test = TESTS[activeTestKey];
-      if (Object.keys(currentAnswers).length < test.questions.length) {
-        showToast('Ответь на все вопросы');
-        return;
-      }
-      const cycleDay = getCycleInfo(getTodayISO(0)).cycleDay;
-      let summary = '';
-
-      if (activeTestKey === 'hads') {
-        let a = 0, d = 0;
-        test.questions.forEach((q, idx) => { if (q.sub === 'A') a += currentAnswers[idx]; else d += currentAnswers[idx]; });
-        const lbl = s => s <= 7 ? 'норма' : s <= 10 ? 'погранично' : 'выражено';
-        summary = `Тревога ${a}/21 (${lbl(a)}) · Депрессия ${d}/21 (${lbl(d)})`;
-      } else {
-        const total = Object.values(currentAnswers).reduce((x, y) => x + y, 0);
-        const lvl = total <= 9 ? 'лёгкий фон' : total <= 19 ? 'умеренный ПМС' : 'выраженный ПМС / возможный ПМДР';
-        summary = `Индекс ПМС: ${total}/30 — ${lvl}`;
-      }
-
-      const box = document.getElementById('testResultBox');
-      box.style.display = 'block';
-      box.textContent = `День цикла ${cycleDay}: ${summary}`;
-
-      state.testHistory.unshift({ date: getTodayISO(0), cycleDay, testName: test.title, summary });
-      persistLocalAndCloud(null);
-      renderTestHistory();
-      showToast('Результат сохранён');
-    }
-
-    function renderTestHistory() {
-      const box = document.getElementById('testHistoryList');
-      if (!state.testHistory.length) return;
-      box.innerHTML = state.testHistory.slice(0, 6).map(t => `
-        <div style="padding:10px 0; border-bottom:1px solid var(--border);">
-          <strong style="color:var(--ink)">${t.date} · День ${t.cycleDay}</strong><br/>${t.summary}
-        </div>
-      `).join('');
     }
 
     // SOS: Nurofen & No-Spa + Hardware-Accelerated Flower Breathing
@@ -2587,7 +3317,6 @@
 
       const runCycle = () => {
         if (!isBreathing) return;
-        // 1. Inhale (3.8s)
         motion.className = 'flower-motion phase-inhale';
         prompt.textContent = 'Вдох носом';
         sub.textContent = 'плавно и глубоко';
@@ -2595,7 +3324,6 @@
 
         breathTimer = setTimeout(() => {
           if (!isBreathing) return;
-          // 2. Top-up inhale (1.5s)
           motion.className = 'flower-motion phase-topup';
           prompt.textContent = 'Довдох';
           sub.textContent = 'коротко носом';
@@ -2603,7 +3331,6 @@
 
           breathTimer = setTimeout(() => {
             if (!isBreathing) return;
-            // 3. Long exhale (5.4s)
             motion.className = 'flower-motion phase-exhale';
             prompt.textContent = 'Долгий выдох';
             sub.textContent = 'расслабь плечи';
@@ -2629,8 +3356,7 @@
 
       syncSettingsInputs();
       persistLocalAndCloud(null);
-      updateHeader();
-      generateExpertAdvice();
+      loadDayForm();
       showToast('Параметры цикла сохранены');
     }
 
@@ -2657,15 +3383,16 @@
     }
 
     async function clearAllData() {
-      if (!confirm('Удалить все записи из устройства и Telegram Cloud и начать заново?')) return;
+      if (!confirm('Удалить все записи и заметки из устройства и Telegram Cloud?')) return;
       localStorage.removeItem(STORAGE_KEY);
       if (hasTelegramCloud()) {
         const keys = await cloudGetKeys();
-        const ourKeys = keys.filter(k => k.startsWith('ritm5_'));
+        const ourKeys = keys.filter(k => k.startsWith('ritm6_'));
         await cloudRemove(ourKeys);
       }
       state = {
         onboarded: false,
+        notesPin: null,
         settings: {
           lastPeriodStart: getTodayISO(0),
           cycleLength: 28,
@@ -2673,9 +3400,10 @@
           darkMode: state.settings.darkMode
         },
         entries: {},
-        painkillers: [],
-        testHistory: []
+        privateNotes: [],
+        painkillers: []
       };
+      isNotesUnlocked = false;
       document.getElementById('obLastPeriod').value = getTodayISO(0);
       document.getElementById('onboardingScreen').classList.add('active');
       showToast('Все данные очищены');
@@ -2684,19 +3412,21 @@
     function switchTab(tab) {
       hapticImpact('light');
       if (tab !== 'sos' && isBreathing) stopBreathing();
+      if (tab !== 'notes') isNotesUnlocked = false;
+
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById(`view-${tab}`).classList.add('active');
       document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
 
+      if (tab === 'analytics_advice') renderAdviceAndSelfCareTab();
       if (tab === 'analytics') renderAnalytics();
-      if (tab === 'tests') { renderTestNotice(); renderTestHistory(); }
+      if (tab === 'notes') initPinScreen();
       if (tab === 'sos') updatePainkillerUI();
     }
 
     // Boot
     initCCSliders();
     setupChips();
-    loadTest('hads');
     loadFromCloudAndLocal().then(() => {
       loadDayForm();
     });
