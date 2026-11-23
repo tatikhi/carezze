@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Ритм</title>
+  <title>Carezze</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg: #F8F9FB;
+      --bg: #F7F8FA;
       --surface: #FFFFFF;
-      --surface-2: #F1F3F6;
+      --surface-2: #F0F2F6;
       --ink: #0F172A;
       --ink-2: #475569;
       --ink-3: #94A3B8;
-      --border: #E6E9EF;
+      --border: #E5E8EF;
 
       --accent: #0D9488;
       --accent-bg: #CCFBF1;
@@ -34,16 +37,17 @@
 
       --radius: 22px;
       --shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+      --kb-offset: 0px;
     }
 
     body.dark-mode {
       --bg: #09090B;
       --surface: #131316;
-      --surface-2: #1C1C21;
+      --surface-2: #1C1C22;
       --ink: #F8FAFC;
       --ink-2: #A1A1AA;
       --ink-3: #63636E;
-      --border: #24242B;
+      --border: #24242C;
 
       --accent: #2DD4BF;
       --accent-bg: #113834;
@@ -78,25 +82,31 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+      font-family: "Manrope", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
       background-color: var(--bg);
       color: var(--ink);
-      font-size: 16px;
-      line-height: 1.48;
+      font-size: 15.5px;
+      line-height: 1.5;
       letter-spacing: -0.01em;
       word-wrap: break-word;
       overflow-wrap: break-word;
       -webkit-font-smoothing: antialiased;
       transition: background-color 0.25s ease, color 0.25s ease;
       padding-top: max(14px, env(safe-area-inset-top));
-      padding-bottom: calc(96px + env(safe-area-inset-bottom));
+      padding-bottom: calc(104px + env(safe-area-inset-bottom) + var(--kb-offset));
+    }
+
+    body.keyboard-open .tab-bar {
+      transform: translateY(140%);
+      opacity: 0;
+      pointer-events: none;
     }
 
     .app {
       width: 100%;
       max-width: 440px;
       margin: 0 auto;
-      padding: 8px 16px 24px;
+      padding: 8px 16px 32px;
     }
 
     .onboarding-overlay {
@@ -141,6 +151,7 @@
     }
 
     .stepper-val {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 18px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
@@ -154,11 +165,11 @@
     }
 
     .brand {
-      font-size: 14px;
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
+      font-size: 19px;
       font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-2);
+      letter-spacing: -0.02em;
+      color: var(--ink);
     }
 
     .header-actions {
@@ -173,7 +184,8 @@
       height: 36px;
       padding: 0 14px;
       border-radius: 999px;
-      font-size: 14px;
+      font-family: inherit;
+      font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -238,6 +250,7 @@
       border: none;
       border-radius: 999px;
       color: var(--ink);
+      font-family: inherit;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
@@ -257,6 +270,7 @@
     }
 
     .hero-day {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 32px;
       font-weight: 700;
       letter-spacing: -0.03em;
@@ -265,7 +279,7 @@
 
     .hero-day span {
       font-size: 17px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--ink-2);
     }
 
@@ -319,6 +333,7 @@
       border: 1.5px solid var(--rose-bg);
       background: var(--rose-tint);
       color: var(--rose);
+      font-family: inherit;
       font-size: 14px;
       font-weight: 700;
       cursor: pointer;
@@ -343,6 +358,7 @@
       border: 1px solid var(--border);
       background: var(--surface-2);
       color: var(--ink);
+      font-family: inherit;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
@@ -372,8 +388,9 @@
     }
 
     .card-title {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 17px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
@@ -414,6 +431,7 @@
       color: var(--ink);
       padding: 8px 14px;
       border-radius: 999px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
@@ -440,6 +458,7 @@
     }
 
     .saved-metric-pill strong {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 16px;
       font-weight: 700;
       color: var(--ink);
@@ -447,9 +466,9 @@
 
     .saved-tags-line {
       margin-top: 10px;
-      font-size: 13px;
+      font-size: 13.5px;
       color: var(--ink-2);
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .saved-cta-row {
@@ -465,6 +484,7 @@
       background: none;
       border: none;
       color: var(--accent);
+      font-family: inherit;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
@@ -494,12 +514,18 @@
       padding: 0 18px;
     }
 
+    .cc-slider.compact {
+      height: 44px;
+      border-radius: 13px;
+      padding: 0 14px;
+    }
+
     .cc-fill {
       position: absolute;
       top: 0;
       left: 0;
       bottom: 0;
-      border-radius: 16px;
+      border-radius: inherit;
       pointer-events: none;
       transition: width 0.08s ease-out;
     }
@@ -507,7 +533,7 @@
     .cc-label {
       position: relative;
       z-index: 2;
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--ink);
     }
@@ -515,10 +541,22 @@
     .cc-value {
       position: relative;
       z-index: 2;
-      font-size: 17px;
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
+      font-size: 16px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       color: var(--ink);
+    }
+
+    .emotion-levels-box {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
     .grid-3 {
@@ -533,7 +571,8 @@
       color: var(--ink);
       padding: 12px 10px;
       border-radius: 14px;
-      font-size: 13px;
+      font-family: inherit;
+      font-size: 13.5px;
       font-weight: 600;
       text-align: center;
       cursor: pointer;
@@ -610,13 +649,15 @@
       align-items: center;
       gap: 12px;
       color: var(--ink);
-      font-size: 16px;
-      font-weight: 600;
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
+      font-size: 16.5px;
+      font-weight: 700;
       cursor: pointer;
       text-align: left;
     }
 
     .accordion-summary {
+      font-family: "Manrope", sans-serif;
       font-size: 13px;
       font-weight: 500;
       color: var(--accent);
@@ -657,7 +698,8 @@
       color: var(--ink);
       padding: 9px 12px;
       border-radius: 14px;
-      font-size: 14px;
+      font-family: inherit;
+      font-size: 13.5px;
       font-weight: 500;
       line-height: 1.25;
       min-height: 38px;
@@ -675,21 +717,21 @@
       background: var(--accent-tint);
       border-color: var(--accent);
       color: var(--accent);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .chip.active-indigo {
       background: var(--indigo-tint);
       border-color: var(--indigo);
       color: var(--indigo);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .chip.active-rose {
       background: var(--rose-tint);
       border-color: var(--rose);
       color: var(--rose);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .btn-primary {
@@ -699,7 +741,8 @@
       color: var(--bg);
       border: none;
       border-radius: 16px;
-      font-size: 16px;
+      font-family: inherit;
+      font-size: 15.5px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -715,7 +758,8 @@
       color: #FFFFFF;
       border: none;
       border-radius: 16px;
-      font-size: 16px;
+      font-family: inherit;
+      font-size: 15.5px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -727,6 +771,7 @@
       color: #FFFFFF;
       border: none;
       border-radius: 14px;
+      font-family: inherit;
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
@@ -747,6 +792,7 @@
       border: none;
       padding: 13px 16px;
       border-radius: 14px;
+      font-family: inherit;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
@@ -758,25 +804,61 @@
       border: none;
       padding: 13px 16px;
       border-radius: 14px;
+      font-family: inherit;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
     }
 
-    input[type="date"], input[type="number"], input[type="text"], input[type="password"] {
+    input[type="date"],
+    input[type="number"],
+    input[type="text"],
+    input[type="password"],
+    textarea {
       width: 100%;
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink);
+      -webkit-text-fill-color: var(--ink);
+      caret-color: var(--ink);
       border-radius: 14px;
       padding: 12px 14px;
       font-size: 16px;
       font-family: inherit;
+      line-height: 1.45;
       outline: none;
+      transition: border-color 0.18s ease, background-color 0.18s ease;
     }
 
-    input:focus {
+    textarea {
+      resize: none;
+      min-height: 84px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--ink-3);
+      -webkit-text-fill-color: var(--ink-3);
+      opacity: 1;
+    }
+
+    input:focus,
+    textarea:focus {
       border-color: var(--accent);
+      background: var(--surface);
+      caret-color: var(--ink);
+    }
+
+    .ai-chat-reply {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--indigo-tint);
+      border: 1px solid var(--indigo-bg);
+      color: var(--ink);
+      font-size: 14.5px;
+      line-height: 1.55;
+      white-space: pre-line;
     }
 
     .protocol-stack {
@@ -809,14 +891,14 @@
 
     .protocol-title {
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--ink);
       margin-bottom: 4px;
     }
 
     .protocol-text {
-      font-size: 14px;
-      line-height: 1.52;
+      font-size: 14.5px;
+      line-height: 1.55;
       color: var(--ink-2);
     }
 
@@ -832,7 +914,7 @@
       gap: 10px;
       align-items: flex-start;
       font-size: 14px;
-      line-height: 1.45;
+      line-height: 1.48;
       color: var(--ink-2);
     }
 
@@ -863,7 +945,7 @@
     }
 
     .tip-action-title {
-      font-size: 15px;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--ink);
     }
@@ -882,6 +964,7 @@
       border: 1.5px solid var(--border);
       background: var(--surface);
       color: var(--ink);
+      font-family: inherit;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
@@ -929,6 +1012,7 @@
     }
 
     .cal-month-title {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 17px;
       font-weight: 700;
       text-transform: capitalize;
@@ -956,6 +1040,7 @@
       border: 1.5px solid transparent;
       background: var(--surface-2);
       color: var(--ink);
+      font-family: inherit;
       font-size: 14px;
       font-weight: 600;
       display: flex;
@@ -1034,7 +1119,12 @@
       gap: 6px;
       overflow-x: auto;
       padding-bottom: 4px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .filter-row::-webkit-scrollbar {
+      display: none;
     }
 
     .filter-pill {
@@ -1043,6 +1133,7 @@
       color: var(--ink-2);
       padding: 7px 13px;
       border-radius: 999px;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
@@ -1054,13 +1145,20 @@
       color: var(--bg);
     }
 
+    .chart-wrap {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 10px 6px 6px;
+    }
+
     .inspector-box {
       margin-top: 12px;
       padding: 14px 16px;
       background: var(--surface-2);
       border-radius: 14px;
       font-size: 14px;
-      line-height: 1.45;
+      line-height: 1.5;
       color: var(--ink-2);
     }
 
@@ -1082,6 +1180,7 @@
     }
 
     .stat-tile-val {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 20px;
       font-weight: 700;
       margin-top: 4px;
@@ -1166,12 +1265,14 @@
       padding: 8px 4px;
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
       z-index: 100;
+      transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .tab-item {
       background: none;
       border: none;
       color: var(--ink-3);
+      font-family: inherit;
       font-size: 11px;
       font-weight: 600;
       display: flex;
@@ -1256,7 +1357,7 @@
 
   <div class="app">
     <div class="header">
-      <div class="brand">Ритм</div>
+      <div class="brand">Carezze</div>
       <div class="header-actions">
         <button class="pill-btn" onclick="toggleTheme()" id="themeBtn">Тёмная</button>
         <button class="pill-btn sos" onclick="switchTab('sos')">SOS</button>
@@ -1404,7 +1505,7 @@
           <button class="accordion-header" onclick="toggleAccordion('acc-context')">
             <div>
               <div>Эмоции и ощущения</div>
-              <div class="accordion-summary" id="sum-context">Спокойствие</div>
+              <div class="accordion-summary" id="sum-context">Спокойствие · 5</div>
             </div>
             <span class="accordion-chevron">⌄</span>
           </button>
@@ -1431,6 +1532,13 @@
               <div class="chip" data-val="Уязвимость">Уязвимость</div>
               <div class="chip" data-val="Перегруз">Перегруз</div>
               <div class="chip" data-val="Внутреннее напряжение">Напряжение</div>
+            </div>
+
+            <div id="emotionIntensityContainer" style="display:none;">
+              <div class="sub-section-header">
+                <span class="field-label">Уровень эмоций (1–10)</span>
+              </div>
+              <div class="emotion-levels-box" id="emotionIntensitySliders"></div>
             </div>
 
             <div class="sub-section-header">
@@ -1491,6 +1599,24 @@
         </div>
       </div>
 
+      <!-- EPHEMERAL AI CHAT CARD -->
+      <div class="card ai-highlight" id="aiQuickChatCard" style="display:none;">
+        <div class="card-top">
+          <span class="card-title">Спросить ИИ</span>
+          <span class="card-sub">Без сохранения</span>
+        </div>
+        <textarea id="aiQuickInput" rows="3" placeholder="Задай вопрос или выпиши тревожные мысли..."></textarea>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+          <button class="btn-indigo" style="height:44px; font-size:14px;" id="btnSendQuickAi" onclick="sendQuickAiQuestion()">
+            Ответить
+          </button>
+          <button class="btn-soft" style="height:44px; display:none;" id="btnClearQuickAi" onclick="clearQuickAiChat()">
+            Очистить
+          </button>
+        </div>
+        <div id="aiQuickReplyBox" class="ai-chat-reply" style="display:none;"></div>
+      </div>
+
       <div class="card">
         <div class="card-top">
           <span class="card-title">Рекомендации</span>
@@ -1499,7 +1625,7 @@
         <div id="actionableTipsList"></div>
 
         <div style="display:flex; gap:8px; margin-top:12px;">
-          <input type="text" id="customHelpInput" placeholder="" />
+          <input type="text" id="customHelpInput" placeholder="Что ещё помогло..." />
           <button class="btn-soft" style="white-space:nowrap;" onclick="addCustomHelped()">Помогло</button>
         </div>
 
@@ -1516,22 +1642,19 @@
 
         <div class="filter-row" id="chartFilters">
           <button class="filter-pill active" data-mode="all" onclick="setChartFilter('all')">Все</button>
+          <button class="filter-pill" data-mode="emotions" onclick="setChartFilter('emotions')">Эмоции</button>
           <button class="filter-pill" data-mode="mood" onclick="setChartFilter('mood')">Настроение</button>
           <button class="filter-pill" data-mode="energy" onclick="setChartFilter('energy')">Энергия</button>
           <button class="filter-pill" data-mode="libido" onclick="setChartFilter('libido')">Либидо</button>
         </div>
 
-        <svg id="cycleChart" width="100%" height="220" viewBox="0 0 400 220"></svg>
+        <div class="filter-row" id="emotionSubFilters" style="display:none; margin-top:-2px;"></div>
 
-        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:12px; font-size:12px; color:var(--ink-2); margin-top:10px;">
-          <span style="color:var(--accent)">● Настроение</span>
-          <span style="color:var(--indigo)">● Энергия</span>
-          <span style="color:var(--amber)">● Либидо</span>
-          <span style="color:var(--rose)">▮ Боль</span>
-          <span style="color:var(--accent)">✦ Овуляция</span>
-          <span style="color:var(--rose)">♥ Близость</span>
-          <svg width="14" height="14" viewBox="0 0 16 16" style="vertical-align:middle;"><circle cx="8" cy="8" r="6" fill="none" stroke="var(--indigo)" stroke-width="1.6"/><polygon points="8,4 12,8 8,12 4,8" fill="var(--indigo)"/></svg>
+        <div class="chart-wrap">
+          <svg id="cycleChart" width="100%" height="230" viewBox="0 0 400 230"></svg>
         </div>
+
+        <div id="chartLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:12px; font-size:12px; color:var(--ink-2); margin-top:10px;"></div>
 
         <div class="inspector-box" id="chartInspector"></div>
       </div>
@@ -1634,7 +1757,7 @@
           <span class="card-title">Gemini</span>
           <span class="card-sub" id="geminiKeyStatusBadge"></span>
         </div>
-        <input type="password" id="setGeminiKey" placeholder="" autocomplete="off" />
+        <input type="password" id="setGeminiKey" placeholder="AIza..." autocomplete="off" />
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
           <button class="btn-indigo" style="height:44px; font-size:14px;" onclick="saveAndTestGeminiKey()" id="btnTestGemini">
             Сохранить и проверить
@@ -1730,6 +1853,44 @@
       tg.expand();
     }
 
+    function setupKeyboardLift() {
+      const updateViewportOffset = () => {
+        if (!window.visualViewport) return;
+        const vv = window.visualViewport;
+        const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        document.documentElement.style.setProperty('--kb-offset', `${Math.round(offset)}px`);
+      };
+
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', updateViewportOffset);
+        window.visualViewport.addEventListener('scroll', updateViewportOffset);
+      }
+
+      document.addEventListener('focusin', (e) => {
+        const el = e.target;
+        if (!el || !['INPUT', 'TEXTAREA'].includes(el.tagName)) return;
+        if (['date'].includes(el.type)) return;
+
+        document.body.classList.add('keyboard-open');
+        setTimeout(() => {
+          updateViewportOffset();
+          try {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } catch (err) {}
+        }, 280);
+      });
+
+      document.addEventListener('focusout', () => {
+        setTimeout(() => {
+          const active = document.activeElement;
+          if (!active || !['INPUT', 'TEXTAREA'].includes(active.tagName)) {
+            document.body.classList.remove('keyboard-open');
+            document.documentElement.style.setProperty('--kb-offset', '0px');
+          }
+        }, 120);
+      });
+    }
+
     function hapticImpact(style = 'light') {
       try { tg?.HapticFeedback?.impactOccurred(style); } catch (e) {}
     }
@@ -1774,8 +1935,23 @@
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     }
 
-    const STORAGE_KEY = 'ritm_clean_v9';
-    const LEGACY_KEYS = ['ritm_clean_v8', 'ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+    const STORAGE_KEY = 'carezze_v1';
+    const LEGACY_KEYS = ['ritm_clean_v9', 'ritm_clean_v8', 'ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+
+    const EMOTION_PALETTE = {
+      'Тревога': { color: '#F97316', bg: 'rgba(249, 115, 22, 0.16)' },
+      'Раздражение': { color: '#E11D48', bg: 'rgba(225, 29, 72, 0.16)' },
+      'Грусть': { color: '#0284C7', bg: 'rgba(2, 132, 199, 0.16)' },
+      'Спокойствие': { color: '#10B981', bg: 'rgba(16, 185, 129, 0.16)' },
+      'Подъём': { color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.16)' },
+      'Усталость': { color: '#6366F1', bg: 'rgba(99, 102, 241, 0.16)' },
+      'Слезливость': { color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.16)' },
+      'Апатия': { color: '#64748B', bg: 'rgba(100, 116, 139, 0.16)' },
+      'Туман в голове': { color: '#818CF8', bg: 'rgba(129, 140, 248, 0.16)' },
+      'Уязвимость': { color: '#EC4899', bg: 'rgba(236, 72, 153, 0.16)' },
+      'Перегруз': { color: '#D97706', bg: 'rgba(217, 119, 6, 0.16)' },
+      'Внутреннее напряжение': { color: '#F43F5E', bg: 'rgba(244, 63, 94, 0.16)' }
+    };
 
     let state = {
       onboarded: false,
@@ -1797,6 +1973,7 @@
 
     let isEditingDay = true;
     let metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
+    let emotionLevels = { 'Спокойствие': 5 };
     let tempIsPeriod = false;
     let tempIsOvulation = false;
     let tempIntimacy = false;
@@ -1804,8 +1981,10 @@
     let tempDischarge = '';
 
     let isAiGenerating = false;
+    let isQuickAiGenerating = false;
 
     let chartFilter = 'all';
+    let selectedEmotionChartFilter = 'all';
     let breathTimer = null;
     let isBreathing = false;
 
@@ -1873,7 +2052,7 @@
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 15)
       });
-      await cloudSet('ritm9_meta', metaPayload);
+      await cloudSet('carezze1_meta', metaPayload);
 
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
@@ -1895,7 +2074,7 @@
       });
 
       for (const [ym, monthEntries] of Object.entries(byMonth)) {
-        await cloudSet(`ritm9_m_${ym}`, JSON.stringify(monthEntries));
+        await cloudSet(`carezze1_m_${ym}`, JSON.stringify(monthEntries));
       }
     }
 
@@ -1935,7 +2114,8 @@
 
       if (hasTelegramCloud()) {
         document.getElementById('cloudSyncBadge').textContent = 'Cloud';
-        const metaRaw = (await cloudGet('ritm9_meta'))
+        const metaRaw = (await cloudGet('carezze1_meta'))
+          || (await cloudGet('ritm9_meta'))
           || (await cloudGet('ritm8_meta'))
           || (await cloudGet('ritm7_meta'));
         if (metaRaw) {
@@ -1947,7 +2127,7 @@
 
             const keys = await cloudGetKeys();
             const monthKeys = keys.filter(k =>
-              k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_') || k.startsWith('ritm7_m_')
+              k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_') || k.startsWith('ritm7_m_')
             );
             for (const mk of monthKeys) {
               const mRaw = await cloudGet(mk);
@@ -2035,6 +2215,9 @@
       state.settings.darkMode = !state.settings.darkMode;
       applyThemeUI();
       persistLocalAndCloud(null);
+      if (document.getElementById('view-analytics').classList.contains('active')) {
+        renderAnalytics();
+      }
     }
 
     function showToast(msg) {
@@ -2045,7 +2228,7 @@
       hapticSuccess();
     }
 
-    async function callGeminiAPI(apiKey, promptText) {
+    async function callGeminiAPI(apiKey, promptText, expectJson = true) {
       const isExpressKey = apiKey.startsWith('AQ.');
       const models = ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite'];
       let lastError = 'Ошибка запроса';
@@ -2053,8 +2236,8 @@
       const payload = {
         contents: [{ role: 'user', parts: [{ text: promptText }] }],
         generationConfig: {
-          temperature: 0.5,
-          responseMimeType: 'application/json'
+          temperature: 0.55,
+          ...(expectJson ? { responseMimeType: 'application/json' } : {})
         }
       };
 
@@ -2088,6 +2271,7 @@
             }
 
             const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            if (!expectJson) return rawText.trim();
             const cleaned = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
             return JSON.parse(cleaned);
           } catch (e) {
@@ -2111,11 +2295,12 @@
       fb.textContent = '...';
 
       try {
-        await callGeminiAPI(key, 'Верни строго JSON: {"ok": true}');
+        await callGeminiAPI(key, 'Верни строго JSON: {"ok": true}', true);
         state.settings.geminiApiKey = key;
         state.onboarded = true;
         persistLocalAndCloud(null);
         syncSettingsInputs();
+        renderAdviceAndSelfCareTab();
         fb.style.color = 'var(--accent)';
         fb.textContent = '✓';
         hapticSuccess();
@@ -2133,66 +2318,76 @@
       state.settings.geminiApiKey = '';
       persistLocalAndCloud(null);
       syncSettingsInputs();
+      renderAdviceAndSelfCareTab();
       document.getElementById('geminiTestFeedback').style.display = 'none';
       showToast('Удалено');
     }
 
+    function attachHorizontalSlider(el, getVal, setVal, renderFn) {
+      const min = Number(el.dataset.min);
+      const max = Number(el.dataset.max);
+      let startX = 0;
+      let startY = 0;
+      let isDragging = false;
+
+      const updateFromEvent = (clientX) => {
+        const rect = el.getBoundingClientRect();
+        let ratio = (clientX - rect.left) / rect.width;
+        ratio = Math.max(0, Math.min(1, ratio));
+        const val = Math.round(min + ratio * (max - min));
+        if (getVal() !== val) {
+          setVal(val);
+          renderFn(val);
+          hapticSelect();
+        }
+      };
+
+      el.addEventListener('pointerdown', (e) => {
+        if (!isEditingDay) return;
+        startX = e.clientX;
+        startY = e.clientY;
+        isDragging = false;
+      });
+
+      el.addEventListener('pointermove', (e) => {
+        if (!isEditingDay || startX === 0) return;
+        const dx = Math.abs(e.clientX - startX);
+        const dy = Math.abs(e.clientY - startY);
+        if (!isDragging && dx > 10 && dx > dy * 1.3) {
+          isDragging = true;
+          el.setPointerCapture(e.pointerId);
+        }
+        if (isDragging) {
+          updateFromEvent(e.clientX);
+        }
+      });
+
+      el.addEventListener('pointerup', (e) => {
+        if (!isEditingDay) return;
+        const dx = Math.abs(e.clientX - startX);
+        const dy = Math.abs(e.clientY - startY);
+        if (!isDragging && dx < 6 && dy < 6) {
+          updateFromEvent(e.clientX);
+        }
+        isDragging = false;
+        startX = 0;
+      });
+
+      el.addEventListener('pointercancel', () => {
+        isDragging = false;
+        startX = 0;
+      });
+    }
+
     function initCCSliders() {
-      document.querySelectorAll('.cc-slider').forEach(el => {
+      document.querySelectorAll('.cc-slider[data-key]').forEach(el => {
         const key = el.dataset.key;
-        const min = Number(el.dataset.min);
-        const max = Number(el.dataset.max);
-        let startX = 0;
-        let startY = 0;
-        let isDragging = false;
-
-        const updateFromEvent = (clientX) => {
-          const rect = el.getBoundingClientRect();
-          let ratio = (clientX - rect.left) / rect.width;
-          ratio = Math.max(0, Math.min(1, ratio));
-          const val = Math.round(min + ratio * (max - min));
-          if (metrics[key] !== val) {
-            metrics[key] = val;
-            renderCCSlider(key);
-            hapticSelect();
-          }
-        };
-
-        el.addEventListener('pointerdown', (e) => {
-          if (!isEditingDay) return;
-          startX = e.clientX;
-          startY = e.clientY;
-          isDragging = false;
-        });
-
-        el.addEventListener('pointermove', (e) => {
-          if (!isEditingDay || startX === 0) return;
-          const dx = Math.abs(e.clientX - startX);
-          const dy = Math.abs(e.clientY - startY);
-          if (!isDragging && dx > 10 && dx > dy * 1.3) {
-            isDragging = true;
-            el.setPointerCapture(e.pointerId);
-          }
-          if (isDragging) {
-            updateFromEvent(e.clientX);
-          }
-        });
-
-        el.addEventListener('pointerup', (e) => {
-          if (!isEditingDay) return;
-          const dx = Math.abs(e.clientX - startX);
-          const dy = Math.abs(e.clientY - startY);
-          if (!isDragging && dx < 6 && dy < 6) {
-            updateFromEvent(e.clientX);
-          }
-          isDragging = false;
-          startX = 0;
-        });
-
-        el.addEventListener('pointercancel', () => {
-          isDragging = false;
-          startX = 0;
-        });
+        attachHorizontalSlider(
+          el,
+          () => metrics[key],
+          (v) => { metrics[key] = v; },
+          () => renderCCSlider(key)
+        );
       });
     }
 
@@ -2209,6 +2404,59 @@
 
     function renderAllCCSliders() {
       ['mood', 'energy', 'pain', 'libido'].forEach(renderCCSlider);
+    }
+
+    function renderEmotionIntensitySliders() {
+      const emos = getSelectedEmotions();
+      const container = document.getElementById('emotionIntensityContainer');
+      const list = document.getElementById('emotionIntensitySliders');
+
+      if (!emos.length) {
+        container.style.display = 'none';
+        list.innerHTML = '';
+        updateSummaries();
+        return;
+      }
+
+      container.style.display = 'block';
+      list.innerHTML = '';
+
+      emos.forEach(emo => {
+        if (typeof emotionLevels[emo] !== 'number') {
+          emotionLevels[emo] = 5;
+        }
+        const val = emotionLevels[emo];
+        const pal = EMOTION_PALETTE[emo] || { bg: 'var(--accent-bg)' };
+        const pct = ((val - 1) / 9) * 100;
+
+        const row = document.createElement('div');
+        row.className = 'cc-slider compact';
+        row.dataset.min = '1';
+        row.dataset.max = '10';
+        row.innerHTML = `
+          <div class="cc-fill" style="background:${pal.bg}; width:${Math.max(10, pct)}%;"></div>
+          <span class="cc-label">${escapeHtml(emo)}</span>
+          <span class="cc-value">${val}</span>
+        `;
+
+        attachHorizontalSlider(
+          row,
+          () => emotionLevels[emo] ?? 5,
+          (newVal) => {
+            emotionLevels[emo] = newVal;
+            updateSummaries();
+          },
+          (newVal) => {
+            const p = ((newVal - 1) / 9) * 100;
+            row.querySelector('.cc-fill').style.width = `${Math.max(10, p)}%`;
+            row.querySelector('.cc-value').textContent = newVal;
+          }
+        );
+
+        list.appendChild(row);
+      });
+
+      updateSummaries();
     }
 
     function getCycleInfo(dateISO) {
@@ -2417,6 +2665,10 @@
       tempDischarge = 'Умеренные';
       syncSettingsInputs();
 
+      const emos = getSelectedEmotions();
+      const levelsSnapshot = {};
+      emos.forEach(em => { levelsSnapshot[em] = emotionLevels[em] ?? 5; });
+
       if (!state.entries[selectedDate]) {
         state.entries[selectedDate] = {
           date: selectedDate,
@@ -2429,7 +2681,8 @@
           energy: metrics.energy,
           pain: metrics.pain,
           libido: metrics.libido,
-          emotions: getSelectedEmotions(),
+          emotions: emos,
+          emotionLevels: levelsSnapshot,
           contexts: getSelectedContexts(),
           helped: []
         };
@@ -2507,7 +2760,7 @@
     }
 
     function updateSummaries() {
-      const emos = getSelectedEmotions();
+      const emos = getSelectedEmotions().map(e => `${e} ${emotionLevels[e] ?? 5}`);
       const contexts = getSelectedContexts();
       const combined = [...emos, ...contexts];
       document.getElementById('sum-context').textContent = combined.length
@@ -2519,15 +2772,25 @@
       document.querySelectorAll('#basicEmotionChips .chip').forEach(chip => {
         chip.onclick = () => {
           hapticSelect();
-          chip.classList.toggle('active');
-          updateSummaries();
+          const emo = chip.dataset.val;
+          const willBeActive = !chip.classList.contains('active');
+          chip.classList.toggle('active', willBeActive);
+          if (willBeActive && typeof emotionLevels[emo] !== 'number') {
+            emotionLevels[emo] = 5;
+          }
+          renderEmotionIntensitySliders();
         };
       });
       document.querySelectorAll('#nuancedEmotionChips .chip').forEach(chip => {
         chip.onclick = () => {
           hapticSelect();
-          chip.classList.toggle('active-indigo');
-          updateSummaries();
+          const emo = chip.dataset.val;
+          const willBeActive = !chip.classList.contains('active-indigo');
+          chip.classList.toggle('active-indigo', willBeActive);
+          if (willBeActive && typeof emotionLevels[emo] !== 'number') {
+            emotionLevels[emo] = 5;
+          }
+          renderEmotionIntensitySliders();
         };
       });
       document.querySelectorAll('#contextChips .chip').forEach(chip => {
@@ -2545,6 +2808,7 @@
       const d = parseLocalISO(selectedDate);
       d.setDate(d.getDate() + delta);
       selectedDate = formatLocalISO(d);
+      clearQuickAiChat();
       loadDayForm();
     }
 
@@ -2559,6 +2823,13 @@
           pain: existing.pain,
           libido: existing.libido
         };
+        const savedEmos = Array.isArray(existing.emotions) ? existing.emotions : ['Спокойствие'];
+        const loadedLevels = { ...(existing.emotionLevels || {}) };
+        savedEmos.forEach(em => {
+          if (typeof loadedLevels[em] !== 'number') loadedLevels[em] = 5;
+        });
+        emotionLevels = loadedLevels;
+
         tempIsPeriod = Boolean(existing.isPeriod);
         tempIsOvulation = Boolean(existing.isOvulation);
         tempIntimacy = Boolean(existing.intimacy);
@@ -2572,6 +2843,7 @@
       } else {
         isEditingDay = true;
         metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
+        emotionLevels = { 'Спокойствие': 5 };
         tempIsPeriod = false;
         tempIsOvulation = false;
         tempIntimacy = false;
@@ -2580,7 +2852,8 @@
 
         populateEditableInputs({
           mood: 6, energy: 6, pain: 1, libido: 5,
-          intimacy: false, soloReset: false, emotions: ['Спокойствие'], contexts: []
+          intimacy: false, soloReset: false, emotions: ['Спокойствие'],
+          emotionLevels: { 'Спокойствие': 5 }, contexts: []
         });
         document.getElementById('savedSummaryCard').style.display = 'none';
         document.getElementById('editableDayForm').style.display = 'block';
@@ -2611,6 +2884,7 @@
           c.classList.add(isRose ? 'active-rose' : 'active');
         }
       });
+      renderEmotionIntensitySliders();
     }
 
     function renderSavedSummaryCard(entry) {
@@ -2625,7 +2899,10 @@
       if (!entry.isPeriod && !entry.isOvulation && entry.discharge) tags.push(`Выделения: ${entry.discharge.toLowerCase()}`);
       if (entry.intimacy) tags.push('Близость ♥');
       if (entry.soloReset) tags.push('◈');
-      if (entry.emotions?.length) tags.push(entry.emotions.join(', '));
+      if (entry.emotions?.length) {
+        const levels = entry.emotionLevels || {};
+        tags.push(entry.emotions.map(em => typeof levels[em] === 'number' ? `${em} ${levels[em]}/10` : em).join(', '));
+      }
       if (entry.contexts?.length) tags.push(entry.contexts.join(', '));
 
       document.getElementById('savedTagsLine').textContent = tags.join(' · ');
@@ -2637,10 +2914,17 @@
       document.getElementById('savedSummaryCard').style.display = 'none';
       document.getElementById('editableDayForm').style.display = 'block';
       updateHeaderAndContextControls();
+      renderEmotionIntensitySliders();
     }
 
     function saveCurrentDay() {
       const emotions = getSelectedEmotions();
+      const finalEmotions = emotions.length ? emotions : ['Спокойствие'];
+      const finalLevels = {};
+      finalEmotions.forEach(em => {
+        finalLevels[em] = typeof emotionLevels[em] === 'number' ? emotionLevels[em] : 5;
+      });
+
       const contexts = getSelectedContexts();
       const prevHelped = state.entries[selectedDate]?.helped || [];
       const prevAi = state.entries[selectedDate]?.aiAnalysis;
@@ -2656,7 +2940,8 @@
         energy: metrics.energy,
         pain: metrics.pain,
         libido: metrics.libido,
-        emotions: emotions.length ? emotions : ['Спокойствие'],
+        emotions: finalEmotions,
+        emotionLevels: finalLevels,
         contexts,
         helped: prevHelped,
         ...(prevAi ? { aiAnalysis: prevAi } : {})
@@ -2701,6 +2986,7 @@
       hapticImpact('medium');
       selectedDate = getTodayISO(0);
       calendarViewDate = parseLocalISO(selectedDate);
+      clearQuickAiChat();
       loadDayForm();
       closeCalendarModal();
     }
@@ -2708,6 +2994,7 @@
     function selectCalendarDate(iso) {
       hapticImpact('medium');
       selectedDate = iso;
+      clearQuickAiChat();
       loadDayForm();
       closeCalendarModal();
     }
@@ -2759,7 +3046,11 @@
     }
 
     function getCurrentWorkingEntry() {
-      return state.entries[selectedDate] || {
+      if (state.entries[selectedDate]) return state.entries[selectedDate];
+      const emos = getSelectedEmotions();
+      const levels = {};
+      emos.forEach(e => { levels[e] = emotionLevels[e] ?? 5; });
+      return {
         date: selectedDate,
         mood: metrics.mood,
         energy: metrics.energy,
@@ -2770,7 +3061,8 @@
         intimacy: tempIntimacy,
         soloReset: tempSoloReset,
         discharge: tempDischarge,
-        emotions: getSelectedEmotions(),
+        emotions: emos,
+        emotionLevels: levels,
         contexts: getSelectedContexts(),
         helped: []
       };
@@ -2827,6 +3119,7 @@
 
       document.getElementById('advicePhaseTag').textContent = `${formatHumanDate(selectedDate)} · День ${info.cycleDay}`;
       document.getElementById('aiControlRow').style.display = hasApiKey ? 'block' : 'none';
+      document.getElementById('aiQuickChatCard').style.display = hasApiKey ? 'block' : 'none';
       document.getElementById('breakdownMainCard').classList.toggle('ai-highlight', hasApiKey && Boolean(entry.aiAnalysis));
 
       const gynH = document.getElementById('gynHeadline');
@@ -2840,6 +3133,8 @@
       const aiNote = document.getElementById('aiStatusNote');
 
       const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
+      const levels = entry.emotionLevels || {};
+      const emosLabeled = emos.map(e => typeof levels[e] === 'number' ? `${e} (${levels[e]}/10)` : e);
       const contexts = Array.isArray(entry.contexts) ? entry.contexts : [];
       const hasBreast = contexts.includes('Болезненность груди');
       const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
@@ -2857,7 +3152,7 @@
           patBox.style.display = 'none';
         }
 
-        psyH.textContent = emos.join(' · ');
+        psyH.textContent = emosLabeled.join(' · ');
         psyB.textContent = entry.aiAnalysis.focus || '';
 
         const aiSteps = Array.isArray(entry.aiAnalysis.steps) && entry.aiAnalysis.steps.length
@@ -2907,7 +3202,7 @@
           gynB.textContent = ('Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся активность, новые задачи и смена обстановки.') + breastNote;
         }
 
-        psyH.textContent = emos.join(' · ');
+        psyH.textContent = emosLabeled.join(' · ');
         if (info.isDelay) {
           psyB.textContent = 'Неопределённость сама по себе выматывает. Постарайся не прокручивать худшие сценарии по кругу и опереться на конкретные шаги.';
         } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
@@ -3059,6 +3354,8 @@
 
       const info = getCycleInfo(selectedDate);
       const current = getCurrentWorkingEntry();
+      const curLevels = current.emotionLevels || {};
+      const formattedEmos = (current.emotions || []).map(em => `${em}: ${curLevels[em] ?? 5}/10`).join(', ');
 
       const recentHistory = Object.values(state.entries)
         .filter(e => e.date !== selectedDate)
@@ -3080,6 +3377,7 @@
             breastTenderness: (e.contexts || []).includes('Болезненность груди'),
             discharge: e.discharge || '',
             emotions: e.emotions || [],
+            emotionLevels: e.emotionLevels || {},
             contexts: e.contexts || [],
             helped: e.helped || []
           };
@@ -3112,7 +3410,7 @@
 - Выделения: ${current.discharge || ''}
 - Близость: ${current.intimacy ? 'да' : 'нет'}
 - tensionRelief: ${Boolean(current.soloReset)}
-- Эмоции: ${(current.emotions || []).join(', ')}
+- Эмоции и интенсивность: ${formattedEmos}
 - Факторы и ощущения: ${(current.contexts || []).join(', ')}
 
 ПОМОГЛО РАНЬШЕ:
@@ -3137,7 +3435,7 @@ ${JSON.stringify(recentHistory)}
 }`;
 
       try {
-        const result = await callGeminiAPI(apiKey, prompt);
+        const result = await callGeminiAPI(apiKey, prompt, true);
         if (!state.entries[selectedDate]) {
           state.entries[selectedDate] = { ...current };
         }
@@ -3159,6 +3457,73 @@ ${JSON.stringify(recentHistory)}
         isAiGenerating = false;
         btn.disabled = false;
       }
+    }
+
+    async function sendQuickAiQuestion() {
+      const apiKey = state.settings.geminiApiKey;
+      const inp = document.getElementById('aiQuickInput');
+      const replyBox = document.getElementById('aiQuickReplyBox');
+      const btnSend = document.getElementById('btnSendQuickAi');
+      const btnClear = document.getElementById('btnClearQuickAi');
+      const text = inp.value.trim();
+
+      if (!apiKey || !text || isQuickAiGenerating) return;
+
+      isQuickAiGenerating = true;
+      btnSend.disabled = true;
+      btnSend.textContent = '...';
+      replyBox.style.display = 'block';
+      replyBox.style.color = 'var(--ink-2)';
+      replyBox.textContent = 'Думаю...';
+
+      const info = getCycleInfo(selectedDate);
+      const current = getCurrentWorkingEntry();
+      const curLevels = current.emotionLevels || {};
+      const formattedEmos = (current.emotions || []).map(em => `${em} (${curLevels[em] ?? 5}/10)`).join(', ');
+
+      const prompt = `Ты чуткий, трезвый и спокойный собеседник (врач-гинеколог и психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
+Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла (если она есть) и предложи одну спокойную опору на сейчас.
+
+Контекст сегодняшнего дня (${selectedDate}):
+- День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
+- Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10
+- Эмоции: ${formattedEmos || 'не указаны'}
+- Факторы: ${(current.contexts || []).join(', ') || 'нет'}
+
+Сообщение пользователя:
+"""
+${text}
+"""
+
+Ответь обычным живым текстом (2–3 коротких абзаца, без markdown-заголовков и звёздочек).`;
+
+      try {
+        const answer = await callGeminiAPI(apiKey, prompt, false);
+        replyBox.style.color = 'var(--ink)';
+        replyBox.textContent = answer;
+        btnClear.style.display = 'inline-flex';
+        hapticSuccess();
+      } catch (e) {
+        replyBox.style.color = 'var(--rose)';
+        replyBox.textContent = String(e.message || e);
+        hapticError();
+      } finally {
+        isQuickAiGenerating = false;
+        btnSend.disabled = false;
+        btnSend.textContent = 'Ответить';
+      }
+    }
+
+    function clearQuickAiChat() {
+      const inp = document.getElementById('aiQuickInput');
+      const replyBox = document.getElementById('aiQuickReplyBox');
+      const btnClear = document.getElementById('btnClearQuickAi');
+      if (inp) inp.value = '';
+      if (replyBox) {
+        replyBox.textContent = '';
+        replyBox.style.display = 'none';
+      }
+      if (btnClear) btnClear.style.display = 'none';
     }
 
     function toggleHelpedTip(tipId) {
@@ -3217,6 +3582,12 @@ ${JSON.stringify(recentHistory)}
       renderAnalytics();
     }
 
+    function setEmotionChartFilter(emoName) {
+      hapticSelect();
+      selectedEmotionChartFilter = emoName;
+      renderAnalytics();
+    }
+
     function catmullRomPath(pts) {
       if (pts.length === 0) return '';
       if (pts.length === 1) return `M ${pts[0].x} ${pts[0].y}`;
@@ -3239,10 +3610,11 @@ ${JSON.stringify(recentHistory)}
       const svg = document.getElementById('cycleChart');
       const len = Number(state.settings.cycleLength) || 28;
       const pLen = Number(state.settings.periodLength) || 5;
-      const w = 400, h = 220;
-      const padL = 24, padR = 12, padT = 22, padB = 28;
+      const w = 400, h = 230;
+      const padL = 26, padR = 14, padT = 24, padB = 28;
       const plotW = w - padL - padR;
       const plotH = h - padT - padB;
+      const isDark = Boolean(state.settings.darkMode);
 
       const byDay = {};
       Object.values(state.entries).sort((a, b) => a.date.localeCompare(b.date)).forEach(e => {
@@ -3250,62 +3622,158 @@ ${JSON.stringify(recentHistory)}
         if (d <= len) byDay[d] = e;
       });
 
-      let html = '';
+      // Collect used emotions across entries
+      const emotionFreq = {};
+      Object.values(byDay).forEach(e => {
+        (e.emotions || []).forEach(em => {
+          emotionFreq[em] = (emotionFreq[em] || 0) + 1;
+        });
+      });
+      const trackedEmotions = Object.entries(emotionFreq)
+        .sort((a, b) => b[1] - a[1])
+        .map(([em]) => em);
 
+      const subRow = document.getElementById('emotionSubFilters');
+      if (chartFilter === 'emotions') {
+        subRow.style.display = 'flex';
+        if (selectedEmotionChartFilter !== 'all' && !trackedEmotions.includes(selectedEmotionChartFilter)) {
+          selectedEmotionChartFilter = 'all';
+        }
+        const pills = ['all', ...trackedEmotions];
+        subRow.innerHTML = pills.map(em => {
+          const active = selectedEmotionChartFilter === em;
+          const label = em === 'all' ? 'Все эмоции' : em;
+          return `<button class="filter-pill ${active ? 'active' : ''}" onclick="setEmotionChartFilter('${em.replace(/'/g, "\\'")}')">${escapeHtml(label)}</button>`;
+        }).join('');
+      } else {
+        subRow.style.display = 'none';
+      }
+
+      let html = `<defs>
+        <linearGradient id="gradTeal" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${isDark ? '#2DD4BF' : '#0D9488'}" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="${isDark ? '#2DD4BF' : '#0D9488'}" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="gradIndigo" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${isDark ? '#818CF8' : '#4F46E5'}" stop-opacity="0.20"/>
+          <stop offset="100%" stop-color="${isDark ? '#818CF8' : '#4F46E5'}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>`;
+
+      // Clean phase background bands
       const wMens = ((pLen - 1) / (len - 1)) * plotW;
-      html += `<rect x="${padL}" y="${padT}" width="${Math.max(8, wMens)}" height="${plotH}" rx="6" fill="var(--rose-tint)" />`;
+      html += `<rect x="${padL}" y="${padT}" width="${Math.max(8, wMens)}" height="${plotH}" rx="8" fill="${isDark ? 'rgba(251,113,133,0.10)' : 'rgba(244,63,94,0.07)'}" />`;
 
       const pmsStart = Math.max(1, len - 6);
       const xPms = padL + ((pmsStart - 1) / (len - 1)) * plotW;
       const wPms = ((len - pmsStart) / (len - 1)) * plotW;
-      html += `<rect x="${xPms}" y="${padT}" width="${wPms}" height="${plotH}" rx="6" fill="var(--amber-tint)" />`;
+      html += `<rect x="${xPms}" y="${padT}" width="${wPms}" height="${plotH}" rx="8" fill="${isDark ? 'rgba(251,191,36,0.08)' : 'rgba(245,158,11,0.07)'}" />`;
 
+      // Crisp horizontal grid lines
       [0, 5, 10].forEach(v => {
         const y = padT + plotH - (v / 10) * plotH;
-        html += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" />`;
-        html += `<text x="4" y="${y + 4}" font-size="10" fill="var(--ink-3)">${v}</text>`;
+        html += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="${v === 5 ? '3 3' : 'none'}" />`;
+        html += `<text x="6" y="${y + 4}" font-size="10.5" font-weight="600" fill="var(--ink-3)">${v}</text>`;
       });
 
       for (let d = 1; d <= len; d++) {
         const x = padL + ((d - 1) / (len - 1)) * plotW;
         if (d === 1 || d % 5 === 0 || d === len) {
-          html += `<text x="${x}" y="${h - 8}" text-anchor="middle" font-size="10" fill="var(--ink-3)">${d}</text>`;
+          html += `<text x="${x}" y="${h - 8}" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--ink-3)">${d}</text>`;
         }
       }
 
-      for (let d = 1; d <= len; d++) {
-        const e = byDay[d];
-        if (e && e.pain > 0) {
-          const x = padL + ((d - 1) / (len - 1)) * plotW - 3;
-          const barH = (e.pain / 10) * plotH;
-          html += `<rect x="${x}" y="${padT + plotH - barH}" width="6" height="${barH}" rx="3" fill="var(--rose)" opacity="0.32" />`;
-        }
-      }
-
-      function drawSmoothSeries(key, color) {
-        if (chartFilter !== 'all' && chartFilter !== key) return;
-        const pts = [];
-        for (let d = 1; d <= len; d++) {
-          if (byDay[d] && typeof byDay[d][key] === 'number') {
-            pts.push({
-              x: padL + ((d - 1) / (len - 1)) * plotW,
-              y: padT + plotH - (byDay[d][key] / 10) * plotH,
-              d
-            });
-          }
-        }
+      function drawSmoothSeries(pts, color, gradId = null) {
+        if (!pts.length) return;
+        const pathD = catmullRomPath(pts);
         if (pts.length > 1) {
-          html += `<path d="${catmullRomPath(pts)}" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" />`;
+          if (gradId) {
+            const first = pts[0];
+            const last = pts[pts.length - 1];
+            const baseY = padT + plotH;
+            html += `<path d="${pathD} L ${last.x.toFixed(1)} ${baseY} L ${first.x.toFixed(1)} ${baseY} Z" fill="url(#${gradId})" />`;
+          }
+          html += `<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" />`;
         }
         pts.forEach(p => {
-          html += `<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="${color}" />`;
+          html += `<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}" stroke="var(--surface)" stroke-width="1.6" />`;
         });
       }
 
-      drawSmoothSeries('mood', 'var(--accent)');
-      drawSmoothSeries('energy', 'var(--indigo)');
-      drawSmoothSeries('libido', 'var(--amber)');
+      const legendEl = document.getElementById('chartLegendRow');
 
+      if (chartFilter === 'emotions') {
+        const emosToDraw = selectedEmotionChartFilter === 'all'
+          ? trackedEmotions.slice(0, 4)
+          : [selectedEmotionChartFilter];
+
+        emosToDraw.forEach(emo => {
+          const pal = EMOTION_PALETTE[emo] || { color: '#0D9488' };
+          const pts = [];
+          for (let d = 1; d <= len; d++) {
+            const e = byDay[d];
+            if (e && Array.isArray(e.emotions) && e.emotions.includes(emo)) {
+              const lvl = typeof e.emotionLevels?.[emo] === 'number' ? e.emotionLevels[emo] : 5;
+              pts.push({
+                x: padL + ((d - 1) / (len - 1)) * plotW,
+                y: padT + plotH - (lvl / 10) * plotH
+              });
+            }
+          }
+          drawSmoothSeries(pts, pal.color, null);
+        });
+
+        legendEl.innerHTML = emosToDraw.length
+          ? emosToDraw.map(em => {
+              const c = (EMOTION_PALETTE[em] || { color: 'var(--accent)' }).color;
+              return `<span style="color:${c}; font-weight:600;">● ${escapeHtml(em)}</span>`;
+            }).join('')
+          : `<span>Отметь эмоции в разделе «Сегодня», чтобы увидеть график</span>`;
+      } else {
+        // Pain bars
+        for (let d = 1; d <= len; d++) {
+          const e = byDay[d];
+          if (e && e.pain > 0) {
+            const x = padL + ((d - 1) / (len - 1)) * plotW - 3.5;
+            const barH = (e.pain / 10) * plotH;
+            html += `<rect x="${x}" y="${padT + plotH - barH}" width="7" height="${barH}" rx="3.5" fill="${isDark ? '#FB7185' : '#F43F5E'}" opacity="0.24" />`;
+          }
+        }
+
+        const buildMetricPts = (key) => {
+          const pts = [];
+          for (let d = 1; d <= len; d++) {
+            if (byDay[d] && typeof byDay[d][key] === 'number') {
+              pts.push({
+                x: padL + ((d - 1) / (len - 1)) * plotW,
+                y: padT + plotH - (byDay[d][key] / 10) * plotH
+              });
+            }
+          }
+          return pts;
+        };
+
+        if (chartFilter === 'all' || chartFilter === 'mood') {
+          drawSmoothSeries(buildMetricPts('mood'), isDark ? '#2DD4BF' : '#0D9488', chartFilter === 'mood' ? 'gradTeal' : null);
+        }
+        if (chartFilter === 'all' || chartFilter === 'energy') {
+          drawSmoothSeries(buildMetricPts('energy'), isDark ? '#818CF8' : '#4F46E5', chartFilter === 'energy' ? 'gradIndigo' : null);
+        }
+        if (chartFilter === 'all' || chartFilter === 'libido') {
+          drawSmoothSeries(buildMetricPts('libido'), isDark ? '#FBBF24' : '#F59E0B', null);
+        }
+
+        legendEl.innerHTML = `
+          <span style="color:${isDark ? '#2DD4BF' : '#0D9488'}; font-weight:600;">● Настроение</span>
+          <span style="color:${isDark ? '#818CF8' : '#4F46E5'}; font-weight:600;">● Энергия</span>
+          <span style="color:${isDark ? '#FBBF24' : '#F59E0B'}; font-weight:600;">● Либидо</span>
+          <span style="color:${isDark ? '#FB7185' : '#F43F5E'}; font-weight:600;">▮ Боль</span>
+          <span style="color:var(--accent)">✦ Овуляция</span>
+          <span style="color:var(--rose)">♥ Близость</span>
+        `;
+      }
+
+      // Interactive day columns & markers
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         const x = padL + ((d - 1) / (len - 1)) * plotW;
@@ -3313,8 +3781,8 @@ ${JSON.stringify(recentHistory)}
         const hasOv = e && Boolean(e.isOvulation);
         const hasSolo = e && Boolean(e.soloReset);
 
-        if (hasIntimacy) html += `<text x="${x - (hasOv ? 5 : 0)}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--rose)">♥</text>`;
-        if (hasOv) html += `<text x="${x + (hasIntimacy ? 5 : 0)}" y="${padT - 6}" text-anchor="middle" font-size="11" fill="var(--accent)">✦</text>`;
+        if (hasIntimacy) html += `<text x="${x - (hasOv ? 5 : 0)}" y="${padT - 7}" text-anchor="middle" font-size="11" fill="var(--rose)">♥</text>`;
+        if (hasOv) html += `<text x="${x + (hasIntimacy ? 5 : 0)}" y="${padT - 7}" text-anchor="middle" font-size="11" fill="var(--accent)">✦</text>`;
         if (hasSolo) {
           const iy = padT + plotH - 10;
           html += `<circle cx="${x}" cy="${iy}" r="4.5" fill="var(--surface)" stroke="var(--indigo)" stroke-width="1.3"/><polygon points="${x},${iy - 2.6} ${x + 2.6},${iy} ${x},${iy + 2.6} ${x - 2.6},${iy}" fill="var(--indigo)"/>`;
@@ -3336,7 +3804,10 @@ ${JSON.stringify(recentHistory)}
         box.innerHTML = `День ${day}`;
         return;
       }
-      const emos = Array.isArray(e.emotions) ? e.emotions.join(', ') : '';
+      const levels = e.emotionLevels || {};
+      const emos = Array.isArray(e.emotions)
+        ? e.emotions.map(em => `${em} (${typeof levels[em] === 'number' ? levels[em] : 5}/10)`).join(', ')
+        : '';
       const extras = [
         e.isPeriod ? 'Месячные' : '',
         e.isOvulation ? 'Овуляция' : '',
@@ -3347,9 +3818,9 @@ ${JSON.stringify(recentHistory)}
       ].filter(Boolean).join(' · ');
 
       box.innerHTML = `
-        <strong style="color:var(--ink)">День ${day}</strong> · ${emos}<br/>
+        <strong style="color:var(--ink)">День ${day}</strong>${emos ? ` · ${escapeHtml(emos)}` : ''}<br/>
         Настр. ${e.mood} · Энергия ${e.energy} · Боль ${e.pain} · Либидо ${e.libido}
-        ${extras ? `<div style="margin-top:4px; color:var(--accent); font-weight:600;">${extras}</div>` : ''}
+        ${extras ? `<div style="margin-top:4px; color:var(--accent); font-weight:600;">${escapeHtml(extras)}</div>` : ''}
       `;
     }
 
@@ -3509,7 +3980,7 @@ ${JSON.stringify(recentHistory)}
       if (hasTelegramCloud()) {
         const keys = await cloudGetKeys();
         const ourKeys = keys.filter(k =>
-          k.startsWith('ritm9_') || k.startsWith('ritm8_') || k.startsWith('ritm7_')
+          k.startsWith('carezze1_') || k.startsWith('ritm9_') || k.startsWith('ritm8_') || k.startsWith('ritm7_')
         );
         await cloudRemove(ourKeys);
       }
@@ -3543,6 +4014,7 @@ ${JSON.stringify(recentHistory)}
       if (tab === 'sos') updatePainkillerUI();
     }
 
+    setupKeyboardLift();
     initCCSliders();
     setupChips();
     loadFromCloudAndLocal().then(() => {
