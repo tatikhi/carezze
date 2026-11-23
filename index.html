@@ -69,17 +69,8 @@
       --shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      margin: 0;
-      padding: 0;
-    }
-
-    html, body {
-      width: 100%;
-      overflow-x: hidden;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    html, body { width: 100%; overflow-x: hidden; }
 
     body {
       font-family: "Manrope", -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
@@ -102,12 +93,7 @@
       pointer-events: none;
     }
 
-    .app {
-      width: 100%;
-      max-width: 440px;
-      margin: 0 auto;
-      padding: 8px 16px 32px;
-    }
+    .app { width: 100%; max-width: 440px; margin: 0 auto; padding: 8px 16px 32px; }
 
     .onboarding-overlay {
       position: fixed;
@@ -118,15 +104,8 @@
       padding: max(28px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
       display: none;
     }
-
-    .onboarding-overlay.active {
-      display: block;
-    }
-
-    .onboarding-box {
-      max-width: 420px;
-      margin: 0 auto;
-    }
+    .onboarding-overlay.active { display: block; }
+    .onboarding-box { max-width: 420px; margin: 0 auto; }
 
     .stepper-row {
       display: flex;
@@ -136,7 +115,6 @@
       border-radius: 16px;
       padding: 8px 12px;
     }
-
     .stepper-btn {
       width: 40px;
       height: 40px;
@@ -149,7 +127,6 @@
       cursor: pointer;
       box-shadow: var(--shadow);
     }
-
     .stepper-val {
       font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 18px;
@@ -157,25 +134,15 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .brand {
       font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
-      font-size: 19px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--ink);
     }
-
-    .header-actions {
-      display: flex;
-      gap: 8px;
-    }
+    .header-actions { display: flex; gap: 8px; }
 
     .pill-btn {
       background: var(--surface);
@@ -193,12 +160,7 @@
       gap: 6px;
       box-shadow: var(--shadow);
     }
-
-    .pill-btn.sos {
-      background: var(--rose-tint);
-      border-color: var(--rose-bg);
-      color: var(--rose);
-    }
+    .pill-btn.sos { background: var(--rose-tint); border-color: var(--rose-bg); color: var(--rose); }
 
     .hero-card {
       background: var(--surface);
@@ -209,20 +171,12 @@
       box-shadow: var(--shadow);
       transition: border-color 0.25s ease, background-color 0.25s ease;
     }
-
     .hero-card.is-period-day {
       border-color: var(--rose-bg);
       background: linear-gradient(180deg, var(--rose-tint) 0%, var(--surface) 58%);
     }
 
-    .date-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
+    .date-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 16px; }
     .date-arrow {
       width: 38px;
       height: 38px;
@@ -238,10 +192,7 @@
       align-items: center;
       justify-content: center;
     }
-
-    .date-arrow:active {
-      transform: scale(0.94);
-    }
+    .date-arrow:active { transform: scale(0.94); }
 
     .date-center-btn {
       flex: 1;
@@ -261,14 +212,7 @@
       padding: 0 12px;
     }
 
-    .hero-main {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
+    .hero-main { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
     .hero-day {
       font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 32px;
@@ -276,56 +220,16 @@
       letter-spacing: -0.03em;
       line-height: 1.08;
     }
+    .hero-day span { font-size: 17px; font-weight: 600; color: var(--ink-2); }
+    .hero-phase { font-size: 15px; font-weight: 600; color: var(--accent); margin-top: 6px; }
+    .hero-phase.is-delay { color: var(--amber); }
+    .hero-phase.is-period { color: var(--rose); }
+    .hero-meta { text-align: right; font-size: 13px; color: var(--ink-2); line-height: 1.35; flex-shrink: 0; }
 
-    .hero-day span {
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--ink-2);
-    }
+    .cycle-track { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+    .cycle-fill { height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.3s ease, background-color 0.3s ease; }
 
-    .hero-phase {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-top: 6px;
-    }
-
-    .hero-phase.is-delay {
-      color: var(--amber);
-    }
-
-    .hero-phase.is-period {
-      color: var(--rose);
-    }
-
-    .hero-meta {
-      text-align: right;
-      font-size: 13px;
-      color: var(--ink-2);
-      line-height: 1.35;
-      flex-shrink: 0;
-    }
-
-    .cycle-track {
-      height: 6px;
-      background: var(--surface-2);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .cycle-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 999px;
-      transition: width 0.3s ease, background-color 0.3s ease;
-    }
-
-    .period-strip {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
+    .period-strip { display: flex; gap: 8px; margin-top: 14px; }
     .btn-period-apple {
       flex: 1;
       height: 44px;
@@ -343,14 +247,12 @@
       gap: 7px;
       transition: all 0.18s ease;
     }
-
     .btn-period-apple.active {
       background: var(--rose-solid);
       border-color: var(--rose-solid);
       color: #FFFFFF;
       box-shadow: 0 4px 14px rgba(244, 63, 94, 0.28);
     }
-
     .btn-new-cycle {
       height: 44px;
       padding: 0 13px;
@@ -373,32 +275,18 @@
       margin-bottom: 14px;
       box-shadow: var(--shadow);
     }
-
     .card.ai-highlight {
       border-color: var(--indigo-bg);
       background: linear-gradient(180deg, var(--indigo-tint) 0%, var(--surface) 45%);
     }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
+    .card-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 14px; }
     .card-title {
       font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 17px;
       font-weight: 700;
       letter-spacing: -0.02em;
     }
-
-    .card-sub {
-      font-size: 13px;
-      color: var(--ink-2);
-      flex-shrink: 0;
-    }
+    .card-sub { font-size: 13px; color: var(--ink-2); flex-shrink: 0; }
 
     .saved-card {
       background: var(--surface);
@@ -408,23 +296,8 @@
       margin-bottom: 14px;
       box-shadow: var(--shadow);
     }
-
-    .saved-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .saved-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
+    .saved-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .saved-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; color: var(--accent); }
     .btn-edit-small {
       background: var(--surface-2);
       border: none;
@@ -436,41 +309,16 @@
       font-weight: 600;
       cursor: pointer;
     }
-
-    .saved-metrics-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 14px;
-    }
-
-    .saved-metric-pill {
-      background: var(--surface-2);
-      border-radius: 12px;
-      padding: 8px 6px;
-      text-align: center;
-    }
-
-    .saved-metric-pill span {
-      display: block;
-      font-size: 11px;
-      color: var(--ink-2);
-    }
-
+    .saved-metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 14px; }
+    .saved-metric-pill { background: var(--surface-2); border-radius: 12px; padding: 8px 6px; text-align: center; }
+    .saved-metric-pill span { display: block; font-size: 11px; color: var(--ink-2); }
     .saved-metric-pill strong {
       font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
       font-size: 16px;
       font-weight: 700;
       color: var(--ink);
     }
-
-    .saved-tags-line {
-      margin-top: 10px;
-      font-size: 13.5px;
-      color: var(--ink-2);
-      line-height: 1.45;
-    }
-
+    .saved-tags-line { margin-top: 10px; font-size: 13.5px; color: var(--ink-2); line-height: 1.45; }
     .saved-cta-row {
       margin-top: 14px;
       padding-top: 12px;
@@ -479,7 +327,6 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .link-btn {
       background: none;
       border: none;
@@ -493,12 +340,7 @@
       gap: 4px;
     }
 
-    .cc-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
+    .cc-group { display: flex; flex-direction: column; gap: 10px; }
     .cc-slider {
       position: relative;
       height: 54px;
@@ -513,13 +355,11 @@
       justify-content: space-between;
       padding: 0 18px;
     }
-
     .cc-slider.compact {
       height: 44px;
       border-radius: 13px;
       padding: 0 14px;
     }
-
     .cc-fill {
       position: absolute;
       top: 0;
@@ -529,15 +369,7 @@
       pointer-events: none;
       transition: width 0.08s ease-out;
     }
-
-    .cc-label {
-      position: relative;
-      z-index: 2;
-      font-size: 14.5px;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
+    .cc-label { position: relative; z-index: 2; font-size: 14.5px; font-weight: 600; color: var(--ink); }
     .cc-value {
       position: relative;
       z-index: 2;
@@ -547,24 +379,11 @@
       font-variant-numeric: tabular-nums;
       color: var(--ink);
     }
+    .cc-value.is-zero { color: var(--ink-3); font-weight: 600; }
 
-    .emotion-levels-box {
-      margin-top: 12px;
-      padding: 12px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .emotion-sliders-stack { display: flex; flex-direction: column; gap: 8px; }
 
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-    }
-
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .choice-btn {
       background: var(--surface-2);
       border: 1.5px solid transparent;
@@ -582,18 +401,8 @@
       align-items: center;
       justify-content: center;
     }
-
-    .choice-btn.active {
-      background: var(--accent-tint);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .choice-btn.active-rose {
-      background: var(--rose-tint);
-      border-color: var(--rose);
-      color: var(--rose);
-    }
+    .choice-btn.active { background: var(--accent-tint); border-color: var(--accent); color: var(--accent); }
+    .choice-btn.active-rose { background: var(--rose-tint); border-color: var(--rose); color: var(--rose); }
 
     .icon-stealth-btn {
       width: 44px;
@@ -610,25 +419,10 @@
       align-items: center;
       justify-content: center;
     }
+    .icon-stealth-btn.active { background: var(--indigo-tint); border-color: var(--indigo); color: var(--indigo); }
 
-    .icon-stealth-btn.active {
-      background: var(--indigo-tint);
-      border-color: var(--indigo);
-      color: var(--indigo);
-    }
-
-    .sub-section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 16px 0 8px;
-    }
-
-    .field-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink-2);
-    }
+    .sub-section-header { display: flex; justify-content: space-between; align-items: center; margin: 16px 0 8px; }
+    .field-label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
 
     .accordion {
       background: var(--surface);
@@ -638,7 +432,6 @@
       overflow: hidden;
       box-shadow: var(--shadow);
     }
-
     .accordion-header {
       width: 100%;
       background: none;
@@ -655,7 +448,6 @@
       cursor: pointer;
       text-align: left;
     }
-
     .accordion-summary {
       font-family: "Manrope", sans-serif;
       font-size: 13px;
@@ -664,75 +456,31 @@
       margin-top: 3px;
       line-height: 1.35;
     }
+    .accordion-chevron { font-size: 20px; color: var(--ink-3); flex-shrink: 0; transition: transform 0.2s ease; }
+    .accordion.open .accordion-chevron { transform: rotate(180deg); }
+    .accordion-body { display: none; padding: 2px 18px 18px; border-top: 1px solid var(--border); }
+    .accordion.open .accordion-body { display: block; }
 
-    .accordion-chevron {
-      font-size: 20px;
-      color: var(--ink-3);
-      flex-shrink: 0;
-      transition: transform 0.2s ease;
-    }
-
-    .accordion.open .accordion-chevron {
-      transform: rotate(180deg);
-    }
-
-    .accordion-body {
-      display: none;
-      padding: 2px 18px 18px;
-      border-top: 1px solid var(--border);
-    }
-
-    .accordion.open .accordion-body {
-      display: block;
-    }
-
-    .chip-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
-
+    .chip-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .chip {
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: 14px;
       font-family: inherit;
       font-size: 13.5px;
       font-weight: 500;
       line-height: 1.25;
-      min-height: 38px;
+      min-height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
-
-    .chip.active {
-      background: var(--accent-tint);
-      border-color: var(--accent);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .chip.active-indigo {
-      background: var(--indigo-tint);
-      border-color: var(--indigo);
-      color: var(--indigo);
-      font-weight: 600;
-    }
-
-    .chip.active-rose {
-      background: var(--rose-tint);
-      border-color: var(--rose);
-      color: var(--rose);
-      font-weight: 600;
-    }
+    .chip.active { background: var(--accent-tint); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+    .chip.active-rose { background: var(--rose-tint); border-color: var(--rose); color: var(--rose); font-weight: 600; }
 
     .btn-primary {
       width: 100%;
@@ -746,10 +494,7 @@
       font-weight: 600;
       cursor: pointer;
     }
-
-    .btn-primary:active {
-      opacity: 0.85;
-    }
+    .btn-primary:active { opacity: 0.85; }
 
     .btn-accent {
       width: 100%;
@@ -780,11 +525,7 @@
       justify-content: center;
       gap: 6px;
     }
-
-    .btn-indigo:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
+    .btn-indigo:disabled { opacity: 0.6; cursor: wait; }
 
     .btn-soft {
       background: var(--surface-2);
@@ -797,7 +538,6 @@
       font-weight: 600;
       cursor: pointer;
     }
-
     .btn-danger-soft {
       background: var(--rose-tint);
       color: var(--rose);
@@ -829,25 +569,9 @@
       outline: none;
       transition: border-color 0.18s ease, background-color 0.18s ease;
     }
-
-    textarea {
-      resize: none;
-      min-height: 84px;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: var(--ink-3);
-      -webkit-text-fill-color: var(--ink-3);
-      opacity: 1;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: var(--accent);
-      background: var(--surface);
-      caret-color: var(--ink);
-    }
+    textarea { resize: none; min-height: 84px; }
+    input::placeholder, textarea::placeholder { color: var(--ink-3); -webkit-text-fill-color: var(--ink-3); opacity: 1; }
+    input:focus, textarea:focus { border-color: var(--accent); background: var(--surface); caret-color: var(--ink); }
 
     .ai-chat-reply {
       margin-top: 12px;
@@ -861,18 +585,8 @@
       white-space: pre-line;
     }
 
-    .protocol-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .protocol-item {
-      background: var(--surface-2);
-      border-radius: 16px;
-      padding: 14px 16px;
-    }
-
+    .protocol-stack { display: flex; flex-direction: column; gap: 10px; }
+    .protocol-item { background: var(--surface-2); border-radius: 16px; padding: 14px 16px; }
     .protocol-badge {
       display: inline-block;
       font-size: 11px;
@@ -883,41 +597,16 @@
       border-radius: 6px;
       margin-bottom: 6px;
     }
-
     .badge-gyn { background: var(--accent-bg); color: var(--accent); }
     .badge-psy { background: var(--indigo-bg); color: var(--indigo); }
     .badge-hist { background: var(--rose-bg); color: var(--rose); }
     .badge-steps { background: var(--amber-bg); color: var(--amber); }
 
-    .protocol-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 4px;
-    }
+    .protocol-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .protocol-text { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
 
-    .protocol-text {
-      font-size: 14.5px;
-      line-height: 1.55;
-      color: var(--ink-2);
-    }
-
-    .step-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .step-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-size: 14px;
-      line-height: 1.48;
-      color: var(--ink-2);
-    }
-
+    .step-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .step-row { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.48; color: var(--ink-2); }
     .step-num {
       width: 22px;
       height: 22px;
@@ -943,20 +632,8 @@
       gap: 12px;
       margin-bottom: 8px;
     }
-
-    .tip-action-title {
-      font-size: 14.5px;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
-    .tip-action-sub {
-      font-size: 13px;
-      color: var(--ink-2);
-      margin-top: 2px;
-      line-height: 1.4;
-    }
-
+    .tip-action-title { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+    .tip-action-sub { font-size: 13px; color: var(--ink-2); margin-top: 2px; line-height: 1.4; }
     .btn-helped-toggle {
       flex-shrink: 0;
       padding: 9px 12px;
@@ -969,12 +646,7 @@
       font-weight: 600;
       cursor: pointer;
     }
-
-    .btn-helped-toggle.checked {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #FFFFFF;
-    }
+    .btn-helped-toggle.checked { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
 
     .modal-backdrop {
       position: fixed;
@@ -989,11 +661,7 @@
       padding: 12px;
       padding-bottom: max(16px, env(safe-area-inset-bottom));
     }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
+    .modal-backdrop.open { display: flex; }
     .modal-sheet {
       width: 100%;
       max-width: 430px;
@@ -1004,36 +672,10 @@
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
     }
 
-    .cal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .cal-month-title {
-      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
-      font-size: 17px;
-      font-weight: 700;
-      text-transform: capitalize;
-    }
-
-    .cal-weekdays {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-3);
-      margin-bottom: 8px;
-    }
-
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-month-title { font-family: "Plus Jakarta Sans", "Manrope", sans-serif; font-size: 17px; font-weight: 700; text-transform: capitalize; }
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; font-weight: 600; color: var(--ink-3); margin-bottom: 8px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
     .cal-cell {
       aspect-ratio: 1;
       border-radius: 14px;
@@ -1050,69 +692,16 @@
       position: relative;
       cursor: pointer;
     }
-
-    .cal-cell.empty {
-      background: transparent;
-      cursor: default;
-    }
-
-    .cal-cell.is-period {
-      background: var(--rose-solid);
-      color: #FFFFFF;
-    }
-
-    .cal-cell.is-predicted-period {
-      background: var(--rose-tint);
-      color: var(--rose);
-      border: 1.5px dashed var(--rose);
-    }
-
-    .cal-cell.is-ovulation {
-      background: var(--accent-tint);
-      color: var(--accent);
-    }
-
-    .cal-cell.is-predicted-ovulation {
-      background: var(--accent-tint);
-      color: var(--accent);
-      border: 1.5px dashed var(--accent);
-    }
-
-    .cal-cell.is-today {
-      box-shadow: inset 0 0 0 2px var(--ink);
-    }
-
-    .cal-cell.is-selected {
-      outline: 2.5px solid var(--accent);
-      outline-offset: 1px;
-    }
-
-    .cal-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: currentColor;
-      position: absolute;
-      bottom: 4px;
-      opacity: 0.85;
-    }
-
-    .cal-legend {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 12px;
-      color: var(--ink-2);
-      margin-top: 14px;
-    }
-
-    .cal-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 16px;
-    }
+    .cal-cell.empty { background: transparent; cursor: default; }
+    .cal-cell.is-period { background: var(--rose-solid); color: #FFFFFF; }
+    .cal-cell.is-predicted-period { background: var(--rose-tint); color: var(--rose); border: 1.5px dashed var(--rose); }
+    .cal-cell.is-ovulation { background: var(--accent-tint); color: var(--accent); }
+    .cal-cell.is-predicted-ovulation { background: var(--accent-tint); color: var(--accent); border: 1.5px dashed var(--accent); }
+    .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ink); }
+    .cal-cell.is-selected { outline: 2.5px solid var(--accent); outline-offset: 1px; }
+    .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; position: absolute; bottom: 4px; opacity: 0.85; }
+    .cal-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--ink-2); margin-top: 14px; }
+    .cal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
 
     .filter-row {
       display: flex;
@@ -1122,11 +711,7 @@
       margin-bottom: 10px;
       scrollbar-width: none;
     }
-
-    .filter-row::-webkit-scrollbar {
-      display: none;
-    }
-
+    .filter-row::-webkit-scrollbar { display: none; }
     .filter-pill {
       background: var(--surface-2);
       border: none;
@@ -1139,11 +724,7 @@
       cursor: pointer;
       white-space: nowrap;
     }
-
-    .filter-pill.active {
-      background: var(--ink);
-      color: var(--bg);
-    }
+    .filter-pill.active { background: var(--ink); color: var(--bg); }
 
     .chart-wrap {
       background: var(--bg);
@@ -1162,46 +743,13 @@
       color: var(--ink-2);
     }
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-tile { background: var(--surface-2); border-radius: 16px; padding: 14px; }
+    .stat-tile-label { font-size: 13px; color: var(--ink-2); }
+    .stat-tile-val { font-family: "Plus Jakarta Sans", "Manrope", sans-serif; font-size: 20px; font-weight: 700; margin-top: 4px; }
 
-    .stat-tile {
-      background: var(--surface-2);
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .stat-tile-label {
-      font-size: 13px;
-      color: var(--ink-2);
-    }
-
-    .stat-tile-val {
-      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .flower-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 18px 10px 10px;
-    }
-
-    .flower-viewport {
-      position: relative;
-      width: 220px;
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
+    .flower-stage { display: flex; flex-direction: column; align-items: center; padding: 18px 10px 10px; }
+    .flower-viewport { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
     .flower-motion {
       width: 176px;
       height: 176px;
@@ -1212,22 +760,9 @@
       transform: translate3d(0, 0, 0) scale(0.86) rotate(0deg);
       transition: transform 3.6s cubic-bezier(0.37, 0, 0.63, 1);
     }
-
-    .flower-motion.phase-inhale {
-      transition-duration: 3.8s;
-      transform: translate3d(0, 0, 0) scale(1.18) rotate(22deg);
-    }
-
-    .flower-motion.phase-topup {
-      transition-duration: 1.5s;
-      transform: translate3d(0, 0, 0) scale(1.26) rotate(34deg);
-    }
-
-    .flower-motion.phase-exhale {
-      transition-duration: 5.4s;
-      transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg);
-    }
-
+    .flower-motion.phase-inhale { transition-duration: 3.8s; transform: translate3d(0, 0, 0) scale(1.18) rotate(22deg); }
+    .flower-motion.phase-topup { transition-duration: 1.5s; transform: translate3d(0, 0, 0) scale(1.26) rotate(34deg); }
+    .flower-motion.phase-exhale { transition-duration: 5.4s; transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg); }
     .flower-prompt {
       position: absolute;
       inset: 0;
@@ -1242,13 +777,7 @@
       padding: 28px;
       pointer-events: none;
     }
-
-    .flower-subprompt {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--ink-2);
-      margin-top: 2px;
-    }
+    .flower-subprompt { font-size: 12px; font-weight: 500; color: var(--ink-2); margin-top: 2px; }
 
     .tab-bar {
       position: fixed;
@@ -1267,7 +796,6 @@
       z-index: 100;
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
-
     .tab-item {
       background: none;
       border: none;
@@ -1283,26 +811,11 @@
       border-radius: 16px;
       cursor: pointer;
     }
+    .tab-item.active { color: var(--ink); }
+    .tab-item svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 2; }
 
-    .tab-item.active {
-      color: var(--ink);
-    }
-
-    .tab-item svg {
-      width: 21px;
-      height: 21px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-    }
-
-    .view {
-      display: none;
-    }
-
-    .view.active {
-      display: block;
-    }
+    .view { display: none; }
+    .view.active { display: block; }
 
     .toast {
       position: fixed;
@@ -1320,10 +833,7 @@
       pointer-events: none;
       transition: opacity 0.2s ease;
     }
-
-    .toast.show {
-      opacity: 1;
-    }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
@@ -1505,51 +1015,24 @@
           <button class="accordion-header" onclick="toggleAccordion('acc-context')">
             <div>
               <div>Эмоции и ощущения</div>
-              <div class="accordion-summary" id="sum-context">Спокойствие · 5</div>
+              <div class="accordion-summary" id="sum-context">Отметить интенсивность</div>
             </div>
             <span class="accordion-chevron">⌄</span>
           </button>
           <div class="accordion-body">
             <div class="sub-section-header">
-              <span class="field-label">Эмоции</span>
+              <span class="field-label">Эмоции (0–10)</span>
             </div>
-            <div class="chip-grid" id="basicEmotionChips">
-              <div class="chip active" data-val="Спокойствие">Спокойствие</div>
-              <div class="chip" data-val="Подъём">Подъём</div>
-              <div class="chip" data-val="Грусть">Грусть</div>
-              <div class="chip" data-val="Тревога">Тревога</div>
-              <div class="chip" data-val="Раздражение">Раздражение</div>
-              <div class="chip" data-val="Усталость">Усталость</div>
-            </div>
-
-            <div class="sub-section-header">
-              <span class="field-label">Оттенки</span>
-            </div>
-            <div class="chip-grid" id="nuancedEmotionChips">
-              <div class="chip" data-val="Слезливость">Слезливость</div>
-              <div class="chip" data-val="Апатия">Апатия</div>
-              <div class="chip" data-val="Туман в голове">Туман в голове</div>
-              <div class="chip" data-val="Уязвимость">Уязвимость</div>
-              <div class="chip" data-val="Перегруз">Перегруз</div>
-              <div class="chip" data-val="Внутреннее напряжение">Напряжение</div>
-            </div>
-
-            <div id="emotionIntensityContainer" style="display:none;">
-              <div class="sub-section-header">
-                <span class="field-label">Уровень эмоций (1–10)</span>
-              </div>
-              <div class="emotion-levels-box" id="emotionIntensitySliders"></div>
-            </div>
+            <div class="emotion-sliders-stack" id="allEmotionSliders"></div>
 
             <div class="sub-section-header">
               <span class="field-label">Ощущения и факторы</span>
             </div>
             <div class="chip-grid" id="contextChips">
-              <div class="chip" data-val="Болезненность груди">Грудь</div>
+              <div class="chip" data-val="Боль в груди">Боль в груди</div>
               <div class="chip" data-val="Недосып">Недосып</div>
               <div class="chip" data-val="Стресс">Стресс</div>
-              <div class="chip" data-val="Отёки / тяга к сладкому">Отёки / сладкое</div>
-              <div class="chip" data-val="Обезболивающее">Обезболивающее</div>
+              <div class="chip" data-val="Отёки">Отёки</div>
             </div>
           </div>
         </div>
@@ -1581,8 +1064,8 @@
           </div>
 
           <div class="protocol-item" id="aiPatternsBox" style="display:none;">
-            <span class="protocol-badge badge-hist">Динамика</span>
-            <div class="protocol-title">Что меняется по дням</div>
+            <span class="protocol-badge badge-hist">Паттерны и напоминания</span>
+            <div class="protocol-title">Что повторяется в твоём ритме</div>
             <div class="protocol-text" id="patternsBody"></div>
           </div>
 
@@ -1603,12 +1086,11 @@
       <div class="card ai-highlight" id="aiQuickChatCard" style="display:none;">
         <div class="card-top">
           <span class="card-title">Спросить ИИ</span>
-          <span class="card-sub">Без сохранения</span>
         </div>
-        <textarea id="aiQuickInput" rows="3" placeholder="Задай вопрос или выпиши тревожные мысли..."></textarea>
+        <textarea id="aiQuickInput" rows="3"></textarea>
         <div style="display:flex; gap:8px; margin-top:10px;">
           <button class="btn-indigo" style="height:44px; font-size:14px;" id="btnSendQuickAi" onclick="sendQuickAiQuestion()">
-            Ответить
+            Спросить
           </button>
           <button class="btn-soft" style="height:44px; display:none;" id="btnClearQuickAi" onclick="clearQuickAiChat()">
             Очистить
@@ -1625,7 +1107,7 @@
         <div id="actionableTipsList"></div>
 
         <div style="display:flex; gap:8px; margin-top:12px;">
-          <input type="text" id="customHelpInput" placeholder="Что ещё помогло..." />
+          <input type="text" id="customHelpInput" />
           <button class="btn-soft" style="white-space:nowrap;" onclick="addCustomHelped()">Помогло</button>
         </div>
 
@@ -1638,6 +1120,7 @@
       <div class="card">
         <div class="card-top">
           <span class="card-title">График</span>
+          <span class="card-sub" id="chartEntriesCount"></span>
         </div>
 
         <div class="filter-row" id="chartFilters">
@@ -1757,7 +1240,7 @@
           <span class="card-title">Gemini</span>
           <span class="card-sub" id="geminiKeyStatusBadge"></span>
         </div>
-        <input type="password" id="setGeminiKey" placeholder="AIza..." autocomplete="off" />
+        <input type="password" id="setGeminiKey" autocomplete="off" />
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
           <button class="btn-indigo" style="height:44px; font-size:14px;" onclick="saveAndTestGeminiKey()" id="btnTestGemini">
             Сохранить и проверить
@@ -1869,14 +1352,12 @@
       document.addEventListener('focusin', (e) => {
         const el = e.target;
         if (!el || !['INPUT', 'TEXTAREA'].includes(el.tagName)) return;
-        if (['date'].includes(el.type)) return;
+        if (el.type === 'date') return;
 
         document.body.classList.add('keyboard-open');
         setTimeout(() => {
           updateViewportOffset();
-          try {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          } catch (err) {}
+          try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {}
         }, 280);
       });
 
@@ -1891,18 +1372,10 @@
       });
     }
 
-    function hapticImpact(style = 'light') {
-      try { tg?.HapticFeedback?.impactOccurred(style); } catch (e) {}
-    }
-    function hapticSelect() {
-      try { tg?.HapticFeedback?.selectionChanged(); } catch (e) {}
-    }
-    function hapticSuccess() {
-      try { tg?.HapticFeedback?.notificationOccurred('success'); } catch (e) {}
-    }
-    function hapticError() {
-      try { tg?.HapticFeedback?.notificationOccurred('error'); } catch (e) {}
-    }
+    function hapticImpact(style = 'light') { try { tg?.HapticFeedback?.impactOccurred(style); } catch (e) {} }
+    function hapticSelect() { try { tg?.HapticFeedback?.selectionChanged(); } catch (e) {} }
+    function hapticSuccess() { try { tg?.HapticFeedback?.notificationOccurred('success'); } catch (e) {} }
+    function hapticError() { try { tg?.HapticFeedback?.notificationOccurred('error'); } catch (e) {} }
 
     function formatLocalISO(dateObj) {
       const y = dateObj.getFullYear();
@@ -1935,23 +1408,50 @@
       return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
     }
 
-    const STORAGE_KEY = 'carezze_v1';
-    const LEGACY_KEYS = ['ritm_clean_v9', 'ritm_clean_v8', 'ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+    const STORAGE_KEY = 'carezze_v2';
+    const LEGACY_KEYS = ['carezze_v1', 'ritm_clean_v9', 'ritm_clean_v8', 'ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+
+    const ALL_EMOTIONS = [
+      'Спокойствие',
+      'Подъём',
+      'Грусть',
+      'Тревога',
+      'Раздражение',
+      'Усталость',
+      'Слезливость',
+      'Апатия',
+      'Туман в голове',
+      'Уязвимость',
+      'Перегруз',
+      'Напряжение'
+    ];
 
     const EMOTION_PALETTE = {
-      'Тревога': { color: '#F97316', bg: 'rgba(249, 115, 22, 0.16)' },
-      'Раздражение': { color: '#E11D48', bg: 'rgba(225, 29, 72, 0.16)' },
-      'Грусть': { color: '#0284C7', bg: 'rgba(2, 132, 199, 0.16)' },
-      'Спокойствие': { color: '#10B981', bg: 'rgba(16, 185, 129, 0.16)' },
-      'Подъём': { color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.16)' },
-      'Усталость': { color: '#6366F1', bg: 'rgba(99, 102, 241, 0.16)' },
-      'Слезливость': { color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.16)' },
-      'Апатия': { color: '#64748B', bg: 'rgba(100, 116, 139, 0.16)' },
-      'Туман в голове': { color: '#818CF8', bg: 'rgba(129, 140, 248, 0.16)' },
-      'Уязвимость': { color: '#EC4899', bg: 'rgba(236, 72, 153, 0.16)' },
-      'Перегруз': { color: '#D97706', bg: 'rgba(217, 119, 6, 0.16)' },
-      'Внутреннее напряжение': { color: '#F43F5E', bg: 'rgba(244, 63, 94, 0.16)' }
+      'Тревога': { color: '#F97316', bg: 'rgba(249, 115, 22, 0.18)' },
+      'Раздражение': { color: '#E11D48', bg: 'rgba(225, 29, 72, 0.18)' },
+      'Грусть': { color: '#0284C7', bg: 'rgba(2, 132, 199, 0.18)' },
+      'Спокойствие': { color: '#10B981', bg: 'rgba(16, 185, 129, 0.18)' },
+      'Подъём': { color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.18)' },
+      'Усталость': { color: '#6366F1', bg: 'rgba(99, 102, 241, 0.18)' },
+      'Слезливость': { color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.18)' },
+      'Апатия': { color: '#64748B', bg: 'rgba(100, 116, 139, 0.18)' },
+      'Туман в голове': { color: '#818CF8', bg: 'rgba(129, 140, 248, 0.18)' },
+      'Уязвимость': { color: '#EC4899', bg: 'rgba(236, 72, 153, 0.18)' },
+      'Перегруз': { color: '#D97706', bg: 'rgba(217, 119, 6, 0.18)' },
+      'Напряжение': { color: '#F43F5E', bg: 'rgba(244, 63, 94, 0.18)' }
     };
+
+    function createDefaultEmotionLevels() {
+      const obj = {};
+      ALL_EMOTIONS.forEach(em => { obj[em] = 0; });
+      return obj;
+    }
+
+    function normalizeContextLabel(label) {
+      if (label === 'Болезненность груди') return 'Боль в груди';
+      if (label === 'Отёки / тяга к сладкому') return 'Отёки';
+      return label;
+    }
 
     let state = {
       onboarded: false,
@@ -1973,7 +1473,7 @@
 
     let isEditingDay = true;
     let metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
-    let emotionLevels = { 'Спокойствие': 5 };
+    let emotionLevels = createDefaultEmotionLevels();
     let tempIsPeriod = false;
     let tempIsOvulation = false;
     let tempIntimacy = false;
@@ -1989,54 +1489,30 @@
     let isBreathing = false;
 
     function hasTelegramCloud() {
-      try {
-        return Boolean(tg && tg.CloudStorage && typeof tg.CloudStorage.getItem === 'function');
-      } catch (e) {
-        return false;
-      }
+      try { return Boolean(tg && tg.CloudStorage && typeof tg.CloudStorage.getItem === 'function'); } catch (e) { return false; }
     }
-
     function cloudGet(key) {
       return new Promise(resolve => {
         if (!hasTelegramCloud()) return resolve(null);
-        try {
-          tg.CloudStorage.getItem(key, (err, val) => resolve(err ? null : (val || null)));
-        } catch (e) {
-          resolve(null);
-        }
+        try { tg.CloudStorage.getItem(key, (err, val) => resolve(err ? null : (val || null))); } catch (e) { resolve(null); }
       });
     }
-
     function cloudSet(key, val) {
       return new Promise(resolve => {
         if (!hasTelegramCloud()) return resolve(false);
-        try {
-          tg.CloudStorage.setItem(key, val, (err) => resolve(!err));
-        } catch (e) {
-          resolve(false);
-        }
+        try { tg.CloudStorage.setItem(key, val, (err) => resolve(!err)); } catch (e) { resolve(false); }
       });
     }
-
     function cloudGetKeys() {
       return new Promise(resolve => {
         if (!hasTelegramCloud()) return resolve([]);
-        try {
-          tg.CloudStorage.getKeys((err, keys) => resolve(err ? [] : (keys || [])));
-        } catch (e) {
-          resolve([]);
-        }
+        try { tg.CloudStorage.getKeys((err, keys) => resolve(err ? [] : (keys || []))); } catch (e) { resolve([]); }
       });
     }
-
     function cloudRemove(keys) {
       return new Promise(resolve => {
         if (!hasTelegramCloud() || !keys.length) return resolve(false);
-        try {
-          tg.CloudStorage.removeItems(keys, () => resolve(true));
-        } catch (e) {
-          resolve(false);
-        }
+        try { tg.CloudStorage.removeItems(keys, () => resolve(true)); } catch (e) { resolve(false); }
       });
     }
 
@@ -2052,7 +1528,7 @@
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 15)
       });
-      await cloudSet('carezze1_meta', metaPayload);
+      await cloudSet('carezze2_meta', metaPayload);
 
       const byMonth = {};
       Object.entries(state.entries).forEach(([iso, entry]) => {
@@ -2074,7 +1550,7 @@
       });
 
       for (const [ym, monthEntries] of Object.entries(byMonth)) {
-        await cloudSet(`carezze1_m_${ym}`, JSON.stringify(monthEntries));
+        await cloudSet(`carezze2_m_${ym}`, JSON.stringify(monthEntries));
       }
     }
 
@@ -2093,10 +1569,7 @@
         if (!raw) {
           for (const lk of LEGACY_KEYS) {
             const legacyRaw = localStorage.getItem(lk);
-            if (legacyRaw) {
-              raw = legacyRaw;
-              break;
-            }
+            if (legacyRaw) { raw = legacyRaw; break; }
           }
         }
         if (raw) {
@@ -2114,10 +1587,10 @@
 
       if (hasTelegramCloud()) {
         document.getElementById('cloudSyncBadge').textContent = 'Cloud';
-        const metaRaw = (await cloudGet('carezze1_meta'))
+        const metaRaw = (await cloudGet('carezze2_meta'))
+          || (await cloudGet('carezze1_meta'))
           || (await cloudGet('ritm9_meta'))
-          || (await cloudGet('ritm8_meta'))
-          || (await cloudGet('ritm7_meta'));
+          || (await cloudGet('ritm8_meta'));
         if (metaRaw) {
           try {
             const meta = JSON.parse(metaRaw);
@@ -2127,7 +1600,7 @@
 
             const keys = await cloudGetKeys();
             const monthKeys = keys.filter(k =>
-              k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_') || k.startsWith('ritm7_m_')
+              k.startsWith('carezze2_m_') || k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_')
             );
             for (const mk of monthKeys) {
               const mRaw = await cloudGet(mk);
@@ -2264,9 +1737,7 @@
             if (!res.ok) {
               const errMsg = data?.error?.message || `HTTP ${res.status}`;
               lastError = errMsg;
-              if (res.status === 404 || res.status === 400 || res.status === 403) {
-                continue;
-              }
+              if (res.status === 404 || res.status === 400 || res.status === 403) continue;
               throw new Error(errMsg);
             }
 
@@ -2286,7 +1757,6 @@
       const key = document.getElementById('setGeminiKey').value.trim();
       const fb = document.getElementById('geminiTestFeedback');
       const btn = document.getElementById('btnTestGemini');
-
       if (!key) return;
 
       btn.disabled = true;
@@ -2357,26 +1827,19 @@
           isDragging = true;
           el.setPointerCapture(e.pointerId);
         }
-        if (isDragging) {
-          updateFromEvent(e.clientX);
-        }
+        if (isDragging) updateFromEvent(e.clientX);
       });
 
       el.addEventListener('pointerup', (e) => {
         if (!isEditingDay) return;
         const dx = Math.abs(e.clientX - startX);
         const dy = Math.abs(e.clientY - startY);
-        if (!isDragging && dx < 6 && dy < 6) {
-          updateFromEvent(e.clientX);
-        }
+        if (!isDragging && dx < 6 && dy < 6) updateFromEvent(e.clientX);
         isDragging = false;
         startX = 0;
       });
 
-      el.addEventListener('pointercancel', () => {
-        isDragging = false;
-        startX = 0;
-      });
+      el.addEventListener('pointercancel', () => { isDragging = false; startX = 0; });
     }
 
     function initCCSliders() {
@@ -2406,50 +1869,38 @@
       ['mood', 'energy', 'pain', 'libido'].forEach(renderCCSlider);
     }
 
-    function renderEmotionIntensitySliders() {
-      const emos = getSelectedEmotions();
-      const container = document.getElementById('emotionIntensityContainer');
-      const list = document.getElementById('emotionIntensitySliders');
-
-      if (!emos.length) {
-        container.style.display = 'none';
-        list.innerHTML = '';
-        updateSummaries();
-        return;
-      }
-
-      container.style.display = 'block';
+    function renderAllEmotionSliders() {
+      const list = document.getElementById('allEmotionSliders');
       list.innerHTML = '';
 
-      emos.forEach(emo => {
-        if (typeof emotionLevels[emo] !== 'number') {
-          emotionLevels[emo] = 5;
-        }
-        const val = emotionLevels[emo];
+      ALL_EMOTIONS.forEach(emo => {
+        const val = typeof emotionLevels[emo] === 'number' ? emotionLevels[emo] : 0;
         const pal = EMOTION_PALETTE[emo] || { bg: 'var(--accent-bg)' };
-        const pct = ((val - 1) / 9) * 100;
+        const pct = (val / 10) * 100;
 
         const row = document.createElement('div');
         row.className = 'cc-slider compact';
-        row.dataset.min = '1';
+        row.dataset.min = '0';
         row.dataset.max = '10';
         row.innerHTML = `
-          <div class="cc-fill" style="background:${pal.bg}; width:${Math.max(10, pct)}%;"></div>
+          <div class="cc-fill" style="background:${pal.bg}; width:${val === 0 ? 0 : Math.max(10, pct)}%;"></div>
           <span class="cc-label">${escapeHtml(emo)}</span>
-          <span class="cc-value">${val}</span>
+          <span class="cc-value ${val === 0 ? 'is-zero' : ''}">${val}</span>
         `;
 
         attachHorizontalSlider(
           row,
-          () => emotionLevels[emo] ?? 5,
+          () => emotionLevels[emo] ?? 0,
           (newVal) => {
             emotionLevels[emo] = newVal;
             updateSummaries();
           },
           (newVal) => {
-            const p = ((newVal - 1) / 9) * 100;
-            row.querySelector('.cc-fill').style.width = `${Math.max(10, p)}%`;
-            row.querySelector('.cc-value').textContent = newVal;
+            const p = (newVal / 10) * 100;
+            row.querySelector('.cc-fill').style.width = `${newVal === 0 ? 0 : Math.max(10, p)}%`;
+            const valSpan = row.querySelector('.cc-value');
+            valSpan.textContent = newVal;
+            valSpan.classList.toggle('is-zero', newVal === 0);
           }
         );
 
@@ -2600,16 +2051,12 @@
       if (tempIsPeriod) {
         mensBlock.style.display = 'block';
         ovulBlock.style.display = 'none';
-        if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) {
-          tempDischarge = 'Умеренные';
-        }
+        if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) tempDischarge = 'Умеренные';
         renderDischargeButtons();
       } else if (info.showOvulationOption) {
         mensBlock.style.display = 'none';
         ovulBlock.style.display = 'block';
-        if (!['Обычные', 'Кремовые', 'Прозрачные'].includes(tempDischarge)) {
-          tempDischarge = 'Обычные';
-        }
+        if (!['Обычные', 'Кремовые', 'Прозрачные'].includes(tempDischarge)) tempDischarge = 'Обычные';
         renderDischargeButtons();
       } else {
         mensBlock.style.display = 'none';
@@ -2634,9 +2081,7 @@
       tempIsPeriod = !tempIsPeriod;
       if (tempIsPeriod) {
         tempIsOvulation = false;
-        if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) {
-          tempDischarge = 'Умеренные';
-        }
+        if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) tempDischarge = 'Умеренные';
       } else {
         tempDischarge = '';
       }
@@ -2647,13 +2092,12 @@
         state.entries[selectedDate].discharge = tempIsPeriod ? tempDischarge : '';
         delete state.entries[selectedDate].aiAnalysis;
         persistLocalAndCloud(selectedDate.slice(0, 7));
-        if (!isEditingDay) {
-          renderSavedSummaryCard(state.entries[selectedDate]);
-        }
+        if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
       }
 
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab();
+      renderAnalytics();
     }
 
     function startNewCycleHere() {
@@ -2665,10 +2109,7 @@
       tempDischarge = 'Умеренные';
       syncSettingsInputs();
 
-      const emos = getSelectedEmotions();
-      const levelsSnapshot = {};
-      emos.forEach(em => { levelsSnapshot[em] = emotionLevels[em] ?? 5; });
-
+      const activeEmos = getActiveEmotionsFromLevels(emotionLevels);
       if (!state.entries[selectedDate]) {
         state.entries[selectedDate] = {
           date: selectedDate,
@@ -2681,8 +2122,8 @@
           energy: metrics.energy,
           pain: metrics.pain,
           libido: metrics.libido,
-          emotions: emos,
-          emotionLevels: levelsSnapshot,
+          emotions: activeEmos,
+          emotionLevels: { ...emotionLevels },
           contexts: getSelectedContexts(),
           helped: []
         };
@@ -2696,6 +2137,7 @@
       updateHeaderAndContextControls();
       if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
       renderAdviceAndSelfCareTab();
+      renderAnalytics();
       showToast('Сохранено');
     }
 
@@ -2718,8 +2160,7 @@
     }
 
     function renderSoloResetButton() {
-      const btn = document.getElementById('btnSoloReset');
-      btn.classList.toggle('active', tempSoloReset);
+      document.getElementById('btnSoloReset').classList.toggle('active', tempSoloReset);
     }
 
     function toggleOvulation() {
@@ -2736,6 +2177,7 @@
       }
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab();
+      renderAnalytics();
     }
 
     function selectDischarge(val) {
@@ -2749,10 +2191,10 @@
       document.getElementById(id).classList.toggle('open');
     }
 
-    function getSelectedEmotions() {
-      const basic = Array.from(document.querySelectorAll('#basicEmotionChips .chip.active')).map(c => c.dataset.val);
-      const nuanced = Array.from(document.querySelectorAll('#nuancedEmotionChips .chip.active-indigo')).map(c => c.dataset.val);
-      return [...basic, ...nuanced];
+    function getActiveEmotionsFromLevels(levelsObj) {
+      return ALL_EMOTIONS
+        .filter(em => (levelsObj[em] ?? 0) > 0)
+        .sort((a, b) => (levelsObj[b] ?? 0) - (levelsObj[a] ?? 0));
     }
 
     function getSelectedContexts() {
@@ -2760,43 +2202,19 @@
     }
 
     function updateSummaries() {
-      const emos = getSelectedEmotions().map(e => `${e} ${emotionLevels[e] ?? 5}`);
+      const activeEmos = getActiveEmotionsFromLevels(emotionLevels).map(e => `${e} ${emotionLevels[e]}`);
       const contexts = getSelectedContexts();
-      const combined = [...emos, ...contexts];
+      const combined = [...activeEmos, ...contexts];
       document.getElementById('sum-context').textContent = combined.length
         ? combined.slice(0, 3).join(' · ') + (combined.length > 3 ? ` +${combined.length - 3}` : '')
-        : '';
+        : 'Отметить интенсивность';
     }
 
     function setupChips() {
-      document.querySelectorAll('#basicEmotionChips .chip').forEach(chip => {
-        chip.onclick = () => {
-          hapticSelect();
-          const emo = chip.dataset.val;
-          const willBeActive = !chip.classList.contains('active');
-          chip.classList.toggle('active', willBeActive);
-          if (willBeActive && typeof emotionLevels[emo] !== 'number') {
-            emotionLevels[emo] = 5;
-          }
-          renderEmotionIntensitySliders();
-        };
-      });
-      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(chip => {
-        chip.onclick = () => {
-          hapticSelect();
-          const emo = chip.dataset.val;
-          const willBeActive = !chip.classList.contains('active-indigo');
-          chip.classList.toggle('active-indigo', willBeActive);
-          if (willBeActive && typeof emotionLevels[emo] !== 'number') {
-            emotionLevels[emo] = 5;
-          }
-          renderEmotionIntensitySliders();
-        };
-      });
       document.querySelectorAll('#contextChips .chip').forEach(chip => {
         chip.onclick = () => {
           hapticSelect();
-          const isRose = chip.dataset.val.includes('Недосып') || chip.dataset.val.includes('Стресс') || chip.dataset.val.includes('груди');
+          const isRose = ['Боль в груди', 'Недосып', 'Стресс'].includes(chip.dataset.val);
           chip.classList.toggle(isRose ? 'active-rose' : 'active');
           updateSummaries();
         };
@@ -2812,6 +2230,27 @@
       loadDayForm();
     }
 
+    function buildLoadedEmotionLevels(entry) {
+      const levels = createDefaultEmotionLevels();
+      if (entry?.emotionLevels) {
+        Object.entries(entry.emotionLevels).forEach(([k, v]) => {
+          const normKey = k === 'Внутреннее напряжение' ? 'Напряжение' : k;
+          if (normKey in levels && typeof v === 'number') {
+            levels[normKey] = v;
+          }
+        });
+      }
+      if (Array.isArray(entry?.emotions)) {
+        entry.emotions.forEach(em => {
+          const normKey = em === 'Внутреннее напряжение' ? 'Напряжение' : em;
+          if (normKey in levels && levels[normKey] === 0 && !entry.emotionLevels) {
+            levels[normKey] = 5;
+          }
+        });
+      }
+      return levels;
+    }
+
     function loadDayForm() {
       const existing = state.entries[selectedDate];
 
@@ -2823,13 +2262,7 @@
           pain: existing.pain,
           libido: existing.libido
         };
-        const savedEmos = Array.isArray(existing.emotions) ? existing.emotions : ['Спокойствие'];
-        const loadedLevels = { ...(existing.emotionLevels || {}) };
-        savedEmos.forEach(em => {
-          if (typeof loadedLevels[em] !== 'number') loadedLevels[em] = 5;
-        });
-        emotionLevels = loadedLevels;
-
+        emotionLevels = buildLoadedEmotionLevels(existing);
         tempIsPeriod = Boolean(existing.isPeriod);
         tempIsOvulation = Boolean(existing.isOvulation);
         tempIntimacy = Boolean(existing.intimacy);
@@ -2843,7 +2276,7 @@
       } else {
         isEditingDay = true;
         metrics = { mood: 6, energy: 6, pain: 1, libido: 5 };
-        emotionLevels = { 'Спокойствие': 5 };
+        emotionLevels = createDefaultEmotionLevels();
         tempIsPeriod = false;
         tempIsOvulation = false;
         tempIntimacy = false;
@@ -2852,8 +2285,7 @@
 
         populateEditableInputs({
           mood: 6, energy: 6, pain: 1, libido: 5,
-          intimacy: false, soloReset: false, emotions: ['Спокойствие'],
-          emotionLevels: { 'Спокойствие': 5 }, contexts: []
+          intimacy: false, soloReset: false, emotionLevels, contexts: []
         });
         document.getElementById('savedSummaryCard').style.display = 'none';
         document.getElementById('editableDayForm').style.display = 'block';
@@ -2870,21 +2302,15 @@
       renderIntimacyButton();
       renderSoloResetButton();
 
-      const savedEmotions = Array.isArray(data.emotions) ? data.emotions : ['Спокойствие'];
-      document.querySelectorAll('#basicEmotionChips .chip').forEach(c => {
-        c.classList.toggle('active', savedEmotions.includes(c.dataset.val));
-      });
-      document.querySelectorAll('#nuancedEmotionChips .chip').forEach(c => {
-        c.classList.toggle('active-indigo', savedEmotions.includes(c.dataset.val));
-      });
+      const normContexts = (data.contexts || []).map(normalizeContextLabel);
       document.querySelectorAll('#contextChips .chip').forEach(c => {
         c.classList.remove('active', 'active-rose');
-        if ((data.contexts || []).includes(c.dataset.val)) {
-          const isRose = c.dataset.val.includes('Недосып') || c.dataset.val.includes('Стресс') || c.dataset.val.includes('груди');
+        if (normContexts.includes(c.dataset.val)) {
+          const isRose = ['Боль в груди', 'Недосып', 'Стресс'].includes(c.dataset.val);
           c.classList.add(isRose ? 'active-rose' : 'active');
         }
       });
-      renderEmotionIntensitySliders();
+      renderAllEmotionSliders();
     }
 
     function renderSavedSummaryCard(entry) {
@@ -2899,11 +2325,15 @@
       if (!entry.isPeriod && !entry.isOvulation && entry.discharge) tags.push(`Выделения: ${entry.discharge.toLowerCase()}`);
       if (entry.intimacy) tags.push('Близость ♥');
       if (entry.soloReset) tags.push('◈');
-      if (entry.emotions?.length) {
-        const levels = entry.emotionLevels || {};
-        tags.push(entry.emotions.map(em => typeof levels[em] === 'number' ? `${em} ${levels[em]}/10` : em).join(', '));
+
+      const levels = buildLoadedEmotionLevels(entry);
+      const activeEmos = getActiveEmotionsFromLevels(levels);
+      if (activeEmos.length) {
+        tags.push(activeEmos.map(em => `${em} ${levels[em]}/10`).join(', '));
       }
-      if (entry.contexts?.length) tags.push(entry.contexts.join(', '));
+
+      const normContexts = (entry.contexts || []).map(normalizeContextLabel);
+      if (normContexts.length) tags.push(normContexts.join(', '));
 
       document.getElementById('savedTagsLine').textContent = tags.join(' · ');
     }
@@ -2914,17 +2344,11 @@
       document.getElementById('savedSummaryCard').style.display = 'none';
       document.getElementById('editableDayForm').style.display = 'block';
       updateHeaderAndContextControls();
-      renderEmotionIntensitySliders();
+      renderAllEmotionSliders();
     }
 
     function saveCurrentDay() {
-      const emotions = getSelectedEmotions();
-      const finalEmotions = emotions.length ? emotions : ['Спокойствие'];
-      const finalLevels = {};
-      finalEmotions.forEach(em => {
-        finalLevels[em] = typeof emotionLevels[em] === 'number' ? emotionLevels[em] : 5;
-      });
-
+      const activeEmos = getActiveEmotionsFromLevels(emotionLevels);
       const contexts = getSelectedContexts();
       const prevHelped = state.entries[selectedDate]?.helped || [];
       const prevAi = state.entries[selectedDate]?.aiAnalysis;
@@ -2940,8 +2364,8 @@
         energy: metrics.energy,
         pain: metrics.pain,
         libido: metrics.libido,
-        emotions: finalEmotions,
-        emotionLevels: finalLevels,
+        emotions: activeEmos,
+        emotionLevels: { ...emotionLevels },
         contexts,
         helped: prevHelped,
         ...(prevAi ? { aiAnalysis: prevAi } : {})
@@ -2957,6 +2381,7 @@
       document.getElementById('editableDayForm').style.display = 'none';
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab();
+      renderAnalytics();
       showToast('Сохранено');
     }
 
@@ -3012,9 +2437,7 @@
       const todayISO = getTodayISO(0);
 
       let html = '';
-      for (let i = 0; i < startWeekday; i++) {
-        html += `<div class="cal-cell empty"></div>`;
-      }
+      for (let i = 0; i < startWeekday; i++) html += `<div class="cal-cell empty"></div>`;
 
       for (let day = 1; day <= daysInMonth; day++) {
         const cellDate = new Date(year, month, day, 12, 0, 0);
@@ -3023,15 +2446,10 @@
         const entry = state.entries[iso];
 
         const classes = ['cal-cell'];
-        if (entry?.isPeriod) {
-          classes.push('is-period');
-        } else if (info.isPredictedPeriod) {
-          classes.push('is-predicted-period');
-        } else if (entry?.isOvulation) {
-          classes.push('is-ovulation');
-        } else if (info.isPredictedOvulation) {
-          classes.push('is-predicted-ovulation');
-        }
+        if (entry?.isPeriod) classes.push('is-period');
+        else if (info.isPredictedPeriod) classes.push('is-predicted-period');
+        else if (entry?.isOvulation) classes.push('is-ovulation');
+        else if (info.isPredictedOvulation) classes.push('is-predicted-ovulation');
         if (iso === todayISO) classes.push('is-today');
         if (iso === selectedDate) classes.push('is-selected');
 
@@ -3047,9 +2465,6 @@
 
     function getCurrentWorkingEntry() {
       if (state.entries[selectedDate]) return state.entries[selectedDate];
-      const emos = getSelectedEmotions();
-      const levels = {};
-      emos.forEach(e => { levels[e] = emotionLevels[e] ?? 5; });
       return {
         date: selectedDate,
         mood: metrics.mood,
@@ -3061,15 +2476,43 @@
         intimacy: tempIntimacy,
         soloReset: tempSoloReset,
         discharge: tempDischarge,
-        emotions: emos,
-        emotionLevels: levels,
+        emotions: getActiveEmotionsFromLevels(emotionLevels),
+        emotionLevels: { ...emotionLevels },
         contexts: getSelectedContexts(),
         helped: []
       };
     }
 
+    function detectLocalPatterns(info) {
+      const allEntries = Object.values(state.entries);
+      if (allEntries.length < 4) return '';
+
+      const samePhaseEntries = allEntries.filter(e => e.date !== selectedDate && getCycleInfo(e.date).phaseCode === info.phaseCode);
+      const notes = [];
+
+      if (samePhaseEntries.length >= 2) {
+        const avgPain = (samePhaseEntries.reduce((s, e) => s + e.pain, 0) / samePhaseEntries.length).toFixed(1);
+        const avgMood = (samePhaseEntries.reduce((s, e) => s + e.mood, 0) / samePhaseEntries.length).toFixed(1);
+        const breastRate = samePhaseEntries.filter(e => (e.contexts || []).map(normalizeContextLabel).includes('Боль в груди')).length;
+        notes.push(`В этой фазе у тебя обычно настроение ~${avgMood}/10, боль ~${avgPain}/10.`);
+        if (breastRate >= 2) {
+          notes.push(`Боль в груди повторялась в ${breastRate} из ${samePhaseEntries.length} дней этой фазы.`);
+        }
+      }
+
+      const helpCounts = {};
+      allEntries.forEach(e => (e.helped || []).forEach(h => { helpCounts[h] = (helpCounts[h] || 0) + 1; }));
+      const topHelp = Object.entries(helpCounts).sort((a, b) => b[1] - a[1])[0];
+      if (topHelp) {
+        notes.push(`Чаще всего тебя выручало: «${topHelp[0]}» (${topHelp[1]} раз).`);
+      }
+
+      return notes.join(' ');
+    }
+
     function buildDefaultSteps(entry, info) {
-      const hasBreast = (entry.contexts || []).includes('Болезненность груди');
+      const normContexts = (entry.contexts || []).map(normalizeContextLabel);
+      const hasBreast = normContexts.includes('Боль в груди');
       if (entry.isPeriod || info.phaseCode === 'menstrual') {
         return [
           'Создай тепло для живота или поясницы и сними лишнюю нагрузку на первые часы.',
@@ -3132,14 +2575,18 @@
       const btnRunAi = document.getElementById('btnRunAi');
       const aiNote = document.getElementById('aiStatusNote');
 
-      const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
-      const levels = entry.emotionLevels || {};
-      const emosLabeled = emos.map(e => typeof levels[e] === 'number' ? `${e} (${levels[e]}/10)` : e);
-      const contexts = Array.isArray(entry.contexts) ? entry.contexts : [];
-      const hasBreast = contexts.includes('Болезненность груди');
-      const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
-      const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
-      const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
+      const levels = buildLoadedEmotionLevels(entry);
+      const activeEmos = getActiveEmotionsFromLevels(levels);
+      const emosLabeled = activeEmos.length
+        ? activeEmos.map(e => `${e} (${levels[e]}/10)`)
+        : ['Ровный фон'];
+
+      const normContexts = (entry.contexts || []).map(normalizeContextLabel);
+      const hasBreast = normContexts.includes('Боль в груди');
+      const hasEdema = normContexts.includes('Отёки');
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Перегруз'] ?? 0) >= 5;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5 || (levels['Уязвимость'] ?? 0) >= 5;
+      const hasLowMood = entry.mood <= 4 || (levels['Грусть'] ?? 0) >= 5 || (levels['Апатия'] ?? 0) >= 5;
 
       if (hasApiKey && entry.aiAnalysis) {
         gynH.textContent = info.phase;
@@ -3152,7 +2599,7 @@
           patBox.style.display = 'none';
         }
 
-        psyH.textContent = emosLabeled.join(' · ');
+        psyH.textContent = emosLabeled.slice(0, 3).join(' · ');
         psyB.textContent = entry.aiAnalysis.focus || '';
 
         const aiSteps = Array.isArray(entry.aiAnalysis.steps) && entry.aiAnalysis.steps.length
@@ -3165,44 +2612,56 @@
         btnRunAi.innerHTML = '<span>Обновить ИИ-разбор</span>';
         aiNote.textContent = '';
       } else {
-        patBox.style.display = 'none';
+        const localPatterns = detectLocalPatterns(info);
+        if (localPatterns) {
+          patBox.style.display = 'block';
+          patBody.textContent = localPatterns;
+        } else {
+          patBox.style.display = 'none';
+        }
+
         if (hasApiKey) {
           btnRunAi.innerHTML = '<span>ИИ-разбор</span>';
           aiNote.textContent = '';
         }
 
-        const breastNote = hasBreast
-          ? ' Чувствительность и болезненность груди часто связаны с гормональными колебаниями (эстроген/прогестерон) или задержкой жидкости — полезно выбрать мягкую посадку без давления.'
-          : '';
+        const extraBodyNotes = [];
+        if (hasBreast) {
+          extraBodyNotes.push('Боль в груди обычно связана с чувствительностью тканей к прогестерону и эстрогену или задержкой жидкости — лучше убрать жёсткое бельё и лишний кофеин.');
+        }
+        if (hasEdema) {
+          extraBodyNotes.push('Отёки чаще возникают во вторую фазу цикла из-за задержки воды; помогает чистая вода и меньше солёного вечером.');
+        }
+        const extraBodySuffix = extraBodyNotes.length ? ' ' + extraBodyNotes.join(' ') : '';
 
         if (info.isDelay) {
           gynH.textContent = `${info.phase} — тело и цикл`;
           gynB.textContent = (info.delayDays <= 7
             ? 'Цикл сместился: такое бывает при стрессе, недосыпе или сдвиге овуляции. Если была близость, полезно сделать тест и понаблюдать за самочувствием.'
-            : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ, чтобы проверить причину.') + breastNote;
+            : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ, чтобы проверить причину.') + extraBodySuffix;
         } else if (entry.pain >= 6) {
           gynH.textContent = 'Выраженные спазмы и боль';
-          gynB.textContent = ('Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают снять спазм.') + breastNote;
+          gynB.textContent = ('Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают снять спазм.') + extraBodySuffix;
         } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
           gynH.textContent = 'Овуляторное окно';
-          gynB.textContent = ('Эстрогены на пике, возможны короткие тянущие ощущения с одного бока, чувствительность груди и более прозрачные выделения. Тело часто легче откликается на движение и близость.') + breastNote;
+          gynB.textContent = ('Эстрогены на пике, возможны короткие тянущие ощущения с одного бока, чувствительность груди и более прозрачные выделения. Тело часто легче откликается на движение и близость.') + extraBodySuffix;
         } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
           gynH.textContent = `${info.phase} · День ${info.cycleDay}`;
           gynB.textContent = (entry.discharge === 'Обильные'
             ? 'Уровень эстрогена и прогестерона низкий, организм обновляет эндометрий. При обильных выделениях важно пить больше воды, следить за железом и не перегружать себя с утра.'
-            : 'Гормональный фон на минимуме, телу нужно больше восстановления и тепла. Даже если сил немного, мягкая разминка или прогулка без спешки обычно улучшают самочувствие.') + breastNote;
+            : 'Гормональный фон на минимуме, телу нужно больше восстановления и тепла. Даже если сил немного, мягкая разминка или прогулка без спешки обычно улучшают самочувствие.') + extraBodySuffix;
         } else if (info.phaseCode === 'late_luteal') {
           gynH.textContent = 'Предменструальное окно';
-          gynB.textContent = ('Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому и скачки энергии. Организму проще переносить ровный режим без резких скачков сахара.') + breastNote;
+          gynB.textContent = ('Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому и скачки энергии. Организму проще переносить ровный режим без резких скачков сахара.') + extraBodySuffix;
         } else if (info.phaseCode === 'early_luteal') {
           gynH.textContent = 'Лютеиновая фаза';
-          gynB.textContent = ('Преобладает прогестерон: обмен веществ немного замедляется, а потребность в спокойном ритме и регулярном питании растёт. Хорошее время для планомерных дел без рывков.') + breastNote;
+          gynB.textContent = ('Преобладает прогестерон: обмен веществ немного замедляется, а потребность в спокойном ритме и регулярном питании растёт. Хорошее время для планомерных дел без рывков.') + extraBodySuffix;
         } else {
           gynH.textContent = 'Фолликулярная фаза';
-          gynB.textContent = ('Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся активность, новые задачи и смена обстановки.') + breastNote;
+          gynB.textContent = ('Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся активность, новые задачи и смена обстановки.') + extraBodySuffix;
         }
 
-        psyH.textContent = emosLabeled.join(' · ');
+        psyH.textContent = emosLabeled.slice(0, 3).join(' · ');
         if (info.isDelay) {
           psyB.textContent = 'Неопределённость сама по себе выматывает. Постарайся не прокручивать худшие сценарии по кругу и опереться на конкретные шаги.';
         } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
@@ -3233,12 +2692,13 @@
     }
 
     function renderActionableTipsList(entry, info) {
-      const emos = Array.isArray(entry.emotions) ? entry.emotions : ['Спокойствие'];
-      const contexts = Array.isArray(entry.contexts) ? entry.contexts : [];
-      const hasBreast = contexts.includes('Болезненность груди');
-      const hasAnxiety = emos.some(e => ['Тревога', 'Внутреннее напряжение', 'Перегруз'].includes(e));
-      const hasIrritability = emos.some(e => ['Раздражение', 'Слезливость', 'Уязвимость'].includes(e));
-      const hasLowMood = entry.mood <= 4 || emos.some(e => ['Грусть', 'Апатия', 'Слезливость'].includes(e));
+      const levels = buildLoadedEmotionLevels(entry);
+      const normContexts = (entry.contexts || []).map(normalizeContextLabel);
+      const hasBreast = normContexts.includes('Боль в груди');
+      const hasEdema = normContexts.includes('Отёки');
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Перегруз'] ?? 0) >= 5;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5 || (levels['Уязвимость'] ?? 0) >= 5;
+      const hasLowMood = entry.mood <= 4 || (levels['Грусть'] ?? 0) >= 5 || (levels['Апатия'] ?? 0) >= 5;
 
       let tips = [];
 
@@ -3254,6 +2714,13 @@
             id: 'Мягкий топ без косточек и меньше кофеина',
             title: 'Мягкий топ без косточек и меньше кофеина',
             sub: 'Снижает давление и чувствительность груди при гормональных колебаниях.'
+          });
+        }
+        if (hasEdema) {
+          tips.push({
+            id: 'Чистая вода и меньше солёного вечером',
+            title: 'Чистая вода и меньше солёного вечером',
+            sub: 'Помогает быстрее вывести лишнюю жидкость и уменьшить тяжесть.'
           });
         }
         if (entry.pain >= 4 || entry.isPeriod) {
@@ -3354,15 +2821,23 @@
 
       const info = getCycleInfo(selectedDate);
       const current = getCurrentWorkingEntry();
-      const curLevels = current.emotionLevels || {};
-      const formattedEmos = (current.emotions || []).map(em => `${em}: ${curLevels[em] ?? 5}/10`).join(', ');
+      const curLevels = buildLoadedEmotionLevels(current);
+      const formattedEmos = ALL_EMOTIONS
+        .filter(em => (curLevels[em] ?? 0) > 0)
+        .map(em => `${em}: ${curLevels[em]}/10`)
+        .join(', ') || 'все эмоции около 0';
 
-      const recentHistory = Object.values(state.entries)
+      const allSorted = Object.values(state.entries)
         .filter(e => e.date !== selectedDate)
-        .sort((a, b) => b.date.localeCompare(a.date))
-        .slice(0, 25)
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+      const recentHistory = allSorted
+        .slice(0, 45)
         .map(e => {
           const ci = getCycleInfo(e.date);
+          const lv = buildLoadedEmotionLevels(e);
+          const activeLv = {};
+          ALL_EMOTIONS.forEach(em => { if ((lv[em] ?? 0) > 0) activeLv[em] = lv[em]; });
           return {
             date: e.date,
             cycleDay: ci.cycleDay,
@@ -3374,31 +2849,30 @@
             isPeriod: Boolean(e.isPeriod),
             isOvulation: Boolean(e.isOvulation),
             tensionRelief: Boolean(e.soloReset),
-            breastTenderness: (e.contexts || []).includes('Болезненность груди'),
             discharge: e.discharge || '',
-            emotions: e.emotions || [],
-            emotionLevels: e.emotionLevels || {},
-            contexts: e.contexts || [],
+            emotionLevels: activeLv,
+            contexts: (e.contexts || []).map(normalizeContextLabel),
             helped: e.helped || []
           };
         });
 
       const helpedCounts = {};
       Object.values(state.entries).forEach(e => {
-        (e.helped || []).forEach(h => {
-          helpedCounts[h] = (helpedCounts[h] || 0) + 1;
-        });
+        (e.helped || []).forEach(h => { helpedCounts[h] = (helpedCounts[h] || 0) + 1; });
       });
+
+      const hasRichHistory = recentHistory.length >= 3;
 
       const prompt = `Ты пишешь как живой, внимательный человек — врач-гинеколог и психолог в одном лице, который общается просто и по делу, на «ты».
 Строго запрещены ИИ-штампы, канцелярит и пустые фразы: не пиши «важно помнить», «в заключение», «комплексный подход», «не стоит забывать», «прислушайся к своему телу», «начни с малого» как общую заглушку. Говори конкретно про факты этого дня и цикла, живым разговорным языком.
 Если tensionRelief=true, учитывай мягкую телесную разрядку для снятия напряжения, но называй её нейтрально ("телесная разрядка", "снятие напряжения") без прямых слов.
-Если в факторах есть «Болезненность груди» или breastTenderness=true в истории, обязательно разбери это телесно и дай практичный шаг.
+Учитывай все факторы: «Боль в груди», «Недосып», «Стресс», «Отёки» и интенсивность всех эмоций (0–10).
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.len} дн., длительность месячных: ${info.pLen} дн.
 - Дата: ${selectedDate}
 - День цикла: ${info.cycleDay} (${info.phase}${info.isDelay ? `, задержка ${info.delayDays} дн.` : ''})
+- Всего записей в базе: ${recentHistory.length + 1}
 
 СЕГОДНЯ:
 - Настроение: ${current.mood}/10
@@ -3410,19 +2884,24 @@
 - Выделения: ${current.discharge || ''}
 - Близость: ${current.intimacy ? 'да' : 'нет'}
 - tensionRelief: ${Boolean(current.soloReset)}
-- Эмоции и интенсивность: ${formattedEmos}
-- Факторы и ощущения: ${(current.contexts || []).join(', ')}
+- Эмоции и их интенсивность: ${formattedEmos}
+- Факторы и ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
 
-ПОМОГЛО РАНЬШЕ:
+СПОСОБЫ, КОТОРЫЕ ПОМОГАЛИ РАНЬШЕ (счётчик):
 ${JSON.stringify(helpedCounts)}
 
-ИСТОРИЯ (до 25 дней):
+ИСТОРИЯ (до 45 дней):
 ${JSON.stringify(recentHistory)}
+
+ЗАДАЧА:
+${hasRichHistory
+  ? 'В базе уже достаточно дней. Глубоко проанализируй повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков и фаз цикла. В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
+  : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
 
 Верни строго JSON:
 {
-  "physiology": "3-4 живых предложения про тело, гормоны, грудь/боль/цикл без шаблонных фраз.",
-  "patterns": "2-4 конкретных предложения о том, что отличается от прошлых дней и фаз в истории.",
+  "physiology": "3-4 живых предложения про тело, гормоны, грудь/отёки/боль/цикл без шаблонных фраз.",
+  "patterns": "2-4 конкретных предложения о паттернах эмоций, боли, факторов, проверенных способов помощи и напоминаний на ближайшие дни.",
   "focus": "2-3 живых предложения про моральное состояние и поддержку сегодня.",
   "steps": [
     "Конкретное действие 1",
@@ -3430,7 +2909,7 @@ ${JSON.stringify(recentHistory)}
     "Конкретное действие 3"
   ],
   "tips": [
-    { "title": "Короткая рекомендация", "sub": "Зачем это именно сейчас" }
+    { "title": "Короткая рекомендация", "sub": "Зачем это именно сейчас (с опорой на то, что помогало)" }
   ]
 }`;
 
@@ -3469,6 +2948,7 @@ ${JSON.stringify(recentHistory)}
 
       if (!apiKey || !text || isQuickAiGenerating) return;
 
+      inp.value = '';
       isQuickAiGenerating = true;
       btnSend.disabled = true;
       btnSend.textContent = '...';
@@ -3478,8 +2958,11 @@ ${JSON.stringify(recentHistory)}
 
       const info = getCycleInfo(selectedDate);
       const current = getCurrentWorkingEntry();
-      const curLevels = current.emotionLevels || {};
-      const formattedEmos = (current.emotions || []).map(em => `${em} (${curLevels[em] ?? 5}/10)`).join(', ');
+      const curLevels = buildLoadedEmotionLevels(current);
+      const formattedEmos = ALL_EMOTIONS
+        .filter(em => (curLevels[em] ?? 0) > 0)
+        .map(em => `${em} (${curLevels[em]}/10)`)
+        .join(', ');
 
       const prompt = `Ты чуткий, трезвый и спокойный собеседник (врач-гинеколог и психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
 Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла (если она есть) и предложи одну спокойную опору на сейчас.
@@ -3488,7 +2971,7 @@ ${JSON.stringify(recentHistory)}
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
 - Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10
 - Эмоции: ${formattedEmos || 'не указаны'}
-- Факторы: ${(current.contexts || []).join(', ') || 'нет'}
+- Факторы: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
 
 Сообщение пользователя:
 """
@@ -3510,7 +2993,7 @@ ${text}
       } finally {
         isQuickAiGenerating = false;
         btnSend.disabled = false;
-        btnSend.textContent = 'Ответить';
+        btnSend.textContent = 'Спросить';
       }
     }
 
@@ -3555,9 +3038,7 @@ ${text}
     function renderLearnedHelpStats() {
       const counts = {};
       Object.values(state.entries).forEach(e => {
-        (e.helped || []).forEach(h => {
-          counts[h] = (counts[h] || 0) + 1;
-        });
+        (e.helped || []).forEach(h => { counts[h] = (counts[h] || 0) + 1; });
       });
       const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 4);
       const box = document.getElementById('learnedHelpStats');
@@ -3608,7 +3089,7 @@ ${text}
 
     function renderAnalytics() {
       const svg = document.getElementById('cycleChart');
-      const len = Number(state.settings.cycleLength) || 28;
+      const baseLen = Number(state.settings.cycleLength) || 28;
       const pLen = Number(state.settings.periodLength) || 5;
       const w = 400, h = 230;
       const padL = 26, padR = 14, padT = 24, padB = 28;
@@ -3616,30 +3097,43 @@ ${text}
       const plotH = h - padT - padB;
       const isDark = Boolean(state.settings.darkMode);
 
+      const allSortedEntries = Object.values(state.entries).sort((a, b) => a.date.localeCompare(b.date));
+      document.getElementById('chartEntriesCount').textContent = allSortedEntries.length
+        ? `${allSortedEntries.length} дн.`
+        : '';
+
       const byDay = {};
-      Object.values(state.entries).sort((a, b) => a.date.localeCompare(b.date)).forEach(e => {
-        const d = getCycleInfo(e.date).cycleDay;
-        if (d <= len) byDay[d] = e;
+      let maxObservedDay = baseLen;
+      allSortedEntries.forEach(e => {
+        const d = Math.max(1, getCycleInfo(e.date).cycleDay);
+        byDay[d] = e;
+        if (d > maxObservedDay) maxObservedDay = d;
       });
 
-      // Collect used emotions across entries
-      const emotionFreq = {};
+      const len = Math.max(2, maxObservedDay);
+
+      // Rank emotions by peak/total intensity across entries
+      const emotionScore = {};
       Object.values(byDay).forEach(e => {
-        (e.emotions || []).forEach(em => {
-          emotionFreq[em] = (emotionFreq[em] || 0) + 1;
+        const lv = buildLoadedEmotionLevels(e);
+        ALL_EMOTIONS.forEach(em => {
+          if ((lv[em] ?? 0) > 0) {
+            emotionScore[em] = (emotionScore[em] || 0) + lv[em];
+          }
         });
       });
-      const trackedEmotions = Object.entries(emotionFreq)
+      const trackedEmotions = Object.entries(emotionScore)
         .sort((a, b) => b[1] - a[1])
         .map(([em]) => em);
 
       const subRow = document.getElementById('emotionSubFilters');
       if (chartFilter === 'emotions') {
         subRow.style.display = 'flex';
-        if (selectedEmotionChartFilter !== 'all' && !trackedEmotions.includes(selectedEmotionChartFilter)) {
+        const filterList = trackedEmotions.length ? trackedEmotions : ALL_EMOTIONS.slice(0, 6);
+        if (selectedEmotionChartFilter !== 'all' && !filterList.includes(selectedEmotionChartFilter)) {
           selectedEmotionChartFilter = 'all';
         }
-        const pills = ['all', ...trackedEmotions];
+        const pills = ['all', ...filterList];
         subRow.innerHTML = pills.map(em => {
           const active = selectedEmotionChartFilter === em;
           const label = em === 'all' ? 'Все эмоции' : em;
@@ -3651,23 +3145,31 @@ ${text}
 
       let html = `<defs>
         <linearGradient id="gradTeal" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="${isDark ? '#2DD4BF' : '#0D9488'}" stop-opacity="0.22"/>
+          <stop offset="0%" stop-color="${isDark ? '#2DD4BF' : '#0D9488'}" stop-opacity="0.24"/>
           <stop offset="100%" stop-color="${isDark ? '#2DD4BF' : '#0D9488'}" stop-opacity="0"/>
         </linearGradient>
         <linearGradient id="gradIndigo" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="${isDark ? '#818CF8' : '#4F46E5'}" stop-opacity="0.20"/>
+          <stop offset="0%" stop-color="${isDark ? '#818CF8' : '#4F46E5'}" stop-opacity="0.22"/>
           <stop offset="100%" stop-color="${isDark ? '#818CF8' : '#4F46E5'}" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="gradAmber" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${isDark ? '#FBBF24' : '#F59E0B'}" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="${isDark ? '#FBBF24' : '#F59E0B'}" stop-opacity="0"/>
         </linearGradient>
       </defs>`;
 
       // Clean phase background bands
-      const wMens = ((pLen - 1) / (len - 1)) * plotW;
-      html += `<rect x="${padL}" y="${padT}" width="${Math.max(8, wMens)}" height="${plotH}" rx="8" fill="${isDark ? 'rgba(251,113,133,0.10)' : 'rgba(244,63,94,0.07)'}" />`;
+      const wMens = ((Math.min(pLen, len) - 1) / (len - 1)) * plotW;
+      html += `<rect x="${padL}" y="${padT}" width="${Math.max(10, wMens)}" height="${plotH}" rx="8" fill="${isDark ? 'rgba(251,113,133,0.11)' : 'rgba(244,63,94,0.07)'}" />`;
 
-      const pmsStart = Math.max(1, len - 6);
-      const xPms = padL + ((pmsStart - 1) / (len - 1)) * plotW;
-      const wPms = ((len - pmsStart) / (len - 1)) * plotW;
-      html += `<rect x="${xPms}" y="${padT}" width="${wPms}" height="${plotH}" rx="8" fill="${isDark ? 'rgba(251,191,36,0.08)' : 'rgba(245,158,11,0.07)'}" />`;
+      const pmsStart = Math.max(1, baseLen - 6);
+      if (pmsStart < len) {
+        const xPms = padL + ((pmsStart - 1) / (len - 1)) * plotW;
+        const wPms = ((Math.min(baseLen, len) - pmsStart) / (len - 1)) * plotW;
+        if (wPms > 0) {
+          html += `<rect x="${xPms}" y="${padT}" width="${wPms}" height="${plotH}" rx="8" fill="${isDark ? 'rgba(251,191,36,0.09)' : 'rgba(245,158,11,0.07)'}" />`;
+        }
+      }
 
       // Crisp horizontal grid lines
       [0, 5, 10].forEach(v => {
@@ -3683,7 +3185,7 @@ ${text}
         }
       }
 
-      function drawSmoothSeries(pts, color, gradId = null) {
+      function drawSmoothSeries(pts, color, gradId = null, showSingleLabel = false) {
         if (!pts.length) return;
         const pathD = catmullRomPath(pts);
         if (pts.length > 1) {
@@ -3694,9 +3196,17 @@ ${text}
             html += `<path d="${pathD} L ${last.x.toFixed(1)} ${baseY} L ${first.x.toFixed(1)} ${baseY} Z" fill="url(#${gradId})" />`;
           }
           html += `<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" />`;
+        } else {
+          // Single day saved: draw soft halo + vertical guide so it's unmistakable
+          const p = pts[0];
+          html += `<line x1="${p.x}" y1="${padT}" x2="${p.x}" y2="${padT + plotH}" stroke="${color}" stroke-opacity="0.25" stroke-dasharray="2 2" />`;
+          html += `<circle cx="${p.x}" cy="${p.y}" r="8.5" fill="${color}" opacity="0.20" />`;
+          if (showSingleLabel) {
+            html += `<text x="${p.x}" y="${Math.max(padT + 10, p.y - 10)}" text-anchor="middle" font-size="10.5" font-weight="700" fill="${color}">${p.val}</text>`;
+          }
         }
         pts.forEach(p => {
-          html += `<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}" stroke="var(--surface)" stroke-width="1.6" />`;
+          html += `<circle cx="${p.x}" cy="${p.y}" r="4.3" fill="${color}" stroke="var(--surface)" stroke-width="1.6" />`;
         });
       }
 
@@ -3704,7 +3214,7 @@ ${text}
 
       if (chartFilter === 'emotions') {
         const emosToDraw = selectedEmotionChartFilter === 'all'
-          ? trackedEmotions.slice(0, 4)
+          ? (trackedEmotions.length ? trackedEmotions.slice(0, 5) : [])
           : [selectedEmotionChartFilter];
 
         emosToDraw.forEach(emo => {
@@ -3712,15 +3222,19 @@ ${text}
           const pts = [];
           for (let d = 1; d <= len; d++) {
             const e = byDay[d];
-            if (e && Array.isArray(e.emotions) && e.emotions.includes(emo)) {
-              const lvl = typeof e.emotionLevels?.[emo] === 'number' ? e.emotionLevels[emo] : 5;
-              pts.push({
-                x: padL + ((d - 1) / (len - 1)) * plotW,
-                y: padT + plotH - (lvl / 10) * plotH
-              });
+            if (e) {
+              const lv = buildLoadedEmotionLevels(e);
+              const val = lv[emo] ?? 0;
+              if (val > 0 || selectedEmotionChartFilter !== 'all') {
+                pts.push({
+                  x: padL + ((d - 1) / (len - 1)) * plotW,
+                  y: padT + plotH - (val / 10) * plotH,
+                  val
+                });
+              }
             }
           }
-          drawSmoothSeries(pts, pal.color, null);
+          drawSmoothSeries(pts, pal.color, null, selectedEmotionChartFilter !== 'all');
         });
 
         legendEl.innerHTML = emosToDraw.length
@@ -3728,15 +3242,15 @@ ${text}
               const c = (EMOTION_PALETTE[em] || { color: 'var(--accent)' }).color;
               return `<span style="color:${c}; font-weight:600;">● ${escapeHtml(em)}</span>`;
             }).join('')
-          : `<span>Отметь эмоции в разделе «Сегодня», чтобы увидеть график</span>`;
+          : `<span>Отметь уровень эмоций в разделе «Сегодня», чтобы увидеть линии</span>`;
       } else {
         // Pain bars
         for (let d = 1; d <= len; d++) {
           const e = byDay[d];
           if (e && e.pain > 0) {
-            const x = padL + ((d - 1) / (len - 1)) * plotW - 3.5;
+            const x = padL + ((d - 1) / (len - 1)) * plotW - 4;
             const barH = (e.pain / 10) * plotH;
-            html += `<rect x="${x}" y="${padT + plotH - barH}" width="7" height="${barH}" rx="3.5" fill="${isDark ? '#FB7185' : '#F43F5E'}" opacity="0.24" />`;
+            html += `<rect x="${x}" y="${padT + plotH - barH}" width="8" height="${barH}" rx="4" fill="${isDark ? '#FB7185' : '#F43F5E'}" opacity="0.28" />`;
           }
         }
 
@@ -3746,7 +3260,8 @@ ${text}
             if (byDay[d] && typeof byDay[d][key] === 'number') {
               pts.push({
                 x: padL + ((d - 1) / (len - 1)) * plotW,
-                y: padT + plotH - (byDay[d][key] / 10) * plotH
+                y: padT + plotH - (byDay[d][key] / 10) * plotH,
+                val: byDay[d][key]
               });
             }
           }
@@ -3754,13 +3269,13 @@ ${text}
         };
 
         if (chartFilter === 'all' || chartFilter === 'mood') {
-          drawSmoothSeries(buildMetricPts('mood'), isDark ? '#2DD4BF' : '#0D9488', chartFilter === 'mood' ? 'gradTeal' : null);
+          drawSmoothSeries(buildMetricPts('mood'), isDark ? '#2DD4BF' : '#0D9488', chartFilter === 'mood' ? 'gradTeal' : null, chartFilter === 'mood');
         }
         if (chartFilter === 'all' || chartFilter === 'energy') {
-          drawSmoothSeries(buildMetricPts('energy'), isDark ? '#818CF8' : '#4F46E5', chartFilter === 'energy' ? 'gradIndigo' : null);
+          drawSmoothSeries(buildMetricPts('energy'), isDark ? '#818CF8' : '#4F46E5', chartFilter === 'energy' ? 'gradIndigo' : null, chartFilter === 'energy');
         }
         if (chartFilter === 'all' || chartFilter === 'libido') {
-          drawSmoothSeries(buildMetricPts('libido'), isDark ? '#FBBF24' : '#F59E0B', null);
+          drawSmoothSeries(buildMetricPts('libido'), isDark ? '#FBBF24' : '#F59E0B', chartFilter === 'libido' ? 'gradAmber' : null, chartFilter === 'libido');
         }
 
         legendEl.innerHTML = `
@@ -3788,37 +3303,45 @@ ${text}
           html += `<circle cx="${x}" cy="${iy}" r="4.5" fill="var(--surface)" stroke="var(--indigo)" stroke-width="1.3"/><polygon points="${x},${iy - 2.6} ${x + 2.6},${iy} ${x},${iy + 2.6} ${x - 2.6},${iy}" fill="var(--indigo)"/>`;
         }
 
-        html += `<rect x="${x - 6}" y="${padT}" width="12" height="${plotH}" fill="transparent" style="cursor:pointer" onclick="inspectChartDay(${d})" />`;
+        html += `<rect x="${x - 7}" y="${padT}" width="14" height="${plotH}" fill="transparent" style="cursor:pointer" onclick="inspectChartDay(${d})" />`;
       }
 
       svg.innerHTML = html;
       window._chartByDay = byDay;
+
+      // Auto-select latest recorded day in inspector if available
+      const recordedDays = Object.keys(byDay).map(Number).sort((a, b) => b - a);
+      if (recordedDays.length) {
+        inspectChartDay(recordedDays[0], true);
+      } else {
+        document.getElementById('chartInspector').innerHTML = 'Сохрани день во вкладке «Сегодня», чтобы увидеть точки на графике';
+      }
+
       renderPhaseStats();
     }
 
-    function inspectChartDay(day) {
-      hapticSelect();
+    function inspectChartDay(day, silent = false) {
+      if (!silent) hapticSelect();
       const e = window._chartByDay?.[day];
       const box = document.getElementById('chartInspector');
       if (!e) {
         box.innerHTML = `День ${day}`;
         return;
       }
-      const levels = e.emotionLevels || {};
-      const emos = Array.isArray(e.emotions)
-        ? e.emotions.map(em => `${em} (${typeof levels[em] === 'number' ? levels[em] : 5}/10)`).join(', ')
-        : '';
+      const levels = buildLoadedEmotionLevels(e);
+      const activeEmos = getActiveEmotionsFromLevels(levels);
+      const emosText = activeEmos.map(em => `${em} (${levels[em]}/10)`).join(', ');
       const extras = [
         e.isPeriod ? 'Месячные' : '',
         e.isOvulation ? 'Овуляция' : '',
         e.intimacy ? 'Близость ♥' : '',
         e.soloReset ? '◈' : '',
         e.discharge ? e.discharge.toLowerCase() : '',
-        ...(e.contexts || [])
+        ...(e.contexts || []).map(normalizeContextLabel)
       ].filter(Boolean).join(' · ');
 
       box.innerHTML = `
-        <strong style="color:var(--ink)">День ${day}</strong>${emos ? ` · ${escapeHtml(emos)}` : ''}<br/>
+        <strong style="color:var(--ink)">День ${day}</strong>${emosText ? ` · ${escapeHtml(emosText)}` : ''}<br/>
         Настр. ${e.mood} · Энергия ${e.energy} · Боль ${e.pain} · Либидо ${e.libido}
         ${extras ? `<div style="margin-top:4px; color:var(--accent); font-weight:600;">${escapeHtml(extras)}</div>` : ''}
       `;
@@ -3851,11 +3374,13 @@ ${text}
 
       const severePain = entries.filter(e => e.pain >= 7).length;
       const heavyFlow = entries.filter(e => e.isPeriod && e.discharge === 'Обильные').length;
-      const breastDays = entries.filter(e => (e.contexts || []).includes('Болезненность груди')).length;
+      const breastDays = entries.filter(e => (e.contexts || []).map(normalizeContextLabel).includes('Боль в груди')).length;
+      const edemaDays = entries.filter(e => (e.contexts || []).map(normalizeContextLabel).includes('Отёки')).length;
       const notes = [];
-      if (severePain >= 3) notes.push(`Боль ≥7: ${severePain}`);
-      if (heavyFlow >= 3) notes.push(`Обильные: ${heavyFlow}`);
-      if (breastDays >= 2) notes.push(`Грудь: ${breastDays}`);
+      if (severePain >= 2) notes.push(`Боль ≥7: ${severePain}`);
+      if (heavyFlow >= 2) notes.push(`Обильные: ${heavyFlow}`);
+      if (breastDays >= 1) notes.push(`Боль в груди: ${breastDays}`);
+      if (edemaDays >= 1) notes.push(`Отёки: ${edemaDays}`);
       document.getElementById('medicalSummary').innerHTML = notes.join(' · ');
     }
 
@@ -3882,10 +3407,7 @@ ${text}
 
     function stopBreathing() {
       isBreathing = false;
-      if (breathTimer) {
-        clearTimeout(breathTimer);
-        breathTimer = null;
-      }
+      if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; }
       const motion = document.getElementById('flowerMotion');
       const prompt = document.getElementById('flowerPrompt');
       const sub = document.getElementById('flowerSubPrompt');
@@ -3898,10 +3420,7 @@ ${text}
 
     function toggleBreathing() {
       hapticImpact('medium');
-      if (isBreathing) {
-        stopBreathing();
-        return;
-      }
+      if (isBreathing) { stopBreathing(); return; }
 
       isBreathing = true;
       document.getElementById('breathBtn').textContent = 'Стоп';
@@ -3951,6 +3470,7 @@ ${text}
       syncSettingsInputs();
       persistLocalAndCloud(null);
       loadDayForm();
+      renderAnalytics();
       showToast('Сохранено');
     }
 
@@ -3969,6 +3489,7 @@ ${text}
           syncSettingsInputs();
           persistLocalAndCloud(null);
           loadDayForm();
+          renderAnalytics();
           showToast('Сохранено');
         }
       } catch (e) {}
@@ -3980,7 +3501,7 @@ ${text}
       if (hasTelegramCloud()) {
         const keys = await cloudGetKeys();
         const ourKeys = keys.filter(k =>
-          k.startsWith('carezze1_') || k.startsWith('ritm9_') || k.startsWith('ritm8_') || k.startsWith('ritm7_')
+          k.startsWith('carezze2_') || k.startsWith('carezze1_') || k.startsWith('ritm9_') || k.startsWith('ritm8_')
         );
         await cloudRemove(ourKeys);
       }
@@ -4019,6 +3540,7 @@ ${text}
     setupChips();
     loadFromCloudAndLocal().then(() => {
       loadDayForm();
+      renderAnalytics();
     });
   </script>
 </body>
