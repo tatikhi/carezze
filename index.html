@@ -70,6 +70,26 @@
       pointer-events: none;
     }
 
+    .ui-svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .ui-svg-sm {
+      width: 14px;
+      height: 14px;
+    }
+    .ui-svg-fill {
+      fill: currentColor;
+      stroke: none;
+    }
+
     .app { width: 100%; max-width: 440px; margin: 0 auto; padding: 8px 16px 32px; }
 
     .onboarding-overlay {
@@ -103,6 +123,9 @@
       font-weight: 600;
       cursor: pointer;
       box-shadow: var(--shadow);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .stepper-val {
       font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
@@ -174,8 +197,6 @@
       border: none;
       background: var(--surface-2);
       color: var(--ink);
-      font-size: 18px;
-      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -329,9 +350,9 @@
       font-weight: 700;
     }
     .theme-option-check {
-      font-size: 16px;
-      font-weight: 700;
       color: var(--accent);
+      display: inline-flex;
+      align-items: center;
     }
 
     .saved-card {
@@ -378,6 +399,9 @@
       background: var(--surface-2);
       padding: 5px 11px;
       border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
     .saved-cta-row {
       margin-top: 14px;
@@ -450,7 +474,7 @@
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink);
-      padding: 11px 6px;
+      padding: 11px 10px;
       border-radius: 14px;
       font-family: inherit;
       font-size: 13.5px;
@@ -462,6 +486,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
       white-space: nowrap;
       letter-spacing: -0.02em;
     }
@@ -469,22 +494,57 @@
     .choice-btn.active-rose { background: var(--rose-tint); border-color: var(--rose); color: var(--rose); }
     .choice-btn.active-ovul { background: var(--ovul-tint); border-color: var(--ovul); color: var(--ovul); }
 
+    .solo-counter-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
     .icon-stealth-btn {
-      width: 48px;
-      min-width: 48px;
+      min-width: 52px;
       height: 46px;
+      padding: 0 12px;
       border-radius: 14px;
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink-2);
-      font-size: 20px;
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 5px;
+      font-variant-numeric: tabular-nums;
+      transition: all 0.15s ease;
     }
-    .icon-stealth-btn.active { background: var(--indigo-tint); border-color: var(--indigo); color: var(--indigo); }
+    .icon-stealth-btn.active {
+      background: var(--indigo-tint);
+      border-color: var(--indigo);
+      color: var(--indigo);
+    }
+    .solo-reset-mini {
+      width: 34px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      border: 1.5px solid transparent;
+      color: var(--ink-2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .solo-reset-mini:active {
+      background: var(--rose-tint);
+      color: var(--rose);
+    }
+
+    .drops-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
 
     .sub-section-header { display: flex; justify-content: space-between; align-items: center; margin: 16px 0 8px; }
     .field-label { font-size: 14px; font-weight: 600; color: var(--ink-2); }
@@ -521,7 +581,7 @@
       margin-top: 3px;
       line-height: 1.35;
     }
-    .accordion-chevron { font-size: 20px; color: var(--ink-3); flex-shrink: 0; transition: transform 0.2s ease; }
+    .accordion-chevron { color: var(--ink-3); flex-shrink: 0; transition: transform 0.2s ease; display: inline-flex; align-items: center; }
     .accordion.open .accordion-chevron { transform: rotate(180deg); }
     .accordion-body { display: none; padding: 6px 18px 18px; border-top: 1px solid var(--border); }
     .accordion.open .accordion-body { display: block; }
@@ -700,11 +760,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 8px;
     }
     .tip-action-title { font-size: 15.5px; font-weight: 600; color: var(--ink); line-height: 1.35; }
     .tip-action-sub { font-size: 13.5px; color: var(--ink-2); margin-top: 3px; line-height: 1.42; }
+    .tip-action-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
     .btn-helped-toggle {
       flex-shrink: 0;
       padding: 9px 12px;
@@ -717,8 +783,29 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
     }
     .btn-helped-toggle.checked { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
+    .btn-tip-del {
+      width: 34px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-2);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn-tip-del:active {
+      background: var(--rose-tint);
+      border-color: var(--rose-bg);
+      color: var(--rose);
+    }
 
     .med-list {
       display: flex;
@@ -757,8 +844,6 @@
       border: none;
       background: var(--surface);
       color: var(--ink-2);
-      font-size: 14px;
-      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -824,6 +909,7 @@
     .cal-cell.is-selected { outline: 2.5px solid var(--accent); outline-offset: 1px; }
     .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; position: absolute; bottom: 4px; opacity: 0.85; }
     .cal-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; font-size: 12.5px; color: var(--ink-2); margin-top: 14px; }
+    .cal-legend-item { display: inline-flex; align-items: center; gap: 5px; }
     .cal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
 
     .filter-row {
@@ -854,6 +940,13 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 10px 6px 6px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
     }
 
     .inspector-box {
@@ -990,16 +1083,24 @@
 
         <div class="field-label" style="margin-top:18px; margin-bottom:8px;">Длина цикла</div>
         <div class="stepper-row">
-          <button class="stepper-btn" type="button" onclick="stepObValue('obCycleLen', -1, 21, 45)">−</button>
+          <button class="stepper-btn" type="button" onclick="stepObValue('obCycleLen', -1, 21, 45)" aria-label="Меньше">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+          </button>
           <span class="stepper-val" id="obCycleLenVal">28</span>
-          <button class="stepper-btn" type="button" onclick="stepObValue('obCycleLen', 1, 21, 45)">+</button>
+          <button class="stepper-btn" type="button" onclick="stepObValue('obCycleLen', 1, 21, 45)" aria-label="Больше">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
         </div>
 
         <div class="field-label" style="margin-top:18px; margin-bottom:8px;">Длительность месячных</div>
         <div class="stepper-row">
-          <button class="stepper-btn" type="button" onclick="stepObValue('obPeriodLen', -1, 2, 10)">−</button>
+          <button class="stepper-btn" type="button" onclick="stepObValue('obPeriodLen', -1, 2, 10)" aria-label="Меньше">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+          </button>
           <span class="stepper-val" id="obPeriodLenVal">5</span>
-          <button class="stepper-btn" type="button" onclick="stepObValue('obPeriodLen', 1, 2, 10)">+</button>
+          <button class="stepper-btn" type="button" onclick="stepObValue('obPeriodLen', 1, 2, 10)" aria-label="Больше">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
         </div>
       </div>
 
@@ -1021,12 +1122,16 @@
     <div id="view-today" class="view active">
       <div class="hero-card" id="heroCard">
         <div class="date-bar">
-          <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Назад">←</button>
+          <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Назад">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
           <button class="date-center-btn" onclick="openCalendarModal()">
             <span id="selectedDateLabel"></span>
-            <span style="font-size:12px; opacity:0.65;">▾</span>
+            <svg class="ui-svg ui-svg-sm" style="opacity:0.7;" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
           </button>
-          <button class="date-arrow" onclick="shiftDate(1)" aria-label="Вперёд">→</button>
+          <button class="date-arrow" onclick="shiftDate(1)" aria-label="Вперёд">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
 
         <div class="hero-main">
@@ -1043,15 +1148,19 @@
 
         <div class="period-strip">
           <button class="btn-period-apple" id="btnPeriodDay" onclick="togglePeriodDay()">
-            <span id="periodBtnIcon">●</span>
+            <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
             <span id="periodBtnText">Месячные</span>
+            <svg class="ui-svg ui-svg-sm" id="periodBtnCheckIcon" style="display:none;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           </button>
         </div>
       </div>
 
       <div id="savedSummaryCard" class="saved-card" style="display:none;">
         <div class="saved-header">
-          <div class="saved-badge">✓ Сохранено</div>
+          <div class="saved-badge">
+            <svg class="ui-svg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            <span>Сохранено</span>
+          </div>
           <button class="btn-edit-small" onclick="unlockDayEditing()">Изменить</button>
         </div>
 
@@ -1074,7 +1183,10 @@
 
         <div class="saved-cta-row">
           <span style="font-size:14px; color:var(--ink-2);">Разбор</span>
-          <button class="link-btn" onclick="switchTab('analytics_advice')">Открыть →</button>
+          <button class="link-btn" onclick="switchTab('analytics_advice')">
+            <span>Открыть</span>
+            <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
       </div>
 
@@ -1115,32 +1227,70 @@
           </div>
         </div>
 
-        <div class="card">
+        <!-- ОТДЕЛЬНОЕ ОКНО: БЛИЗОСТЬ И ОВУЛЯЦИЯ -->
+        <div class="card" id="intimacyCard">
           <div class="card-top">
-            <span class="card-title">Близость и выделения</span>
+            <span class="card-title">Близость</span>
           </div>
 
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;" id="intimacyBlock">
-            <button class="choice-btn" style="padding:11px 14px;" id="btnIntimacyToggle" onclick="toggleIntimacy()">Близость ♥</button>
-            <button class="icon-stealth-btn" id="btnSoloReset" onclick="toggleSoloReset()" aria-label="⚡">⚡</button>
-            <button class="choice-btn" style="padding:11px 14px; display:none;" id="btnOvulation" onclick="toggleOvulation()">✦ Овуляция</button>
+            <button class="choice-btn" style="padding:11px 14px;" id="btnIntimacyToggle" onclick="toggleIntimacy()">
+              <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" stroke="none"/></svg>
+              <span>Близость</span>
+              <svg class="ui-svg ui-svg-sm" id="intimacyCheckIcon" style="display:none;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+
+            <div class="solo-counter-wrap">
+              <button class="icon-stealth-btn" id="btnSoloReset" onclick="incrementSoloReset()" aria-label="Разрядка">
+                <svg class="ui-svg" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/></svg>
+                <span id="soloCountLabel" style="display:none;">1</span>
+              </button>
+              <button class="solo-reset-mini" id="btnSoloResetZero" style="display:none;" onclick="resetSoloReset()" aria-label="Сбросить счётчик">
+                <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <button class="choice-btn" style="padding:11px 14px; display:none;" id="btnOvulation" onclick="toggleOvulation()">
+              <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" fill="currentColor" stroke="none"/></svg>
+              <span>Овуляция</span>
+              <svg class="ui-svg ui-svg-sm" id="ovulationCheckIcon" style="display:none;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ОТДЕЛЬНОЕ ОКНО: ВЫДЕЛЕНИЯ -->
+        <div class="card" id="dischargeCard">
+          <div class="card-top">
+            <span class="card-title">Выделения</span>
           </div>
 
           <div id="menstrualDischargeBlock" style="display:none;">
-            <div class="sub-section-header">
-              <span class="field-label">Выделения</span>
-            </div>
             <div class="grid-3" id="menstrualFlowSelector">
-              <div class="choice-btn" data-val="Скудные" onclick="selectDischarge('Скудные')">Скудные 💧</div>
-              <div class="choice-btn active-rose" data-val="Умеренные" onclick="selectDischarge('Умеренные')">Умеренные 💧💧</div>
-              <div class="choice-btn" data-val="Обильные" onclick="selectDischarge('Обильные')">Обильные 💧💧💧</div>
+              <div class="choice-btn" data-val="Скудные" onclick="selectDischarge('Скудные')">
+                <span>Скудные</span>
+                <span class="drops-row">
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
+                </span>
+              </div>
+              <div class="choice-btn active-rose" data-val="Умеренные" onclick="selectDischarge('Умеренные')">
+                <span>Умеренные</span>
+                <span class="drops-row">
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
+                </span>
+              </div>
+              <div class="choice-btn" data-val="Обильные" onclick="selectDischarge('Обильные')">
+                <span>Обильные</span>
+                <span class="drops-row">
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
+                </span>
+              </div>
             </div>
           </div>
 
-          <div id="ovulatoryDischargeBlock" style="display:none;">
-            <div class="sub-section-header">
-              <span class="field-label">Выделения</span>
-            </div>
+          <div id="regularDischargeBlock" style="display:block;">
             <div class="grid-3" id="ovulatoryFlowSelector">
               <div class="choice-btn active-ovul" data-val="Обычные" onclick="selectDischarge('Обычные')">Обычные</div>
               <div class="choice-btn" data-val="Кремовые" onclick="selectDischarge('Кремовые')">Кремовые</div>
@@ -1156,7 +1306,9 @@
               <div>Эмоции и ощущения</div>
               <div class="accordion-summary" id="sum-context">Отметить интенсивность</div>
             </div>
-            <span class="accordion-chevron">⌄</span>
+            <span class="accordion-chevron">
+              <svg class="ui-svg" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
           </button>
           <div class="accordion-body">
             <div class="sub-section-header" style="margin-top:10px;">
@@ -1172,7 +1324,9 @@
               <div>Температура (Watch)</div>
               <div class="accordion-summary" id="sum-watch">Опционально</div>
             </div>
-            <span class="accordion-chevron">⌄</span>
+            <span class="accordion-chevron">
+              <svg class="ui-svg" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
           </button>
           <div class="accordion-body">
             <div style="margin-top:8px;">
@@ -1247,7 +1401,7 @@
         <div id="actionableTipsList"></div>
 
         <div style="display:flex; gap:8px; margin-top:12px;">
-          <input type="text" id="customHelpInput" />
+          <input type="text" id="customHelpInput" placeholder="Добавить свой способ..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomHelped();}" />
           <button class="btn-soft" onclick="addCustomHelped()">Помогло</button>
         </div>
 
@@ -1429,7 +1583,9 @@
         <div class="card-top" style="margin-bottom:10px;">
           <div style="display:flex; align-items:center; gap:8px;">
             <span class="card-title">Gemini</span>
-            <span id="geminiKeyStatusBadge" style="display:none; color:var(--ok); font-weight:700; font-size:17px;">✓</span>
+            <span id="geminiKeyStatusBadge" style="display:none; color:var(--ok); align-items:center;">
+              <svg class="ui-svg" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
           </div>
           <button class="btn-danger-soft" id="btnRemoveGeminiTop" style="display:none; padding:8px 14px; font-size:13.5px;" onclick="removeGeminiKey()">Удалить ключ</button>
         </div>
@@ -1480,9 +1636,13 @@
   <div class="modal-backdrop" id="calendarModal" onclick="closeCalendarOnBackdrop(event)">
     <div class="modal-sheet">
       <div class="cal-header">
-        <button class="date-arrow" onclick="shiftCalendarMonth(-1)">←</button>
+        <button class="date-arrow" onclick="shiftCalendarMonth(-1)" aria-label="Предыдущий месяц">
+          <svg class="ui-svg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
         <div class="cal-month-title" id="calMonthTitle"></div>
-        <button class="date-arrow" onclick="shiftCalendarMonth(1)">→</button>
+        <button class="date-arrow" onclick="shiftCalendarMonth(1)" aria-label="Следующий месяц">
+          <svg class="ui-svg" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
 
       <div class="cal-weekdays">
@@ -1491,10 +1651,22 @@
       <div class="cal-grid" id="calGrid"></div>
 
       <div class="cal-legend">
-        <span style="color:var(--rose-solid)">● Месячные / 1-й день</span>
-        <span style="color:var(--rose)">◌ Примерно</span>
-        <span style="color:var(--ovul)">● Овуляция</span>
-        <span>• Запись</span>
+        <span class="cal-legend-item" style="color:var(--rose-solid)">
+          <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor" stroke="none"/></svg>
+          <span>Месячные / 1-й день</span>
+        </span>
+        <span class="cal-legend-item" style="color:var(--rose)">
+          <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" stroke-dasharray="3 2"/></svg>
+          <span>Примерно</span>
+        </span>
+        <span class="cal-legend-item" style="color:var(--ovul)">
+          <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" fill="currentColor" stroke="none"/></svg>
+          <span>Овуляция</span>
+        </span>
+        <span class="cal-legend-item">
+          <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>
+          <span>Запись</span>
+        </span>
       </div>
 
       <div class="cal-actions">
@@ -1530,6 +1702,16 @@
       tg.ready();
       tg.expand();
     }
+
+    const SVG_ICONS = {
+      check: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>',
+      cross: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>',
+      dot: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none"/></svg>',
+      bar: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><rect x="9" y="4" width="6" height="16" rx="2" fill="currentColor" stroke="none"/></svg>',
+      heart: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" stroke="none"/></svg>',
+      bolt: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/></svg>',
+      sparkle: '<svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z" fill="currentColor" stroke="none"/></svg>'
+    };
 
     const THEMES = {
       peach_sage: {
@@ -1933,6 +2115,17 @@
       return label;
     }
 
+    function normalizeSoloCount(entry) {
+      if (!entry) return 0;
+      if (typeof entry.soloCount === 'number' && Number.isFinite(entry.soloCount)) {
+        return Math.max(0, Math.min(20, Math.round(entry.soloCount)));
+      }
+      if (typeof entry.soloReset === 'number' && Number.isFinite(entry.soloReset)) {
+        return Math.max(0, Math.min(20, Math.round(entry.soloReset)));
+      }
+      return entry.soloReset ? 1 : 0;
+    }
+
     function computeDerivedMood(levelsObj, energyVal, painVal) {
       const pos = ((levelsObj['Спокойствие'] || 0) + (levelsObj['Подъём'] || 0)) * 0.25;
       const negKeys = ['Грусть', 'Тревога', 'Раздражение', 'Усталость', 'Слезливость', 'Апатия', 'Туман в голове', 'Уязвимость', 'Перегруз', 'Напряжение', 'Стресс'];
@@ -1976,12 +2169,13 @@
     let tempIsPeriod = false;
     let tempIsOvulation = false;
     let tempIntimacy = false;
-    let tempSoloReset = false;
+    let tempSoloCount = 0;
     let tempDischarge = '';
     let tempContraception = 'Нет';
 
     let isAiGenerating = false;
     let isQuickAiGenerating = false;
+    let renderedTipsBuffer = [];
 
     let chartFilter = 'all';
     let selectedEmotionChartFilter = 'all';
@@ -1993,6 +2187,9 @@
 
     let importedTempToday = null;
     let isCloudSyncing = false;
+    let pendingCloudWritePromise = Promise.resolve();
+    let lastLocalWriteTimestamp = 0;
+    let emotionAutosaveTimer = null;
 
     function getCurrentPaletteColors() {
       const palKey = THEMES[state.settings.palette] ? state.settings.palette : 'peach_sage';
@@ -2030,7 +2227,7 @@
               </div>
               <span class="theme-option-name">${item.name}</span>
             </div>
-            ${isActive ? '<span class="theme-option-check">✓</span>' : ''}
+            ${isActive ? `<span class="theme-option-check">${SVG_ICONS.check}</span>` : ''}
           </button>
         `;
       }).join('');
@@ -2088,35 +2285,41 @@
 
     function compactEntryForCloud(entry, aiMaxScale = 1) {
       const compactEmotions = {};
-      if (entry.emotionLevels) {
+      if (entry.emotionLevels && typeof entry.emotionLevels === 'object') {
         Object.entries(entry.emotionLevels).forEach(([k, v]) => {
-          if (typeof v === 'number' && v > 0) compactEmotions[k] = v;
+          const num = Number(v);
+          if (Number.isFinite(num) && num > 0) {
+            compactEmotions[k] = Math.max(0, Math.min(10, Math.round(num)));
+          }
         });
       }
+      const soloCnt = normalizeSoloCount(entry);
       const clone = {
         date: entry.date,
         updatedAt: entry.updatedAt || Date.now(),
         isPeriod: Boolean(entry.isPeriod),
         isOvulation: Boolean(entry.isOvulation),
         intimacy: Boolean(entry.intimacy),
-        soloReset: Boolean(entry.soloReset),
+        soloCount: soloCnt,
+        soloReset: soloCnt > 0,
         discharge: entry.discharge || '',
         mood: entry.mood,
         energy: entry.energy,
         pain: entry.pain,
         libido: entry.libido,
+        emotions: Object.keys(compactEmotions),
         emotionLevels: compactEmotions,
         contexts: entry.contexts || [],
-        helped: Array.isArray(entry.helped) ? entry.helped.slice(0, 15) : []
+        helped: Array.isArray(entry.helped) ? entry.helped.slice(0, 20) : []
       };
       if (typeof entry.wristTempDelta === 'number' && Number.isFinite(entry.wristTempDelta)) {
         clone.wristTempDelta = entry.wristTempDelta;
       }
       if (entry.aiAnalysis && aiMaxScale > 0) {
-        const pLen = Math.round(260 * aiMaxScale);
-        const fLen = Math.round(200 * aiMaxScale);
-        const stepLen = Math.round(110 * aiMaxScale);
-        const subLen = Math.round(75 * aiMaxScale);
+        const pLen = Math.round(240 * aiMaxScale);
+        const fLen = Math.round(180 * aiMaxScale);
+        const stepLen = Math.round(105 * aiMaxScale);
+        const subLen = Math.round(70 * aiMaxScale);
         clone.aiAnalysis = {
           physiology: (entry.aiAnalysis.physiology || '').slice(0, pLen),
           patterns: (entry.aiAnalysis.patterns || '').slice(0, pLen),
@@ -2147,10 +2350,32 @@
       if (!localEntry) return cloudEntry;
       const cTime = Number(cloudEntry.updatedAt) || 0;
       const lTime = Number(localEntry.updatedAt) || 0;
-      const newer = lTime > cTime ? localEntry : cloudEntry;
-      const older = lTime > cTime ? cloudEntry : localEntry;
+      const newer = lTime >= cTime ? localEntry : cloudEntry;
+      const older = lTime >= cTime ? cloudEntry : localEntry;
 
       const merged = { ...older, ...newer };
+
+      const newerLevels = newer.emotionLevels && typeof newer.emotionLevels === 'object' ? newer.emotionLevels : {};
+      const olderLevels = older.emotionLevels && typeof older.emotionLevels === 'object' ? older.emotionLevels : {};
+      const newerHasEmos = Object.values(newerLevels).some(v => Number(v) > 0);
+      const olderHasEmos = Object.values(olderLevels).some(v => Number(v) > 0);
+
+      if (newerHasEmos) {
+        merged.emotionLevels = { ...createDefaultEmotionLevels(), ...newerLevels };
+      } else if (olderHasEmos) {
+        merged.emotionLevels = { ...createDefaultEmotionLevels(), ...olderLevels };
+      } else {
+        merged.emotionLevels = buildLoadedEmotionLevels(newer);
+      }
+
+      const soloCnt = Math.max(normalizeSoloCount(newer), lTime >= cTime ? 0 : normalizeSoloCount(older));
+      merged.soloCount = normalizeSoloCount(newer);
+      merged.soloReset = merged.soloCount > 0;
+      if (merged.soloCount === 0 && soloCnt > 0 && lTime === cTime) {
+        merged.soloCount = soloCnt;
+        merged.soloReset = true;
+      }
+
       if ((merged.wristTempDelta === undefined || merged.wristTempDelta === null) && typeof older.wristTempDelta === 'number') {
         merged.wristTempDelta = older.wristTempDelta;
       }
@@ -2176,14 +2401,16 @@
       const tasks = [];
       const entriesList = Object.entries(state.entries);
 
-      for (const [iso, entry] of entriesList) {
-        if (!specificTargetKey || iso === specificTargetKey || iso.startsWith(specificTargetKey)) {
-          const serialized = serializeDaySafelyForCloud(entry);
-          tasks.push(cloudSet(`carezze2_d_${iso}`, serialized));
+      if (specificTargetKey !== '__meta_only__') {
+        for (const [iso, entry] of entriesList) {
+          if (!specificTargetKey || iso === specificTargetKey || iso.startsWith(specificTargetKey)) {
+            const serialized = serializeDaySafelyForCloud(entry);
+            tasks.push(cloudSet(`carezze2_d_${iso}`, serialized));
+          }
         }
       }
 
-      const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 20) : [];
+      const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 25) : [];
       const metaPayload = JSON.stringify({
         onboarded: state.onboarded,
         settings: state.settings,
@@ -2260,6 +2487,7 @@
         isPeriod: today === state.settings.lastPeriodStart,
         isOvulation: false,
         intimacy: false,
+        soloCount: 0,
         soloReset: false,
         discharge: '',
         mood: 6,
@@ -2300,6 +2528,18 @@
       return false;
     }
 
+    function normalizeAllLoadedEntries() {
+      Object.keys(state.entries || {}).forEach(iso => {
+        const entry = state.entries[iso];
+        if (!entry) return;
+        entry.date = entry.date || iso;
+        entry.emotionLevels = buildLoadedEmotionLevels(entry);
+        entry.emotions = getActiveEmotionsFromLevels(entry.emotionLevels);
+        entry.soloCount = normalizeSoloCount(entry);
+        entry.soloReset = entry.soloCount > 0;
+      });
+    }
+
     function loadLocalSync() {
       try {
         let raw = localStorage.getItem(STORAGE_KEY);
@@ -2322,6 +2562,7 @@
           if (!THEMES[state.settings.palette]) {
             state.settings.palette = 'peach_sage';
           }
+          normalizeAllLoadedEntries();
           ensureProfileStructure();
           ensureOnboardedFlagIfDataExists();
         }
@@ -2351,6 +2592,11 @@
       if (!hasTelegramCloud() || isCloudSyncing) return;
       isCloudSyncing = true;
       try {
+        await pendingCloudWritePromise;
+        if (Date.now() - lastLocalWriteTimestamp < 1800) {
+          return;
+        }
+
         document.getElementById('cloudSyncBadge').textContent = 'Cloud';
         const metaRaw = (await cloudGet('carezze2_meta'))
           || (await cloudGet('carezze1_meta'))
@@ -2404,6 +2650,8 @@
           state.entries[iso] = mergeEntryRecords(cloudEntriesMap[iso], state.entries[iso]);
         });
 
+        normalizeAllLoadedEntries();
+
         if (importedTempToday !== null) {
           applyIncomingTempToToday(importedTempToday, false);
         }
@@ -2430,12 +2678,19 @@
 
     function persistLocalAndCloud(targetKey = null) {
       state.onboarded = true;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      syncToCloud(targetKey);
+      lastLocalWriteTimestamp = Date.now();
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+      pendingCloudWritePromise = pendingCloudWritePromise
+        .then(() => syncToCloud(targetKey))
+        .catch(() => {});
+      return pendingCloudWritePromise;
     }
 
     async function forceCloudSync() {
       hapticImpact('medium');
+      lastLocalWriteTimestamp = 0;
       await syncToCloud(null);
       await syncFromCloudBackground();
       showToast('Сохранено');
@@ -2579,7 +2834,7 @@
       document.getElementById('setGeminiKey').value = state.settings.geminiApiKey || '';
 
       const hasKey = Boolean(state.settings.geminiApiKey);
-      document.getElementById('geminiKeyStatusBadge').style.display = hasKey ? 'inline' : 'none';
+      document.getElementById('geminiKeyStatusBadge').style.display = hasKey ? 'inline-flex' : 'none';
       document.getElementById('btnRemoveGeminiTop').style.display = hasKey ? 'inline-flex' : 'none';
       document.getElementById('geminiInputArea').style.display = hasKey ? 'none' : 'block';
     }
@@ -2683,7 +2938,21 @@
       showToast('Удалено');
     }
 
-    function attachHorizontalSlider(el, getVal, setVal, renderFn) {
+    function scheduleEmotionAutosave() {
+      if (emotionAutosaveTimer) clearTimeout(emotionAutosaveTimer);
+      emotionAutosaveTimer = setTimeout(() => {
+        if (!state.entries[selectedDate]) {
+          state.entries[selectedDate] = getCurrentWorkingEntry();
+        }
+        state.entries[selectedDate].emotionLevels = { ...emotionLevels };
+        state.entries[selectedDate].emotions = getActiveEmotionsFromLevels(emotionLevels);
+        state.entries[selectedDate].mood = computeDerivedMood(emotionLevels, metrics.energy, metrics.pain);
+        state.entries[selectedDate].updatedAt = Date.now();
+        persistLocalAndCloud(selectedDate);
+      }, 350);
+    }
+
+    function attachHorizontalSlider(el, getVal, setVal, renderFn, onCommit = null) {
       const min = Number(el.dataset.min);
       const max = Number(el.dataset.max);
       let startX = 0;
@@ -2727,9 +2996,14 @@
         if (!isDragging && dx < 6 && dy < 6) updateFromEvent(e.clientX);
         isDragging = false;
         startX = 0;
+        if (onCommit) onCommit();
       });
 
-      el.addEventListener('pointercancel', () => { isDragging = false; startX = 0; });
+      el.addEventListener('pointercancel', () => {
+        isDragging = false;
+        startX = 0;
+        if (onCommit) onCommit();
+      });
     }
 
     function initCCSliders() {
@@ -2784,6 +3058,7 @@
           (newVal) => {
             emotionLevels[emo] = newVal;
             updateSummaries();
+            scheduleEmotionAutosave();
           },
           (newVal) => {
             const p = (newVal / 10) * 100;
@@ -2791,7 +3066,8 @@
             const valSpan = row.querySelector('.cc-value');
             valSpan.textContent = newVal;
             valSpan.classList.toggle('is-zero', newVal === 0);
-          }
+          },
+          () => scheduleEmotionAutosave()
         );
 
         list.appendChild(row);
@@ -2931,32 +3207,29 @@
       document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
 
       const pBtn = document.getElementById('btnPeriodDay');
-      const pText = document.getElementById('periodBtnText');
+      const pCheck = document.getElementById('periodBtnCheckIcon');
       pBtn.classList.toggle('active', tempIsPeriod);
-      pText.textContent = tempIsPeriod ? 'Месячные ✓' : 'Месячные';
+      pCheck.style.display = tempIsPeriod ? 'inline-block' : 'none';
 
       const ovBtn = document.getElementById('btnOvulation');
+      const ovCheck = document.getElementById('ovulationCheckIcon');
       ovBtn.style.display = info.showOvulationOption ? 'inline-flex' : 'none';
       ovBtn.classList.toggle('active-ovul', tempIsOvulation);
-      ovBtn.textContent = tempIsOvulation ? '✦ Овуляция ✓' : '✦ Овуляция';
+      ovCheck.style.display = tempIsOvulation ? 'inline-block' : 'none';
 
       const mensBlock = document.getElementById('menstrualDischargeBlock');
-      const ovulBlock = document.getElementById('ovulatoryDischargeBlock');
+      const regBlock = document.getElementById('regularDischargeBlock');
 
       if (tempIsPeriod) {
         mensBlock.style.display = 'block';
-        ovulBlock.style.display = 'none';
+        regBlock.style.display = 'none';
         if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) tempDischarge = 'Умеренные';
-        renderDischargeButtons();
-      } else if (info.showOvulationOption) {
-        mensBlock.style.display = 'none';
-        ovulBlock.style.display = 'block';
-        if (!['Обычные', 'Кремовые', 'Прозрачные'].includes(tempDischarge)) tempDischarge = 'Обычные';
         renderDischargeButtons();
       } else {
         mensBlock.style.display = 'none';
-        ovulBlock.style.display = 'none';
-        tempDischarge = '';
+        regBlock.style.display = 'block';
+        if (!['Обычные', 'Кремовые', 'Прозрачные'].includes(tempDischarge)) tempDischarge = 'Обычные';
+        renderDischargeButtons();
       }
 
       updateSummaries();
@@ -3015,7 +3288,7 @@
         }
       } else {
         tempIsPeriod = false;
-        tempDischarge = '';
+        tempDischarge = 'Обычные';
 
         if (selectedDate === state.settings.lastPeriodStart) {
           const fallbackStart = state.settings.prevLastPeriodStart || findPreviousCycleStartBefore(selectedDate);
@@ -3030,9 +3303,8 @@
       if (state.entries[selectedDate]) {
         state.entries[selectedDate].isPeriod = tempIsPeriod;
         state.entries[selectedDate].isOvulation = tempIsOvulation;
-        state.entries[selectedDate].discharge = tempIsPeriod ? tempDischarge : '';
+        state.entries[selectedDate].discharge = tempDischarge;
         state.entries[selectedDate].updatedAt = Date.now();
-        delete state.entries[selectedDate].aiAnalysis;
         persistLocalAndCloud(selectedDate);
         if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
       } else if (turningOn && selectedDate === state.settings.lastPeriodStart) {
@@ -3054,18 +3326,38 @@
 
     function renderIntimacyButton() {
       const btn = document.getElementById('btnIntimacyToggle');
+      const chk = document.getElementById('intimacyCheckIcon');
       btn.classList.toggle('active-rose', tempIntimacy);
-      btn.textContent = tempIntimacy ? 'Близость ♥ ✓' : 'Близость ♥';
+      chk.style.display = tempIntimacy ? 'inline-block' : 'none';
     }
 
-    function toggleSoloReset() {
+    function incrementSoloReset() {
+      hapticImpact('light');
+      tempSoloCount = Math.min(20, (Number(tempSoloCount) || 0) + 1);
+      renderSoloResetButton();
+    }
+
+    function resetSoloReset() {
       hapticSelect();
-      tempSoloReset = !tempSoloReset;
+      tempSoloCount = 0;
       renderSoloResetButton();
     }
 
     function renderSoloResetButton() {
-      document.getElementById('btnSoloReset').classList.toggle('active', tempSoloReset);
+      const btn = document.getElementById('btnSoloReset');
+      const lbl = document.getElementById('soloCountLabel');
+      const resetMini = document.getElementById('btnSoloResetZero');
+      const count = Number(tempSoloCount) || 0;
+      btn.classList.toggle('active', count > 0);
+      if (count > 0) {
+        lbl.style.display = 'inline';
+        lbl.textContent = count;
+        resetMini.style.display = 'inline-flex';
+      } else {
+        lbl.style.display = 'none';
+        lbl.textContent = '1';
+        resetMini.style.display = 'none';
+      }
     }
 
     function toggleOvulation() {
@@ -3079,7 +3371,6 @@
         state.entries[selectedDate].isOvulation = tempIsOvulation;
         state.entries[selectedDate].isPeriod = tempIsPeriod;
         state.entries[selectedDate].updatedAt = Date.now();
-        delete state.entries[selectedDate].aiAnalysis;
         persistLocalAndCloud(selectedDate);
       }
       updateHeaderAndContextControls();
@@ -3146,24 +3437,27 @@
 
     function buildLoadedEmotionLevels(entry) {
       const levels = createDefaultEmotionLevels();
-      if (entry?.emotionLevels) {
+      if (entry?.emotionLevels && typeof entry.emotionLevels === 'object') {
         Object.entries(entry.emotionLevels).forEach(([k, v]) => {
           const normKey = k === 'Внутреннее напряжение' ? 'Напряжение' : k;
-          if (normKey in levels && typeof v === 'number') {
-            levels[normKey] = v;
+          const num = Number(v);
+          if (normKey in levels && Number.isFinite(num)) {
+            levels[normKey] = Math.max(0, Math.min(10, Math.round(num)));
           }
         });
       }
       if (Array.isArray(entry?.emotions)) {
+        const hasAnySavedVal = Object.values(levels).some(v => v > 0);
         entry.emotions.forEach(em => {
           const normKey = em === 'Внутреннее напряжение' ? 'Напряжение' : em;
-          if (normKey in levels && levels[normKey] === 0 && !entry.emotionLevels) {
+          if (normKey in levels && levels[normKey] === 0 && !hasAnySavedVal) {
             levels[normKey] = 5;
           }
         });
       }
       if (Array.isArray(entry?.contexts) && entry.contexts.includes('Стресс') && (levels['Стресс'] ?? 0) === 0) {
-        levels['Стресс'] = 5;
+        const hasAnySavedVal = Object.values(levels).some(v => v > 0);
+        if (!hasAnySavedVal) levels['Стресс'] = 5;
       }
       return levels;
     }
@@ -3183,8 +3477,8 @@
         tempIsPeriod = Boolean(existing.isPeriod || isCycleStart);
         tempIsOvulation = Boolean(existing.isOvulation);
         tempIntimacy = Boolean(existing.intimacy);
-        tempSoloReset = Boolean(existing.soloReset);
-        tempDischarge = existing.discharge || '';
+        tempSoloCount = normalizeSoloCount(existing);
+        tempDischarge = existing.discharge || (tempIsPeriod ? 'Умеренные' : 'Обычные');
 
         populateEditableInputs(existing);
         renderSavedSummaryCard(existing);
@@ -3197,12 +3491,12 @@
         tempIsPeriod = isCycleStart;
         tempIsOvulation = false;
         tempIntimacy = false;
-        tempSoloReset = false;
-        tempDischarge = isCycleStart ? 'Умеренные' : '';
+        tempSoloCount = 0;
+        tempDischarge = isCycleStart ? 'Умеренные' : 'Обычные';
 
         populateEditableInputs({
           energy: 6, pain: 1, libido: 5,
-          intimacy: false, soloReset: false, emotionLevels, contexts: [],
+          intimacy: false, soloCount: 0, soloReset: false, emotionLevels, contexts: [],
           wristTempDelta: ''
         });
         document.getElementById('savedSummaryCard').style.display = 'none';
@@ -3216,7 +3510,7 @@
     function populateEditableInputs(data) {
       renderAllCCSliders();
       tempIntimacy = Boolean(data.intimacy);
-      tempSoloReset = Boolean(data.soloReset);
+      tempSoloCount = normalizeSoloCount(data);
       renderIntimacyButton();
       renderSoloResetButton();
 
@@ -3242,6 +3536,13 @@
 
       const watchRow = document.getElementById('savedWatchRow');
       const pills = [];
+      const soloCnt = normalizeSoloCount(entry);
+      if (soloCnt > 0) {
+        pills.push(`<span class="saved-watch-pill">${SVG_ICONS.bolt}<span>×${soloCnt}</span></span>`);
+      }
+      if (entry.intimacy) {
+        pills.push(`<span class="saved-watch-pill">${SVG_ICONS.heart}<span>Близость</span></span>`);
+      }
       if (typeof entry.wristTempDelta === 'number' && !isNaN(entry.wristTempDelta)) {
         const sign = entry.wristTempDelta > 0 ? '+' : '';
         pills.push(`<span class="saved-watch-pill">Темп.: ${sign}${entry.wristTempDelta} °C</span>`);
@@ -3269,17 +3570,29 @@
     }
 
     function saveCurrentDay() {
-      const activeEmos = getActiveEmotionsFromLevels(emotionLevels);
+      if (emotionAutosaveTimer) {
+        clearTimeout(emotionAutosaveTimer);
+        emotionAutosaveTimer = null;
+      }
+      const savedEmotionLevels = {};
+      ALL_EMOTIONS.forEach(em => {
+        const val = Number(emotionLevels[em]);
+        savedEmotionLevels[em] = Number.isFinite(val) ? Math.max(0, Math.min(10, Math.round(val))) : 0;
+      });
+      emotionLevels = { ...savedEmotionLevels };
+
+      const activeEmos = getActiveEmotionsFromLevels(savedEmotionLevels);
       const contexts = getSelectedPhysicalContexts();
-      if ((emotionLevels['Стресс'] ?? 0) >= 4 && !contexts.includes('Стресс')) {
+      if ((savedEmotionLevels['Стресс'] ?? 0) >= 4 && !contexts.includes('Стресс')) {
         contexts.push('Стресс');
       }
-      const prevHelped = state.entries[selectedDate]?.helped || [];
+      const prevHelped = Array.isArray(state.entries[selectedDate]?.helped) ? [...state.entries[selectedDate].helped] : [];
       const prevAi = state.entries[selectedDate]?.aiAnalysis;
 
       const tempRaw = document.getElementById('inpWristTemp').value.trim();
       const wristTempDelta = tempRaw !== '' && !isNaN(parseFloat(tempRaw)) ? parseFloat(tempRaw) : null;
-      const derivedMood = computeDerivedMood(emotionLevels, metrics.energy, metrics.pain);
+      const derivedMood = computeDerivedMood(savedEmotionLevels, metrics.energy, metrics.pain);
+      const soloCnt = Math.max(0, Math.min(20, Number(tempSoloCount) || 0));
 
       const entry = {
         date: selectedDate,
@@ -3287,14 +3600,15 @@
         isPeriod: tempIsPeriod,
         isOvulation: tempIsOvulation,
         intimacy: tempIntimacy,
-        soloReset: tempSoloReset,
-        discharge: tempIsPeriod ? tempDischarge : (getCycleInfo(selectedDate).showOvulationOption ? tempDischarge : ''),
+        soloCount: soloCnt,
+        soloReset: soloCnt > 0,
+        discharge: tempDischarge || (tempIsPeriod ? 'Умеренные' : 'Обычные'),
         mood: derivedMood,
         energy: metrics.energy,
         pain: metrics.pain,
         libido: metrics.libido,
         emotions: activeEmos,
-        emotionLevels: { ...emotionLevels },
+        emotionLevels: savedEmotionLevels,
         contexts,
         ...(wristTempDelta !== null ? { wristTempDelta } : {}),
         helped: prevHelped,
@@ -3406,8 +3720,10 @@
       if ((emotionLevels['Стресс'] ?? 0) >= 4 && !contexts.includes('Стресс')) {
         contexts.push('Стресс');
       }
+      const soloCnt = Math.max(0, Math.min(20, Number(tempSoloCount) || 0));
       return {
         date: selectedDate,
+        updatedAt: Date.now(),
         mood: computeDerivedMood(emotionLevels, metrics.energy, metrics.pain),
         energy: metrics.energy,
         pain: metrics.pain,
@@ -3415,7 +3731,8 @@
         isPeriod: tempIsPeriod,
         isOvulation: tempIsOvulation,
         intimacy: tempIntimacy,
-        soloReset: tempSoloReset,
+        soloCount: soloCnt,
+        soloReset: soloCnt > 0,
         discharge: tempDischarge,
         emotions: getActiveEmotionsFromLevels(emotionLevels),
         emotionLevels: { ...emotionLevels },
@@ -3629,7 +3946,7 @@
           psyB.textContent = 'Эмоциональный фон относительно ровный. Хороший момент, чтобы замечать, что именно поддерживает твоё спокойствие и энергию.';
         }
 
-        if (entry.soloReset) {
+        if (normalizeSoloCount(entry) > 0) {
           psyB.textContent += ' Мягкая телесная разрядка и снятие внутреннего зажима помогают снизить напряжение, улучшить кровоток и легче переключиться.';
         }
 
@@ -3655,93 +3972,117 @@
 
       if (entry.aiAnalysis?.tips?.length) {
         tips = entry.aiAnalysis.tips.map(t => ({
-          id: t.title,
-          title: t.title,
-          sub: t.sub || ''
-        }));
+          id: String(t.title || '').trim(),
+          title: String(t.title || '').trim(),
+          sub: String(t.sub || '').trim(),
+          isCustom: false
+        })).filter(t => t.id);
       } else {
         if (hasBreast) {
           tips.push({
             id: 'Мягкий топ без косточек и меньше кофеина',
             title: 'Мягкий топ без косточек и меньше кофеина',
-            sub: 'Снижает давление и чувствительность груди при гормональных колебаниях.'
+            sub: 'Снижает давление и чувствительность груди при гормональных колебаниях.',
+            isCustom: false
           });
         }
         if (hasEdema) {
           tips.push({
             id: 'Чистая вода и меньше солёного вечером',
             title: 'Чистая вода и меньше солёного вечером',
-            sub: 'Помогает быстрее вывести лишнюю жидкость и уменьшить тяжесть.'
+            sub: 'Помогает быстрее вывести лишнюю жидкость и уменьшить тяжесть.',
+            isCustom: false
           });
         }
         if (entry.pain >= 4 || entry.isPeriod) {
           tips.push({
             id: 'Тепло на низ живота или поясницу',
             title: 'Тепло на низ живота или поясницу',
-            sub: 'Грелка или тёплый душ помогают расслабить спазмированные мышцы.'
+            sub: 'Грелка или тёплый душ помогают расслабить спазмированные мышцы.',
+            isCustom: false
           });
         }
         if (entry.pain >= 4) {
           tips.push({
             id: 'Нурофен 400 мг',
             title: 'Нурофен 400 мг',
-            sub: 'Снимает боль и воспаление при спазмах — лучше принять до того, как боль станет сильной.'
+            sub: 'Снимает боль и воспаление при спазмах — лучше принять до того, как боль станет сильной.',
+            isCustom: false
           });
           tips.push({
             id: 'Но-шпа',
             title: 'Но-шпа',
-            sub: 'Мягкий спазмолитик, если хочется снять мышечный спазм.'
+            sub: 'Мягкий спазмолитик, если хочется снять мышечный спазм.',
+            isCustom: false
           });
         }
-        if (hasAnxiety || entry.pain >= 5 || entry.soloReset) {
+        if (hasAnxiety || entry.pain >= 5 || normalizeSoloCount(entry) > 0) {
           tips.push({
             id: 'Медленное дыхание',
             title: 'Медленное дыхание',
-            sub: 'Удлинённый выдох успокаивает нервную систему и снижает телесный зажим.'
+            sub: 'Удлинённый выдох успокаивает нервную систему и снижает телесный зажим.',
+            isCustom: false
           });
         }
         if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
           tips.push({
             id: 'Регулярный приём пищи с белком',
             title: 'Регулярный приём пищи с белком',
-            sub: 'Ровный уровень сахара в крови помогает меньше срываться и не проваливаться в усталость.'
+            sub: 'Ровный уровень сахара в крови помогает меньше срываться и не проваливаться в усталость.',
+            isCustom: false
           });
           tips.push({
             id: 'Меньше экранов и новостей вечером',
             title: 'Меньше экранов и новостей вечером',
-            sub: 'Снижает перевозбуждение и помогает спокойнее уснуть.'
+            sub: 'Снижает перевозбуждение и помогает спокойнее уснуть.',
+            isCustom: false
           });
         }
         if (info.isDelay) {
           tips.push({
             id: 'Тест и запись к врачу',
             title: 'Тест и запись к врачу',
-            sub: 'Даёт ясность и убирает лишнюю тревогу из-за неизвестности.'
+            sub: 'Даёт ясность и убирает лишнюю тревогу из-за неизвестности.',
+            isCustom: false
           });
         }
         if (tips.length < 3) {
           tips.push({
             id: 'Короткая прогулка на свежем воздухе',
             title: 'Короткая прогулка на свежем воздухе',
-            sub: 'Помогает проветрить голову и слегка поднять тонус без перегрузки.'
+            sub: 'Помогает проветрить голову и слегка поднять тонус без перегрузки.',
+            isCustom: false
           });
           tips.push({
             id: 'Ранний отход ко сну',
             title: 'Ранний отход ко сну',
-            sub: 'Сон остаётся самой надёжной опорой для гормонального и эмоционального баланса.'
+            sub: 'Сон остаётся самой надёжной опорой для гормонального и эмоционального баланса.',
+            isCustom: false
           });
         }
       }
 
-      const currentHelped = state.entries[selectedDate]?.helped || [];
+      const currentHelped = Array.isArray(state.entries[selectedDate]?.helped) ? state.entries[selectedDate].helped : [];
+      const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool : [];
       const allDisplayed = [...tips];
-      currentHelped.forEach(hId => {
-        if (!allDisplayed.some(t => t.id === hId)) {
-          allDisplayed.push({ id: hId, title: hId, sub: '' });
+
+      customPool.forEach(cId => {
+        const cleanId = String(cId || '').trim();
+        if (cleanId && !allDisplayed.some(t => t.id === cleanId)) {
+          allDisplayed.push({ id: cleanId, title: cleanId, sub: 'Твой способ', isCustom: true });
         }
       });
 
-      document.getElementById('actionableTipsList').innerHTML = allDisplayed.map(t => {
+      currentHelped.forEach(hId => {
+        const cleanId = String(hId || '').trim();
+        if (cleanId && !allDisplayed.some(t => t.id === cleanId)) {
+          allDisplayed.push({ id: cleanId, title: cleanId, sub: '', isCustom: true });
+        }
+      });
+
+      renderedTipsBuffer = allDisplayed;
+      const container = document.getElementById('actionableTipsList');
+      container.innerHTML = allDisplayed.map((t, idx) => {
         const isChecked = currentHelped.includes(t.id);
         return `
           <div class="tip-action-card">
@@ -3749,14 +4090,50 @@
               <div class="tip-action-title">${escapeHtml(t.title)}</div>
               ${t.sub ? `<div class="tip-action-sub">${escapeHtml(t.sub)}</div>` : ''}
             </div>
-            <button class="btn-helped-toggle ${isChecked ? 'checked' : ''}" onclick="toggleHelpedTip('${t.id.replace(/'/g, "\\'")}')">
-              ${isChecked ? 'Помогло ✓' : 'Помогло'}
-            </button>
+            <div class="tip-action-btns">
+              <button type="button" class="btn-helped-toggle ${isChecked ? 'checked' : ''}" data-tip-idx="${idx}">
+                <span>Помогло</span>
+                ${isChecked ? SVG_ICONS.check : ''}
+              </button>
+              ${t.isCustom ? `<button type="button" class="btn-tip-del" data-del-tip-idx="${idx}" aria-label="Удалить">${SVG_ICONS.cross}</button>` : ''}
+            </div>
           </div>
         `;
       }).join('');
 
+      container.querySelectorAll('.btn-helped-toggle').forEach(btn => {
+        btn.onclick = () => {
+          const idx = Number(btn.dataset.tipIdx);
+          const item = renderedTipsBuffer[idx];
+          if (item) toggleHelpedTip(item.id, Boolean(item.isCustom));
+        };
+      });
+
+      container.querySelectorAll('.btn-tip-del').forEach(btn => {
+        btn.onclick = () => {
+          const idx = Number(btn.dataset.delTipIdx);
+          const item = renderedTipsBuffer[idx];
+          if (item) removeCustomHelpedItem(item.id);
+        };
+      });
+
       renderLearnedHelpStats();
+    }
+
+    function removeCustomHelpedItem(tipId) {
+      hapticImpact('light');
+      if (Array.isArray(state.customHelpedPool)) {
+        state.customHelpedPool = state.customHelpedPool.filter(x => x !== tipId);
+      }
+      if (state.entries[selectedDate] && Array.isArray(state.entries[selectedDate].helped)) {
+        state.entries[selectedDate].helped = state.entries[selectedDate].helped.filter(x => x !== tipId);
+        state.entries[selectedDate].updatedAt = Date.now();
+        persistLocalAndCloud(selectedDate);
+      } else {
+        persistLocalAndCloud('__meta_only__');
+      }
+      renderAdviceAndSelfCareTab();
+      showToast('Удалено');
     }
 
     function formatProfileContextForPrompt() {
@@ -3815,6 +4192,7 @@
           const lv = buildLoadedEmotionLevels(e);
           const activeLv = {};
           ALL_EMOTIONS.forEach(em => { if ((lv[em] ?? 0) > 0) activeLv[em] = lv[em]; });
+          const sCount = normalizeSoloCount(e);
           return {
             date: e.date,
             cycleDay: ci.cycleDay,
@@ -3825,7 +4203,7 @@
             isPeriod: Boolean(e.isPeriod),
             isOvulation: Boolean(e.isOvulation),
             intimacy: Boolean(e.intimacy),
-            soloDischargeOrTensionRelief: Boolean(e.soloReset),
+            soloDischargeCount: sCount,
             discharge: e.discharge || '',
             ...(typeof e.wristTempDelta === 'number' ? { wristTempC: e.wristTempDelta } : {}),
             emotionLevels: activeLv,
@@ -3842,14 +4220,15 @@
       const hasRichHistory = recentHistory.length >= 3;
       const watchToday = [];
       if (typeof current.wristTempDelta === 'number') watchToday.push(`Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C`);
+      const todaySoloCount = normalizeSoloCount(current);
 
       const prompt = `Ты пишешь как живой, внимательный человек — врач-гинеколог и психолог в одном лице, который общается просто и по делу, на «ты».
 Строго запрещены ИИ-штампы, канцелярит и пустые фразы: не пиши «важно помнить», «в заключение», «комплексный подход», «не стоит забывать», «прислушайся к своему телу», «начни с малого» как общую заглушку. Говори конкретно про факты этого дня и цикла, живым разговорным языком.
 
 СЛОВАРЬ ОБОЗНАЧЕНИЙ ПРИЛОЖЕНИЯ (обязательно учитывай при анализе и рекомендациях):
-- Символ ♥ (intimacy): партнёрская близость.
-- Символ ⚡ (soloDischargeOrTensionRelief): соло-разрядка (мастурбация / оргазм наедине с собой). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
-- Символ ✦ (isOvulation): отмеченная овуляция.
+- Сердце (intimacy): партнёрская близость.
+- Молния (soloDischargeCount — число раз за день): соло-разрядка (мастурбация / оргазм наедине с собой, может отмечаться несколько раз в день). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер и количество раз в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
+- Звезда (isOvulation): отмеченная овуляция.
 - Данные температуры: учитывай возраст и фазу цикла при оценке значений температуры (например, значения около 36.2–37.4 °C или отклонения от базовой линии в зависимости от фазы цикла и возраста).
 
 ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ:
@@ -3866,10 +4245,10 @@
 - Боль: ${current.pain}/10
 - Либидо: ${current.libido}/10
 - Месячные: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
-- Овуляция (✦): ${current.isOvulation ? 'да' : 'нет'}
+- Овуляция: ${current.isOvulation ? 'да' : 'нет'}
 - Выделения: ${current.discharge || ''}
-- Близость (♥): ${current.intimacy ? 'да' : 'нет'}
-- Соло-разрядка (⚡ / soloDischargeOrTensionRelief): ${Boolean(current.soloReset)}
+- Близость: ${current.intimacy ? 'да' : 'нет'}
+- Соло-разрядка (количество раз за день): ${todaySoloCount}
 ${watchToday.length ? `- Температура: ${watchToday.join(', ')}` : ''}
 - Эмоции и стресс (интенсивность): ${formattedEmos}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
@@ -3882,7 +4261,7 @@ ${JSON.stringify(recentHistory)}
 
 ЗАДАЧА:
 ${hasRichHistory
-  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, чувствительности груди, недосыпа, стресса, отёков, температуры, а также как влияли близость (♥) и соло-разрядка (⚡). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
+  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, чувствительности груди, недосыпа, стресса, отёков, температуры, а также как влияли близость и соло-разрядка (включая её частоту за день). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
   : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
 
 Верни строго JSON:
@@ -3953,10 +4332,11 @@ ${hasRichHistory
         .filter(em => (curLevels[em] ?? 0) > 0)
         .map(em => `${em} (${curLevels[em]}/10)`)
         .join(', ');
+      const soloCnt = normalizeSoloCount(current);
 
       const prompt = `Ты чуткий, трезвый и спокойный собеседник (врач-гинеколог и психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
 Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла, возрастом и её профилем (если она есть) и предложи одну спокойную опору на сейчас.
-Примечание по маркерам: ♥ — партнёрская близость, ⚡ — соло-разрядка (называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой»).
+Примечание по маркерам: близость — партнёрская близость, соло-разрядка (счётчик за день) — называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой».
 
 Профиль пользователя:
 - ${formatProfileContextForPrompt()}
@@ -3964,7 +4344,7 @@ ${hasRichHistory
 Контекст сегодняшнего дня (${selectedDate}):
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
 - Энергия: ${current.energy}/10, Боль: ${current.pain}/10, Либидо: ${current.libido}/10
-- Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка(⚡)=${Boolean(current.soloReset)}, овуляция=${Boolean(current.isOvulation)}
+- Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка=${soloCnt} раз, овуляция=${Boolean(current.isOvulation)}
 ${typeof current.wristTempDelta === 'number' ? `- Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции и стресс: ${formattedEmos || 'не указаны'}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
@@ -4014,13 +4394,14 @@ ${text}
       const idx = list.indexOf(tipId);
       if (idx >= 0) {
         list.splice(idx, 1);
+        showToast('Отметка снята');
       } else {
         list.push(tipId);
         if (isCustom) {
           if (!Array.isArray(state.customHelpedPool)) state.customHelpedPool = [];
           if (!state.customHelpedPool.includes(tipId)) {
             state.customHelpedPool.unshift(tipId);
-            state.customHelpedPool = state.customHelpedPool.slice(0, 20);
+            state.customHelpedPool = state.customHelpedPool.slice(0, 25);
           }
         }
         showToast('Сохранено');
@@ -4036,7 +4417,19 @@ ${text}
       const val = inp.value.trim();
       if (!val) return;
       inp.value = '';
-      toggleHelpedTip(val, true);
+      if (!Array.isArray(state.customHelpedPool)) state.customHelpedPool = [];
+      if (!state.customHelpedPool.includes(val)) {
+        state.customHelpedPool.unshift(val);
+        state.customHelpedPool = state.customHelpedPool.slice(0, 25);
+      }
+      const alreadyChecked = Array.isArray(state.entries[selectedDate]?.helped) && state.entries[selectedDate].helped.includes(val);
+      if (!alreadyChecked) {
+        toggleHelpedTip(val, true);
+      } else {
+        persistLocalAndCloud('__meta_only__');
+        renderAdviceAndSelfCareTab();
+        showToast('Сохранено');
+      }
     }
 
     function renderLearnedHelpStats() {
@@ -4096,7 +4489,7 @@ ${text}
       const baseLen = Number(state.settings.cycleLength) || 28;
       const pLen = Number(state.settings.periodLength) || 5;
       const w = 400, h = 244;
-      const padR = 14, padT = 36, padB = 28;
+      const padR = 14, padT = 38, padB = 28;
       const plotH = h - padT - padB;
       const isDark = Boolean(state.settings.darkMode);
       const colors = getCurrentPaletteColors();
@@ -4282,7 +4675,7 @@ ${text}
           });
           drawSmoothSeries(pts, cAccent, 'gradAccent', true);
         }
-        legendEl.innerHTML = `<span style="color:${cAccent}; font-weight:600;">● Температура (°C)</span>`;
+        legendEl.innerHTML = `<span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Температура (°C)</span></span>`;
       } else if (chartFilter === 'emotions') {
         const emosToDraw = selectedEmotionChartFilter === 'all'
           ? (trackedEmotions.length ? trackedEmotions.slice(0, 5) : [])
@@ -4311,7 +4704,7 @@ ${text}
         legendEl.innerHTML = emosToDraw.length
           ? emosToDraw.map(em => {
               const c = (EMOTION_PALETTE[em] || { color: cAccent }).color;
-              return `<span style="color:${c}; font-weight:600;">● ${escapeHtml(em)}</span>`;
+              return `<span class="legend-item" style="color:${c};">${SVG_ICONS.dot}<span>${escapeHtml(em)}</span></span>`;
             }).join('')
           : '';
       } else {
@@ -4346,9 +4739,9 @@ ${text}
         }
 
         legendEl.innerHTML = `
-          <span style="color:${cIndigo}; font-weight:600;">● Энергия</span>
-          <span style="color:${cAmber}; font-weight:600;">● Либидо</span>
-          <span style="color:${cRose}; font-weight:600;">▮ Боль</span>
+          <span class="legend-item" style="color:${cIndigo};">${SVG_ICONS.dot}<span>Энергия</span></span>
+          <span class="legend-item" style="color:${cAmber};">${SVG_ICONS.dot}<span>Либидо</span></span>
+          <span class="legend-item" style="color:${cRose};">${SVG_ICONS.bar}<span>Боль</span></span>
         `;
       }
 
@@ -4356,17 +4749,28 @@ ${text}
         const e = byDay[d];
         if (!e) continue;
         const x = effectivePadL + ((d - 1) / (len - 1)) * effectivePlotW;
+        const soloCnt = normalizeSoloCount(e);
         const topMarkers = [];
-        if (e.intimacy) topMarkers.push({ sym: '♥', color: 'var(--rose)', size: '17' });
-        if (e.soloReset) topMarkers.push({ sym: '⚡', color: cAmber, size: '16.5' });
-        if (e.isOvulation) topMarkers.push({ sym: '✦', color: cOvul, size: '18.5' });
+        if (e.intimacy) topMarkers.push({ type: 'heart', color: 'var(--rose)', count: 1 });
+        if (soloCnt > 0) topMarkers.push({ type: 'bolt', color: cAmber, count: soloCnt });
+        if (e.isOvulation) topMarkers.push({ type: 'sparkle', color: cOvul, count: 1 });
 
         if (topMarkers.length) {
-          const spacing = 14;
+          const spacing = 16;
           const startX = x - ((topMarkers.length - 1) * spacing) / 2;
           topMarkers.forEach((m, idx) => {
             const mx = startX + idx * spacing;
-            html += `<text x="${mx.toFixed(1)}" y="${padT - 11}" text-anchor="middle" font-size="${m.size}" font-weight="700" fill="${m.color}">${m.sym}</text>`;
+            const my = padT - 22;
+            if (m.type === 'heart') {
+              html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><path d="M6.5 11.6L5.7 10.9C2.9 8.3 1.1 6.7 1.1 4.6 1.1 2.9 2.4 1.6 4.1 1.6c1 0 1.9.4 2.4 1.1.5-.7 1.4-1.1 2.4-1.1 1.7 0 3 1.3 3 3 0 2.1-1.8 3.7-4.6 6.3l-.8.7z"/></g>`;
+            } else if (m.type === 'bolt') {
+              html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><polygon points="7.2 1 1.6 7.6 6.6 7.6 6.1 12 11.6 5.4 6.6 5.4 7.2 1"/></g>`;
+              if (m.count > 1) {
+                html += `<text x="${(mx + 6.5).toFixed(1)}" y="${my + 9}" font-size="9" font-weight="700" fill="${m.color}">${m.count}</text>`;
+              }
+            } else if (m.type === 'sparkle') {
+              html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><path d="M6.5 1l1.3 4.2L12 6.5 7.8 7.8 6.5 12 5.2 7.8 1 6.5l4.2-1.3L6.5 1z"/></g>`;
+            }
           });
         }
       }
@@ -4417,7 +4821,7 @@ ${text}
               <div class="med-item-name">${escapeHtml(item.name)}</div>
               <div class="med-item-time">${dayStr}, ${tStr} → след. с ${nStr}</div>
             </div>
-            <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">✕</button>
+            <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">${SVG_ICONS.cross}</button>
           </div>
         `;
       }).join('');
@@ -4535,6 +4939,7 @@ ${text}
           if (!THEMES[state.settings.palette]) {
             state.settings.palette = 'peach_sage';
           }
+          normalizeAllLoadedEntries();
           ensureProfileStructure();
           applyThemeUI();
           syncSettingsInputs();
