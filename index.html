@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Carezze</title>
+  <title>CareZze</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
@@ -976,7 +976,7 @@
 
   <div class="app">
     <div class="header">
-      <div class="brand">Carezze</div>
+      <div class="brand">CareZze</div>
       <div class="header-actions">
         <button class="pill-btn" onclick="toggleTheme()" id="themeBtn">Тёмная</button>
         <button class="pill-btn sos" onclick="switchTab('sos')">SOS</button>
@@ -1166,7 +1166,7 @@
       <div class="card" id="breakdownMainCard">
         <div id="aiControlRow" style="margin-bottom:14px;">
           <button class="btn-indigo" id="btnRunAi" onclick="runGeminiAnalysis(true)">
-            <span>Разбор Carezze</span>
+            <span>Разбор CareZze</span>
           </button>
           <div id="aiStatusNote" style="font-size:13px; font-weight:600; color:var(--accent); margin-top:8px; text-align:center; display:none;"></div>
         </div>
@@ -1200,7 +1200,7 @@
       <!-- EPHEMERAL AI CHAT CARD -->
       <div class="card ai-highlight" id="aiQuickChatCard" style="display:none;">
         <div class="card-top">
-          <span class="card-title">Спросить Carezze</span>
+          <span class="card-title">Спросить CareZze</span>
         </div>
         <textarea id="aiQuickInput" rows="3"></textarea>
         <div style="display:flex; gap:8px; margin-top:10px;">
@@ -1935,6 +1935,7 @@
     let isBreathing = false;
 
     let importedTempToday = null;
+    let isCloudSyncing = false;
 
     function getCurrentPaletteColors() {
       const palKey = THEMES[state.settings.palette] ? state.settings.palette : 'peach_sage';
@@ -2029,7 +2030,63 @@
       });
     }
 
-    async function syncToCloud(specificMonthKey = null) {
+    function compactEntryForCloud(entry) {
+      const compactEmotions = {};
+      if (entry.emotionLevels) {
+        Object.entries(entry.emotionLevels).forEach(([k, v]) => {
+          if (typeof v === 'number' && v > 0) compactEmotions[k] = v;
+        });
+      }
+      const clone = {
+        date: entry.date,
+        updatedAt: entry.updatedAt || Date.now(),
+        isPeriod: Boolean(entry.isPeriod),
+        isOvulation: Boolean(entry.isOvulation),
+        intimacy: Boolean(entry.intimacy),
+        soloReset: Boolean(entry.soloReset),
+        discharge: entry.discharge || '',
+        mood: entry.mood,
+        energy: entry.energy,
+        pain: entry.pain,
+        libido: entry.libido,
+        emotionLevels: compactEmotions,
+        contexts: entry.contexts || [],
+        helped: entry.helped || []
+      };
+      if (typeof entry.wristTempDelta === 'number' && Number.isFinite(entry.wristTempDelta)) {
+        clone.wristTempDelta = entry.wristTempDelta;
+      }
+      if (entry.aiAnalysis) {
+        clone.aiAnalysis = {
+          physiology: (entry.aiAnalysis.physiology || '').slice(0, 420),
+          patterns: (entry.aiAnalysis.patterns || '').slice(0, 420),
+          focus: (entry.aiAnalysis.focus || '').slice(0, 320),
+          steps: (entry.aiAnalysis.steps || []).slice(0, 4),
+          tips: (entry.aiAnalysis.tips || []).slice(0, 4)
+        };
+      }
+      return clone;
+    }
+
+    function mergeEntryRecords(cloudEntry, localEntry) {
+      if (!cloudEntry) return localEntry;
+      if (!localEntry) return cloudEntry;
+      const cTime = Number(cloudEntry.updatedAt) || 0;
+      const lTime = Number(localEntry.updatedAt) || 0;
+      const newer = lTime > cTime ? localEntry : cloudEntry;
+      const older = lTime > cTime ? cloudEntry : localEntry;
+
+      const merged = { ...older, ...newer };
+      if ((merged.wristTempDelta === undefined || merged.wristTempDelta === null) && typeof older.wristTempDelta === 'number') {
+        merged.wristTempDelta = older.wristTempDelta;
+      }
+      if (!merged.updatedAt) {
+        merged.updatedAt = Math.max(cTime, lTime, Date.now());
+      }
+      return merged;
+    }
+
+    async function syncToCloud(specificTargetKey = null) {
       if (!hasTelegramCloud()) {
         document.getElementById('cloudSyncBadge').textContent = '';
         return;
@@ -2043,27 +2100,17 @@
       });
       await cloudSet('carezze2_meta', metaPayload);
 
-      const byMonth = {};
-      Object.entries(state.entries).forEach(([iso, entry]) => {
-        const ym = iso.slice(0, 7);
-        if (!specificMonthKey || ym === specificMonthKey) {
-          if (!byMonth[ym]) byMonth[ym] = {};
-          const clone = { ...entry };
-          if (clone.aiAnalysis) {
-            clone.aiAnalysis = {
-              physiology: (clone.aiAnalysis.physiology || '').slice(0, 520),
-              patterns: (clone.aiAnalysis.patterns || '').slice(0, 520),
-              focus: (clone.aiAnalysis.focus || '').slice(0, 420),
-              steps: (clone.aiAnalysis.steps || []).slice(0, 4),
-              tips: (clone.aiAnalysis.tips || []).slice(0, 4)
-            };
+      const entriesList = Object.entries(state.entries);
+      for (const [iso, entry] of entriesList) {
+        if (!specificTargetKey || iso === specificTargetKey || iso.startsWith(specificTargetKey)) {
+          const compact = compactEntryForCloud(entry);
+          let serialized = JSON.stringify(compact);
+          if (serialized.length > 3900 && compact.aiAnalysis) {
+            delete compact.aiAnalysis;
+            serialized = JSON.stringify(compact);
           }
-          byMonth[ym][iso] = clone;
+          await cloudSet(`carezze2_d_${iso}`, serialized);
         }
-      });
-
-      for (const [ym, monthEntries] of Object.entries(byMonth)) {
-        await cloudSet(`carezze2_m_${ym}`, JSON.stringify(monthEntries));
       }
     }
 
@@ -2142,9 +2189,10 @@
       };
 
       existing.wristTempDelta = wristTemp;
+      existing.updatedAt = Date.now();
       state.entries[today] = existing;
       if (shouldPersist) {
-        persistLocalAndCloud(today.slice(0, 7));
+        persistLocalAndCloud(today);
       }
       return true;
     }
@@ -2215,25 +2263,31 @@
     }
 
     async function syncFromCloudBackground() {
-      if (!hasTelegramCloud()) return;
-      document.getElementById('cloudSyncBadge').textContent = 'Cloud';
-      const metaRaw = (await cloudGet('carezze2_meta'))
-        || (await cloudGet('carezze1_meta'))
-        || (await cloudGet('ritm9_meta'))
-        || (await cloudGet('ritm8_meta'));
-      if (!metaRaw) return;
-
+      if (!hasTelegramCloud() || isCloudSyncing) return;
+      isCloudSyncing = true;
       try {
-        const meta = JSON.parse(metaRaw);
-        state.onboarded = Boolean(meta.onboarded) || state.onboarded;
-        state.settings = { ...state.settings, ...(meta.settings || {}) };
-        if (!THEMES[state.settings.palette]) {
-          state.settings.palette = 'peach_sage';
+        document.getElementById('cloudSyncBadge').textContent = 'Cloud';
+        const metaRaw = (await cloudGet('carezze2_meta'))
+          || (await cloudGet('carezze1_meta'))
+          || (await cloudGet('ritm9_meta'))
+          || (await cloudGet('ritm8_meta'));
+
+        if (metaRaw) {
+          const meta = JSON.parse(metaRaw);
+          state.onboarded = Boolean(meta.onboarded) || state.onboarded;
+          state.settings = { ...state.settings, ...(meta.settings || {}) };
+          if (!THEMES[state.settings.palette]) {
+            state.settings.palette = 'peach_sage';
+          }
+          ensureProfileStructure();
+          if (Array.isArray(meta.painkillers) && meta.painkillers.length) {
+            state.painkillers = meta.painkillers;
+          }
         }
-        ensureProfileStructure();
-        state.painkillers = meta.painkillers || state.painkillers;
 
         const keys = await cloudGetKeys();
+        const cloudEntriesMap = {};
+
         const monthKeys = keys.filter(k =>
           k.startsWith('carezze2_m_') || k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_')
         );
@@ -2241,9 +2295,26 @@
           const mRaw = await cloudGet(mk);
           if (mRaw) {
             const mEntries = JSON.parse(mRaw);
-            state.entries = { ...mEntries, ...state.entries };
+            Object.entries(mEntries).forEach(([iso, entry]) => {
+              cloudEntriesMap[iso] = mergeEntryRecords(cloudEntriesMap[iso], entry);
+            });
           }
         }
+
+        const dayKeys = keys.filter(k => k.startsWith('carezze2_d_'));
+        for (const dk of dayKeys) {
+          const dRaw = await cloudGet(dk);
+          if (dRaw) {
+            const dEntry = JSON.parse(dRaw);
+            const iso = dEntry.date || dk.replace('carezze2_d_', '');
+            cloudEntriesMap[iso] = mergeEntryRecords(cloudEntriesMap[iso], dEntry);
+          }
+        }
+
+        const allDates = new Set([...Object.keys(cloudEntriesMap), ...Object.keys(state.entries)]);
+        allDates.forEach(iso => {
+          state.entries[iso] = mergeEntryRecords(cloudEntriesMap[iso], state.entries[iso]);
+        });
 
         if (importedTempToday !== null) {
           applyIncomingTempToToday(importedTempToday, false);
@@ -2251,8 +2322,9 @@
 
         ensureOnboardedFlagIfDataExists();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
         if (importedTempToday !== null) {
-          await syncToCloud(getTodayISO(0).slice(0, 7));
+          await syncToCloud(getTodayISO(0));
         }
 
         applyThemeUI();
@@ -2262,18 +2334,22 @@
         }
         loadDayForm();
         renderAnalytics();
-      } catch (e) {}
+      } catch (e) {
+      } finally {
+        isCloudSyncing = false;
+      }
     }
 
-    function persistLocalAndCloud(monthKey = null) {
+    function persistLocalAndCloud(targetKey = null) {
       state.onboarded = true;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      syncToCloud(monthKey);
+      syncToCloud(targetKey);
     }
 
     async function forceCloudSync() {
       hapticImpact('medium');
       await syncToCloud(null);
+      await syncFromCloudBackground();
       showToast('Сохранено');
     }
 
@@ -2867,13 +2943,14 @@
         state.entries[selectedDate].isPeriod = tempIsPeriod;
         state.entries[selectedDate].isOvulation = tempIsOvulation;
         state.entries[selectedDate].discharge = tempIsPeriod ? tempDischarge : '';
+        state.entries[selectedDate].updatedAt = Date.now();
         delete state.entries[selectedDate].aiAnalysis;
-        persistLocalAndCloud(selectedDate.slice(0, 7));
+        persistLocalAndCloud(selectedDate);
         if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
       } else if (turningOn && selectedDate === state.settings.lastPeriodStart) {
-        persistLocalAndCloud(selectedDate.slice(0, 7));
+        persistLocalAndCloud(selectedDate);
       } else if (!turningOn) {
-        persistLocalAndCloud(selectedDate.slice(0, 7));
+        persistLocalAndCloud(selectedDate);
       }
 
       updateHeaderAndContextControls();
@@ -2913,7 +2990,9 @@
       if (state.entries[selectedDate]) {
         state.entries[selectedDate].isOvulation = tempIsOvulation;
         state.entries[selectedDate].isPeriod = tempIsPeriod;
+        state.entries[selectedDate].updatedAt = Date.now();
         delete state.entries[selectedDate].aiAnalysis;
+        persistLocalAndCloud(selectedDate);
       }
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab();
@@ -3110,6 +3189,7 @@
 
       const entry = {
         date: selectedDate,
+        updatedAt: Date.now(),
         isPeriod: tempIsPeriod,
         isOvulation: tempIsOvulation,
         intimacy: tempIntimacy,
@@ -3134,7 +3214,7 @@
       state.onboarded = true;
       state.entries[selectedDate] = entry;
       isEditingDay = false;
-      persistLocalAndCloud(selectedDate.slice(0, 7));
+      persistLocalAndCloud(selectedDate);
 
       renderSavedSummaryCard(entry);
       document.getElementById('savedSummaryCard').style.display = 'block';
@@ -3353,7 +3433,7 @@
 
       if (!isAiGenerating) {
         btnRunAi.disabled = false;
-        btnRunAi.innerHTML = '<span>Разбор Carezze</span>';
+        btnRunAi.innerHTML = '<span>Разбор CareZze</span>';
         aiNote.style.display = 'none';
         aiNote.textContent = '';
       }
@@ -3613,7 +3693,7 @@
       const btn = document.getElementById('btnRunAi');
       const note = document.getElementById('aiStatusNote');
       btn.disabled = true;
-      btn.innerHTML = '<span>Разбор Carezze</span>';
+      btn.innerHTML = '<span>Разбор CareZze</span>';
       note.style.display = 'block';
       note.style.color = 'var(--accent)';
       note.textContent = 'Составляю разбор...';
@@ -3729,6 +3809,7 @@ ${hasRichHistory
         if (!state.entries[selectedDate]) {
           state.entries[selectedDate] = { ...current };
         }
+        state.entries[selectedDate].updatedAt = Date.now();
         state.entries[selectedDate].aiAnalysis = {
           physiology: result.physiology || '',
           patterns: result.patterns || '',
@@ -3736,7 +3817,7 @@ ${hasRichHistory
           steps: Array.isArray(result.steps) ? result.steps.slice(0, 4) : [],
           tips: Array.isArray(result.tips) ? result.tips.slice(0, 4) : []
         };
-        persistLocalAndCloud(selectedDate.slice(0, 7));
+        persistLocalAndCloud(selectedDate);
         isAiGenerating = false;
         btn.disabled = false;
         renderAdviceAndSelfCareTab();
@@ -3842,7 +3923,8 @@ ${text}
         showToast('Сохранено');
       }
       state.entries[selectedDate].helped = list;
-      persistLocalAndCloud(selectedDate.slice(0, 7));
+      state.entries[selectedDate].updatedAt = Date.now();
+      persistLocalAndCloud(selectedDate);
       renderAdviceAndSelfCareTab();
     }
 
@@ -4196,7 +4278,7 @@ ${text}
 
     function logPainkiller(name, hours = 4) {
       state.painkillers.unshift({ name, timeISO: new Date().toISOString(), hours });
-      persistLocalAndCloud(null);
+      persistLocalAndCloud('__meta_only__');
       updatePainkillerUI();
       showToast('Добавлено');
     }
@@ -4213,7 +4295,7 @@ ${text}
       hapticImpact('light');
       if (index >= 0 && index < state.painkillers.length) {
         state.painkillers.splice(index, 1);
-        persistLocalAndCloud(null);
+        persistLocalAndCloud('__meta_only__');
         updatePainkillerUI();
         showToast('Удалено');
       }
@@ -4334,7 +4416,7 @@ ${text}
       state.onboarded = true;
 
       syncSettingsInputs();
-      persistLocalAndCloud(null);
+      persistLocalAndCloud('__meta_only__');
       loadDayForm();
       renderAnalytics();
       showToast('Сохранено');
@@ -4424,6 +4506,17 @@ ${text}
         renderProfileViewMode();
       }
     }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        syncFromCloudBackground();
+      }
+    });
+    try {
+      tg?.onEvent?.('activated', () => {
+        syncFromCloudBackground();
+      });
+    } catch (e) {}
 
     setupKeyboardLift();
     initCCSliders();
