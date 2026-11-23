@@ -1144,21 +1144,15 @@
         <div class="accordion" id="acc-watch">
           <button class="accordion-header" onclick="toggleAccordion('acc-watch')">
             <div>
-              <div>Сон и температура (Watch)</div>
+              <div>Температура (Watch)</div>
               <div class="accordion-summary" id="sum-watch">Опционально</div>
             </div>
             <span class="accordion-chevron">⌄</span>
           </button>
           <div class="accordion-body">
-            <div class="grid-2" style="margin-top:8px;">
-              <div>
-                <div class="field-label" style="margin-bottom:6px;">Сон (часы)</div>
-                <input type="number" id="inpSleepHours" step="0.1" min="0" max="18" oninput="updateWatchSummary()" />
-              </div>
-              <div>
-                <div class="field-label" style="margin-bottom:6px;">Δ Темп. запястья (°C)</div>
-                <input type="number" id="inpWristTemp" step="0.05" min="-2.5" max="2.5" oninput="updateWatchSummary()" />
-              </div>
+            <div style="margin-top:8px;">
+              <div class="field-label" style="margin-bottom:6px;">Δ Темп. запястья (°C)</div>
+              <input type="number" id="inpWristTemp" step="0.05" min="-2.5" max="2.5" oninput="updateWatchSummary()" />
             </div>
           </div>
         </div>
@@ -1497,7 +1491,7 @@
       <span>График</span>
     </button>
     <button class="tab-item" data-tab="settings" onclick="switchTab('settings')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l-.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <span>Настройки</span>
     </button>
   </nav>
@@ -2047,12 +2041,21 @@
       }
     }
 
+    function parseIncomingTempValue(rawVal) {
+      if (rawVal === undefined || rawVal === null) return null;
+      const cleaned = String(rawVal).trim().replace(/_/g, '.').replace(/,/g, '.');
+      if (!cleaned) return null;
+      const parsed = Number(cleaned);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
+
     function applyIncomingUrlParams() {
       try {
+        const tgStartParam = tg?.initDataUnsafe?.start_param;
         const params = new URLSearchParams(window.location.search);
-        const sleepParam = params.get('sleep');
-        const tempParam = params.get('temp');
-        if (sleepParam === null && tempParam === null) return false;
+        const tempParam = tgStartParam || params.get('temp');
+        const wristTemp = parseIncomingTempValue(tempParam);
+        if (wristTemp === null) return false;
 
         const today = getTodayISO(0);
         selectedDate = today;
@@ -2073,22 +2076,14 @@
           helped: []
         };
 
-        let updated = false;
-        if (sleepParam !== null && sleepParam !== '' && !isNaN(parseFloat(sleepParam))) {
-          existing.sleepHours = parseFloat(sleepParam);
-          updated = true;
-        }
-        if (tempParam !== null && tempParam !== '' && !isNaN(parseFloat(tempParam))) {
-          existing.wristTempDelta = parseFloat(tempParam);
-          updated = true;
-        }
+        existing.wristTempDelta = wristTemp;
+        state.entries[today] = existing;
+        persistLocalAndCloud(today.slice(0, 7));
 
-        if (updated) {
-          state.entries[today] = existing;
-          persistLocalAndCloud(today.slice(0, 7));
+        if (params.has('temp') || params.has('sleep')) {
           window.history.replaceState({}, document.title, window.location.pathname);
-          return true;
         }
+        return true;
       } catch (e) {}
       return false;
     }
@@ -2135,7 +2130,7 @@
       loadDayForm();
       renderAnalytics();
       if (hadUrlImport) {
-        setTimeout(() => showToast('Данные Apple Watch добавлены'), 350);
+        setTimeout(() => showToast('Температура добавлена'), 350);
       }
     }
 
@@ -2845,15 +2840,13 @@
     }
 
     function updateWatchSummary() {
-      const sVal = document.getElementById('inpSleepHours').value.trim();
       const tVal = document.getElementById('inpWristTemp').value.trim();
-      const parts = [];
-      if (sVal !== '') parts.push(`Сон ${sVal} ч`);
       if (tVal !== '') {
         const num = parseFloat(tVal);
-        parts.push(`Темп. ${num > 0 ? '+' : ''}${tVal} °C`);
+        document.getElementById('sum-watch').textContent = `Темп. ${num > 0 ? '+' : ''}${tVal} °C`;
+      } else {
+        document.getElementById('sum-watch').textContent = 'Опционально';
       }
-      document.getElementById('sum-watch').textContent = parts.length ? parts.join(' · ') : 'Опционально';
     }
 
     function setupChips() {
@@ -2933,7 +2926,7 @@
         populateEditableInputs({
           mood: 6, energy: 6, pain: 1, libido: 5,
           intimacy: false, soloReset: false, emotionLevels, contexts: [],
-          sleepHours: '', wristTempDelta: ''
+          wristTempDelta: ''
         });
         document.getElementById('savedSummaryCard').style.display = 'none';
         document.getElementById('editableDayForm').style.display = 'block';
@@ -2959,7 +2952,6 @@
         }
       });
 
-      document.getElementById('inpSleepHours').value = (data.sleepHours !== undefined && data.sleepHours !== null && data.sleepHours !== '') ? data.sleepHours : '';
       document.getElementById('inpWristTemp').value = (data.wristTempDelta !== undefined && data.wristTempDelta !== null && data.wristTempDelta !== '') ? data.wristTempDelta : '';
       updateWatchSummary();
 
@@ -2974,9 +2966,6 @@
 
       const watchRow = document.getElementById('savedWatchRow');
       const pills = [];
-      if (typeof entry.sleepHours === 'number' && !isNaN(entry.sleepHours)) {
-        pills.push(`<span class="saved-watch-pill">Сон: ${entry.sleepHours} ч</span>`);
-      }
       if (typeof entry.wristTempDelta === 'number' && !isNaN(entry.wristTempDelta)) {
         const sign = entry.wristTempDelta > 0 ? '+' : '';
         pills.push(`<span class="saved-watch-pill">Δ Темп.: ${sign}${entry.wristTempDelta} °C</span>`);
@@ -3005,9 +2994,7 @@
       const prevHelped = state.entries[selectedDate]?.helped || [];
       const prevAi = state.entries[selectedDate]?.aiAnalysis;
 
-      const sleepRaw = document.getElementById('inpSleepHours').value.trim();
       const tempRaw = document.getElementById('inpWristTemp').value.trim();
-      const sleepHours = sleepRaw !== '' && !isNaN(parseFloat(sleepRaw)) ? parseFloat(sleepRaw) : null;
       const wristTempDelta = tempRaw !== '' && !isNaN(parseFloat(tempRaw)) ? parseFloat(tempRaw) : null;
 
       const entry = {
@@ -3024,7 +3011,6 @@
         emotions: activeEmos,
         emotionLevels: { ...emotionLevels },
         contexts,
-        ...(sleepHours !== null ? { sleepHours } : {}),
         ...(wristTempDelta !== null ? { wristTempDelta } : {}),
         helped: prevHelped,
         ...(prevAi ? { aiAnalysis: prevAi } : {})
@@ -3126,7 +3112,6 @@
 
     function getCurrentWorkingEntry() {
       if (state.entries[selectedDate]) return state.entries[selectedDate];
-      const sleepRaw = document.getElementById('inpSleepHours')?.value.trim();
       const tempRaw = document.getElementById('inpWristTemp')?.value.trim();
       return {
         date: selectedDate,
@@ -3142,7 +3127,6 @@
         emotions: getActiveEmotionsFromLevels(emotionLevels),
         emotionLevels: { ...emotionLevels },
         contexts: getSelectedContexts(),
-        ...(sleepRaw ? { sleepHours: parseFloat(sleepRaw) } : {}),
         ...(tempRaw ? { wristTempDelta: parseFloat(tempRaw) } : {}),
         helped: []
       };
@@ -3542,7 +3526,6 @@
             intimacy: Boolean(e.intimacy),
             soloDischargeOrTensionRelief: Boolean(e.soloReset),
             discharge: e.discharge || '',
-            ...(typeof e.sleepHours === 'number' ? { sleepHours: e.sleepHours } : {}),
             ...(typeof e.wristTempDelta === 'number' ? { wristTempDeltaC: e.wristTempDelta } : {}),
             emotionLevels: activeLv,
             contexts: (e.contexts || []).map(normalizeContextLabel),
@@ -3557,7 +3540,6 @@
 
       const hasRichHistory = recentHistory.length >= 3;
       const watchToday = [];
-      if (typeof current.sleepHours === 'number') watchToday.push(`Сон: ${current.sleepHours} ч`);
       if (typeof current.wristTempDelta === 'number') watchToday.push(`Отклонение температуры запястья (Apple Watch): ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C`);
 
       const prompt = `Ты пишешь как живой, внимательный человек — врач-гинеколог и психолог в одном лице, который общается просто и по делу, на «ты».
@@ -3567,7 +3549,7 @@
 - Символ ♥ (intimacy): партнёрская близость.
 - Символ ⚡ (soloDischargeOrTensionRelief): соло-разрядка (мастурбация / оргазм наедине с собой). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
 - Символ ✦ (isOvulation): отмеченная овуляция.
-- Данные Apple Watch (если указаны): длительность сна и отклонение ночной температуры запястья от базовой линии (рост на +0.2…+0.5 °C подтверждает лютеиновую фазу и прогестерон после овуляции; резкое падение перед концом цикла предвещает скорые месячные).
+- Данные Apple Watch (если указаны): отклонение ночной температуры запястья от базовой линии (рост на +0.2…+0.5 °C подтверждает лютеиновую фазу и прогестерон после овуляции; резкое падение перед концом цикла предвещает скорые месячные).
 
 ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ:
 - ${formatProfileContextForPrompt()}
@@ -3600,7 +3582,7 @@ ${JSON.stringify(recentHistory)}
 
 ЗАДАЧА:
 ${hasRichHistory
-  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, сна/температуры запястья, а также как влияли близость (♥) и соло-разрядка (⚡). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
+  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, температуры запястья, а также как влияли близость (♥) и соло-разрядка (⚡). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
   : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
 
 Верни строго JSON:
@@ -3682,7 +3664,6 @@ ${hasRichHistory
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
 - Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10, Либидо: ${current.libido}/10
 - Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка(⚡)=${Boolean(current.soloReset)}, овуляция=${Boolean(current.isOvulation)}
-${typeof current.sleepHours === 'number' ? `- Сон: ${current.sleepHours} ч` : ''}
 ${typeof current.wristTempDelta === 'number' ? `- Δ Температуры запястья: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции: ${formattedEmos || 'не указаны'}
 - Факторы: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
@@ -4002,7 +3983,6 @@ ${text}
         `;
       }
 
-      // Large, clear top-of-chart markers for mobile readability
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         if (!e) continue;
