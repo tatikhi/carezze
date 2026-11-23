@@ -253,7 +253,6 @@
     }
     .card-sub { font-size: 13px; color: var(--ink-2); flex-shrink: 0; }
 
-    /* Theme selector cards in settings */
     .theme-list {
       display: flex;
       flex-direction: column;
@@ -335,6 +334,20 @@
       font-weight: 700;
       color: var(--ink);
     }
+    .saved-watch-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+    .saved-watch-pill {
+      background: var(--surface-2);
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
     .saved-cta-row {
       margin-top: 14px;
       padding-top: 12px;
@@ -399,6 +412,7 @@
 
     .emotion-sliders-stack { display: flex; flex-direction: column; gap: 8px; }
 
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .choice-btn {
       background: var(--surface-2);
@@ -665,7 +679,6 @@
     }
     .btn-helped-toggle.checked { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
 
-    /* Medication list in SOS */
     .med-list {
       display: flex;
       flex-direction: column;
@@ -1014,6 +1027,8 @@
           </div>
         </div>
 
+        <div class="saved-watch-row" id="savedWatchRow" style="display:none;"></div>
+
         <div class="saved-cta-row">
           <span style="font-size:13px; color:var(--ink-2);">Разбор</span>
           <button class="link-btn" onclick="switchTab('analytics_advice')">Открыть →</button>
@@ -1109,6 +1124,28 @@
               <div class="chip" data-val="Недосып">Недосып</div>
               <div class="chip" data-val="Стресс">Стресс</div>
               <div class="chip" data-val="Отёки">Отёки</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion" id="acc-watch">
+          <button class="accordion-header" onclick="toggleAccordion('acc-watch')">
+            <div>
+              <div>Сон и температура (Watch)</div>
+              <div class="accordion-summary" id="sum-watch">Опционально</div>
+            </div>
+            <span class="accordion-chevron">⌄</span>
+          </button>
+          <div class="accordion-body">
+            <div class="grid-2" style="margin-top:8px;">
+              <div>
+                <div class="field-label" style="margin-bottom:6px;">Сон (часы)</div>
+                <input type="number" id="inpSleepHours" step="0.1" min="0" max="18" placeholder="7.5" oninput="updateWatchSummary()" />
+              </div>
+              <div>
+                <div class="field-label" style="margin-bottom:6px;">Δ Темп. запястья (°C)</div>
+                <input type="number" id="inpWristTemp" step="0.05" min="-2.5" max="2.5" placeholder="+0.25" oninput="updateWatchSummary()" />
+              </div>
             </div>
           </div>
         </div>
@@ -1303,6 +1340,39 @@
 
     <!-- VIEW 5: SETTINGS ("Настройки") -->
     <div id="view-settings" class="view">
+      <div class="card">
+        <div class="card-top">
+          <span class="card-title">О себе</span>
+          <span class="card-sub">Для точности ИИ</span>
+        </div>
+
+        <div class="field-label" style="margin-bottom:8px;">Возраст</div>
+        <input type="number" id="setProfileAge" min="14" max="75" placeholder="28" />
+
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Гормональная контрацепция</div>
+        <div class="grid-2" id="contraceptionSelector">
+          <button type="button" class="choice-btn active" data-val="Нет" onclick="selectContraception('Нет')">Нет</button>
+          <button type="button" class="choice-btn" data-val="КОК" onclick="selectContraception('КОК')">КОК (таблетки)</button>
+          <button type="button" class="choice-btn" data-val="Кольцо / пластырь" onclick="selectContraception('Кольцо / пластырь')">Кольцо / пластырь</button>
+          <button type="button" class="choice-btn" data-val="Гормональная ВМС" onclick="selectContraception('Гормональная ВМС')">Горм. ВМС</button>
+        </div>
+
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Особенности организма</div>
+        <div class="chip-grid" id="profileConditionChips">
+          <div class="chip" data-val="Низкий ферритин / анемия">Низкий ферритин</div>
+          <div class="chip" data-val="Мигрени">Мигрени</div>
+          <div class="chip" data-val="СПКЯ">СПКЯ</div>
+          <div class="chip" data-val="Эндометриоз">Эндометриоз</div>
+          <div class="chip" data-val="Выраженный ПМС">Выраженный ПМС</div>
+          <div class="chip" data-val="Чувствительность к кофеину">Чувств. к кофеину</div>
+        </div>
+
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Дополнительно (одной строкой)</div>
+        <input type="text" id="setProfileNotes" placeholder="Например: пью железо и магний, чувствительный ЖКТ" />
+
+        <button class="btn-accent" style="margin-top:18px;" onclick="saveProfileSettings()">Сохранить профиль</button>
+      </div>
+
       <div class="card">
         <div class="card-top">
           <span class="card-title">Оформление</span>
@@ -1759,7 +1829,13 @@
         periodLength: 5,
         darkMode: false,
         palette: 'peach_sage',
-        geminiApiKey: ''
+        geminiApiKey: '',
+        profile: {
+          age: '',
+          contraception: 'Нет',
+          conditions: [],
+          notes: ''
+        }
       },
       entries: {},
       painkillers: []
@@ -1778,6 +1854,7 @@
     let tempIntimacy = false;
     let tempSoloReset = false;
     let tempDischarge = '';
+    let tempContraception = 'Нет';
 
     let isAiGenerating = false;
     let isQuickAiGenerating = false;
@@ -1930,6 +2007,61 @@
       }
     }
 
+    function ensureProfileStructure() {
+      if (!state.settings.profile) {
+        state.settings.profile = { age: '', contraception: 'Нет', conditions: [], notes: '' };
+      }
+      if (!Array.isArray(state.settings.profile.conditions)) {
+        state.settings.profile.conditions = [];
+      }
+    }
+
+    function applyIncomingUrlParams() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const sleepParam = params.get('sleep');
+        const tempParam = params.get('temp');
+        if (sleepParam === null && tempParam === null) return false;
+
+        const today = getTodayISO(0);
+        selectedDate = today;
+        const existing = state.entries[today] || {
+          date: today,
+          isPeriod: today === state.settings.lastPeriodStart,
+          isOvulation: false,
+          intimacy: false,
+          soloReset: false,
+          discharge: '',
+          mood: 6,
+          energy: 6,
+          pain: 1,
+          libido: 5,
+          emotions: [],
+          emotionLevels: createDefaultEmotionLevels(),
+          contexts: [],
+          helped: []
+        };
+
+        let updated = false;
+        if (sleepParam !== null && sleepParam !== '' && !isNaN(parseFloat(sleepParam))) {
+          existing.sleepHours = parseFloat(sleepParam);
+          updated = true;
+        }
+        if (tempParam !== null && tempParam !== '' && !isNaN(parseFloat(tempParam))) {
+          existing.wristTempDelta = parseFloat(tempParam);
+          updated = true;
+        }
+
+        if (updated) {
+          state.entries[today] = existing;
+          persistLocalAndCloud(today.slice(0, 7));
+          window.history.replaceState({}, document.title, window.location.pathname);
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
+
     function loadLocalSync() {
       try {
         let raw = localStorage.getItem(STORAGE_KEY);
@@ -1951,9 +2083,12 @@
           if (!THEMES[state.settings.palette]) {
             state.settings.palette = 'peach_sage';
           }
+          ensureProfileStructure();
           ensureOnboardedFlagIfDataExists();
         }
       } catch (e) {}
+
+      const hadUrlImport = applyIncomingUrlParams();
 
       applyThemeUI();
       syncSettingsInputs();
@@ -1968,6 +2103,9 @@
 
       loadDayForm();
       renderAnalytics();
+      if (hadUrlImport) {
+        setTimeout(() => showToast('Данные Apple Watch добавлены'), 350);
+      }
     }
 
     async function syncFromCloudBackground() {
@@ -1986,6 +2124,7 @@
         if (!THEMES[state.settings.palette]) {
           state.settings.palette = 'peach_sage';
         }
+        ensureProfileStructure();
         state.painkillers = meta.painkillers || state.painkillers;
 
         const keys = await cloudGetKeys();
@@ -2051,7 +2190,54 @@
       showToast('Сохранено');
     }
 
+    function selectContraception(val) {
+      hapticSelect();
+      tempContraception = val;
+      document.querySelectorAll('#contraceptionSelector .choice-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.val === val);
+      });
+    }
+
+    function setupProfileChips() {
+      document.querySelectorAll('#profileConditionChips .chip').forEach(chip => {
+        chip.onclick = () => {
+          hapticSelect();
+          chip.classList.toggle('active');
+        };
+      });
+    }
+
+    function saveProfileSettings() {
+      ensureProfileStructure();
+      const ageRaw = document.getElementById('setProfileAge').value.trim();
+      const ageNum = ageRaw ? Math.max(14, Math.min(75, Number(ageRaw))) : '';
+      const conditions = Array.from(document.querySelectorAll('#profileConditionChips .chip.active')).map(c => c.dataset.val);
+      const notes = document.getElementById('setProfileNotes').value.trim();
+
+      state.settings.profile = {
+        age: ageNum,
+        contraception: tempContraception || 'Нет',
+        conditions,
+        notes
+      };
+
+      persistLocalAndCloud(null);
+      showToast('Профиль сохранён');
+    }
+
     function syncSettingsInputs() {
+      ensureProfileStructure();
+      const prof = state.settings.profile;
+      document.getElementById('setProfileAge').value = prof.age || '';
+      tempContraception = prof.contraception || 'Нет';
+      document.querySelectorAll('#contraceptionSelector .choice-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.val === tempContraception);
+      });
+      document.querySelectorAll('#profileConditionChips .chip').forEach(c => {
+        c.classList.toggle('active', (prof.conditions || []).includes(c.dataset.val));
+      });
+      document.getElementById('setProfileNotes').value = prof.notes || '';
+
       document.getElementById('setLastPeriod').value = state.settings.lastPeriodStart;
       document.getElementById('setCycleLength').value = state.settings.cycleLength;
       document.getElementById('setPeriodLength').value = state.settings.periodLength || 5;
@@ -2457,7 +2643,6 @@
         .sort();
       if (!periodDates.length) return null;
 
-      // Walk backwards from the latest period date before excludeDateISO to find the start of that period block
       let blockStart = periodDates[periodDates.length - 1];
       for (let i = periodDates.length - 2; i >= 0; i--) {
         const prev = parseLocalISO(periodDates[i]);
@@ -2497,7 +2682,6 @@
         tempIsPeriod = false;
         tempDischarge = '';
 
-        // If this date was the current cycle start, revert cycle start back to the previous actual cycle day
         if (selectedDate === state.settings.lastPeriodStart) {
           const fallbackStart = state.settings.prevLastPeriodStart || findPreviousCycleStartBefore(selectedDate);
           if (fallbackStart && fallbackStart !== selectedDate) {
@@ -2516,7 +2700,6 @@
         persistLocalAndCloud(selectedDate.slice(0, 7));
         if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
       } else if (turningOn && selectedDate === state.settings.lastPeriodStart) {
-        // Persist updated cycle start even if full day form hasn't been saved yet
         persistLocalAndCloud(selectedDate.slice(0, 7));
       } else if (!turningOn) {
         persistLocalAndCloud(selectedDate.slice(0, 7));
@@ -2596,6 +2779,18 @@
         : 'Отметить интенсивность';
     }
 
+    function updateWatchSummary() {
+      const sVal = document.getElementById('inpSleepHours').value.trim();
+      const tVal = document.getElementById('inpWristTemp').value.trim();
+      const parts = [];
+      if (sVal !== '') parts.push(`Сон ${sVal} ч`);
+      if (tVal !== '') {
+        const num = parseFloat(tVal);
+        parts.push(`Темп. ${num > 0 ? '+' : ''}${tVal} °C`);
+      }
+      document.getElementById('sum-watch').textContent = parts.length ? parts.join(' · ') : 'Опционально';
+    }
+
     function setupChips() {
       document.querySelectorAll('#contextChips .chip').forEach(chip => {
         chip.onclick = () => {
@@ -2672,7 +2867,8 @@
 
         populateEditableInputs({
           mood: 6, energy: 6, pain: 1, libido: 5,
-          intimacy: false, soloReset: false, emotionLevels, contexts: []
+          intimacy: false, soloReset: false, emotionLevels, contexts: [],
+          sleepHours: '', wristTempDelta: ''
         });
         document.getElementById('savedSummaryCard').style.display = 'none';
         document.getElementById('editableDayForm').style.display = 'block';
@@ -2697,6 +2893,11 @@
           c.classList.add(isRose ? 'active-rose' : 'active');
         }
       });
+
+      document.getElementById('inpSleepHours').value = (data.sleepHours !== undefined && data.sleepHours !== null && data.sleepHours !== '') ? data.sleepHours : '';
+      document.getElementById('inpWristTemp').value = (data.wristTempDelta !== undefined && data.wristTempDelta !== null && data.wristTempDelta !== '') ? data.wristTempDelta : '';
+      updateWatchSummary();
+
       renderAllEmotionSliders();
     }
 
@@ -2705,6 +2906,23 @@
       document.getElementById('sum-e').textContent = entry.energy;
       document.getElementById('sum-p').textContent = entry.pain;
       document.getElementById('sum-l').textContent = entry.libido;
+
+      const watchRow = document.getElementById('savedWatchRow');
+      const pills = [];
+      if (typeof entry.sleepHours === 'number' && !isNaN(entry.sleepHours)) {
+        pills.push(`<span class="saved-watch-pill">Сон: ${entry.sleepHours} ч</span>`);
+      }
+      if (typeof entry.wristTempDelta === 'number' && !isNaN(entry.wristTempDelta)) {
+        const sign = entry.wristTempDelta > 0 ? '+' : '';
+        pills.push(`<span class="saved-watch-pill">Δ Темп.: ${sign}${entry.wristTempDelta} °C</span>`);
+      }
+      if (pills.length) {
+        watchRow.style.display = 'flex';
+        watchRow.innerHTML = pills.join('');
+      } else {
+        watchRow.style.display = 'none';
+        watchRow.innerHTML = '';
+      }
     }
 
     function unlockDayEditing() {
@@ -2722,6 +2940,11 @@
       const prevHelped = state.entries[selectedDate]?.helped || [];
       const prevAi = state.entries[selectedDate]?.aiAnalysis;
 
+      const sleepRaw = document.getElementById('inpSleepHours').value.trim();
+      const tempRaw = document.getElementById('inpWristTemp').value.trim();
+      const sleepHours = sleepRaw !== '' && !isNaN(parseFloat(sleepRaw)) ? parseFloat(sleepRaw) : null;
+      const wristTempDelta = tempRaw !== '' && !isNaN(parseFloat(tempRaw)) ? parseFloat(tempRaw) : null;
+
       const entry = {
         date: selectedDate,
         isPeriod: tempIsPeriod,
@@ -2736,6 +2959,8 @@
         emotions: activeEmos,
         emotionLevels: { ...emotionLevels },
         contexts,
+        ...(sleepHours !== null ? { sleepHours } : {}),
+        ...(wristTempDelta !== null ? { wristTempDelta } : {}),
         helped: prevHelped,
         ...(prevAi ? { aiAnalysis: prevAi } : {})
       };
@@ -2836,6 +3061,8 @@
 
     function getCurrentWorkingEntry() {
       if (state.entries[selectedDate]) return state.entries[selectedDate];
+      const sleepRaw = document.getElementById('inpSleepHours')?.value.trim();
+      const tempRaw = document.getElementById('inpWristTemp')?.value.trim();
       return {
         date: selectedDate,
         mood: metrics.mood,
@@ -2850,6 +3077,8 @@
         emotions: getActiveEmotionsFromLevels(emotionLevels),
         emotionLevels: { ...emotionLevels },
         contexts: getSelectedContexts(),
+        ...(sleepRaw ? { sleepHours: parseFloat(sleepRaw) } : {}),
+        ...(tempRaw ? { wristTempDelta: parseFloat(tempRaw) } : {}),
         helped: []
       };
     }
@@ -3000,6 +3229,13 @@
         }
         if (hasEdema) {
           extraBodyNotes.push('Отёки чаще возникают во вторую фазу цикла из-за задержки воды; помогает чистая вода и меньше солёного вечером.');
+        }
+        if (typeof entry.wristTempDelta === 'number' && !isNaN(entry.wristTempDelta)) {
+          if (entry.wristTempDelta >= 0.2) {
+            extraBodyNotes.push(`Температура запястья повышена (${entry.wristTempDelta > 0 ? '+' : ''}${entry.wristTempDelta} °C) — это типичный признак лютеиновой фазы и работы прогестерона после овуляции.`);
+          } else if (entry.wristTempDelta <= -0.2) {
+            extraBodyNotes.push(`Температура запястья ниже базовой (${entry.wristTempDelta} °C) — характерно для фолликулярной фазы или скорого начала менструации.`);
+          }
         }
         const extraBodySuffix = extraBodyNotes.length ? ' ' + extraBodyNotes.join(' ') : '';
 
@@ -3177,6 +3413,25 @@
       renderLearnedHelpStats();
     }
 
+    function formatProfileContextForPrompt() {
+      ensureProfileStructure();
+      const prof = state.settings.profile;
+      const parts = [];
+      if (prof.age) parts.push(`Возраст: ${prof.age} лет`);
+      if (prof.contraception && prof.contraception !== 'Нет') {
+        parts.push(`Гормональная контрацепция: ${prof.contraception} (учитывай, что собственный овуляторный цикл подавлен или изменён препаратом, а кровотечение является реакцией отмены / действием гормонов)`);
+      } else {
+        parts.push('Гормональная контрацепция: не используется (естественный цикл)');
+      }
+      if (prof.conditions && prof.conditions.length) {
+        parts.push(`Известные особенности: ${prof.conditions.join(', ')}`);
+      }
+      if (prof.notes) {
+        parts.push(`Заметка о себе: ${prof.notes}`);
+      }
+      return parts.join('\n- ');
+    }
+
     async function runGeminiAnalysis(isManualClick = false) {
       const apiKey = state.settings.geminiApiKey;
       if (!apiKey || isAiGenerating) return;
@@ -3222,6 +3477,8 @@
             intimacy: Boolean(e.intimacy),
             soloDischargeOrTensionRelief: Boolean(e.soloReset),
             discharge: e.discharge || '',
+            ...(typeof e.sleepHours === 'number' ? { sleepHours: e.sleepHours } : {}),
+            ...(typeof e.wristTempDelta === 'number' ? { wristTempDeltaC: e.wristTempDelta } : {}),
             emotionLevels: activeLv,
             contexts: (e.contexts || []).map(normalizeContextLabel),
             helped: e.helped || []
@@ -3234,6 +3491,9 @@
       });
 
       const hasRichHistory = recentHistory.length >= 3;
+      const watchToday = [];
+      if (typeof current.sleepHours === 'number') watchToday.push(`Сон: ${current.sleepHours} ч`);
+      if (typeof current.wristTempDelta === 'number') watchToday.push(`Отклонение температуры запястья (Apple Watch): ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C`);
 
       const prompt = `Ты пишешь как живой, внимательный человек — врач-гинеколог и психолог в одном лице, который общается просто и по делу, на «ты».
 Строго запрещены ИИ-штампы, канцелярит и пустые фразы: не пиши «важно помнить», «в заключение», «комплексный подход», «не стоит забывать», «прислушайся к своему телу», «начни с малого» как общую заглушку. Говори конкретно про факты этого дня и цикла, живым разговорным языком.
@@ -3242,7 +3502,10 @@
 - Символ ♥ (intimacy): партнёрская близость.
 - Символ ✧ (soloDischargeOrTensionRelief): соло-разрядка (мастурбация / оргазм наедине с собой). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
 - Символ ✦ (isOvulation): отмеченная овуляция.
-- Учитывай факторы: «Боль в груди», «Недосып», «Стресс», «Отёки» и интенсивность всех эмоций (0–10).
+- Данные Apple Watch (если указаны): длительность сна и отклонение ночной температуры запястья от базовой линии (рост на +0.2…+0.5 °C подтверждает лютеиновую фазу и прогестерон после овуляции; резкое падение перед концом цикла предвещает скорые месячные).
+
+ПРОФИЛЬ ПОЛЬЗОВАТЕЛЯ:
+- ${formatProfileContextForPrompt()}
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.len} дн., длительность месячных: ${info.pLen} дн.
@@ -3260,6 +3523,7 @@
 - Выделения: ${current.discharge || ''}
 - Близость (♥): ${current.intimacy ? 'да' : 'нет'}
 - Соло-разрядка (✧ / soloDischargeOrTensionRelief): ${Boolean(current.soloReset)}
+${watchToday.length ? `- Apple Watch: ${watchToday.join(', ')}` : ''}
 - Эмоции и их интенсивность: ${formattedEmos}
 - Факторы и ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
 
@@ -3271,12 +3535,12 @@ ${JSON.stringify(recentHistory)}
 
 ЗАДАЧА:
 ${hasRichHistory
-  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, а также как влияли близость (♥) и соло-разрядка (✧). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
+  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, сна/температуры запястья, а также как влияли близость (♥) и соло-разрядка (✧). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
   : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
 
 Верни строго JSON:
 {
-  "physiology": "3-4 живых предложения про тело, гормоны, грудь/отёки/боль/цикл без шаблонных фраз.",
+  "physiology": "3-4 живых предложения про тело, гормоны, профиль пользователя, грудь/отёки/боль/температуру/цикл без шаблонных фраз.",
   "patterns": "2-4 конкретных предложения о паттернах эмоций, боли, факторов, проверенных способов помощи и напоминаний на ближайшие дни.",
   "focus": "2-3 живых предложения про моральное состояние и поддержку сегодня.",
   "steps": [
@@ -3343,13 +3607,18 @@ ${hasRichHistory
         .join(', ');
 
       const prompt = `Ты чуткий, трезвый и спокойный собеседник (врач-гинеколог и психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
-Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла (если она есть) и предложи одну спокойную опору на сейчас.
+Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла и её профилем (если она есть) и предложи одну спокойную опору на сейчас.
 Примечание по маркерам: ♥ — партнёрская близость, ✧ — соло-разрядка (называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой»).
+
+Профиль пользователя:
+- ${formatProfileContextForPrompt()}
 
 Контекст сегодняшнего дня (${selectedDate}):
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
 - Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10, Либидо: ${current.libido}/10
 - Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка(✧)=${Boolean(current.soloReset)}, овуляция=${Boolean(current.isOvulation)}
+${typeof current.sleepHours === 'number' ? `- Сон: ${current.sleepHours} ч` : ''}
+${typeof current.wristTempDelta === 'number' ? `- Δ Температуры запястья: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции: ${formattedEmos || 'не указаны'}
 - Факторы: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
 
@@ -3671,7 +3940,6 @@ ${text}
         `;
       }
 
-      // Top-of-chart markers for intimacy (♥), solo reset (✧), and ovulation (✦)
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         if (!e) continue;
@@ -3855,6 +4123,7 @@ ${text}
           if (!THEMES[state.settings.palette]) {
             state.settings.palette = 'peach_sage';
           }
+          ensureProfileStructure();
           applyThemeUI();
           syncSettingsInputs();
           persistLocalAndCloud(null);
@@ -3884,7 +4153,13 @@ ${text}
           periodLength: 5,
           darkMode: state.settings.darkMode,
           palette: state.settings.palette || 'peach_sage',
-          geminiApiKey: ''
+          geminiApiKey: '',
+          profile: {
+            age: '',
+            contraception: 'Нет',
+            conditions: [],
+            notes: ''
+          }
         },
         entries: {},
         painkillers: []
@@ -3915,6 +4190,7 @@ ${text}
     setupKeyboardLift();
     initCCSliders();
     setupChips();
+    setupProfileChips();
     loadLocalSync();
     syncFromCloudBackground();
   </script>
