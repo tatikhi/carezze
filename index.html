@@ -22,6 +22,10 @@
       --accent-bg: #F9E3DC;
       --accent-tint: #FDF4F1;
 
+      --ovul: #5A7A68;
+      --ovul-bg: #E2ECE6;
+      --ovul-tint: #F3F8F5;
+
       --rose: #C8445E;
       --rose-solid: #D94865;
       --rose-bg: #FCE2E7;
@@ -197,6 +201,7 @@
     .hero-phase { font-size: 15px; font-weight: 600; color: var(--accent); margin-top: 6px; }
     .hero-phase.is-delay { color: var(--amber); }
     .hero-phase.is-period { color: var(--rose); }
+    .hero-phase.is-ovul { color: var(--ovul); }
     .hero-meta { text-align: right; font-size: 13px; color: var(--ink-2); line-height: 1.35; flex-shrink: 0; }
 
     .cycle-track { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
@@ -204,7 +209,7 @@
 
     .period-strip { display: flex; gap: 8px; margin-top: 14px; }
     .btn-period-apple {
-      flex: 1;
+      width: 100%;
       height: 44px;
       border-radius: 14px;
       border: 1.5px solid var(--rose-bg);
@@ -225,19 +230,6 @@
       border-color: var(--rose-solid);
       color: #FFFFFF;
       box-shadow: 0 4px 14px rgba(217, 72, 101, 0.28);
-    }
-    .btn-new-cycle {
-      height: 44px;
-      padding: 0 13px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--ink);
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
     }
 
     .card {
@@ -343,7 +335,6 @@
       font-weight: 700;
       color: var(--ink);
     }
-    .saved-tags-line { margin-top: 10px; font-size: 13.5px; color: var(--ink-2); line-height: 1.45; }
     .saved-cta-row {
       margin-top: 14px;
       padding-top: 12px;
@@ -428,6 +419,7 @@
     }
     .choice-btn.active { background: var(--accent-tint); border-color: var(--accent); color: var(--accent); }
     .choice-btn.active-rose { background: var(--rose-tint); border-color: var(--rose); color: var(--rose); }
+    .choice-btn.active-ovul { background: var(--ovul-tint); border-color: var(--ovul); color: var(--ovul); }
 
     .icon-stealth-btn {
       width: 44px;
@@ -437,7 +429,7 @@
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink-2);
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -673,6 +665,57 @@
     }
     .btn-helped-toggle.checked { background: var(--accent); border-color: var(--accent); color: #FFFFFF; }
 
+    /* Medication list in SOS */
+    .med-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .med-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--surface-2);
+      border-radius: 14px;
+      padding: 11px 14px;
+    }
+    .med-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .med-item-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .med-item-time {
+      font-size: 12.5px;
+      color: var(--ink-2);
+      font-variant-numeric: tabular-nums;
+    }
+    .med-del-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      border: none;
+      background: var(--surface);
+      color: var(--ink-2);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .med-del-btn:active {
+      background: var(--rose-tint);
+      color: var(--rose);
+    }
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -721,8 +764,8 @@
     .cal-cell.is-period { background: var(--rose-solid); color: #FFFFFF; }
     .cal-cell.is-cycle-start { box-shadow: inset 0 0 0 2px #FFFFFF; }
     .cal-cell.is-predicted-period { background: var(--rose-tint); color: var(--rose); border: 1.5px dashed var(--rose); }
-    .cal-cell.is-ovulation { background: var(--accent-tint); color: var(--accent); }
-    .cal-cell.is-predicted-ovulation { background: var(--accent-tint); color: var(--accent); border: 1.5px dashed var(--accent); }
+    .cal-cell.is-ovulation { background: var(--ovul-tint); color: var(--ovul); }
+    .cal-cell.is-predicted-ovulation { background: var(--ovul-tint); color: var(--ovul); border: 1.5px dashed var(--ovul); }
     .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--ink); }
     .cal-cell.is-selected { outline: 2.5px solid var(--accent); outline-offset: 1px; }
     .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; position: absolute; bottom: 4px; opacity: 0.85; }
@@ -769,7 +812,14 @@
       color: var(--ink-2);
     }
 
-    .flower-stage { display: flex; flex-direction: column; align-items: center; padding: 18px 10px 10px; }
+    .breath-desc {
+      font-size: 13.5px;
+      color: var(--ink-2);
+      line-height: 1.45;
+      margin-bottom: 6px;
+    }
+
+    .flower-stage { display: flex; flex-direction: column; align-items: center; padding: 14px 10px 10px; }
     .flower-viewport { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
     .flower-motion {
       width: 176px;
@@ -778,12 +828,17 @@
       align-items: center;
       justify-content: center;
       will-change: transform;
-      transform: translate3d(0, 0, 0) scale(0.86) rotate(0deg);
-      transition: transform 3.6s cubic-bezier(0.37, 0, 0.63, 1);
+      transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg);
+      transition-property: transform;
+      transition-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+      transition-duration: 3.6s;
     }
-    .flower-motion.phase-inhale { transition-duration: 3.8s; transform: translate3d(0, 0, 0) scale(1.18) rotate(22deg); }
-    .flower-motion.phase-topup { transition-duration: 1.5s; transform: translate3d(0, 0, 0) scale(1.26) rotate(34deg); }
-    .flower-motion.phase-exhale { transition-duration: 5.4s; transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg); }
+    .flower-motion.phase-inhale { transform: translate3d(0, 0, 0) scale(1.18) rotate(22deg); }
+    .flower-motion.phase-topup { transform: translate3d(0, 0, 0) scale(1.27) rotate(34deg); }
+    .flower-motion.phase-hold-in { transform: translate3d(0, 0, 0) scale(1.20) rotate(26deg); }
+    .flower-motion.phase-exhale { transform: translate3d(0, 0, 0) scale(0.84) rotate(0deg); }
+    .flower-motion.phase-hold-out { transform: translate3d(0, 0, 0) scale(0.82) rotate(-4deg); }
+
     .flower-prompt {
       position: absolute;
       inset: 0;
@@ -792,13 +847,20 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--ink);
       padding: 28px;
       pointer-events: none;
     }
-    .flower-subprompt { font-size: 12px; font-weight: 500; color: var(--ink-2); margin-top: 2px; }
+    .flower-subprompt {
+      font-family: "Plus Jakarta Sans", "Manrope", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
 
     .tab-bar {
       position: fixed;
@@ -924,9 +986,6 @@
             <span id="periodBtnIcon">●</span>
             <span id="periodBtnText">Месячные</span>
           </button>
-          <button class="btn-new-cycle" id="btnNewCycle" onclick="startNewCycleHere()" style="display:none;">
-            1-й день цикла
-          </button>
         </div>
       </div>
 
@@ -954,8 +1013,6 @@
             <strong id="sum-l">5</strong>
           </div>
         </div>
-
-        <div class="saved-tags-line" id="savedTagsLine"></div>
 
         <div class="saved-cta-row">
           <span style="font-size:13px; color:var(--ink-2);">Разбор</span>
@@ -1003,7 +1060,7 @@
 
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;" id="intimacyBlock">
             <button class="choice-btn" id="btnIntimacyToggle" onclick="toggleIntimacy()">Близость ♥</button>
-            <button class="icon-stealth-btn" id="btnSoloReset" onclick="toggleSoloReset()" aria-label="◈">◈</button>
+            <button class="icon-stealth-btn" id="btnSoloReset" onclick="toggleSoloReset()" aria-label="✧">✧</button>
             <button class="choice-btn" id="btnOvulation" onclick="toggleOvulation()" style="display:none;">✦ Овуляция</button>
           </div>
 
@@ -1023,7 +1080,7 @@
               <span class="field-label">Выделения</span>
             </div>
             <div class="grid-3" id="ovulatoryFlowSelector">
-              <div class="choice-btn active" data-val="Обычные" onclick="selectDischarge('Обычные')">Обычные</div>
+              <div class="choice-btn active-ovul" data-val="Обычные" onclick="selectDischarge('Обычные')">Обычные</div>
               <div class="choice-btn" data-val="Кремовые" onclick="selectDischarge('Кремовые')">Кремовые</div>
               <div class="choice-btn" data-val="Прозрачные" onclick="selectDischarge('Прозрачные')">Прозрачные</div>
             </div>
@@ -1148,7 +1205,7 @@
         <div class="filter-row" id="emotionSubFilters" style="display:none; margin-top:-2px;"></div>
 
         <div class="chart-wrap">
-          <svg id="cycleChart" width="100%" height="230" viewBox="0 0 400 230"></svg>
+          <svg id="cycleChart" width="100%" height="238" viewBox="0 0 400 238"></svg>
         </div>
 
         <div id="chartLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:12px; font-size:12px; color:var(--ink-2); margin-top:10px;"></div>
@@ -1165,13 +1222,26 @@
           <button class="btn-soft" onclick="logPainkiller('Нурофен 400 мг', 6)">Нурофен 400 мг</button>
           <button class="btn-soft" onclick="logPainkiller('Но-шпа', 4)">Но-шпа</button>
         </div>
-        <div class="inspector-box" id="painkillerStatus"></div>
+        <div style="display:flex; gap:8px; margin-top:8px;">
+          <input type="text" id="customMedInput" placeholder="Другой препарат" />
+          <button class="btn-soft" style="white-space:nowrap;" onclick="logCustomPainkiller()">Добавить</button>
+        </div>
+        <div class="med-list" id="painkillerStatus"></div>
       </div>
 
       <div class="card">
         <div class="card-top">
           <span class="card-title">Дыхание</span>
         </div>
+
+        <div class="filter-row" id="breathPatternRow">
+          <button class="filter-pill active" data-pattern="spasm" onclick="selectBreathPattern('spasm')">От спазмов</button>
+          <button class="filter-pill" data-pattern="sigh" onclick="selectBreathPattern('sigh')">От тревоги</button>
+          <button class="filter-pill" data-pattern="box" onclick="selectBreathPattern('box')">От перегруза</button>
+          <button class="filter-pill" data-pattern="sleep" onclick="selectBreathPattern('sleep')">Перед сном</button>
+        </div>
+        <div class="breath-desc" id="breathPatternDesc"></div>
+
         <div class="flower-stage">
           <div class="flower-viewport">
             <div id="flowerMotion" class="flower-motion">
@@ -1309,7 +1379,7 @@
       <div class="cal-legend">
         <span style="color:var(--rose-solid)">● Месячные / 1-й день</span>
         <span style="color:var(--rose)">◌ Примерно</span>
-        <span style="color:var(--accent)">● Овуляция</span>
+        <span style="color:var(--ovul)">● Овуляция</span>
         <span>• Запись</span>
       </div>
 
@@ -1362,6 +1432,9 @@
           '--accent': '#D46A4E',
           '--accent-bg': '#F9E3DC',
           '--accent-tint': '#FDF4F1',
+          '--ovul': '#5A7A68',
+          '--ovul-bg': '#E2ECE6',
+          '--ovul-tint': '#F3F8F5',
           '--rose': '#C8445E',
           '--rose-solid': '#D94865',
           '--rose-bg': '#FCE2E7',
@@ -1385,6 +1458,9 @@
           '--accent': '#EB866B',
           '--accent-bg': '#3D231C',
           '--accent-tint': '#2B1813',
+          '--ovul': '#84B097',
+          '--ovul-bg': '#1F3026',
+          '--ovul-tint': '#17241D',
           '--rose': '#F26B85',
           '--rose-solid': '#D94865',
           '--rose-bg': '#3D1922',
@@ -1400,7 +1476,7 @@
       },
       dusty_rose: {
         name: 'Пыльная Роза',
-        dots: ['#BE4B66', '#68598A', '#D97757'],
+        dots: ['#BE4B66', '#C47D3B', '#68598A'],
         light: {
           '--bg': '#FBF8F9',
           '--surface': '#FFFFFF',
@@ -1412,6 +1488,9 @@
           '--accent': '#BE4B66',
           '--accent-bg': '#F8DFE5',
           '--accent-tint': '#FDF3F5',
+          '--ovul': '#C47D3B',
+          '--ovul-bg': '#F9EAD8',
+          '--ovul-tint': '#FEF8F0',
           '--rose': '#D13B5B',
           '--rose-solid': '#D94865',
           '--rose-bg': '#FCE0E6',
@@ -1435,6 +1514,9 @@
           '--accent': '#E5738E',
           '--accent-bg': '#3D1D26',
           '--accent-tint': '#2B151B',
+          '--ovul': '#E5A35E',
+          '--ovul-bg': '#3A2815',
+          '--ovul-tint': '#2A1D0E',
           '--rose': '#F46987',
           '--rose-solid': '#D94865',
           '--rose-bg': '#401822',
@@ -1462,6 +1544,9 @@
           '--accent': '#6D4C82',
           '--accent-bg': '#EAE1F0',
           '--accent-tint': '#F6F2F9',
+          '--ovul': '#536895',
+          '--ovul-bg': '#E2E7F2',
+          '--ovul-tint': '#F3F5FA',
           '--rose': '#C94E72',
           '--rose-solid': '#D94865',
           '--rose-bg': '#FCE2EA',
@@ -1485,6 +1570,9 @@
           '--accent': '#A17DB8',
           '--accent-bg': '#2D2036',
           '--accent-tint': '#211828',
+          '--ovul': '#8499C7',
+          '--ovul-bg': '#1F2638',
+          '--ovul-tint': '#171C29',
           '--rose': '#EE7296',
           '--rose-solid': '#D94865',
           '--rose-bg': '#3D1B26',
@@ -1497,6 +1585,45 @@
           '--amber-tint': '#281B10',
           '--shadow': '0 8px 28px rgba(0, 0, 0, 0.48)'
         }
+      }
+    };
+
+    const BREATH_PATTERNS = {
+      spasm: {
+        name: 'От спазмов',
+        desc: 'Вдох 4с · Плавный выдох 7с — снимает мышечный спазм и мягко расслабляет низ живота.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 4000, haptic: 'light' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 7000, haptic: 'select' }
+        ]
+      },
+      sigh: {
+        name: 'От тревоги',
+        desc: 'Вдох · Довдох · Долгий выдох 6с — быстро сбрасывает напряжение и замедляет пульс.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 3500, haptic: 'light' },
+          { label: 'Довдох', cls: 'phase-topup', ms: 1500, haptic: 'medium' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 6000, haptic: 'select' }
+        ]
+      },
+      box: {
+        name: 'От перегруза',
+        desc: 'Ритм 4–4–4–4 — возвращает ясность головы и внутреннюю опору при суете.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 4000, haptic: 'light' },
+          { label: 'Пауза', cls: 'phase-hold-in', ms: 4000, haptic: 'select' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 4000, haptic: 'light' },
+          { label: 'Пауза', cls: 'phase-hold-out', ms: 4000, haptic: 'select' }
+        ]
+      },
+      sleep: {
+        name: 'Перед сном',
+        desc: 'Ритм 4–7–8 — успокаивает нервную систему и помогает быстрее уснуть.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 4000, haptic: 'light' },
+          { label: 'Пауза', cls: 'phase-hold-in', ms: 7000, haptic: 'select' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 8000, haptic: 'light' }
+        ]
       }
     };
 
@@ -1557,6 +1684,12 @@
       const d = new Date();
       d.setHours(12, 0, 0, 0);
       d.setDate(d.getDate() + offsetDays);
+      return formatLocalISO(d);
+    }
+
+    function shiftISOByDays(isoStr, deltaDays) {
+      const d = parseLocalISO(isoStr);
+      d.setDate(d.getDate() + deltaDays);
       return formatLocalISO(d);
     }
 
@@ -1621,6 +1754,7 @@
       onboarded: false,
       settings: {
         lastPeriodStart: getTodayISO(0),
+        prevLastPeriodStart: null,
         cycleLength: 28,
         periodLength: 5,
         darkMode: false,
@@ -1650,7 +1784,10 @@
 
     let chartFilter = 'all';
     let selectedEmotionChartFilter = 'all';
+
+    let currentBreathPattern = 'spasm';
     let breathTimer = null;
+    let breathTickTimer = null;
     let isBreathing = false;
 
     function getCurrentPaletteColors() {
@@ -1820,6 +1957,7 @@
 
       applyThemeUI();
       syncSettingsInputs();
+      renderBreathPatternUI();
 
       if (!state.onboarded) {
         document.getElementById('obLastPeriod').value = getTodayISO(0);
@@ -1901,6 +2039,7 @@
       const pickedDate = document.getElementById('obLastPeriod').value || getTodayISO(0);
       state.onboarded = true;
       state.settings.lastPeriodStart = pickedDate;
+      state.settings.prevLastPeriodStart = null;
       state.settings.cycleLength = obCycleLen;
       state.settings.periodLength = obPeriodLen;
 
@@ -2251,30 +2390,33 @@
       } else {
         document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>/ ${info.len}</span>`;
         heroPhase.textContent = info.phase;
-        heroPhase.className = tempIsPeriod ? 'hero-phase is-period' : 'hero-phase';
+        if (tempIsPeriod) {
+          heroPhase.className = 'hero-phase is-period';
+        } else if (tempIsOvulation || info.phaseCode === 'ovulation') {
+          heroPhase.className = 'hero-phase is-ovul';
+        } else {
+          heroPhase.className = 'hero-phase';
+        }
         const daysLeft = Math.max(0, info.len - info.cycleDay + 1);
         document.getElementById('heroCountdown').innerHTML = daysLeft === 1
           ? 'Новый цикл<br/>завтра'
           : `До нового цикла<br/>~${daysLeft} дн.`;
         bar.style.width = `${Math.min(100, (info.cycleDay / info.len) * 100)}%`;
-        bar.style.background = tempIsPeriod ? 'var(--rose-solid)' : 'var(--accent)';
+        bar.style.background = tempIsPeriod
+          ? 'var(--rose-solid)'
+          : ((tempIsOvulation || info.phaseCode === 'ovulation') ? 'var(--ovul)' : 'var(--accent)');
       }
 
       document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
 
       const pBtn = document.getElementById('btnPeriodDay');
       const pText = document.getElementById('periodBtnText');
-      const newCycleBtn = document.getElementById('btnNewCycle');
-
       pBtn.classList.toggle('active', tempIsPeriod);
       pText.textContent = tempIsPeriod ? 'Месячные ✓' : 'Месячные';
 
-      const showNewCycleBtn = (info.cycleDay >= 15 || info.isDelay) && selectedDate !== state.settings.lastPeriodStart;
-      newCycleBtn.style.display = showNewCycleBtn ? 'block' : 'none';
-
       const ovBtn = document.getElementById('btnOvulation');
       ovBtn.style.display = info.showOvulationOption ? 'inline-flex' : 'none';
-      ovBtn.classList.toggle('active', tempIsOvulation);
+      ovBtn.classList.toggle('active-ovul', tempIsOvulation);
       ovBtn.textContent = tempIsOvulation ? '✦ Овуляция ✓' : '✦ Овуляция';
 
       const mensBlock = document.getElementById('menstrualDischargeBlock');
@@ -2304,18 +2446,66 @@
         btn.classList.toggle('active-rose', btn.dataset.val === tempDischarge);
       });
       document.querySelectorAll('#ovulatoryFlowSelector .choice-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.val === tempDischarge);
+        btn.classList.toggle('active-ovul', btn.dataset.val === tempDischarge);
       });
+    }
+
+    function findPreviousCycleStartBefore(excludeDateISO) {
+      const periodDates = Object.values(state.entries)
+        .filter(e => e.isPeriod && e.date < excludeDateISO)
+        .map(e => e.date)
+        .sort();
+      if (!periodDates.length) return null;
+
+      // Walk backwards from the latest period date before excludeDateISO to find the start of that period block
+      let blockStart = periodDates[periodDates.length - 1];
+      for (let i = periodDates.length - 2; i >= 0; i--) {
+        const prev = parseLocalISO(periodDates[i]);
+        const curr = parseLocalISO(blockStart);
+        const gap = Math.round((curr - prev) / (1000 * 60 * 60 * 24));
+        if (gap <= 2) {
+          blockStart = periodDates[i];
+        } else {
+          break;
+        }
+      }
+      return blockStart;
     }
 
     function togglePeriodDay() {
       hapticImpact('medium');
-      tempIsPeriod = !tempIsPeriod;
-      if (tempIsPeriod) {
+      const infoBefore = getCycleInfo(selectedDate);
+      const turningOn = !tempIsPeriod;
+
+      if (turningOn) {
+        tempIsPeriod = true;
         tempIsOvulation = false;
         if (!['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge)) tempDischarge = 'Умеренные';
+
+        const prevISO = shiftISOByDays(selectedDate, -1);
+        const prevWasPeriod = Boolean(state.entries[prevISO]?.isPeriod) || prevISO === state.settings.lastPeriodStart;
+        const shouldStartNewCycle = (infoBefore.cycleDay >= 15 || infoBefore.isDelay)
+          && !prevWasPeriod
+          && selectedDate !== state.settings.lastPeriodStart;
+
+        if (shouldStartNewCycle) {
+          state.settings.prevLastPeriodStart = state.settings.lastPeriodStart;
+          state.settings.lastPeriodStart = selectedDate;
+          syncSettingsInputs();
+        }
       } else {
+        tempIsPeriod = false;
         tempDischarge = '';
+
+        // If this date was the current cycle start, revert cycle start back to the previous actual cycle day
+        if (selectedDate === state.settings.lastPeriodStart) {
+          const fallbackStart = state.settings.prevLastPeriodStart || findPreviousCycleStartBefore(selectedDate);
+          if (fallbackStart && fallbackStart !== selectedDate) {
+            state.settings.lastPeriodStart = fallbackStart;
+            state.settings.prevLastPeriodStart = null;
+            syncSettingsInputs();
+          }
+        }
       }
 
       if (state.entries[selectedDate]) {
@@ -2325,52 +2515,16 @@
         delete state.entries[selectedDate].aiAnalysis;
         persistLocalAndCloud(selectedDate.slice(0, 7));
         if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
+      } else if (turningOn && selectedDate === state.settings.lastPeriodStart) {
+        // Persist updated cycle start even if full day form hasn't been saved yet
+        persistLocalAndCloud(selectedDate.slice(0, 7));
+      } else if (!turningOn) {
+        persistLocalAndCloud(selectedDate.slice(0, 7));
       }
 
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab();
       renderAnalytics();
-    }
-
-    function startNewCycleHere() {
-      hapticImpact('heavy');
-      state.settings.lastPeriodStart = selectedDate;
-      state.onboarded = true;
-      tempIsPeriod = true;
-      tempIsOvulation = false;
-      tempDischarge = 'Умеренные';
-      syncSettingsInputs();
-
-      const activeEmos = getActiveEmotionsFromLevels(emotionLevels);
-      if (!state.entries[selectedDate]) {
-        state.entries[selectedDate] = {
-          date: selectedDate,
-          isPeriod: true,
-          isOvulation: false,
-          intimacy: tempIntimacy,
-          soloReset: tempSoloReset,
-          discharge: 'Умеренные',
-          mood: metrics.mood,
-          energy: metrics.energy,
-          pain: metrics.pain,
-          libido: metrics.libido,
-          emotions: activeEmos,
-          emotionLevels: { ...emotionLevels },
-          contexts: getSelectedContexts(),
-          helped: []
-        };
-      } else {
-        state.entries[selectedDate].isPeriod = true;
-        state.entries[selectedDate].discharge = 'Умеренные';
-        delete state.entries[selectedDate].aiAnalysis;
-      }
-
-      persistLocalAndCloud(selectedDate.slice(0, 7));
-      updateHeaderAndContextControls();
-      if (!isEditingDay) renderSavedSummaryCard(state.entries[selectedDate]);
-      renderAdviceAndSelfCareTab();
-      renderAnalytics();
-      showToast('Сохранено');
     }
 
     function toggleIntimacy() {
@@ -2551,24 +2705,6 @@
       document.getElementById('sum-e').textContent = entry.energy;
       document.getElementById('sum-p').textContent = entry.pain;
       document.getElementById('sum-l').textContent = entry.libido;
-
-      const tags = [];
-      if (entry.isPeriod || entry.date === state.settings.lastPeriodStart) tags.push(`Месячные (${(entry.discharge || 'умеренные').toLowerCase()})`);
-      if (entry.isOvulation) tags.push(`Овуляция${entry.discharge ? ` · ${entry.discharge.toLowerCase()}` : ''}`);
-      if (!entry.isPeriod && !entry.isOvulation && entry.discharge) tags.push(`Выделения: ${entry.discharge.toLowerCase()}`);
-      if (entry.intimacy) tags.push('Близость ♥');
-      if (entry.soloReset) tags.push('◈');
-
-      const levels = buildLoadedEmotionLevels(entry);
-      const activeEmos = getActiveEmotionsFromLevels(levels);
-      if (activeEmos.length) {
-        tags.push(activeEmos.map(em => `${em} ${levels[em]}/10`).join(', '));
-      }
-
-      const normContexts = (entry.contexts || []).map(normalizeContextLabel);
-      if (normContexts.length) tags.push(normContexts.join(', '));
-
-      document.getElementById('savedTagsLine').textContent = tags.join(' · ');
     }
 
     function unlockDayEditing() {
@@ -2718,7 +2854,6 @@
       };
     }
 
-    /* Hidden under-the-hood pattern & cross-day comparison engine */
     function detectLocalPatterns(info) {
       const allEntries = Object.values(state.entries);
       if (allEntries.length < 4) return '';
@@ -2913,7 +3048,7 @@
         }
 
         if (entry.soloReset) {
-          psyB.textContent += ' Мягкая телесная разрядка и снятие внутреннего зажима помогают снизить напряжение и легче переключиться.';
+          psyB.textContent += ' Мягкая телесная разрядка и снятие внутреннего зажима помогают снизить напряжение, улучшить кровоток и легче переключиться.';
         }
 
         const defSteps = buildDefaultSteps(entry, info);
@@ -3084,7 +3219,8 @@
             libido: e.libido,
             isPeriod: Boolean(e.isPeriod),
             isOvulation: Boolean(e.isOvulation),
-            tensionRelief: Boolean(e.soloReset),
+            intimacy: Boolean(e.intimacy),
+            soloDischargeOrTensionRelief: Boolean(e.soloReset),
             discharge: e.discharge || '',
             emotionLevels: activeLv,
             contexts: (e.contexts || []).map(normalizeContextLabel),
@@ -3101,8 +3237,12 @@
 
       const prompt = `Ты пишешь как живой, внимательный человек — врач-гинеколог и психолог в одном лице, который общается просто и по делу, на «ты».
 Строго запрещены ИИ-штампы, канцелярит и пустые фразы: не пиши «важно помнить», «в заключение», «комплексный подход», «не стоит забывать», «прислушайся к своему телу», «начни с малого» как общую заглушку. Говори конкретно про факты этого дня и цикла, живым разговорным языком.
-Если tensionRelief=true, учитывай мягкую телесную разрядку для снятия напряжения, но называй её нейтрально ("телесная разрядка", "снятие напряжения") без прямых слов.
-Учитывай все факторы: «Боль в груди», «Недосып», «Стресс», «Отёки» и интенсивность всех эмоций (0–10).
+
+СЛОВАРЬ ОБОЗНАЧЕНИЙ ПРИЛОЖЕНИЯ (обязательно учитывай при анализе и рекомендациях):
+- Символ ♥ (intimacy): партнёрская близость.
+- Символ ✧ (soloDischargeOrTensionRelief): соло-разрядка (мастурбация / оргазм наедине с собой). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
+- Символ ✦ (isOvulation): отмеченная овуляция.
+- Учитывай факторы: «Боль в груди», «Недосып», «Стресс», «Отёки» и интенсивность всех эмоций (0–10).
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.len} дн., длительность месячных: ${info.pLen} дн.
@@ -3116,10 +3256,10 @@
 - Боль: ${current.pain}/10
 - Либидо: ${current.libido}/10
 - Месячные: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
-- Овуляция: ${current.isOvulation ? 'да' : 'нет'}
+- Овуляция (✦): ${current.isOvulation ? 'да' : 'нет'}
 - Выделения: ${current.discharge || ''}
-- Близость: ${current.intimacy ? 'да' : 'нет'}
-- tensionRelief: ${Boolean(current.soloReset)}
+- Близость (♥): ${current.intimacy ? 'да' : 'нет'}
+- Соло-разрядка (✧ / soloDischargeOrTensionRelief): ${Boolean(current.soloReset)}
 - Эмоции и их интенсивность: ${formattedEmos}
 - Факторы и ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
 
@@ -3131,7 +3271,7 @@ ${JSON.stringify(recentHistory)}
 
 ЗАДАЧА:
 ${hasRichHistory
-  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков. В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
+  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, а также как влияли близость (♥) и соло-разрядка (✧). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
   : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
 
 Верни строго JSON:
@@ -3204,10 +3344,12 @@ ${hasRichHistory
 
       const prompt = `Ты чуткий, трезвый и спокойный собеседник (врач-гинеколог и психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
 Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла (если она есть) и предложи одну спокойную опору на сейчас.
+Примечание по маркерам: ♥ — партнёрская близость, ✧ — соло-разрядка (называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой»).
 
 Контекст сегодняшнего дня (${selectedDate}):
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
-- Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10
+- Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10, Либидо: ${current.libido}/10
+- Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка(✧)=${Boolean(current.soloReset)}, овуляция=${Boolean(current.isOvulation)}
 - Эмоции: ${formattedEmos || 'не указаны'}
 - Факторы: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
 
@@ -3329,8 +3471,8 @@ ${text}
       const svg = document.getElementById('cycleChart');
       const baseLen = Number(state.settings.cycleLength) || 28;
       const pLen = Number(state.settings.periodLength) || 5;
-      const w = 400, h = 230;
-      const padL = 26, padR = 14, padT = 24, padB = 28;
+      const w = 400, h = 238;
+      const padL = 26, padR = 14, padT = 30, padB = 28;
       const plotW = w - padL - padR;
       const plotH = h - padT - padB;
       const isDark = Boolean(state.settings.darkMode);
@@ -3340,6 +3482,7 @@ ${text}
       const cIndigo = colors['--indigo'];
       const cAmber = colors['--amber'];
       const cRose = colors['--rose-solid'];
+      const cOvul = colors['--ovul'] || cAccent;
 
       const allSortedEntries = Object.values(state.entries).sort((a, b) => a.date.localeCompare(b.date));
       document.getElementById('chartEntriesCount').textContent = allSortedEntries.length
@@ -3522,34 +3665,58 @@ ${text}
           <span style="color:${cIndigo}; font-weight:600;">● Энергия</span>
           <span style="color:${cAmber}; font-weight:600;">● Либидо</span>
           <span style="color:${cRose}; font-weight:600;">▮ Боль</span>
-          <span style="color:var(--accent)">✦ Овуляция</span>
-          <span style="color:var(--rose)">♥ Близость</span>
+          <span style="color:${cOvul}; font-weight:600;">✦ Овуляция</span>
+          <span style="color:var(--rose); font-weight:600;">♥ Близость</span>
+          <span style="color:var(--indigo); font-weight:600;">✧ Разрядка</span>
         `;
       }
 
+      // Top-of-chart markers for intimacy (♥), solo reset (✧), and ovulation (✦)
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
+        if (!e) continue;
         const x = padL + ((d - 1) / (len - 1)) * plotW;
-        const hasIntimacy = e && Boolean(e.intimacy);
-        const hasOv = e && Boolean(e.isOvulation);
-        const hasSolo = e && Boolean(e.soloReset);
+        const topMarkers = [];
+        if (e.intimacy) topMarkers.push({ sym: '♥', color: 'var(--rose)' });
+        if (e.soloReset) topMarkers.push({ sym: '✧', color: 'var(--indigo)' });
+        if (e.isOvulation) topMarkers.push({ sym: '✦', color: cOvul });
 
-        if (hasIntimacy) html += `<text x="${x - (hasOv ? 5 : 0)}" y="${padT - 7}" text-anchor="middle" font-size="11" fill="var(--rose)">♥</text>`;
-        if (hasOv) html += `<text x="${x + (hasIntimacy ? 5 : 0)}" y="${padT - 7}" text-anchor="middle" font-size="11" fill="var(--accent)">✦</text>`;
-        if (hasSolo) {
-          const iy = padT + plotH - 10;
-          html += `<circle cx="${x}" cy="${iy}" r="4.5" fill="var(--surface)" stroke="var(--indigo)" stroke-width="1.3"/><polygon points="${x},${iy - 2.6} ${x + 2.6},${iy} ${x},${iy + 2.6} ${x - 2.6},${iy}" fill="var(--indigo)"/>`;
+        if (topMarkers.length) {
+          const spacing = 11;
+          const startX = x - ((topMarkers.length - 1) * spacing) / 2;
+          topMarkers.forEach((m, idx) => {
+            const mx = startX + idx * spacing;
+            html += `<text x="${mx.toFixed(1)}" y="${padT - 9}" text-anchor="middle" font-size="14.5" font-weight="700" fill="${m.color}">${m.sym}</text>`;
+          });
         }
       }
 
       svg.innerHTML = html;
     }
 
-    function logPainkiller(name, hours) {
+    function logPainkiller(name, hours = 4) {
       state.painkillers.unshift({ name, timeISO: new Date().toISOString(), hours });
       persistLocalAndCloud(null);
       updatePainkillerUI();
-      showToast('Сохранено');
+      showToast('Добавлено');
+    }
+
+    function logCustomPainkiller() {
+      const inp = document.getElementById('customMedInput');
+      const name = inp.value.trim();
+      if (!name) return;
+      inp.value = '';
+      logPainkiller(name, 4);
+    }
+
+    function deletePainkiller(index) {
+      hapticImpact('light');
+      if (index >= 0 && index < state.painkillers.length) {
+        state.painkillers.splice(index, 1);
+        persistLocalAndCloud(null);
+        updatePainkillerUI();
+        showToast('Удалено');
+      }
     }
 
     function updatePainkillerUI() {
@@ -3558,21 +3725,52 @@ ${text}
         box.innerHTML = '';
         return;
       }
-      const last = state.painkillers[0];
-      const taken = new Date(last.timeISO);
-      const nextSafe = new Date(taken.getTime() + last.hours * 3600000);
-      const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      box.innerHTML = `${last.name} · ${tStr} → ${nStr}`;
+      box.innerHTML = state.painkillers.slice(0, 12).map((item, idx) => {
+        const taken = new Date(item.timeISO);
+        const nextSafe = new Date(taken.getTime() + (item.hours || 4) * 3600000);
+        const dayStr = taken.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
+        const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        return `
+          <div class="med-item">
+            <div class="med-item-info">
+              <div class="med-item-name">${escapeHtml(item.name)}</div>
+              <div class="med-item-time">${dayStr}, ${tStr} → след. с ${nStr}</div>
+            </div>
+            <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBreathPatternUI() {
+      const pat = BREATH_PATTERNS[currentBreathPattern] || BREATH_PATTERNS.spasm;
+      document.querySelectorAll('#breathPatternRow .filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.pattern === currentBreathPattern);
+      });
+      const descEl = document.getElementById('breathPatternDesc');
+      if (descEl) descEl.textContent = pat.desc;
+    }
+
+    function selectBreathPattern(patternKey) {
+      if (!BREATH_PATTERNS[patternKey]) return;
+      hapticSelect();
+      const wasRunning = isBreathing;
+      if (isBreathing) stopBreathing();
+      currentBreathPattern = patternKey;
+      renderBreathPatternUI();
+      if (wasRunning) toggleBreathing();
     }
 
     function stopBreathing() {
       isBreathing = false;
       if (breathTimer) { clearTimeout(breathTimer); breathTimer = null; }
+      if (breathTickTimer) { clearInterval(breathTickTimer); breathTickTimer = null; }
       const motion = document.getElementById('flowerMotion');
       const prompt = document.getElementById('flowerPrompt');
       const sub = document.getElementById('flowerSubPrompt');
       const btn = document.getElementById('breathBtn');
+      motion.style.transitionDuration = '0.6s';
       motion.className = 'flower-motion';
       prompt.textContent = '';
       sub.textContent = '';
@@ -3583,35 +3781,43 @@ ${text}
       hapticImpact('medium');
       if (isBreathing) { stopBreathing(); return; }
 
+      const pat = BREATH_PATTERNS[currentBreathPattern] || BREATH_PATTERNS.spasm;
       isBreathing = true;
       document.getElementById('breathBtn').textContent = 'Стоп';
       const motion = document.getElementById('flowerMotion');
       const prompt = document.getElementById('flowerPrompt');
+      const sub = document.getElementById('flowerSubPrompt');
 
-      const runCycle = () => {
+      let stepIndex = 0;
+
+      const runStep = () => {
         if (!isBreathing) return;
-        motion.className = 'flower-motion phase-inhale';
-        prompt.textContent = 'Вдох';
-        hapticImpact('light');
+        const step = pat.steps[stepIndex];
+        motion.style.transitionDuration = `${(step.ms / 1000).toFixed(2)}s`;
+        motion.className = `flower-motion ${step.cls}`;
+        prompt.textContent = step.label;
+
+        if (step.haptic === 'medium') hapticImpact('medium');
+        else if (step.haptic === 'select') hapticSelect();
+        else hapticImpact('light');
+
+        if (breathTickTimer) clearInterval(breathTickTimer);
+        let remainingSec = Math.ceil(step.ms / 1000);
+        sub.textContent = `${remainingSec} с`;
+        breathTickTimer = setInterval(() => {
+          remainingSec -= 1;
+          if (remainingSec > 0 && isBreathing) {
+            sub.textContent = `${remainingSec} с`;
+          }
+        }, 1000);
 
         breathTimer = setTimeout(() => {
-          if (!isBreathing) return;
-          motion.className = 'flower-motion phase-topup';
-          prompt.textContent = 'Довдох';
-          hapticImpact('medium');
-
-          breathTimer = setTimeout(() => {
-            if (!isBreathing) return;
-            motion.className = 'flower-motion phase-exhale';
-            prompt.textContent = 'Выдох';
-            hapticSelect();
-
-            breathTimer = setTimeout(runCycle, 5500);
-          }, 1600);
-        }, 3900);
+          stepIndex = (stepIndex + 1) % pat.steps.length;
+          runStep();
+        }, step.ms);
       };
 
-      runCycle();
+      runStep();
     }
 
     function saveSettings() {
@@ -3619,7 +3825,10 @@ ${text}
       const cl = Number(document.getElementById('setCycleLength').value) || 28;
       const pl = Number(document.getElementById('setPeriodLength').value) || 5;
 
-      if (lp) state.settings.lastPeriodStart = lp;
+      if (lp && lp !== state.settings.lastPeriodStart) {
+        state.settings.prevLastPeriodStart = state.settings.lastPeriodStart;
+        state.settings.lastPeriodStart = lp;
+      }
       state.settings.cycleLength = Math.max(21, Math.min(45, cl));
       state.settings.periodLength = Math.max(2, Math.min(10, pl));
       state.onboarded = true;
@@ -3670,6 +3879,7 @@ ${text}
         onboarded: false,
         settings: {
           lastPeriodStart: getTodayISO(0),
+          prevLastPeriodStart: null,
           cycleLength: 28,
           periodLength: 5,
           darkMode: state.settings.darkMode,
@@ -3695,7 +3905,10 @@ ${text}
 
       if (tab === 'analytics_advice') renderAdviceAndSelfCareTab();
       if (tab === 'analytics') renderAnalytics();
-      if (tab === 'sos') updatePainkillerUI();
+      if (tab === 'sos') {
+        updatePainkillerUI();
+        renderBreathPatternUI();
+      }
       if (tab === 'settings') renderThemeSelector();
     }
 
