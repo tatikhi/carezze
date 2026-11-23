@@ -523,6 +523,11 @@
       border-color: var(--indigo);
       color: var(--indigo);
     }
+    .icon-stealth-btn.active-rose {
+      background: var(--rose-tint);
+      border-color: var(--rose);
+      color: var(--rose);
+    }
     .solo-reset-mini {
       width: 34px;
       height: 46px;
@@ -1234,9 +1239,8 @@
           </div>
 
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;" id="intimacyBlock">
-            <button class="choice-btn" style="padding:11px 14px;" id="btnIntimacyToggle" onclick="toggleIntimacy()">
-              <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" stroke="none"/></svg>
-              <span>Близость</span>
+            <button class="icon-stealth-btn" id="btnIntimacyToggle" onclick="toggleIntimacy()" aria-label="Близость">
+              <svg class="ui-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" stroke="none"/></svg>
               <svg class="ui-svg ui-svg-sm" id="intimacyCheckIcon" style="display:none;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
             </button>
 
@@ -1291,8 +1295,7 @@
           </div>
 
           <div id="regularDischargeBlock" style="display:block;">
-            <div class="grid-3" id="ovulatoryFlowSelector">
-              <div class="choice-btn active-ovul" data-val="Обычные" onclick="selectDischarge('Обычные')">Обычные</div>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;" id="ovulatoryFlowSelector">
               <div class="choice-btn" data-val="Кремовые" onclick="selectDischarge('Кремовые')">Кремовые</div>
               <div class="choice-btn" data-val="Прозрачные" onclick="selectDischarge('Прозрачные')">Прозрачные</div>
             </div>
@@ -1402,7 +1405,7 @@
 
         <div style="display:flex; gap:8px; margin-top:12px;">
           <input type="text" id="customHelpInput" placeholder="Добавить свой способ..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomHelped();}" />
-          <button class="btn-soft" onclick="addCustomHelped()">Помогло</button>
+          <button class="btn-soft" onclick="addCustomHelped()">Добавить</button>
         </div>
 
         <div class="inspector-box" id="learnedHelpStats" style="display:none;"></div>
@@ -2073,7 +2076,6 @@
 
     const ALL_EMOTIONS = [
       'Спокойствие',
-      'Подъём',
       'Грусть',
       'Тревога',
       'Раздражение',
@@ -2081,8 +2083,6 @@
       'Слезливость',
       'Апатия',
       'Туман в голове',
-      'Уязвимость',
-      'Перегруз',
       'Напряжение',
       'Стресс'
     ];
@@ -2092,13 +2092,10 @@
       'Раздражение': { color: '#C83E59', bg: 'rgba(200, 62, 89, 0.18)' },
       'Грусть': { color: '#5A769A', bg: 'rgba(90, 118, 154, 0.18)' },
       'Спокойствие': { color: '#4E8C6B', bg: 'rgba(78, 140, 107, 0.18)' },
-      'Подъём': { color: '#9E5A8A', bg: 'rgba(158, 90, 138, 0.18)' },
       'Усталость': { color: '#7E648F', bg: 'rgba(126, 100, 143, 0.18)' },
       'Слезливость': { color: '#5B8EA8', bg: 'rgba(91, 142, 168, 0.18)' },
       'Апатия': { color: '#7A726F', bg: 'rgba(122, 114, 111, 0.18)' },
       'Туман в голове': { color: '#8A7B9E', bg: 'rgba(138, 123, 158, 0.18)' },
-      'Уязвимость': { color: '#C95A7E', bg: 'rgba(201, 90, 126, 0.18)' },
-      'Перегруз': { color: '#C97A2B', bg: 'rgba(201, 122, 43, 0.18)' },
       'Напряжение': { color: '#D94865', bg: 'rgba(217, 72, 101, 0.18)' },
       'Стресс': { color: '#B84A39', bg: 'rgba(184, 74, 57, 0.18)' }
     };
@@ -2127,8 +2124,8 @@
     }
 
     function computeDerivedMood(levelsObj, energyVal, painVal) {
-      const pos = ((levelsObj['Спокойствие'] || 0) + (levelsObj['Подъём'] || 0)) * 0.25;
-      const negKeys = ['Грусть', 'Тревога', 'Раздражение', 'Усталость', 'Слезливость', 'Апатия', 'Туман в голове', 'Уязвимость', 'Перегруз', 'Напряжение', 'Стресс'];
+      const pos = (levelsObj['Спокойствие'] || 0) * 0.35;
+      const negKeys = ['Грусть', 'Тревога', 'Раздражение', 'Усталость', 'Слезливость', 'Апатия', 'Туман в голове', 'Напряжение', 'Стресс'];
       const negSum = negKeys.reduce((s, k) => s + (levelsObj[k] || 0), 0);
       const raw = 5.5 + pos - (negSum * 0.12) + ((energyVal - 5) * 0.2) - (painVal * 0.15);
       return Math.max(1, Math.min(10, Math.round(raw)));
@@ -2384,11 +2381,24 @@
       }
       if (!Array.isArray(merged.helped)) {
         merged.helped = Array.isArray(older.helped) ? [...older.helped] : [];
+      } else if (Math.abs(lTime - cTime) < 2000 && Array.isArray(older.helped) && older.helped.length) {
+        merged.helped = Array.from(new Set([...merged.helped, ...older.helped]));
       }
       if (!merged.updatedAt) {
         merged.updatedAt = Math.max(cTime, lTime, Date.now());
       }
       return merged;
+    }
+
+    function serializeCustomPoolSafely(pool) {
+      const clean = Array.isArray(pool) ? pool.map(x => String(x || '').trim()).filter(Boolean) : [];
+      let slice = clean.slice(0, 30);
+      let str = JSON.stringify(slice);
+      while (slice.length > 0 && utf8ByteLength(str) > 3900) {
+        slice.pop();
+        str = JSON.stringify(slice);
+      }
+      return str;
     }
 
     async function syncToCloud(specificTargetKey = null) {
@@ -2410,13 +2420,25 @@
         }
       }
 
-      const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 25) : [];
-      const metaPayload = JSON.stringify({
+      const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 30) : [];
+      tasks.push(cloudSet('carezze2_custom_tips', serializeCustomPoolSafely(customPool)));
+
+      let metaPool = customPool.slice(0, 20);
+      let metaPayload = JSON.stringify({
         onboarded: state.onboarded,
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 12),
-        customHelpedPool: customPool
+        customHelpedPool: metaPool
       });
+      while (metaPool.length > 0 && utf8ByteLength(metaPayload) > 3950) {
+        metaPool.pop();
+        metaPayload = JSON.stringify({
+          onboarded: state.onboarded,
+          settings: state.settings,
+          painkillers: state.painkillers.slice(0, 12),
+          customHelpedPool: metaPool
+        });
+      }
       tasks.push(cloudSet('carezze2_meta', metaPayload));
 
       await Promise.all(tasks);
@@ -2593,7 +2615,7 @@
       isCloudSyncing = true;
       try {
         await pendingCloudWritePromise;
-        if (Date.now() - lastLocalWriteTimestamp < 1800) {
+        if (Date.now() - lastLocalWriteTimestamp < 4000) {
           return;
         }
 
@@ -2617,6 +2639,16 @@
           if (Array.isArray(meta.customHelpedPool)) {
             state.customHelpedPool = Array.from(new Set([...state.customHelpedPool, ...meta.customHelpedPool]));
           }
+        }
+
+        const customTipsRaw = await cloudGet('carezze2_custom_tips');
+        if (customTipsRaw) {
+          try {
+            const parsedTips = JSON.parse(customTipsRaw);
+            if (Array.isArray(parsedTips)) {
+              state.customHelpedPool = Array.from(new Set([...state.customHelpedPool, ...parsedTips]));
+            }
+          } catch (e) {}
         }
 
         const keys = await cloudGetKeys();
@@ -2668,7 +2700,15 @@
         if (state.onboarded) {
           document.getElementById('onboardingScreen').classList.remove('active');
         }
+        const wasEditingCurrent = isEditingDay;
         loadDayForm();
+        if (wasEditingCurrent && state.entries[selectedDate]) {
+          isEditingDay = true;
+          document.getElementById('savedSummaryCard').style.display = 'none';
+          document.getElementById('editableDayForm').style.display = 'block';
+          updateHeaderAndContextControls();
+          renderAllEmotionSliders();
+        }
         renderAnalytics();
       } catch (e) {
       } finally {
@@ -2938,18 +2978,63 @@
       showToast('Удалено');
     }
 
+    function buildLiveDaySnapshot() {
+      const normalizedLevels = {};
+      ALL_EMOTIONS.forEach(em => {
+        const val = Number(emotionLevels[em]);
+        normalizedLevels[em] = Number.isFinite(val) ? Math.max(0, Math.min(10, Math.round(val))) : 0;
+      });
+      const activeEmos = getActiveEmotionsFromLevels(normalizedLevels);
+      const contexts = getSelectedPhysicalContexts();
+      const prevEntry = state.entries[selectedDate] || {};
+      const prevHelped = Array.isArray(prevEntry.helped) ? [...prevEntry.helped] : [];
+      const prevAi = prevEntry.aiAnalysis;
+      const tempInputEl = document.getElementById('inpWristTemp');
+      const tempRaw = tempInputEl ? tempInputEl.value.trim() : '';
+      const wristTempDelta = tempRaw !== '' && !isNaN(parseFloat(tempRaw)) ? parseFloat(tempRaw) : null;
+      const soloCnt = Math.max(0, Math.min(20, Number(tempSoloCount) || 0));
+      const cleanDischarge = tempIsPeriod
+        ? (['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge) ? tempDischarge : 'Умеренные')
+        : (['Кремовые', 'Прозрачные'].includes(tempDischarge) ? tempDischarge : '');
+
+      return {
+        date: selectedDate,
+        updatedAt: Date.now(),
+        isPeriod: Boolean(tempIsPeriod),
+        isOvulation: Boolean(tempIsOvulation),
+        intimacy: Boolean(tempIntimacy),
+        soloCount: soloCnt,
+        soloReset: soloCnt > 0,
+        discharge: cleanDischarge,
+        mood: computeDerivedMood(normalizedLevels, metrics.energy, metrics.pain),
+        energy: metrics.energy,
+        pain: metrics.pain,
+        libido: metrics.libido,
+        emotions: activeEmos,
+        emotionLevels: normalizedLevels,
+        contexts,
+        ...(wristTempDelta !== null ? { wristTempDelta } : {}),
+        helped: prevHelped,
+        ...(prevAi ? { aiAnalysis: prevAi } : {})
+      };
+    }
+
+    function autosaveCurrentDayDraft() {
+      if (emotionAutosaveTimer) {
+        clearTimeout(emotionAutosaveTimer);
+        emotionAutosaveTimer = null;
+      }
+      state.entries[selectedDate] = buildLiveDaySnapshot();
+      persistLocalAndCloud(selectedDate);
+      renderAdviceAndSelfCareTab();
+      renderAnalytics();
+    }
+
     function scheduleEmotionAutosave() {
       if (emotionAutosaveTimer) clearTimeout(emotionAutosaveTimer);
       emotionAutosaveTimer = setTimeout(() => {
-        if (!state.entries[selectedDate]) {
-          state.entries[selectedDate] = getCurrentWorkingEntry();
-        }
-        state.entries[selectedDate].emotionLevels = { ...emotionLevels };
-        state.entries[selectedDate].emotions = getActiveEmotionsFromLevels(emotionLevels);
-        state.entries[selectedDate].mood = computeDerivedMood(emotionLevels, metrics.energy, metrics.pain);
-        state.entries[selectedDate].updatedAt = Date.now();
-        persistLocalAndCloud(selectedDate);
-      }, 350);
+        autosaveCurrentDayDraft();
+      }, 220);
     }
 
     function attachHorizontalSlider(el, getVal, setVal, renderFn, onCommit = null) {
@@ -2982,9 +3067,9 @@
         if (!isEditingDay || startX === 0) return;
         const dx = Math.abs(e.clientX - startX);
         const dy = Math.abs(e.clientY - startY);
-        if (!isDragging && dx > 10 && dx > dy * 1.3) {
+        if (!isDragging && dx > 7 && dx > dy * 1.1) {
           isDragging = true;
-          el.setPointerCapture(e.pointerId);
+          try { el.setPointerCapture(e.pointerId); } catch (err) {}
         }
         if (isDragging) updateFromEvent(e.clientX);
       });
@@ -2993,7 +3078,7 @@
         if (!isEditingDay) return;
         const dx = Math.abs(e.clientX - startX);
         const dy = Math.abs(e.clientY - startY);
-        if (!isDragging && dx < 6 && dy < 6) updateFromEvent(e.clientX);
+        if (!isDragging && dx <= 14 && dy <= 14) updateFromEvent(e.clientX);
         isDragging = false;
         startX = 0;
         if (onCommit) onCommit();
@@ -3013,7 +3098,8 @@
           el,
           () => metrics[key],
           (v) => { metrics[key] = v; },
-          () => renderCCSlider(key)
+          () => renderCCSlider(key),
+          () => autosaveCurrentDayDraft()
         );
       });
     }
@@ -3181,7 +3267,7 @@
         document.getElementById('heroDay').innerHTML = `День ${info.cycleDay} <span>/ ${info.len}</span>`;
         heroPhase.textContent = info.phase;
         heroPhase.className = 'hero-phase is-delay';
-        document.getElementById('heroCountdown').innerHTML = `Обычный цикл<br/>${pluralDays(info.len)}`;
+        document.getElementById('heroCountdown').innerHTML = '';
         bar.style.width = '100%';
         bar.style.background = 'var(--amber)';
       } else {
@@ -3228,7 +3314,7 @@
       } else {
         mensBlock.style.display = 'none';
         regBlock.style.display = 'block';
-        if (!['Обычные', 'Кремовые', 'Прозрачные'].includes(tempDischarge)) tempDischarge = 'Обычные';
+        if (!['Кремовые', 'Прозрачные'].includes(tempDischarge)) tempDischarge = '';
         renderDischargeButtons();
       }
 
@@ -3288,7 +3374,7 @@
         }
       } else {
         tempIsPeriod = false;
-        tempDischarge = 'Обычные';
+        tempDischarge = '';
 
         if (selectedDate === state.settings.lastPeriodStart) {
           const fallbackStart = state.settings.prevLastPeriodStart || findPreviousCycleStartBefore(selectedDate);
@@ -3322,6 +3408,7 @@
       hapticSelect();
       tempIntimacy = !tempIntimacy;
       renderIntimacyButton();
+      autosaveCurrentDayDraft();
     }
 
     function renderIntimacyButton() {
@@ -3335,12 +3422,14 @@
       hapticImpact('light');
       tempSoloCount = Math.min(20, (Number(tempSoloCount) || 0) + 1);
       renderSoloResetButton();
+      autosaveCurrentDayDraft();
     }
 
     function resetSoloReset() {
       hapticSelect();
       tempSoloCount = 0;
       renderSoloResetButton();
+      autosaveCurrentDayDraft();
     }
 
     function renderSoloResetButton() {
@@ -3370,6 +3459,7 @@
       if (state.entries[selectedDate]) {
         state.entries[selectedDate].isOvulation = tempIsOvulation;
         state.entries[selectedDate].isPeriod = tempIsPeriod;
+        state.entries[selectedDate].discharge = tempDischarge;
         state.entries[selectedDate].updatedAt = Date.now();
         persistLocalAndCloud(selectedDate);
       }
@@ -3380,8 +3470,13 @@
 
     function selectDischarge(val) {
       hapticSelect();
-      tempDischarge = val;
+      if (!tempIsPeriod && tempDischarge === val) {
+        tempDischarge = '';
+      } else {
+        tempDischarge = val;
+      }
       renderDischargeButtons();
+      autosaveCurrentDayDraft();
     }
 
     function toggleAccordion(id) {
@@ -3406,13 +3501,16 @@
         : 'Отметить интенсивность';
     }
 
-    function updateWatchSummary() {
+    function updateWatchSummary(shouldAutosave = true) {
       const tVal = document.getElementById('inpWristTemp').value.trim();
       if (tVal !== '') {
         const num = parseFloat(tVal);
         document.getElementById('sum-watch').textContent = `Темп. ${num > 0 ? '+' : ''}${tVal} °C`;
       } else {
         document.getElementById('sum-watch').textContent = 'Опционально';
+      }
+      if (shouldAutosave && isEditingDay) {
+        autosaveCurrentDayDraft();
       }
     }
 
@@ -3422,6 +3520,7 @@
           hapticSelect();
           const isRose = ['Чувствительность груди', 'Недосып'].includes(chip.dataset.val);
           chip.classList.toggle(isRose ? 'active-rose' : 'active');
+          autosaveCurrentDayDraft();
         };
       });
     }
@@ -3478,7 +3577,9 @@
         tempIsOvulation = Boolean(existing.isOvulation);
         tempIntimacy = Boolean(existing.intimacy);
         tempSoloCount = normalizeSoloCount(existing);
-        tempDischarge = existing.discharge || (tempIsPeriod ? 'Умеренные' : 'Обычные');
+        tempDischarge = tempIsPeriod
+          ? (['Скудные', 'Умеренные', 'Обильные'].includes(existing.discharge) ? existing.discharge : 'Умеренные')
+          : (['Кремовые', 'Прозрачные'].includes(existing.discharge) ? existing.discharge : '');
 
         populateEditableInputs(existing);
         renderSavedSummaryCard(existing);
@@ -3492,7 +3593,7 @@
         tempIsOvulation = false;
         tempIntimacy = false;
         tempSoloCount = 0;
-        tempDischarge = isCycleStart ? 'Умеренные' : 'Обычные';
+        tempDischarge = isCycleStart ? 'Умеренные' : '';
 
         populateEditableInputs({
           energy: 6, pain: 1, libido: 5,
@@ -3524,7 +3625,7 @@
       });
 
       document.getElementById('inpWristTemp').value = (data.wristTempDelta !== undefined && data.wristTempDelta !== null && data.wristTempDelta !== '') ? data.wristTempDelta : '';
-      updateWatchSummary();
+      updateWatchSummary(false);
 
       renderAllEmotionSliders();
     }
@@ -3541,7 +3642,10 @@
         pills.push(`<span class="saved-watch-pill">${SVG_ICONS.bolt}<span>×${soloCnt}</span></span>`);
       }
       if (entry.intimacy) {
-        pills.push(`<span class="saved-watch-pill">${SVG_ICONS.heart}<span>Близость</span></span>`);
+        pills.push(`<span class="saved-watch-pill">${SVG_ICONS.heart}</span>`);
+      }
+      if (entry.discharge && entry.discharge !== 'Обычные') {
+        pills.push(`<span class="saved-watch-pill">Выделения: ${escapeHtml(entry.discharge)}</span>`);
       }
       if (typeof entry.wristTempDelta === 'number' && !isNaN(entry.wristTempDelta)) {
         const sign = entry.wristTempDelta > 0 ? '+' : '';
@@ -3550,6 +3654,10 @@
       const normContexts = (entry.contexts || []).map(normalizeContextLabel).filter(c => c !== 'Стресс');
       normContexts.forEach(c => {
         pills.push(`<span class="saved-watch-pill">${escapeHtml(c)}</span>`);
+      });
+      const savedLevels = buildLoadedEmotionLevels(entry);
+      getActiveEmotionsFromLevels(savedLevels).forEach(em => {
+        pills.push(`<span class="saved-watch-pill">${escapeHtml(em)} ${savedLevels[em]}</span>`);
       });
       if (pills.length) {
         watchRow.style.display = 'flex';
@@ -3583,9 +3691,6 @@
 
       const activeEmos = getActiveEmotionsFromLevels(savedEmotionLevels);
       const contexts = getSelectedPhysicalContexts();
-      if ((savedEmotionLevels['Стресс'] ?? 0) >= 4 && !contexts.includes('Стресс')) {
-        contexts.push('Стресс');
-      }
       const prevHelped = Array.isArray(state.entries[selectedDate]?.helped) ? [...state.entries[selectedDate].helped] : [];
       const prevAi = state.entries[selectedDate]?.aiAnalysis;
 
@@ -3593,6 +3698,9 @@
       const wristTempDelta = tempRaw !== '' && !isNaN(parseFloat(tempRaw)) ? parseFloat(tempRaw) : null;
       const derivedMood = computeDerivedMood(savedEmotionLevels, metrics.energy, metrics.pain);
       const soloCnt = Math.max(0, Math.min(20, Number(tempSoloCount) || 0));
+      const cleanDischarge = tempIsPeriod
+        ? (['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge) ? tempDischarge : 'Умеренные')
+        : (['Кремовые', 'Прозрачные'].includes(tempDischarge) ? tempDischarge : '');
 
       const entry = {
         date: selectedDate,
@@ -3602,7 +3710,7 @@
         intimacy: tempIntimacy,
         soloCount: soloCnt,
         soloReset: soloCnt > 0,
-        discharge: tempDischarge || (tempIsPeriod ? 'Умеренные' : 'Обычные'),
+        discharge: cleanDischarge,
         mood: derivedMood,
         energy: metrics.energy,
         pain: metrics.pain,
@@ -3715,31 +3823,7 @@
 
     function getCurrentWorkingEntry() {
       if (state.entries[selectedDate]) return state.entries[selectedDate];
-      const tempRaw = document.getElementById('inpWristTemp')?.value.trim();
-      const contexts = getSelectedPhysicalContexts();
-      if ((emotionLevels['Стресс'] ?? 0) >= 4 && !contexts.includes('Стресс')) {
-        contexts.push('Стресс');
-      }
-      const soloCnt = Math.max(0, Math.min(20, Number(tempSoloCount) || 0));
-      return {
-        date: selectedDate,
-        updatedAt: Date.now(),
-        mood: computeDerivedMood(emotionLevels, metrics.energy, metrics.pain),
-        energy: metrics.energy,
-        pain: metrics.pain,
-        libido: metrics.libido,
-        isPeriod: tempIsPeriod,
-        isOvulation: tempIsOvulation,
-        intimacy: tempIntimacy,
-        soloCount: soloCnt,
-        soloReset: soloCnt > 0,
-        discharge: tempDischarge,
-        emotions: getActiveEmotionsFromLevels(emotionLevels),
-        emotionLevels: { ...emotionLevels },
-        contexts,
-        ...(tempRaw ? { wristTempDelta: parseFloat(tempRaw) } : {}),
-        helped: []
-      };
+      return buildLiveDaySnapshot();
     }
 
     function detectLocalPatterns(info) {
@@ -3842,8 +3926,8 @@
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
       const hasEdema = normContexts.includes('Отёки');
-      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Перегруз'] ?? 0) >= 5 || (levels['Стресс'] ?? 0) >= 5;
-      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5 || (levels['Уязвимость'] ?? 0) >= 5;
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Стресс'] ?? 0) >= 5;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5;
       const hasLowMood = (levels['Грусть'] ?? 0) >= 5 || (levels['Апатия'] ?? 0) >= 5;
 
       if (!isAiGenerating) {
@@ -3964,8 +4048,8 @@
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
       const hasEdema = normContexts.includes('Отёки');
-      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Перегруз'] ?? 0) >= 5 || (levels['Стресс'] ?? 0) >= 5;
-      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5 || (levels['Уязвимость'] ?? 0) >= 5;
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Стресс'] ?? 0) >= 5;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5;
       const hasLowMood = (levels['Грусть'] ?? 0) >= 5 || (levels['Апатия'] ?? 0) >= 5;
 
       let tips = [];
@@ -4387,21 +4471,23 @@ ${text}
 
     function toggleHelpedTip(tipId, isCustom = false) {
       hapticImpact('medium');
+      const cleanId = String(tipId || '').trim();
+      if (!cleanId) return;
       if (!state.entries[selectedDate]) {
-        state.entries[selectedDate] = getCurrentWorkingEntry();
+        state.entries[selectedDate] = buildLiveDaySnapshot();
       }
       const list = Array.isArray(state.entries[selectedDate].helped) ? [...state.entries[selectedDate].helped] : [];
-      const idx = list.indexOf(tipId);
+      const idx = list.indexOf(cleanId);
       if (idx >= 0) {
         list.splice(idx, 1);
         showToast('Отметка снята');
       } else {
-        list.push(tipId);
+        list.push(cleanId);
         if (isCustom) {
           if (!Array.isArray(state.customHelpedPool)) state.customHelpedPool = [];
-          if (!state.customHelpedPool.includes(tipId)) {
-            state.customHelpedPool.unshift(tipId);
-            state.customHelpedPool = state.customHelpedPool.slice(0, 25);
+          if (!state.customHelpedPool.includes(cleanId)) {
+            state.customHelpedPool.unshift(cleanId);
+            state.customHelpedPool = state.customHelpedPool.slice(0, 30);
           }
         }
         showToast('Сохранено');
@@ -4420,16 +4506,20 @@ ${text}
       if (!Array.isArray(state.customHelpedPool)) state.customHelpedPool = [];
       if (!state.customHelpedPool.includes(val)) {
         state.customHelpedPool.unshift(val);
-        state.customHelpedPool = state.customHelpedPool.slice(0, 25);
+        state.customHelpedPool = state.customHelpedPool.slice(0, 30);
       }
-      const alreadyChecked = Array.isArray(state.entries[selectedDate]?.helped) && state.entries[selectedDate].helped.includes(val);
-      if (!alreadyChecked) {
-        toggleHelpedTip(val, true);
-      } else {
-        persistLocalAndCloud('__meta_only__');
-        renderAdviceAndSelfCareTab();
-        showToast('Сохранено');
+      if (!state.entries[selectedDate]) {
+        state.entries[selectedDate] = buildLiveDaySnapshot();
       }
+      const list = Array.isArray(state.entries[selectedDate].helped) ? [...state.entries[selectedDate].helped] : [];
+      if (!list.includes(val)) {
+        list.push(val);
+      }
+      state.entries[selectedDate].helped = list;
+      state.entries[selectedDate].updatedAt = Date.now();
+      persistLocalAndCloud(selectedDate);
+      renderAdviceAndSelfCareTab();
+      showToast('Сохранено');
     }
 
     function renderLearnedHelpStats() {
