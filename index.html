@@ -253,6 +253,20 @@
     }
     .card-sub { font-size: 13px; color: var(--ink-2); flex-shrink: 0; }
 
+    .profile-summary-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .profile-pill {
+      background: var(--surface-2);
+      color: var(--ink);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
     .theme-list {
       display: flex;
       flex-direction: column;
@@ -436,15 +450,15 @@
     .choice-btn.active-ovul { background: var(--ovul-tint); border-color: var(--ovul); color: var(--ovul); }
 
     .icon-stealth-btn {
-      width: 44px;
-      min-width: 44px;
+      width: 46px;
+      min-width: 46px;
       height: 44px;
       border-radius: 14px;
       background: var(--surface-2);
       border: 1.5px solid transparent;
       color: var(--ink-2);
-      font-size: 18px;
-      font-weight: 600;
+      font-size: 19px;
+      font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -601,7 +615,6 @@
       transition: border-color 0.18s ease, background-color 0.18s ease;
     }
     textarea { resize: none; min-height: 84px; }
-    input::placeholder, textarea::placeholder { color: var(--ink-3); -webkit-text-fill-color: var(--ink-3); opacity: 1; }
     input:focus, textarea:focus { border-color: var(--accent); background: var(--surface); caret-color: var(--ink); }
 
     .ai-chat-reply {
@@ -1075,7 +1088,7 @@
 
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;" id="intimacyBlock">
             <button class="choice-btn" id="btnIntimacyToggle" onclick="toggleIntimacy()">Близость ♥</button>
-            <button class="icon-stealth-btn" id="btnSoloReset" onclick="toggleSoloReset()" aria-label="✧">✧</button>
+            <button class="icon-stealth-btn" id="btnSoloReset" onclick="toggleSoloReset()" aria-label="⚡">⚡</button>
             <button class="choice-btn" id="btnOvulation" onclick="toggleOvulation()" style="display:none;">✦ Овуляция</button>
           </div>
 
@@ -1140,11 +1153,11 @@
             <div class="grid-2" style="margin-top:8px;">
               <div>
                 <div class="field-label" style="margin-bottom:6px;">Сон (часы)</div>
-                <input type="number" id="inpSleepHours" step="0.1" min="0" max="18" placeholder="7.5" oninput="updateWatchSummary()" />
+                <input type="number" id="inpSleepHours" step="0.1" min="0" max="18" oninput="updateWatchSummary()" />
               </div>
               <div>
                 <div class="field-label" style="margin-bottom:6px;">Δ Темп. запястья (°C)</div>
-                <input type="number" id="inpWristTemp" step="0.05" min="-2.5" max="2.5" placeholder="+0.25" oninput="updateWatchSummary()" />
+                <input type="number" id="inpWristTemp" step="0.05" min="-2.5" max="2.5" oninput="updateWatchSummary()" />
               </div>
             </div>
           </div>
@@ -1242,7 +1255,7 @@
         <div class="filter-row" id="emotionSubFilters" style="display:none; margin-top:-2px;"></div>
 
         <div class="chart-wrap">
-          <svg id="cycleChart" width="100%" height="238" viewBox="0 0 400 238"></svg>
+          <svg id="cycleChart" width="100%" height="244" viewBox="0 0 400 244"></svg>
         </div>
 
         <div id="chartLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:12px; font-size:12px; color:var(--ink-2); margin-top:10px;"></div>
@@ -1260,7 +1273,7 @@
           <button class="btn-soft" onclick="logPainkiller('Но-шпа', 4)">Но-шпа</button>
         </div>
         <div style="display:flex; gap:8px; margin-top:8px;">
-          <input type="text" id="customMedInput" placeholder="Другой препарат" />
+          <input type="text" id="customMedInput" />
           <button class="btn-soft" style="white-space:nowrap;" onclick="logCustomPainkiller()">Добавить</button>
         </div>
         <div class="med-list" id="painkillerStatus"></div>
@@ -1340,14 +1353,23 @@
 
     <!-- VIEW 5: SETTINGS ("Настройки") -->
     <div id="view-settings" class="view">
-      <div class="card">
+      <!-- COLLAPSED SAVED PROFILE CARD -->
+      <div class="card" id="profileSavedCard" style="display:none;">
+        <div class="card-top" style="margin-bottom:10px;">
+          <span class="card-title">О себе</span>
+          <button type="button" class="btn-edit-small" onclick="unlockProfileEditing()">Изменить</button>
+        </div>
+        <div class="profile-summary-pills" id="profileSummaryPills"></div>
+      </div>
+
+      <!-- EDITABLE PROFILE CARD -->
+      <div class="card" id="profileEditCard">
         <div class="card-top">
           <span class="card-title">О себе</span>
-          <span class="card-sub">Для точности ИИ</span>
         </div>
 
         <div class="field-label" style="margin-bottom:8px;">Возраст</div>
-        <input type="number" id="setProfileAge" min="14" max="75" placeholder="28" />
+        <input type="number" id="setProfileAge" min="14" max="75" />
 
         <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Гормональная контрацепция</div>
         <div class="grid-2" id="contraceptionSelector">
@@ -1367,8 +1389,8 @@
           <div class="chip" data-val="Чувствительность к кофеину">Чувств. к кофеину</div>
         </div>
 
-        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Дополнительно (одной строкой)</div>
-        <input type="text" id="setProfileNotes" placeholder="Например: пью железо и магний, чувствительный ЖКТ" />
+        <div class="field-label" style="margin-top:16px; margin-bottom:8px;">Дополнительно</div>
+        <input type="text" id="setProfileNotes" />
 
         <button class="btn-accent" style="margin-top:18px;" onclick="saveProfileSettings()">Сохранить профиль</button>
       </div>
@@ -1831,6 +1853,7 @@
         palette: 'peach_sage',
         geminiApiKey: '',
         profile: {
+          saved: false,
           age: '',
           contraception: 'Нет',
           conditions: [],
@@ -2009,10 +2032,18 @@
 
     function ensureProfileStructure() {
       if (!state.settings.profile) {
-        state.settings.profile = { age: '', contraception: 'Нет', conditions: [], notes: '' };
+        state.settings.profile = { saved: false, age: '', contraception: 'Нет', conditions: [], notes: '' };
       }
       if (!Array.isArray(state.settings.profile.conditions)) {
         state.settings.profile.conditions = [];
+      }
+      if (typeof state.settings.profile.saved !== 'boolean') {
+        state.settings.profile.saved = Boolean(
+          state.settings.profile.age ||
+          (state.settings.profile.contraception && state.settings.profile.contraception !== 'Нет') ||
+          state.settings.profile.conditions.length ||
+          state.settings.profile.notes
+        );
       }
     }
 
@@ -2207,6 +2238,37 @@
       });
     }
 
+    function renderProfileViewMode() {
+      ensureProfileStructure();
+      const prof = state.settings.profile;
+      const savedCard = document.getElementById('profileSavedCard');
+      const editCard = document.getElementById('profileEditCard');
+
+      if (prof.saved) {
+        const pills = [];
+        if (prof.age) pills.push(`${prof.age} лет`);
+        if (prof.contraception && prof.contraception !== 'Нет') pills.push(prof.contraception);
+        (prof.conditions || []).forEach(c => pills.push(c));
+        if (prof.notes) pills.push(prof.notes);
+        if (!pills.length) pills.push('Без особенностей');
+
+        document.getElementById('profileSummaryPills').innerHTML = pills
+          .map(p => `<span class="profile-pill">${escapeHtml(p)}</span>`)
+          .join('');
+        savedCard.style.display = 'block';
+        editCard.style.display = 'none';
+      } else {
+        savedCard.style.display = 'none';
+        editCard.style.display = 'block';
+      }
+    }
+
+    function unlockProfileEditing() {
+      hapticImpact('light');
+      document.getElementById('profileSavedCard').style.display = 'none';
+      document.getElementById('profileEditCard').style.display = 'block';
+    }
+
     function saveProfileSettings() {
       ensureProfileStructure();
       const ageRaw = document.getElementById('setProfileAge').value.trim();
@@ -2215,6 +2277,7 @@
       const notes = document.getElementById('setProfileNotes').value.trim();
 
       state.settings.profile = {
+        saved: true,
         age: ageNum,
         contraception: tempContraception || 'Нет',
         conditions,
@@ -2222,7 +2285,8 @@
       };
 
       persistLocalAndCloud(null);
-      showToast('Профиль сохранён');
+      renderProfileViewMode();
+      showToast('Сохранено');
     }
 
     function syncSettingsInputs() {
@@ -2237,6 +2301,7 @@
         c.classList.toggle('active', (prof.conditions || []).includes(c.dataset.val));
       });
       document.getElementById('setProfileNotes').value = prof.notes || '';
+      renderProfileViewMode();
 
       document.getElementById('setLastPeriod').value = state.settings.lastPeriodStart;
       document.getElementById('setCycleLength').value = state.settings.cycleLength;
@@ -3500,7 +3565,7 @@
 
 СЛОВАРЬ ОБОЗНАЧЕНИЙ ПРИЛОЖЕНИЯ (обязательно учитывай при анализе и рекомендациях):
 - Символ ♥ (intimacy): партнёрская близость.
-- Символ ✧ (soloDischargeOrTensionRelief): соло-разрядка (мастурбация / оргазм наедине с собой). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
+- Символ ⚡ (soloDischargeOrTensionRelief): соло-разрядка (мастурбация / оргазм наедине с собой). Физиологически это выброс окситоцина и эндорфинов, усиление кровотока в малом тазу, снижение кортизола и расслабление гладкой мускулатуры. Учитывай этот маркер в анализе (как он связан с уровнем либидо, снятием стресса, облегчением спазмов/боли или улучшением настроения и сна), но в тексте для пользователя называй его деликатно: «телесная разрядка», «снятие напряжения наедине с собой» или «мягкая разрядка».
 - Символ ✦ (isOvulation): отмеченная овуляция.
 - Данные Apple Watch (если указаны): длительность сна и отклонение ночной температуры запястья от базовой линии (рост на +0.2…+0.5 °C подтверждает лютеиновую фазу и прогестерон после овуляции; резкое падение перед концом цикла предвещает скорые месячные).
 
@@ -3522,7 +3587,7 @@
 - Овуляция (✦): ${current.isOvulation ? 'да' : 'нет'}
 - Выделения: ${current.discharge || ''}
 - Близость (♥): ${current.intimacy ? 'да' : 'нет'}
-- Соло-разрядка (✧ / soloDischargeOrTensionRelief): ${Boolean(current.soloReset)}
+- Соло-разрядка (⚡ / soloDischargeOrTensionRelief): ${Boolean(current.soloReset)}
 ${watchToday.length ? `- Apple Watch: ${watchToday.join(', ')}` : ''}
 - Эмоции и их интенсивность: ${formattedEmos}
 - Факторы и ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
@@ -3535,7 +3600,7 @@ ${JSON.stringify(recentHistory)}
 
 ЗАДАЧА:
 ${hasRichHistory
-  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, сна/температуры запястья, а также как влияли близость (♥) и соло-разрядка (✧). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
+  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, боли в груди, недосыпа, стресса, отёков, сна/температуры запястья, а также как влияли близость (♥) и соло-разрядка (⚡). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
   : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
 
 Верни строго JSON:
@@ -3608,7 +3673,7 @@ ${hasRichHistory
 
       const prompt = `Ты чуткий, трезвый и спокойный собеседник (врач-гинеколог и психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
 Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Помоги ей разложить всё по полочкам: отдели реальные факты от тревожных домыслов, объясни связь с фазой цикла и её профилем (если она есть) и предложи одну спокойную опору на сейчас.
-Примечание по маркерам: ♥ — партнёрская близость, ✧ — соло-разрядка (называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой»).
+Примечание по маркерам: ♥ — партнёрская близость, ⚡ — соло-разрядка (называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой»).
 
 Профиль пользователя:
 - ${formatProfileContextForPrompt()}
@@ -3616,7 +3681,7 @@ ${hasRichHistory
 Контекст сегодняшнего дня (${selectedDate}):
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
 - Настроение: ${current.mood}/10, Энергия: ${current.energy}/10, Боль: ${current.pain}/10, Либидо: ${current.libido}/10
-- Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка(✧)=${Boolean(current.soloReset)}, овуляция=${Boolean(current.isOvulation)}
+- Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка(⚡)=${Boolean(current.soloReset)}, овуляция=${Boolean(current.isOvulation)}
 ${typeof current.sleepHours === 'number' ? `- Сон: ${current.sleepHours} ч` : ''}
 ${typeof current.wristTempDelta === 'number' ? `- Δ Температуры запястья: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции: ${formattedEmos || 'не указаны'}
@@ -3740,8 +3805,8 @@ ${text}
       const svg = document.getElementById('cycleChart');
       const baseLen = Number(state.settings.cycleLength) || 28;
       const pLen = Number(state.settings.periodLength) || 5;
-      const w = 400, h = 238;
-      const padL = 26, padR = 14, padT = 30, padB = 28;
+      const w = 400, h = 244;
+      const padL = 26, padR = 14, padT = 36, padB = 28;
       const plotW = w - padL - padR;
       const plotH = h - padT - padB;
       const isDark = Boolean(state.settings.darkMode);
@@ -3934,27 +3999,25 @@ ${text}
           <span style="color:${cIndigo}; font-weight:600;">● Энергия</span>
           <span style="color:${cAmber}; font-weight:600;">● Либидо</span>
           <span style="color:${cRose}; font-weight:600;">▮ Боль</span>
-          <span style="color:${cOvul}; font-weight:600;">✦ Овуляция</span>
-          <span style="color:var(--rose); font-weight:600;">♥ Близость</span>
-          <span style="color:var(--indigo); font-weight:600;">✧ Разрядка</span>
         `;
       }
 
+      // Large, clear top-of-chart markers for mobile readability
       for (let d = 1; d <= len; d++) {
         const e = byDay[d];
         if (!e) continue;
         const x = padL + ((d - 1) / (len - 1)) * plotW;
         const topMarkers = [];
-        if (e.intimacy) topMarkers.push({ sym: '♥', color: 'var(--rose)' });
-        if (e.soloReset) topMarkers.push({ sym: '✧', color: 'var(--indigo)' });
-        if (e.isOvulation) topMarkers.push({ sym: '✦', color: cOvul });
+        if (e.intimacy) topMarkers.push({ sym: '♥', color: 'var(--rose)', size: '17' });
+        if (e.soloReset) topMarkers.push({ sym: '⚡', color: cAmber, size: '16.5' });
+        if (e.isOvulation) topMarkers.push({ sym: '✦', color: cOvul, size: '18.5' });
 
         if (topMarkers.length) {
-          const spacing = 11;
+          const spacing = 14;
           const startX = x - ((topMarkers.length - 1) * spacing) / 2;
           topMarkers.forEach((m, idx) => {
             const mx = startX + idx * spacing;
-            html += `<text x="${mx.toFixed(1)}" y="${padT - 9}" text-anchor="middle" font-size="14.5" font-weight="700" fill="${m.color}">${m.sym}</text>`;
+            html += `<text x="${mx.toFixed(1)}" y="${padT - 11}" text-anchor="middle" font-size="${m.size}" font-weight="700" fill="${m.color}">${m.sym}</text>`;
           });
         }
       }
@@ -4155,6 +4218,7 @@ ${text}
           palette: state.settings.palette || 'peach_sage',
           geminiApiKey: '',
           profile: {
+            saved: false,
             age: '',
             contraception: 'Нет',
             conditions: [],
@@ -4184,7 +4248,10 @@ ${text}
         updatePainkillerUI();
         renderBreathPatternUI();
       }
-      if (tab === 'settings') renderThemeSelector();
+      if (tab === 'settings') {
+        renderThemeSelector();
+        renderProfileViewMode();
+      }
     }
 
     setupKeyboardLift();
