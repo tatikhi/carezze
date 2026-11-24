@@ -112,7 +112,7 @@
       background: radial-gradient(circle at 50% 35%, var(--amber-bg) 0%, transparent 72%);
     }
     body.dark-mode .ambient-glow {
-      opacity: 0.55;
+      opacity: 0.28;
     }
 
     .ui-svg {
@@ -1243,7 +1243,7 @@
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
     body.dark-mode .tab-bar {
-      background: rgba(17, 18, 16, 0.84);
+      background: color-mix(in srgb, var(--bg) 84%, transparent);
     }
     .tab-item {
       background: none;
@@ -1371,7 +1371,7 @@
       transition: background-color 0.25s ease, height 0.2s ease, opacity 0.2s ease;
     }
     body.dark-mode .cycle-seg {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
     }
     .cycle-seg.is-current {
       height: 9px;
@@ -1380,25 +1380,25 @@
       background: #E25B70;
     }
     body.dark-mode .cycle-seg.seg-period {
-      background: #EB6A7E;
+      background: #F27286;
     }
     .cycle-seg.seg-salad {
       background: #94D14F;
     }
     body.dark-mode .cycle-seg.seg-salad {
-      background: #8BC946;
+      background: #9AD45A;
     }
     .cycle-seg.seg-ovul {
       background: #2E9E5B;
     }
     body.dark-mode .cycle-seg.seg-ovul {
-      background: #38B86B;
+      background: #42C477;
     }
     .cycle-seg.seg-delay {
       background: #EA7C2B;
     }
     body.dark-mode .cycle-seg.seg-delay {
-      background: #F59342;
+      background: #F79B4E;
     }
 
     /* 2x2 Metric Cards (Tap-only cyclic 0..5) */
@@ -1702,42 +1702,6 @@
       font-weight: 700;
     }
 
-    /* iPhone Shortcuts Sync Box */
-    .shortcut-sync-box {
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 16px;
-      background: var(--surface-2);
-    }
-    .shortcut-sync-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .shortcut-url-code {
-      display: block;
-      width: 100%;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px;
-      color: var(--ink-2);
-      background: var(--surface);
-      padding: 9px 11px;
-      border-radius: 11px;
-      word-break: break-all;
-      margin-bottom: 8px;
-    }
-    .shortcut-steps {
-      font-size: 13px;
-      line-height: 1.45;
-      color: var(--ink-2);
-      margin-top: 8px;
-      padding-left: 16px;
-    }
-    .shortcut-steps li { margin-bottom: 4px; }
 
   </style>
 </head>
@@ -2032,7 +1996,7 @@
             <span class="card-title">Спросить CareZze</span>
           </div>
           <div id="aiQuickThread" class="ai-chat-thread" style="display:none;"></div>
-          <textarea id="aiQuickInput" rows="3" placeholder="Напиши, что сейчас тревожит или что хочется разобрать..."></textarea>
+          <textarea id="aiQuickInput" rows="3"></textarea>
           <div style="display:flex; gap:8px; margin-top:10px;">
             <button class="btn-indigo" style="height:46px; font-size:15px;" id="btnSendQuickAi" onclick="sendQuickAiQuestion()">
               Спросить
@@ -2341,7 +2305,6 @@
 
       <div style="display:flex; flex-direction:column; gap:10px;">
         <button class="btn-soft" onclick="forceCloudSync()">Синхронизировать с облаком</button>
-        <button class="btn-soft" onclick="copyShortcutSyncUrl()">Ссылка для Команд iPhone (Температура)</button>
         <button class="btn-soft" onclick="exportData()">Экспорт резервной копии</button>
         <button class="btn-soft" onclick="importDataPrompt()">Импорт из резервной копии</button>
         <button class="btn-danger-soft" onclick="clearAllData()">Сбросить все данные</button>
@@ -2511,30 +2474,30 @@
           '--shadow': '0 4px 20px rgba(34, 35, 32, 0.04)'
         },
         dark: {
-          '--bg': '#111210',
-          '--surface': '#191B18',
-          '--surface-2': '#232622',
-          '--ink': '#F6F5F2',
-          '--ink-2': '#9FA39B',
-          '--ink-3': '#666A63',
-          '--border': '#2D312B',
-          '--accent': '#EB866B',
-          '--accent-bg': '#3D231C',
-          '--accent-tint': '#2B1813',
-          '--ovul': '#84B097',
-          '--ovul-bg': '#1F3026',
-          '--ovul-tint': '#17241D',
-          '--rose': '#F26B85',
+          '--bg': '#121316',
+          '--surface': '#1A1C20',
+          '--surface-2': '#24272D',
+          '--ink': '#F5F6F8',
+          '--ink-2': '#B2B6C0',
+          '--ink-3': '#7A7F8C',
+          '--border': '#2F333B',
+          '--accent': '#F08C70',
+          '--accent-bg': 'rgba(240, 140, 112, 0.18)',
+          '--accent-tint': 'rgba(240, 140, 112, 0.11)',
+          '--ovul': '#86B89C',
+          '--ovul-bg': 'rgba(134, 184, 156, 0.18)',
+          '--ovul-tint': 'rgba(134, 184, 156, 0.11)',
+          '--rose': '#F4728C',
           '--rose-solid': '#D94865',
-          '--rose-bg': '#3D1922',
-          '--rose-tint': '#2B1218',
-          '--indigo': '#84B097',
-          '--indigo-bg': '#1F3026',
-          '--indigo-tint': '#17241D',
-          '--amber': '#E8A65D',
-          '--amber-bg': '#3A2815',
-          '--amber-tint': '#291C0E',
-          '--shadow': '0 8px 28px rgba(0, 0, 0, 0.48)'
+          '--rose-bg': 'rgba(244, 114, 140, 0.18)',
+          '--rose-tint': 'rgba(244, 114, 140, 0.11)',
+          '--indigo': '#86B89C',
+          '--indigo-bg': 'rgba(134, 184, 156, 0.18)',
+          '--indigo-tint': 'rgba(134, 184, 156, 0.11)',
+          '--amber': '#ECA85E',
+          '--amber-bg': 'rgba(236, 168, 94, 0.18)',
+          '--amber-tint': 'rgba(236, 168, 94, 0.11)',
+          '--shadow': '0 8px 28px rgba(0, 0, 0, 0.45)'
         }
       },
       dusty_rose: {
@@ -2567,30 +2530,30 @@
           '--shadow': '0 4px 20px rgba(34, 26, 30, 0.04)'
         },
         dark: {
-          '--bg': '#120E10',
-          '--surface': '#1B1518',
-          '--surface-2': '#261E22',
-          '--ink': '#FAF4F6',
-          '--ink-2': '#A8969E',
-          '--ink-3': '#6E5E66',
-          '--border': '#30252A',
-          '--accent': '#E5738E',
-          '--accent-bg': '#3D1D26',
-          '--accent-tint': '#2B151B',
-          '--ovul': '#E5A35E',
-          '--ovul-bg': '#3A2815',
-          '--ovul-tint': '#2A1D0E',
-          '--rose': '#F46987',
+          '--bg': '#141115',
+          '--surface': '#1D191F',
+          '--surface-2': '#27222A',
+          '--ink': '#F8F4F7',
+          '--ink-2': '#B8AEB8',
+          '--ink-3': '#807580',
+          '--border': '#332C36',
+          '--accent': '#EC7A96',
+          '--accent-bg': 'rgba(236, 122, 150, 0.18)',
+          '--accent-tint': 'rgba(236, 122, 150, 0.11)',
+          '--ovul': '#E8A864',
+          '--ovul-bg': 'rgba(232, 168, 100, 0.18)',
+          '--ovul-tint': 'rgba(232, 168, 100, 0.11)',
+          '--rose': '#F66F8D',
           '--rose-solid': '#D94865',
-          '--rose-bg': '#401822',
-          '--rose-tint': '#2D1118',
-          '--indigo': '#9D8EC4',
-          '--indigo-bg': '#272136',
-          '--indigo-tint': '#1D1829',
-          '--amber': '#E59866',
-          '--amber-bg': '#3A2316',
-          '--amber-tint': '#29180F',
-          '--shadow': '0 8px 28px rgba(0, 0, 0, 0.48)'
+          '--rose-bg': 'rgba(246, 111, 141, 0.18)',
+          '--rose-tint': 'rgba(246, 111, 141, 0.11)',
+          '--indigo': '#A596CC',
+          '--indigo-bg': 'rgba(165, 150, 204, 0.18)',
+          '--indigo-tint': 'rgba(165, 150, 204, 0.11)',
+          '--amber': '#EA9D6C',
+          '--amber-bg': 'rgba(234, 157, 108, 0.18)',
+          '--amber-tint': 'rgba(234, 157, 108, 0.11)',
+          '--shadow': '0 8px 28px rgba(0, 0, 0, 0.45)'
         }
       },
       blackberry_iris: {
@@ -2623,30 +2586,30 @@
           '--shadow': '0 4px 20px rgba(30, 26, 36, 0.04)'
         },
         dark: {
-          '--bg': '#100E13',
-          '--surface': '#18151D',
-          '--surface-2': '#231F2B',
-          '--ink': '#F6F4FA',
-          '--ink-2': '#9E96AB',
-          '--ink-3': '#665E73',
-          '--border': '#2D2736',
-          '--accent': '#A17DB8',
-          '--accent-bg': '#2D2036',
-          '--accent-tint': '#211828',
-          '--ovul': '#8499C7',
-          '--ovul-bg': '#1F2638',
-          '--ovul-tint': '#171C29',
-          '--rose': '#EE7296',
+          '--bg': '#111117',
+          '--surface': '#191922',
+          '--surface-2': '#23232F',
+          '--ink': '#F5F4FA',
+          '--ink-2': '#B2B0C2',
+          '--ink-3': '#7A788C',
+          '--border': '#2E2E3D',
+          '--accent': '#AD88C6',
+          '--accent-bg': 'rgba(173, 136, 198, 0.18)',
+          '--accent-tint': 'rgba(173, 136, 198, 0.11)',
+          '--ovul': '#8BA2D4',
+          '--ovul-bg': 'rgba(139, 162, 212, 0.18)',
+          '--ovul-tint': 'rgba(139, 162, 212, 0.11)',
+          '--rose': '#F2789C',
           '--rose-solid': '#D94865',
-          '--rose-bg': '#3D1B26',
-          '--rose-tint': '#2B131B',
-          '--indigo': '#8499C7',
-          '--indigo-bg': '#1F2638',
-          '--indigo-tint': '#171C29',
-          '--amber': '#DDA068',
-          '--amber-bg': '#382718',
-          '--amber-tint': '#281B10',
-          '--shadow': '0 8px 28px rgba(0, 0, 0, 0.48)'
+          '--rose-bg': 'rgba(242, 120, 156, 0.18)',
+          '--rose-tint': 'rgba(242, 120, 156, 0.11)',
+          '--indigo': '#8BA2D4',
+          '--indigo-bg': 'rgba(139, 162, 212, 0.18)',
+          '--indigo-tint': 'rgba(139, 162, 212, 0.11)',
+          '--amber': '#E3A66E',
+          '--amber-bg': 'rgba(227, 166, 110, 0.18)',
+          '--amber-tint': 'rgba(227, 166, 110, 0.11)',
+          '--shadow': '0 8px 28px rgba(0, 0, 0, 0.45)'
         }
       }
     };
@@ -2857,12 +2820,12 @@
     ];
 
     const EMOTION_PALETTE = {
-      'Спокойствие': { color: '#4E8C6B', bg: 'rgba(78, 140, 107, 0.18)' },
-      'Радость': { color: '#D49A3A', bg: 'rgba(212, 154, 58, 0.18)' },
-      'Усталость': { color: '#7E648F', bg: 'rgba(126, 100, 143, 0.18)' },
-      'Туман в голове': { color: '#8A7B9E', bg: 'rgba(138, 123, 158, 0.18)' },
-      'Слезливость': { color: '#5B8EA8', bg: 'rgba(91, 142, 168, 0.18)' },
-      'Раздражение': { color: '#C83E59', bg: 'rgba(200, 62, 89, 0.18)' }
+      'Спокойствие': { color: '#5FA882', bg: 'rgba(95, 168, 130, 0.20)' },
+      'Радость': { color: '#E3AA46', bg: 'rgba(227, 170, 70, 0.20)' },
+      'Усталость': { color: '#A182B8', bg: 'rgba(161, 130, 184, 0.20)' },
+      'Туман в голове': { color: '#A596BD', bg: 'rgba(165, 150, 189, 0.20)' },
+      'Слезливость': { color: '#6CA6C4', bg: 'rgba(108, 166, 196, 0.20)' },
+      'Раздражение': { color: '#E35D78', bg: 'rgba(227, 93, 120, 0.20)' }
     };
 
     function createDefaultEmotionLevels() {
@@ -4973,25 +4936,8 @@
       }
     }
 
-    function buildShortcutSyncUrlTemplate() {
-      const base = `${window.location.origin}${window.location.pathname}`;
-      return `${base}?temp=`;
-    }
-
-    function refreshShortcutUrlPreview() {
-      const box = document.getElementById('shortcutSyncUrlPreview');
-      if (box) box.textContent = `${buildShortcutSyncUrlTemplate()}36.65`;
-    }
-
-    function copyShortcutSyncUrl() {
-      const tpl = buildShortcutSyncUrlTemplate();
-      navigator.clipboard?.writeText(tpl);
-      showToast('Ссылка скопирована');
-    }
-
     function openSheet(id) {
       hapticImpact('light');
-      if (id === 'sheetTemp') refreshShortcutUrlPreview();
       const el = document.getElementById(id);
       if (el) {
         lockBodyScroll();
