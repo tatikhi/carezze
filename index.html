@@ -450,9 +450,28 @@
       top: 0;
       left: 0;
       bottom: 0;
-      border-radius: inherit;
+      border-radius: 0;
       pointer-events: none;
-      transition: width 0.08s ease-out;
+      will-change: width;
+      transition: width 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .cc-slider.is-dragging .cc-fill {
+      transition: none;
+    }
+    .cc-steps-grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .cc-steps-grid span {
+      border-right: 1px solid rgba(128, 128, 128, 0.12);
+      height: 100%;
+    }
+    .cc-steps-grid span:last-child {
+      border-right: none;
     }
     .cc-label { position: relative; z-index: 2; font-size: 15.5px; font-weight: 600; color: var(--ink); white-space: nowrap; }
     .cc-value {
@@ -1203,22 +1222,25 @@
           </div>
 
           <div class="cc-group">
-            <div class="cc-slider" data-key="energy" data-min="1" data-max="10">
-              <div class="cc-fill" style="background:var(--indigo-bg); width:60%;"></div>
+            <div class="cc-slider" data-key="energy" data-min="0" data-max="5">
+              <div class="cc-fill" style="background:var(--indigo-bg); width:0%;"></div>
+              <div class="cc-steps-grid"><span></span><span></span><span></span><span></span><span></span></div>
               <span class="cc-label">Энергия</span>
-              <span class="cc-value" id="val-energy">6</span>
+              <span class="cc-value is-zero" id="val-energy">0</span>
             </div>
 
-            <div class="cc-slider" data-key="pain" data-min="0" data-max="10">
-              <div class="cc-fill" style="background:var(--rose-bg); width:10%;"></div>
+            <div class="cc-slider" data-key="pain" data-min="0" data-max="5">
+              <div class="cc-fill" style="background:var(--rose-bg); width:0%;"></div>
+              <div class="cc-steps-grid"><span></span><span></span><span></span><span></span><span></span></div>
               <span class="cc-label">Боль и спазмы</span>
-              <span class="cc-value" id="val-pain">1</span>
+              <span class="cc-value is-zero" id="val-pain">0</span>
             </div>
 
-            <div class="cc-slider" data-key="libido" data-min="0" data-max="10">
-              <div class="cc-fill" style="background:var(--amber-bg); width:50%;"></div>
+            <div class="cc-slider" data-key="libido" data-min="0" data-max="5">
+              <div class="cc-fill" style="background:var(--amber-bg); width:0%;"></div>
+              <div class="cc-steps-grid"><span></span><span></span><span></span><span></span><span></span></div>
               <span class="cc-label">Либидо</span>
-              <span class="cc-value" id="val-libido">5</span>
+              <span class="cc-value is-zero" id="val-libido">0</span>
             </div>
           </div>
 
@@ -1315,7 +1337,7 @@
           </button>
           <div class="accordion-body">
             <div class="sub-section-header" style="margin-top:10px;">
-              <span class="field-label">Эмоциональный фон и стресс (0–10)</span>
+              <span class="field-label">Эмоциональный фон и стресс (0–5)</span>
             </div>
             <div class="emotion-sliders-stack" id="allEmotionSliders"></div>
           </div>
@@ -2127,8 +2149,8 @@
       const pos = (levelsObj['Спокойствие'] || 0) * 0.35;
       const negKeys = ['Грусть', 'Тревога', 'Раздражение', 'Усталость', 'Слезливость', 'Апатия', 'Туман в голове', 'Напряжение', 'Стресс'];
       const negSum = negKeys.reduce((s, k) => s + (levelsObj[k] || 0), 0);
-      const raw = 5.5 + pos - (negSum * 0.12) + ((energyVal - 5) * 0.2) - (painVal * 0.15);
-      return Math.max(1, Math.min(10, Math.round(raw)));
+      const raw = 2.8 + pos - (negSum * 0.12) + ((energyVal - 2.5) * 0.25) - (painVal * 0.18);
+      return Math.max(0, Math.min(5, Math.round(raw)));
     }
 
     let state = {
@@ -2161,7 +2183,7 @@
     let calendarViewDate = parseLocalISO(selectedDate);
 
     let isEditingDay = true;
-    let metrics = { energy: 6, pain: 1, libido: 5 };
+    let metrics = { energy: 0, pain: 0, libido: 0 };
     let emotionLevels = createDefaultEmotionLevels();
     let tempIsPeriod = false;
     let tempIsOvulation = false;
@@ -2286,13 +2308,14 @@
         Object.entries(entry.emotionLevels).forEach(([k, v]) => {
           const num = Number(v);
           if (Number.isFinite(num) && num > 0) {
-            compactEmotions[k] = Math.max(0, Math.min(10, Math.round(num)));
+            compactEmotions[k] = Math.max(0, Math.min(5, Math.round(num)));
           }
         });
       }
       const soloCnt = normalizeSoloCount(entry);
       const clone = {
         date: entry.date,
+        scaleMax: 5,
         updatedAt: entry.updatedAt || Date.now(),
         isPeriod: Boolean(entry.isPeriod),
         isOvulation: Boolean(entry.isOvulation),
@@ -2506,16 +2529,17 @@
       selectedDate = today;
       const existing = state.entries[today] || {
         date: today,
+        scaleMax: 5,
         isPeriod: today === state.settings.lastPeriodStart,
         isOvulation: false,
         intimacy: false,
         soloCount: 0,
         soloReset: false,
         discharge: '',
-        mood: 6,
-        energy: 6,
-        pain: 1,
-        libido: 5,
+        mood: 3,
+        energy: 0,
+        pain: 0,
+        libido: 0,
         emotions: [],
         emotionLevels: createDefaultEmotionLevels(),
         contexts: [],
@@ -2550,11 +2574,39 @@
       return false;
     }
 
+    function toFiveScale(val) {
+      const n = Number(val);
+      if (!Number.isFinite(n) || n <= 0) return 0;
+      return Math.max(0, Math.min(5, Math.round(n / 2)));
+    }
+
     function normalizeAllLoadedEntries() {
       Object.keys(state.entries || {}).forEach(iso => {
         const entry = state.entries[iso];
         if (!entry) return;
         entry.date = entry.date || iso;
+        const isLegacy10 = entry.scaleMax !== 5 && (
+          Number(entry.energy) > 5 ||
+          Number(entry.pain) > 5 ||
+          Number(entry.libido) > 5 ||
+          Object.values(entry.emotionLevels || {}).some(v => Number(v) > 5)
+        );
+        if (isLegacy10) {
+          entry.energy = toFiveScale(entry.energy);
+          entry.pain = toFiveScale(entry.pain);
+          entry.libido = toFiveScale(entry.libido);
+          if (typeof entry.mood === 'number') entry.mood = toFiveScale(entry.mood);
+          if (entry.emotionLevels && typeof entry.emotionLevels === 'object') {
+            Object.keys(entry.emotionLevels).forEach(k => {
+              entry.emotionLevels[k] = toFiveScale(entry.emotionLevels[k]);
+            });
+          }
+        } else {
+          entry.energy = Math.max(0, Math.min(5, Math.round(Number(entry.energy) || 0)));
+          entry.pain = Math.max(0, Math.min(5, Math.round(Number(entry.pain) || 0)));
+          entry.libido = Math.max(0, Math.min(5, Math.round(Number(entry.libido) || 0)));
+        }
+        entry.scaleMax = 5;
         entry.emotionLevels = buildLoadedEmotionLevels(entry);
         entry.emotions = getActiveEmotionsFromLevels(entry.emotionLevels);
         entry.soloCount = normalizeSoloCount(entry);
@@ -2982,7 +3034,7 @@
       const normalizedLevels = {};
       ALL_EMOTIONS.forEach(em => {
         const val = Number(emotionLevels[em]);
-        normalizedLevels[em] = Number.isFinite(val) ? Math.max(0, Math.min(10, Math.round(val))) : 0;
+        normalizedLevels[em] = Number.isFinite(val) ? Math.max(0, Math.min(5, Math.round(val))) : 0;
       });
       const activeEmos = getActiveEmotionsFromLevels(normalizedLevels);
       const contexts = getSelectedPhysicalContexts();
@@ -2999,6 +3051,7 @@
 
       return {
         date: selectedDate,
+        scaleMax: 5,
         updatedAt: Date.now(),
         isPeriod: Boolean(tempIsPeriod),
         isOvulation: Boolean(tempIsOvulation),
@@ -3042,51 +3095,110 @@
       const max = Number(el.dataset.max);
       let startX = 0;
       let startY = 0;
-      let isDragging = false;
+      let gestureMode = null; // 'horizontal' | 'vertical' | null
+      let cachedRect = null;
+      let lastClientX = 0;
 
-      const updateFromEvent = (clientX) => {
-        const rect = el.getBoundingClientRect();
-        let ratio = (clientX - rect.left) / rect.width;
+      const calcFromClientX = (clientX) => {
+        const rect = cachedRect || el.getBoundingClientRect();
+        let ratio = (clientX - rect.left) / Math.max(1, rect.width);
         ratio = Math.max(0, Math.min(1, ratio));
         const val = Math.round(min + ratio * (max - min));
-        if (getVal() !== val) {
-          setVal(val);
-          renderFn(val);
-          hapticSelect();
-        }
+        return { val, ratio };
       };
 
-      el.addEventListener('pointerdown', (e) => {
-        if (!isEditingDay) return;
-        startX = e.clientX;
-        startY = e.clientY;
-        isDragging = false;
-      });
-
-      el.addEventListener('pointermove', (e) => {
-        if (!isEditingDay || startX === 0) return;
-        const dx = Math.abs(e.clientX - startX);
-        const dy = Math.abs(e.clientY - startY);
-        if (!isDragging && dx > 7 && dx > dy * 1.1) {
-          isDragging = true;
-          try { el.setPointerCapture(e.pointerId); } catch (err) {}
+      const applyPoint = (clientX, smoothFollow = false) => {
+        const { val, ratio } = calcFromClientX(clientX);
+        const prev = getVal();
+        if (prev !== val) {
+          setVal(val);
+          hapticImpact('light');
+          hapticSelect();
         }
-        if (isDragging) updateFromEvent(e.clientX);
-      });
+        renderFn(val, smoothFollow ? ratio : null);
+      };
 
-      el.addEventListener('pointerup', (e) => {
+      el.addEventListener('touchstart', (e) => {
+        if (!isEditingDay || e.touches.length !== 1) return;
+        const t = e.touches[0];
+        startX = t.clientX;
+        startY = t.clientY;
+        lastClientX = t.clientX;
+        gestureMode = null;
+        cachedRect = el.getBoundingClientRect();
+      }, { passive: true });
+
+      el.addEventListener('touchmove', (e) => {
+        if (!isEditingDay || e.touches.length !== 1) return;
+        const t = e.touches[0];
+        lastClientX = t.clientX;
+        const dx = Math.abs(t.clientX - startX);
+        const dy = Math.abs(t.clientY - startY);
+
+        if (!gestureMode) {
+          if (dx < 4 && dy < 4) return;
+          if (dx >= dy) {
+            gestureMode = 'horizontal';
+            el.classList.add('is-dragging');
+          } else {
+            gestureMode = 'vertical';
+            return;
+          }
+        }
+
+        if (gestureMode === 'horizontal') {
+          if (e.cancelable) e.preventDefault();
+          applyPoint(t.clientX, true);
+        }
+      }, { passive: false });
+
+      const finishTouch = () => {
         if (!isEditingDay) return;
-        const dx = Math.abs(e.clientX - startX);
-        const dy = Math.abs(e.clientY - startY);
-        if (!isDragging && dx <= 14 && dy <= 14) updateFromEvent(e.clientX);
-        isDragging = false;
-        startX = 0;
-        if (onCommit) onCommit();
+        el.classList.remove('is-dragging');
+        if (gestureMode === 'horizontal') {
+          renderFn(getVal(), null);
+          if (onCommit) onCommit();
+        } else if (gestureMode === null) {
+          // Simple tap on slider
+          applyPoint(lastClientX, false);
+          if (onCommit) onCommit();
+        }
+        gestureMode = null;
+        cachedRect = null;
+      };
+
+      el.addEventListener('touchend', finishTouch, { passive: true });
+      el.addEventListener('touchcancel', () => {
+        el.classList.remove('is-dragging');
+        if (gestureMode === 'horizontal') {
+          renderFn(getVal(), null);
+          if (onCommit) onCommit();
+        }
+        gestureMode = null;
+        cachedRect = null;
+      }, { passive: true });
+
+      // Desktop mouse support
+      let mouseActive = false;
+      el.addEventListener('mousedown', (e) => {
+        if (!isEditingDay || e.button !== 0) return;
+        mouseActive = true;
+        cachedRect = el.getBoundingClientRect();
+        el.classList.add('is-dragging');
+        applyPoint(e.clientX, true);
       });
 
-      el.addEventListener('pointercancel', () => {
-        isDragging = false;
-        startX = 0;
+      window.addEventListener('mousemove', (e) => {
+        if (!mouseActive || !isEditingDay) return;
+        applyPoint(e.clientX, true);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!mouseActive) return;
+        mouseActive = false;
+        el.classList.remove('is-dragging');
+        renderFn(getVal(), null);
+        cachedRect = null;
         if (onCommit) onCommit();
       });
     }
@@ -3098,25 +3210,29 @@
           el,
           () => metrics[key],
           (v) => { metrics[key] = v; },
-          () => renderCCSlider(key),
+          (v, liveRatio) => renderCCSlider(key, liveRatio),
           () => autosaveCurrentDayDraft()
         );
       });
     }
 
-    function renderCCSlider(key) {
+    function renderCCSlider(key, liveRatio = null) {
       const el = document.querySelector(`.cc-slider[data-key="${key}"]`);
       if (!el) return;
       const min = Number(el.dataset.min);
       const max = Number(el.dataset.max);
       const val = metrics[key];
-      const pct = ((val - min) / (max - min)) * 100;
-      el.querySelector('.cc-fill').style.width = `${Math.max(8, pct)}%`;
-      document.getElementById(`val-${key}`).textContent = val;
+      const pct = liveRatio !== null
+        ? Math.max(0, Math.min(100, liveRatio * 100))
+        : ((val - min) / (max - min)) * 100;
+      el.querySelector('.cc-fill').style.width = `${pct}%`;
+      const valEl = document.getElementById(`val-${key}`);
+      valEl.textContent = val;
+      valEl.classList.toggle('is-zero', val === 0);
     }
 
     function renderAllCCSliders() {
-      ['energy', 'pain', 'libido'].forEach(renderCCSlider);
+      ['energy', 'pain', 'libido'].forEach(k => renderCCSlider(k, null));
     }
 
     function renderAllEmotionSliders() {
@@ -3126,14 +3242,15 @@
       ALL_EMOTIONS.forEach(emo => {
         const val = typeof emotionLevels[emo] === 'number' ? emotionLevels[emo] : 0;
         const pal = EMOTION_PALETTE[emo] || { bg: 'var(--accent-bg)' };
-        const pct = (val / 10) * 100;
+        const pct = (val / 5) * 100;
 
         const row = document.createElement('div');
         row.className = 'cc-slider compact';
         row.dataset.min = '0';
-        row.dataset.max = '10';
+        row.dataset.max = '5';
         row.innerHTML = `
-          <div class="cc-fill" style="background:${pal.bg}; width:${val === 0 ? 0 : Math.max(10, pct)}%;"></div>
+          <div class="cc-fill" style="background:${pal.bg}; width:${pct}%;"></div>
+          <div class="cc-steps-grid"><span></span><span></span><span></span><span></span><span></span></div>
           <span class="cc-label">${escapeHtml(emo)}</span>
           <span class="cc-value ${val === 0 ? 'is-zero' : ''}">${val}</span>
         `;
@@ -3144,16 +3261,17 @@
           (newVal) => {
             emotionLevels[emo] = newVal;
             updateSummaries();
-            scheduleEmotionAutosave();
           },
-          (newVal) => {
-            const p = (newVal / 10) * 100;
-            row.querySelector('.cc-fill').style.width = `${newVal === 0 ? 0 : Math.max(10, p)}%`;
+          (newVal, liveRatio) => {
+            const p = liveRatio !== null
+              ? Math.max(0, Math.min(100, liveRatio * 100))
+              : (newVal / 5) * 100;
+            row.querySelector('.cc-fill').style.width = `${p}%`;
             const valSpan = row.querySelector('.cc-value');
             valSpan.textContent = newVal;
             valSpan.classList.toggle('is-zero', newVal === 0);
           },
-          () => scheduleEmotionAutosave()
+          () => autosaveCurrentDayDraft()
         );
 
         list.appendChild(row);
@@ -3541,7 +3659,8 @@
           const normKey = k === 'Внутреннее напряжение' ? 'Напряжение' : k;
           const num = Number(v);
           if (normKey in levels && Number.isFinite(num)) {
-            levels[normKey] = Math.max(0, Math.min(10, Math.round(num)));
+            const scaled = (entry.scaleMax !== 5 && num > 5) ? Math.round(num / 2) : Math.round(num);
+            levels[normKey] = Math.max(0, Math.min(5, scaled));
           }
         });
       }
@@ -3550,13 +3669,13 @@
         entry.emotions.forEach(em => {
           const normKey = em === 'Внутреннее напряжение' ? 'Напряжение' : em;
           if (normKey in levels && levels[normKey] === 0 && !hasAnySavedVal) {
-            levels[normKey] = 5;
+            levels[normKey] = 3;
           }
         });
       }
       if (Array.isArray(entry?.contexts) && entry.contexts.includes('Стресс') && (levels['Стресс'] ?? 0) === 0) {
         const hasAnySavedVal = Object.values(levels).some(v => v > 0);
-        if (!hasAnySavedVal) levels['Стресс'] = 5;
+        if (!hasAnySavedVal) levels['Стресс'] = 3;
       }
       return levels;
     }
@@ -3587,7 +3706,7 @@
         document.getElementById('editableDayForm').style.display = 'none';
       } else {
         isEditingDay = true;
-        metrics = { energy: 6, pain: 1, libido: 5 };
+        metrics = { energy: 0, pain: 0, libido: 0 };
         emotionLevels = createDefaultEmotionLevels();
         tempIsPeriod = isCycleStart;
         tempIsOvulation = false;
@@ -3596,7 +3715,7 @@
         tempDischarge = isCycleStart ? 'Умеренные' : '';
 
         populateEditableInputs({
-          energy: 6, pain: 1, libido: 5,
+          energy: 0, pain: 0, libido: 0,
           intimacy: false, soloCount: 0, soloReset: false, emotionLevels, contexts: [],
           wristTempDelta: ''
         });
@@ -3685,7 +3804,7 @@
       const savedEmotionLevels = {};
       ALL_EMOTIONS.forEach(em => {
         const val = Number(emotionLevels[em]);
-        savedEmotionLevels[em] = Number.isFinite(val) ? Math.max(0, Math.min(10, Math.round(val))) : 0;
+        savedEmotionLevels[em] = Number.isFinite(val) ? Math.max(0, Math.min(5, Math.round(val))) : 0;
       });
       emotionLevels = { ...savedEmotionLevels };
 
@@ -3704,6 +3823,7 @@
 
       const entry = {
         date: selectedDate,
+        scaleMax: 5,
         updatedAt: Date.now(),
         isPeriod: tempIsPeriod,
         isOvulation: tempIsOvulation,
@@ -3837,7 +3957,7 @@
         const avgPain = (samePhaseEntries.reduce((s, e) => s + e.pain, 0) / samePhaseEntries.length).toFixed(1);
         const avgEnergy = (samePhaseEntries.reduce((s, e) => s + e.energy, 0) / samePhaseEntries.length).toFixed(1);
         const breastRate = samePhaseEntries.filter(e => (e.contexts || []).map(normalizeContextLabel).includes('Чувствительность груди')).length;
-        notes.push(`В этой фазе у тебя обычно энергия ~${avgEnergy}/10, боль ~${avgPain}/10.`);
+        notes.push(`В этой фазе у тебя обычно энергия ~${avgEnergy}/5, боль ~${avgPain}/5.`);
         if (breastRate >= 2) {
           notes.push(`Чувствительность груди повторялась в ${breastRate} из ${samePhaseEntries.length} дней этой фазы.`);
         }
@@ -3920,15 +4040,15 @@
       const levels = buildLoadedEmotionLevels(entry);
       const activeEmos = getActiveEmotionsFromLevels(levels);
       const emosLabeled = activeEmos.length
-        ? activeEmos.map(e => `${e} (${levels[e]}/10)`)
+        ? activeEmos.map(e => `${e} (${levels[e]}/5)`)
         : ['Ровный фон'];
 
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
       const hasEdema = normContexts.includes('Отёки');
-      const hasAnxiety = (levels['Тревога'] ?? 0) >= 5 || (levels['Напряжение'] ?? 0) >= 5 || (levels['Стресс'] ?? 0) >= 5;
-      const hasIrritability = (levels['Раздражение'] ?? 0) >= 5 || (levels['Слезливость'] ?? 0) >= 5;
-      const hasLowMood = (levels['Грусть'] ?? 0) >= 5 || (levels['Апатия'] ?? 0) >= 5;
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || (levels['Напряжение'] ?? 0) >= 3 || (levels['Стресс'] ?? 0) >= 3;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 3 || (levels['Слезливость'] ?? 0) >= 3;
+      const hasLowMood = (levels['Грусть'] ?? 0) >= 3 || (levels['Апатия'] ?? 0) >= 3;
 
       if (!isAiGenerating) {
         btnRunAi.disabled = false;
@@ -3991,7 +4111,7 @@
           gynB.textContent = (info.delayDays <= 7
             ? 'Цикл сместился: такое бывает при стрессе, недосыпе или сдвиге овуляции. Если была близость, полезно сделать тест и понаблюдать за самочувствием.'
             : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ, чтобы проверить причину.') + extraBodySuffix;
-        } else if (entry.pain >= 6) {
+        } else if (entry.pain >= 3) {
           gynH.textContent = 'Выраженные спазмы и боль';
           gynB.textContent = ('Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают снять спазм.') + extraBodySuffix;
         } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
@@ -4020,7 +4140,7 @@
           psyB.textContent = 'В предменструальные дни эмоции часто ощущаются острее, чем есть на самом деле. Важные решения и резкие оценки себя лучше отложить на несколько дней.';
         } else if (hasAnxiety) {
           psyB.textContent = 'Внутреннее напряжение и стресс держат нервную систему в тонусе. Замедли темп, выдохни глубже вдоха и сними часть фоновых задач, которые не горят сегодня.';
-        } else if (entry.pain >= 6 || entry.energy <= 3) {
+        } else if (entry.pain >= 3 || entry.energy <= 1) {
           psyB.textContent = 'Когда тело болит или нет сил, требовать от себя прежней продуктивности тяжело. Разреши себе сделать меньше и беречь ресурс.';
         } else if (hasIrritability) {
           psyB.textContent = 'Раздражительность и уязвимость часто говорят об усталости или переизбытке шума и общения. Полезно дать себе личное пространство и снизить число внешних триггеров.';
@@ -4078,7 +4198,7 @@
             isCustom: false
           });
         }
-        if (entry.pain >= 4 || entry.isPeriod) {
+        if (entry.pain >= 2 || entry.isPeriod) {
           tips.push({
             id: 'Тепло на низ живота или поясницу',
             title: 'Тепло на низ живота или поясницу',
@@ -4086,7 +4206,7 @@
             isCustom: false
           });
         }
-        if (entry.pain >= 4) {
+        if (entry.pain >= 2) {
           tips.push({
             id: 'Нурофен 400 мг',
             title: 'Нурофен 400 мг',
@@ -4100,7 +4220,7 @@
             isCustom: false
           });
         }
-        if (hasAnxiety || entry.pain >= 5 || normalizeSoloCount(entry) > 0) {
+        if (hasAnxiety || entry.pain >= 3 || normalizeSoloCount(entry) > 0) {
           tips.push({
             id: 'Медленное дыхание',
             title: 'Медленное дыхание',
@@ -4262,7 +4382,7 @@
       const curLevels = buildLoadedEmotionLevels(current);
       const formattedEmos = ALL_EMOTIONS
         .filter(em => (curLevels[em] ?? 0) > 0)
-        .map(em => `${em}: ${curLevels[em]}/10`)
+        .map(em => `${em}: ${curLevels[em]}/5`)
         .join(', ') || 'все эмоции около 0';
 
       const allSorted = Object.values(state.entries)
@@ -4324,10 +4444,10 @@
 - День цикла: ${info.cycleDay} (${info.phase}${info.isDelay ? `, задержка ${pluralDays(info.delayDays)}` : ''})
 - Всего записей в базе: ${recentHistory.length + 1}
 
-СЕГОДНЯ:
-- Энергия: ${current.energy}/10
-- Боль: ${current.pain}/10
-- Либидо: ${current.libido}/10
+СЕГОДНЯ (оценка по 5-балльной шкале 0–5):
+- Энергия: ${current.energy}/5
+- Боль: ${current.pain}/5
+- Либидо: ${current.libido}/5
 - Месячные: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
 - Овуляция: ${current.isOvulation ? 'да' : 'нет'}
 - Выделения: ${current.discharge || ''}
@@ -4414,7 +4534,7 @@ ${hasRichHistory
       const curLevels = buildLoadedEmotionLevels(current);
       const formattedEmos = ALL_EMOTIONS
         .filter(em => (curLevels[em] ?? 0) > 0)
-        .map(em => `${em} (${curLevels[em]}/10)`)
+        .map(em => `${em} (${curLevels[em]}/5)`)
         .join(', ');
       const soloCnt = normalizeSoloCount(current);
 
@@ -4425,9 +4545,9 @@ ${hasRichHistory
 Профиль пользователя:
 - ${formatProfileContextForPrompt()}
 
-Контекст сегодняшнего дня (${selectedDate}):
+Контекст сегодняшнего дня (${selectedDate}), шкала 0–5:
 - День цикла: ${info.cycleDay} из ${info.len} (${info.phase})
-- Энергия: ${current.energy}/10, Боль: ${current.pain}/10, Либидо: ${current.libido}/10
+- Энергия: ${current.energy}/5, Боль: ${current.pain}/5, Либидо: ${current.libido}/5
 - Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка=${soloCnt} раз, овуляция=${Boolean(current.isOvulation)}
 ${typeof current.wristTempDelta === 'number' ? `- Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции и стресс: ${formattedEmos || 'не указаны'}
@@ -4635,7 +4755,7 @@ ${text}
         subRow.style.display = 'none';
       }
 
-      const effectivePadL = chartFilter === 'temp' ? 44 : 26;
+      const effectivePadL = 16;
       const effectivePlotW = w - effectivePadL - padR;
 
       let html = `<defs>
@@ -4673,54 +4793,13 @@ ${text}
         }
       }
 
-      if (chartFilter === 'temp') {
-        let minT = 35.5;
-        let maxT = 37.5;
-        if (tempPtsRaw.length) {
-          const vals = tempPtsRaw.map(p => p.val);
-          const rawMin = Math.min(...vals);
-          const rawMax = Math.max(...vals);
-          if (rawMin === rawMax) {
-            minT = Number((rawMin - 0.5).toFixed(2));
-            maxT = Number((rawMax + 0.5).toFixed(2));
-          } else {
-            const margin = Math.max(0.15, (rawMax - rawMin) * 0.25);
-            minT = Number((rawMin - margin).toFixed(2));
-            maxT = Number((rawMax + margin).toFixed(2));
-          }
-        }
-        const midT = Number(((minT + maxT) / 2).toFixed(2));
-        const scaleT = (v) => {
-          const ratio = (v - minT) / Math.max(0.01, maxT - minT);
-          return padT + plotH - Math.max(0, Math.min(1, ratio)) * plotH;
-        };
+      // Subtle reference horizontal lines without any numbers
+      [0, 2.5, 5].forEach(v => {
+        const y = padT + plotH - (v / 5) * plotH;
+        html += `<line x1="${effectivePadL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="${v === 2.5 ? '3 3' : 'none'}" />`;
+      });
 
-        [
-          { v: maxT, dash: 'none' },
-          { v: midT, dash: '3 3' },
-          { v: minT, dash: 'none' }
-        ].forEach(tick => {
-          const y = scaleT(tick.v);
-          const label = String(Number(tick.v.toFixed(2)));
-          html += `<line x1="${effectivePadL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="${tick.dash}" />`;
-          html += `<text x="4" y="${y + 4}" font-size="10" font-weight="600" fill="var(--ink-3)">${label}</text>`;
-        });
-      } else {
-        [0, 5, 10].forEach(v => {
-          const y = padT + plotH - (v / 10) * plotH;
-          html += `<line x1="${effectivePadL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="${v === 5 ? '3 3' : 'none'}" />`;
-          html += `<text x="6" y="${y + 4}" font-size="10.5" font-weight="600" fill="var(--ink-3)">${v}</text>`;
-        });
-      }
-
-      for (let d = 1; d <= len; d++) {
-        const x = effectivePadL + ((d - 1) / (len - 1)) * effectivePlotW;
-        if (d === 1 || d % 5 === 0 || d === len) {
-          html += `<text x="${x}" y="${h - 8}" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--ink-3)">${d}</text>`;
-        }
-      }
-
-      function drawSmoothSeries(pts, color, gradId = null, showLabels = false) {
+      function drawSmoothSeries(pts, color, gradId = null) {
         if (!pts.length) return;
         const pathD = catmullRomPath(pts);
         if (pts.length > 1) {
@@ -4737,11 +4816,7 @@ ${text}
           html += `<circle cx="${p.x}" cy="${p.y}" r="8.5" fill="${color}" opacity="0.20" />`;
         }
         pts.forEach(p => {
-          html += `<circle cx="${p.x}" cy="${p.y}" r="4.3" fill="${color}" stroke="var(--surface)" stroke-width="1.6" />`;
-          if (showLabels) {
-            const lbl = p.label !== undefined ? p.label : p.val;
-            html += `<text x="${p.x}" y="${Math.max(padT + 10, p.y - 9)}" text-anchor="middle" font-size="10" font-weight="700" fill="${color}">${escapeHtml(lbl)}</text>`;
-          }
+          html += `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${color}" stroke="var(--surface)" stroke-width="1.6" />`;
         });
       }
 
@@ -4759,11 +4834,10 @@ ${text}
             return {
               x: effectivePadL + ((p.day - 1) / (len - 1)) * effectivePlotW,
               y: padT + plotH - Math.max(0, Math.min(1, ratio)) * plotH,
-              val: p.val,
-              label: `${p.val > 0 && p.val < 10 ? '+' : ''}${p.val}°`
+              val: p.val
             };
           });
-          drawSmoothSeries(pts, cAccent, 'gradAccent', true);
+          drawSmoothSeries(pts, cAccent, 'gradAccent');
         }
         legendEl.innerHTML = `<span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Температура (°C)</span></span>`;
       } else if (chartFilter === 'emotions') {
@@ -4778,17 +4852,17 @@ ${text}
             const e = byDay[d];
             if (e) {
               const lv = buildLoadedEmotionLevels(e);
-              const val = lv[emo] ?? 0;
+              const val = Math.min(5, lv[emo] ?? 0);
               if (val > 0 || selectedEmotionChartFilter !== 'all') {
                 pts.push({
                   x: effectivePadL + ((d - 1) / (len - 1)) * effectivePlotW,
-                  y: padT + plotH - (val / 10) * plotH,
+                  y: padT + plotH - (val / 5) * plotH,
                   val
                 });
               }
             }
           }
-          drawSmoothSeries(pts, pal.color, null, selectedEmotionChartFilter !== 'all');
+          drawSmoothSeries(pts, pal.color, null);
         });
 
         legendEl.innerHTML = emosToDraw.length
@@ -4798,40 +4872,35 @@ ${text}
             }).join('')
           : '';
       } else {
-        for (let d = 1; d <= len; d++) {
-          const e = byDay[d];
-          if (e && e.pain > 0) {
-            const x = effectivePadL + ((d - 1) / (len - 1)) * effectivePlotW - 4;
-            const barH = (e.pain / 10) * plotH;
-            html += `<rect x="${x}" y="${padT + plotH - barH}" width="8" height="${barH}" rx="4" fill="${cRose}" opacity="0.28" />`;
-          }
-        }
-
         const buildMetricPts = (key) => {
           const pts = [];
           for (let d = 1; d <= len; d++) {
             if (byDay[d] && typeof byDay[d][key] === 'number') {
+              const val = Math.max(0, Math.min(5, byDay[d][key]));
               pts.push({
                 x: effectivePadL + ((d - 1) / (len - 1)) * effectivePlotW,
-                y: padT + plotH - (byDay[d][key] / 10) * plotH,
-                val: byDay[d][key]
+                y: padT + plotH - (val / 5) * plotH,
+                val
               });
             }
           }
           return pts;
         };
 
+        if (chartFilter === 'all') {
+          drawSmoothSeries(buildMetricPts('pain'), cRose, null);
+        }
         if (chartFilter === 'all' || chartFilter === 'energy') {
-          drawSmoothSeries(buildMetricPts('energy'), cIndigo, chartFilter === 'energy' ? 'gradIndigo' : null, chartFilter === 'energy');
+          drawSmoothSeries(buildMetricPts('energy'), cIndigo, chartFilter === 'energy' ? 'gradIndigo' : null);
         }
         if (chartFilter === 'all' || chartFilter === 'libido') {
-          drawSmoothSeries(buildMetricPts('libido'), cAmber, chartFilter === 'libido' ? 'gradAmber' : null, chartFilter === 'libido');
+          drawSmoothSeries(buildMetricPts('libido'), cAmber, chartFilter === 'libido' ? 'gradAmber' : null);
         }
 
         legendEl.innerHTML = `
           <span class="legend-item" style="color:${cIndigo};">${SVG_ICONS.dot}<span>Энергия</span></span>
           <span class="legend-item" style="color:${cAmber};">${SVG_ICONS.dot}<span>Либидо</span></span>
-          <span class="legend-item" style="color:${cRose};">${SVG_ICONS.bar}<span>Боль</span></span>
+          <span class="legend-item" style="color:${cRose};">${SVG_ICONS.dot}<span>Боль</span></span>
         `;
       }
 
@@ -4841,9 +4910,9 @@ ${text}
         const x = effectivePadL + ((d - 1) / (len - 1)) * effectivePlotW;
         const soloCnt = normalizeSoloCount(e);
         const topMarkers = [];
-        if (e.intimacy) topMarkers.push({ type: 'heart', color: 'var(--rose)', count: 1 });
-        if (soloCnt > 0) topMarkers.push({ type: 'bolt', color: cAmber, count: soloCnt });
-        if (e.isOvulation) topMarkers.push({ type: 'sparkle', color: cOvul, count: 1 });
+        if (e.intimacy) topMarkers.push({ type: 'heart', color: 'var(--rose)' });
+        if (soloCnt > 0) topMarkers.push({ type: 'bolt', color: cAmber });
+        if (e.isOvulation) topMarkers.push({ type: 'sparkle', color: cOvul });
 
         if (topMarkers.length) {
           const spacing = 16;
@@ -4855,9 +4924,6 @@ ${text}
               html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><path d="M6.5 11.6L5.7 10.9C2.9 8.3 1.1 6.7 1.1 4.6 1.1 2.9 2.4 1.6 4.1 1.6c1 0 1.9.4 2.4 1.1.5-.7 1.4-1.1 2.4-1.1 1.7 0 3 1.3 3 3 0 2.1-1.8 3.7-4.6 6.3l-.8.7z"/></g>`;
             } else if (m.type === 'bolt') {
               html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><polygon points="7.2 1 1.6 7.6 6.6 7.6 6.1 12 11.6 5.4 6.6 5.4 7.2 1"/></g>`;
-              if (m.count > 1) {
-                html += `<text x="${(mx + 6.5).toFixed(1)}" y="${my + 9}" font-size="9" font-weight="700" fill="${m.color}">${m.count}</text>`;
-              }
             } else if (m.type === 'sparkle') {
               html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><path d="M6.5 1l1.3 4.2L12 6.5 7.8 7.8 6.5 12 5.2 7.8 1 6.5l4.2-1.3L6.5 1z"/></g>`;
             }
