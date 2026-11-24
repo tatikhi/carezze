@@ -803,6 +803,34 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
 
+    .ai-chat-thread {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .ai-msg-bubble {
+      padding: 12px 15px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.55;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    .ai-msg-bubble.is-user {
+      align-self: flex-end;
+      max-width: 88%;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      border-bottom-right-radius: 6px;
+    }
+    .ai-msg-bubble.is-ai {
+      align-self: stretch;
+      background: var(--indigo-tint);
+      color: var(--ink);
+      border-bottom-left-radius: 6px;
+    }
     .ai-chat-reply {
       margin-top: 12px;
       padding: 14px 16px;
@@ -812,6 +840,71 @@
       font-size: 15.5px;
       line-height: 1.55;
       white-space: pre-line;
+    }
+
+    /* Profile additional notes rows */
+    .profile-notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .profile-note-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+    .profile-note-text {
+      flex: 1;
+      font-size: 14.5px;
+      line-height: 1.4;
+      color: var(--ink);
+      word-break: break-word;
+    }
+    .profile-note-edit-input {
+      flex: 1;
+      height: 36px !important;
+      padding: 0 10px !important;
+      font-size: 14.5px !important;
+      border-radius: 10px !important;
+    }
+    .profile-note-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .profile-note-icon-btn {
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--ink-2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .profile-note-icon-btn:active {
+      background: rgba(128, 128, 128, 0.14);
+    }
+    .profile-note-icon-btn.is-save {
+      color: var(--ok);
+    }
+    .profile-note-icon-btn.is-del {
+      color: var(--rose);
+    }
+    .profile-note-add-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
 
     .protocol-stack { display: flex; flex-direction: column; gap: 10px; }
@@ -1232,49 +1325,19 @@
 
     .somatic-hero {
       text-align: center;
-      padding: 2px 4px 14px;
+      padding: 6px 4px 16px;
     }
-    .hero-phase-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 5px 13px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.72);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent);
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-      margin-bottom: 8px;
-    }
-    body.dark-mode .hero-phase-pill {
-      background: rgba(255, 255, 255, 0.08);
-    }
-    .hero-phase-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: currentColor;
-      flex-shrink: 0;
-    }
-    .hero-phase-pill.is-period { color: var(--rose); background: var(--rose-tint); }
-    .hero-phase-pill.is-ovul { color: var(--ovul); background: var(--ovul-tint); }
-    .hero-phase-pill.is-delay { color: var(--amber); background: var(--amber-tint); }
-
     .hero-day-giant {
       display: flex;
       align-items: baseline;
       justify-content: center;
       gap: 7px;
       line-height: 1;
-      margin-bottom: 6px;
+      margin-bottom: 14px;
     }
     .hero-day-num {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif;
-      font-size: 54px;
+      font-size: 56px;
       font-weight: 700;
       letter-spacing: -0.04em;
       color: var(--ink);
@@ -1285,16 +1348,57 @@
       font-weight: 600;
       color: var(--ink-2);
     }
-    .hero-subline {
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink-2);
-      margin-bottom: 10px;
-    }
-    .somatic-hero .cycle-track {
-      max-width: 240px;
-      height: 4px;
+    .cycle-segments {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      max-width: 310px;
+      height: 10px;
       margin: 0 auto;
+      padding: 0 2px;
+    }
+    .cycle-segments.is-dense {
+      gap: 2px;
+      max-width: 330px;
+    }
+    .cycle-seg {
+      flex: 1 1 0;
+      min-width: 3px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(128, 128, 128, 0.16);
+      transition: background-color 0.25s ease, height 0.2s ease, opacity 0.2s ease;
+    }
+    body.dark-mode .cycle-seg {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .cycle-seg.is-current {
+      height: 9px;
+    }
+    .cycle-seg.seg-period {
+      background: #E25B70;
+    }
+    body.dark-mode .cycle-seg.seg-period {
+      background: #EB6A7E;
+    }
+    .cycle-seg.seg-salad {
+      background: #94D14F;
+    }
+    body.dark-mode .cycle-seg.seg-salad {
+      background: #8BC946;
+    }
+    .cycle-seg.seg-ovul {
+      background: #2E9E5B;
+    }
+    body.dark-mode .cycle-seg.seg-ovul {
+      background: #38B86B;
+    }
+    .cycle-seg.seg-delay {
+      background: #EA7C2B;
+    }
+    body.dark-mode .cycle-seg.seg-delay {
+      background: #F59342;
     }
 
     /* 2x2 Metric Cards (Tap-only cyclic 0..5) */
@@ -1709,17 +1813,8 @@
       </div>
 
       <div class="somatic-hero" id="heroCard">
-        <div class="hero-phase-pill" id="heroPhasePill">
-          <span class="hero-phase-dot"></span>
-          <span id="heroPhase"></span>
-        </div>
-
         <div class="hero-day-giant" id="heroDay"></div>
-        <div class="hero-subline" id="heroSubline"></div>
-
-        <div class="cycle-track">
-          <div class="cycle-fill" id="cycleProgressBar" style="width: 0%;"></div>
-        </div>
+        <div class="cycle-segments" id="cycleSegmentsBar" aria-label="Дни цикла"></div>
       </div>
 
       <div id="editableDayForm">
@@ -1936,7 +2031,8 @@
           <div class="card-top">
             <span class="card-title">Спросить CareZze</span>
           </div>
-          <textarea id="aiQuickInput" rows="3"></textarea>
+          <div id="aiQuickThread" class="ai-chat-thread" style="display:none;"></div>
+          <textarea id="aiQuickInput" rows="3" placeholder="Напиши, что сейчас тревожит или что хочется разобрать..."></textarea>
           <div style="display:flex; gap:8px; margin-top:10px;">
             <button class="btn-indigo" style="height:46px; font-size:15px;" id="btnSendQuickAi" onclick="sendQuickAiQuestion()">
               Спросить
@@ -2168,7 +2264,11 @@
       </div>
 
       <div class="field-label" style="margin-top:14px; margin-bottom:8px;">Дополнительно</div>
-      <input type="text" id="setProfileNotes" placeholder="Важные заметки для анализа" />
+      <div id="profileNotesList" class="profile-notes-list"></div>
+      <div class="profile-note-add-row">
+        <input type="text" id="setProfileNotes" placeholder="Добавить строку..." onkeydown="if(event.key==='Enter'){event.preventDefault();addProfileNoteItem();}" />
+        <button type="button" class="btn-soft" style="height:44px; padding:0 14px; flex-shrink:0;" onclick="addProfileNoteItem()">Добавить</button>
+      </div>
 
       <button class="btn-accent" style="margin-top:16px;" onclick="saveProfileSettings()">Сохранить профиль</button>
     </div>
@@ -2841,6 +2941,8 @@
 
     let isAiGenerating = false;
     let isQuickAiGenerating = false;
+    let quickAiChatHistory = [];
+    let editingProfileNoteIndex = -1;
     let renderedTipsBuffer = [];
 
     let chartFilter = 'all';
@@ -3182,7 +3284,7 @@
 
     function ensureProfileStructure() {
       if (!state.settings.profile) {
-        state.settings.profile = { saved: false, birthDate: '', age: '', contraception: 'Нет', conditions: [], notes: '' };
+        state.settings.profile = { saved: false, birthDate: '', age: '', contraception: 'Нет', conditions: [], notes: '', noteItems: [] };
       }
       if (typeof state.settings.profile.birthDate !== 'string') {
         state.settings.profile.birthDate = '';
@@ -3196,6 +3298,18 @@
       if (!Array.isArray(state.settings.profile.conditions)) {
         state.settings.profile.conditions = [];
       }
+      if (!Array.isArray(state.settings.profile.noteItems)) {
+        const legacyNotes = typeof state.settings.profile.notes === 'string' ? state.settings.profile.notes : '';
+        state.settings.profile.noteItems = legacyNotes
+          .split(/\r?\n/)
+          .map(s => s.trim())
+          .filter(Boolean);
+      } else {
+        state.settings.profile.noteItems = state.settings.profile.noteItems
+          .map(s => String(s || '').trim())
+          .filter(Boolean);
+      }
+      state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
       if (!Array.isArray(state.customHelpedPool)) {
         state.customHelpedPool = [];
       }
@@ -3205,7 +3319,7 @@
           state.settings.profile.age ||
           (state.settings.profile.contraception && state.settings.profile.contraception !== 'Нет') ||
           state.settings.profile.conditions.length ||
-          state.settings.profile.notes
+          state.settings.profile.noteItems.length
         );
       }
     }
@@ -3548,6 +3662,126 @@
       });
     }
 
+    function renderProfileNotesList() {
+      ensureProfileStructure();
+      const container = document.getElementById('profileNotesList');
+      if (!container) return;
+      const items = state.settings.profile.noteItems || [];
+      if (!items.length) {
+        container.innerHTML = '';
+        container.style.display = 'none';
+        return;
+      }
+      container.style.display = 'flex';
+      container.innerHTML = items.map((item, idx) => {
+        if (editingProfileNoteIndex === idx) {
+          return `
+            <div class="profile-note-row">
+              <input
+                type="text"
+                class="profile-note-edit-input"
+                id="profileNoteEditInput_${idx}"
+                value="${escapeHtml(item)}"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();commitEditProfileNoteItem(${idx});}else if(event.key==='Escape'){event.preventDefault();cancelEditProfileNoteItem();}"
+              />
+              <div class="profile-note-actions">
+                <button type="button" class="profile-note-icon-btn is-save" onclick="commitEditProfileNoteItem(${idx})" aria-label="Сохранить строку">
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                </button>
+                <button type="button" class="profile-note-icon-btn" onclick="cancelEditProfileNoteItem()" aria-label="Отменить">
+                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+          `;
+        }
+        return `
+          <div class="profile-note-row">
+            <div class="profile-note-text" onclick="startEditProfileNoteItem(${idx})">${escapeHtml(item)}</div>
+            <div class="profile-note-actions">
+              <button type="button" class="profile-note-icon-btn" onclick="startEditProfileNoteItem(${idx})" aria-label="Редактировать строку">
+                <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </button>
+              <button type="button" class="profile-note-icon-btn is-del" onclick="deleteProfileNoteItem(${idx})" aria-label="Удалить строку">
+                <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addProfileNoteItem() {
+      ensureProfileStructure();
+      const inp = document.getElementById('setProfileNotes');
+      if (!inp) return;
+      const val = inp.value.trim();
+      if (!val) return;
+      state.settings.profile.noteItems.push(val);
+      state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
+      state.settings.profile.saved = true;
+      inp.value = '';
+      editingProfileNoteIndex = -1;
+      persistLocalAndCloud(null);
+      renderProfileNotesList();
+      renderProfileViewMode();
+      renderAdviceAndSelfCareTab();
+      showToast('Добавлено');
+    }
+
+    function startEditProfileNoteItem(idx) {
+      ensureProfileStructure();
+      editingProfileNoteIndex = idx;
+      renderProfileNotesList();
+      const editInp = document.getElementById(`profileNoteEditInput_${idx}`);
+      if (editInp) {
+        editInp.focus();
+        const len = editInp.value.length;
+        editInp.setSelectionRange(len, len);
+      }
+    }
+
+    function commitEditProfileNoteItem(idx) {
+      ensureProfileStructure();
+      const editInp = document.getElementById(`profileNoteEditInput_${idx}`);
+      if (!editInp) {
+        editingProfileNoteIndex = -1;
+        renderProfileNotesList();
+        return;
+      }
+      const nextVal = editInp.value.trim();
+      if (!nextVal) {
+        state.settings.profile.noteItems.splice(idx, 1);
+      } else {
+        state.settings.profile.noteItems[idx] = nextVal;
+      }
+      state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
+      editingProfileNoteIndex = -1;
+      persistLocalAndCloud(null);
+      renderProfileNotesList();
+      renderProfileViewMode();
+      renderAdviceAndSelfCareTab();
+      showToast('Сохранено');
+    }
+
+    function cancelEditProfileNoteItem() {
+      editingProfileNoteIndex = -1;
+      renderProfileNotesList();
+    }
+
+    function deleteProfileNoteItem(idx) {
+      ensureProfileStructure();
+      state.settings.profile.noteItems.splice(idx, 1);
+      state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
+      if (editingProfileNoteIndex === idx) editingProfileNoteIndex = -1;
+      else if (editingProfileNoteIndex > idx) editingProfileNoteIndex -= 1;
+      persistLocalAndCloud(null);
+      renderProfileNotesList();
+      renderProfileViewMode();
+      renderAdviceAndSelfCareTab();
+      showToast('Удалено');
+    }
+
     function renderProfileViewMode() {
       ensureProfileStructure();
       const prof = state.settings.profile;
@@ -3559,6 +3793,7 @@
         prof.age ||
         (prof.contraception && prof.contraception !== 'Нет') ||
         (prof.conditions && prof.conditions.length) ||
+        (prof.noteItems && prof.noteItems.length) ||
         prof.notes
       );
       if (badge) badge.style.display = hasAnyData ? 'inline-flex' : 'none';
@@ -3571,6 +3806,22 @@
 
     function saveProfileSettings() {
       ensureProfileStructure();
+      if (editingProfileNoteIndex >= 0) {
+        const editInp = document.getElementById(`profileNoteEditInput_${editingProfileNoteIndex}`);
+        if (editInp) {
+          const editedVal = editInp.value.trim();
+          if (editedVal) state.settings.profile.noteItems[editingProfileNoteIndex] = editedVal;
+          else state.settings.profile.noteItems.splice(editingProfileNoteIndex, 1);
+        }
+        editingProfileNoteIndex = -1;
+      }
+      const notesInp = document.getElementById('setProfileNotes');
+      const pendingNote = notesInp ? notesInp.value.trim() : '';
+      if (pendingNote) {
+        state.settings.profile.noteItems.push(pendingNote);
+        notesInp.value = '';
+      }
+
       const bdRaw = document.getElementById('setProfileBirthDate').value.trim();
       const computedAgeFromBd = calculateAgeFromBirthDate(bdRaw);
       const ageRaw = document.getElementById('setProfileAge').value.trim();
@@ -3588,7 +3839,7 @@
       }
 
       const conditions = Array.from(document.querySelectorAll('#profileConditionChips .chip.active')).map(c => c.dataset.val);
-      const notes = document.getElementById('setProfileNotes').value.trim();
+      const noteItems = [...state.settings.profile.noteItems];
 
       state.settings.profile = {
         saved: true,
@@ -3596,7 +3847,8 @@
         age: finalAge,
         contraception: tempContraception || 'Нет',
         conditions,
-        notes
+        noteItems,
+        notes: noteItems.join('\n')
       };
 
       persistLocalAndCloud(null);
@@ -3619,7 +3871,10 @@
       document.querySelectorAll('#profileConditionChips .chip').forEach(c => {
         c.classList.toggle('active', (prof.conditions || []).includes(c.dataset.val));
       });
-      document.getElementById('setProfileNotes').value = prof.notes || '';
+      editingProfileNoteIndex = -1;
+      const notesInp = document.getElementById('setProfileNotes');
+      if (notesInp) notesInp.value = '';
+      renderProfileNotesList();
       renderProfileViewMode();
 
       const bounds = getCycleBounds();
@@ -3664,7 +3919,7 @@
       );
     }
 
-    async function callGeminiAPI(apiKey, promptText, expectJson = true) {
+    async function callGeminiAPI(apiKey, promptText, expectJson = true, options = {}) {
       const cleanKey = String(apiKey || '').trim();
       const isExpressKey = cleanKey.startsWith('AQ.');
       // Для ключей AQ. и стандартных ключей ставим первой более развёрнутую gemini-3.6-flash,
@@ -3678,10 +3933,17 @@
       let lastWasOverload = false;
       let preferredSurface = null; // 'aiplatform' | 'generativelanguage'
 
+      const customContents = Array.isArray(options.contents) && options.contents.length
+        ? options.contents
+        : [{ role: 'user', parts: [{ text: promptText }] }];
+      const sysInstText = typeof options.systemInstruction === 'string' ? options.systemInstruction.trim() : '';
+      const tempVal = typeof options.temperature === 'number' ? options.temperature : 0.55;
+
       const buildPayload = (useThinkingBudget) => ({
-        contents: [{ role: 'user', parts: [{ text: promptText }] }],
+        ...(sysInstText ? { systemInstruction: { parts: [{ text: sysInstText }] } } : {}),
+        contents: customContents,
         generationConfig: {
-          temperature: 0.55,
+          temperature: tempVal,
           maxOutputTokens: 4096,
           ...(useThinkingBudget ? { thinkingConfig: { thinkingBudget: 0 } } : {}),
           ...(expectJson ? { responseMimeType: 'application/json' } : {})
@@ -4352,48 +4614,83 @@
       return 'Рост эстрогенов';
     }
 
-    function updateHeaderAndContextControls() {
-      const info = getCycleInfo(selectedDate);
-      const heroPhase = document.getElementById('heroPhase');
-      const phasePill = document.getElementById('heroPhasePill');
-      const bar = document.getElementById('cycleProgressBar');
-      const lenLabel = info.isVariable ? `${info.minLen}–${info.maxLen}` : `${info.len}`;
+    function renderCycleSegmentsBar(info) {
+      const container = document.getElementById('cycleSegmentsBar');
+      if (!container) return;
 
-      document.getElementById('heroDay').innerHTML = `<span class="hero-day-num">${info.cycleDay}</span><span class="hero-day-unit">${pluralDaysWord(info.cycleDay)}</span>`;
-      heroPhase.textContent = info.phase;
+      const normalCycleLen = Math.max(1, Number(info.maxLen) || Number(info.len) || 28);
+      const currentDay = Math.max(1, Number(info.cycleDay) || 1);
+      const isDelay = currentDay > normalCycleLen;
+      const totalSegments = isDelay ? currentDay : normalCycleLen;
+      const startISO = state.settings.lastPeriodStart;
+      const isCurrentCycle = selectedDate >= startISO;
 
-      phasePill.className = 'hero-phase-pill';
-      if (info.isDelay) {
-        phasePill.classList.add('is-delay');
-        document.getElementById('heroSubline').textContent = `День ${info.cycleDay} (норма ${lenLabel}) · ${getPhaseShortHint(info)}`;
-        bar.style.width = '100%';
-        bar.style.background = 'var(--amber)';
-      } else if (info.isExpectedWindow) {
-        document.getElementById('heroSubline').textContent = `День ${info.cycleDay} (норма ${lenLabel}) · ${getPhaseShortHint(info)}`;
-        bar.style.width = `${Math.min(98, (info.cycleDay / info.maxLen) * 100)}%`;
-        bar.style.background = 'var(--accent)';
-      } else {
-        if (tempIsPeriod) phasePill.classList.add('is-period');
-        else if (tempIsOvulation || info.phaseCode === 'ovulation') phasePill.classList.add('is-ovul');
+      container.classList.toggle('is-dense', totalSegments > 32);
 
-        if (info.cycleDay === 1) {
-          document.getElementById('heroSubline').textContent = `День ${info.cycleDay} из ${lenLabel} · ${getPhaseShortHint(info)}`;
-        } else if (info.isVariable) {
-          const minLeft = Math.max(1, info.minLen - info.cycleDay + 1);
-          const maxLeft = Math.max(1, info.maxLen - info.cycleDay + 1);
-          const tailText = minLeft === maxLeft ? `до цикла ~${pluralDays(minLeft)}` : `окно цикла через ${minLeft}–${maxLeft} дн.`;
-          document.getElementById('heroSubline').textContent = `День ${info.cycleDay} из ${lenLabel} · ${getPhaseShortHint(info)} · ${tailText}`;
-        } else {
-          const daysLeft = Math.max(0, info.len - info.cycleDay + 1);
-          const tailText = daysLeft === 1 ? 'новый цикл завтра' : `до цикла ~${pluralDays(daysLeft)}`;
-          document.getElementById('heroSubline').textContent = `День ${info.cycleDay} из ${lenLabel} · ${getPhaseShortHint(info)} · ${tailText}`;
+      let stoppedBefore = false;
+      const segHtml = [];
+
+      for (let d = 1; d <= totalSegments; d++) {
+        const isFilled = d <= currentDay;
+        const isCurrent = d === currentDay;
+        let segClass = 'cycle-seg';
+        if (isCurrent) segClass += ' is-current';
+
+        let isPeriodDay = false;
+        let isOvulDay = false;
+
+        if (d <= normalCycleLen) {
+          if (isCurrentCycle) {
+            const dayISO = shiftISOByDays(startISO, d - 1);
+            if (dayISO === selectedDate) {
+              isPeriodDay = Boolean(tempIsPeriod);
+              if (!isPeriodDay) stoppedBefore = true;
+            } else {
+              const ent = state.entries[dayISO];
+              if (ent && typeof ent.isPeriod === 'boolean') {
+                isPeriodDay = ent.isPeriod;
+                if (!isPeriodDay) stoppedBefore = true;
+              } else {
+                isPeriodDay = !stoppedBefore && d <= info.pLen;
+              }
+            }
+
+            if (!info.isSuppressedOvulation && !isPeriodDay) {
+              const explicitOvul = dayISO === selectedDate
+                ? Boolean(tempIsOvulation)
+                : Boolean(state.entries[dayISO]?.isOvulation);
+              isOvulDay = explicitOvul || (d >= info.ovulStart && d <= info.ovulEnd);
+            }
+          } else {
+            isPeriodDay = d <= info.pLen;
+            if (!info.isSuppressedOvulation && !isPeriodDay) {
+              isOvulDay = d >= info.ovulStart && d <= info.ovulEnd;
+            }
+          }
         }
 
-        bar.style.width = `${Math.min(100, (info.cycleDay / info.maxLen) * 100)}%`;
-        bar.style.background = tempIsPeriod
-          ? 'var(--rose-solid)'
-          : ((tempIsOvulation || info.phaseCode === 'ovulation') ? 'var(--ovul)' : 'var(--accent)');
+        if (isFilled) {
+          if (d > normalCycleLen) {
+            segClass += ' seg-delay';
+          } else if (isPeriodDay) {
+            segClass += ' seg-period';
+          } else if (isOvulDay) {
+            segClass += ' seg-ovul';
+          } else {
+            segClass += ' seg-salad';
+          }
+        }
+
+        segHtml.push(`<span class="${segClass}"></span>`);
       }
+
+      container.innerHTML = segHtml.join('');
+    }
+
+    function updateHeaderAndContextControls() {
+      const info = getCycleInfo(selectedDate);
+      document.getElementById('heroDay').innerHTML = `<span class="hero-day-num">${info.cycleDay}</span><span class="hero-day-unit">${pluralDaysWord(info.cycleDay)}</span>`;
+      renderCycleSegmentsBar(info);
 
       document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
 
@@ -5398,7 +5695,9 @@
       if (prof.conditions && prof.conditions.length) {
         parts.push(`Известные особенности: ${prof.conditions.join(', ')}`);
       }
-      if (prof.notes) {
+      if (prof.noteItems && prof.noteItems.length) {
+        parts.push(`Заметки о себе: ${prof.noteItems.join('; ')}`);
+      } else if (prof.notes) {
         parts.push(`Заметка о себе: ${prof.notes}`);
       }
       return parts.join('\n- ');
@@ -5558,24 +5857,24 @@ ${hasRichHistory
       }
     }
 
-    async function sendQuickAiQuestion() {
-      const apiKey = state.settings.geminiApiKey;
-      const inp = document.getElementById('aiQuickInput');
-      const replyBox = document.getElementById('aiQuickReplyBox');
-      const btnSend = document.getElementById('btnSendQuickAi');
+    function renderQuickAiThread() {
+      const threadEl = document.getElementById('aiQuickThread');
       const btnClear = document.getElementById('btnClearQuickAi');
-      const text = inp.value.trim();
+      if (!threadEl) return;
+      if (!quickAiChatHistory.length) {
+        threadEl.innerHTML = '';
+        threadEl.style.display = 'none';
+        if (btnClear) btnClear.style.display = 'none';
+        return;
+      }
+      threadEl.style.display = 'flex';
+      threadEl.innerHTML = quickAiChatHistory.map(msg => `
+        <div class="ai-msg-bubble ${msg.role === 'user' ? 'is-user' : 'is-ai'}">${escapeHtml(msg.text)}</div>
+      `).join('');
+      if (btnClear) btnClear.style.display = 'inline-flex';
+    }
 
-      if (!apiKey || !text || isQuickAiGenerating) return;
-
-      inp.value = '';
-      isQuickAiGenerating = true;
-      btnSend.disabled = true;
-      btnSend.textContent = 'Спросить';
-      replyBox.style.display = 'block';
-      replyBox.style.color = 'var(--ink-2)';
-      replyBox.textContent = 'Готовлю ответ...';
-
+    function buildQuickAiSystemInstruction() {
       const info = getCycleInfo(selectedDate);
       const current = getCurrentWorkingEntry();
       const curLevels = buildLoadedEmotionLevels(current);
@@ -5584,36 +5883,81 @@ ${hasRichHistory
         .map(em => `${em} (${curLevels[em]}/5)`)
         .join(', ');
       const soloCnt = normalizeSoloCount(current);
+      const stressVal = current.stress !== undefined
+        ? Number(current.stress)
+        : (Number(current.emotionLevels?.['Стресс']) || 0);
 
-      const prompt = `Ты чуткий, трезвый и спокойный собеседник (доказательный врач-гинеколог и КПТ-психолог), отвечаешь на «ты», коротко, по-человечески и без нейросетевых штампов («важно помнить», «не стоит забывать», «комплексный подход», «в заключение»).
-Девушка хочет задать уточняющий вопрос или выгрузить пугающие мысли. Используй КПТ-подход: отдели подтверждённые факты от когнитивных искажений (катастрофизации, эмоционального обоснования), объясни связь с фазой цикла, возрастом и её профилем (если она есть) и предложи одно конкретное действие или опору на сейчас.
-Примечание по маркерам: близость — партнёрская близость, соло-разрядка (счётчик за день) — называй её тактично: «телесная разрядка» или «снятие напряжения наедине с собой».
+      return `Ты — опытный, тёплый КПТ-психолог с глубоким пониманием женской физиологии и менструального цикла. Ты общаешься на «ты» — живо, спокойно и по-человечески, как в личной доверительной переписке.
+
+Как ты ведёшь диалог:
+- Сначала по-настоящему откликаешься на то, что девушка написала: называешь её переживание своими словами, опираясь на детали её сообщения и реальное состояние организма сегодня, чтобы она чувствовала живое понимание, а не дежурное утешение.
+- Не обесцениваешь чувства фразой «это просто гормоны», а мягко связываешь контекст: показываешь, как телесный фон (фаза цикла, боль, усталость, недосып) усиливает тревожные или самокритичные мысли.
+- Работаешь в духе живой когнитивно-поведенческой терапии без учебника и ярлыков: помогаешь аккуратно отделить реальные факты от пугающих прогнозов и автоматических мыслей, не споришь и не читаешь нотаций, а предлагаешь более трезвый угол зрения или задаёшь один точный, бережный вопрос, который помогает ей самой нащупать опору.
+- Если уместно, предлагаешь одно маленькое, реалистичное действие на ближайшие 10–15 минут, строго соразмерное её текущим силам (при низкой энергии или боли — ничего энергозатратного).
+- Если в диалоге уже были реплики, опираешься на нить разговора и не повторяешь уже сказанное.
+
+Строгие запреты:
+- Никаких шаблонных нейросетевых оборотов и канцелярита: не используй фразы «важно помнить», «не стоит забывать», «ты не одна», «я слышу тебя», «это абсолютно нормально», «комплексный подход», «в заключение», «прислушайся к своему телу», «начни с малого».
+- Не ставь академических диагнозов мыслям вроде «у тебя когнитивное искажение — катастрофизация» или «это эмоциональное обоснование» — говори обычным человеческим языком.
+- Не пиши списки с буллитами, нумерацией, заголовками и markdown-звёздочками. Только 2–3 коротких, дышащих абзаца обычного текста.
+- По маркерам: близость — партнёрская близость; соло-разрядка — называй её тактично («телесная разрядка» или «снятие напряжения наедине с собой»).
 
 Профиль пользователя:
 - ${formatProfileContextForPrompt()}
 
-Контекст сегодняшнего дня (${selectedDate}), шкала 0–5:
+Состояние и фон сегодняшнего дня (${selectedDate}, шкала 0–5):
 - День цикла: ${info.cycleDay} из ${info.isVariable ? `${info.minLen}–${info.maxLen} (норма плавающего цикла)` : info.len} (${info.phase})
-- Энергия: ${current.energy}/5, Боль: ${current.pain}/5, Либидо: ${current.libido}/5, Стресс: ${current.stress !== undefined ? Number(current.stress) : (Number(current.emotionLevels?.['Стресс']) || 0)}/5
+- Энергия: ${current.energy}/5, Боль: ${current.pain}/5, Либидо: ${current.libido}/5, Стресс: ${stressVal}/5
 - Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка=${soloCnt} раз, овуляция=${Boolean(current.isOvulation)}
 ${typeof current.wristTempDelta === 'number' ? `- Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции: ${formattedEmos || 'не указаны'}
-- Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
+- Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}`;
+    }
 
-Сообщение пользователя:
-"""
-${text}
-"""
+    async function sendQuickAiQuestion() {
+      const apiKey = state.settings.geminiApiKey;
+      const inp = document.getElementById('aiQuickInput');
+      const replyBox = document.getElementById('aiQuickReplyBox');
+      const btnSend = document.getElementById('btnSendQuickAi');
+      const text = inp.value.trim();
 
-Ответь обычным живым текстом (2–3 коротких абзаца, без markdown-заголовков и звёздочек).`;
+      if (!apiKey || !text || isQuickAiGenerating) return;
+
+      inp.value = '';
+      isQuickAiGenerating = true;
+      btnSend.disabled = true;
+      btnSend.textContent = 'Думаю...';
+
+      quickAiChatHistory.push({ role: 'user', text });
+      renderQuickAiThread();
+
+      replyBox.style.display = 'block';
+      replyBox.style.color = 'var(--ink-2)';
+      replyBox.textContent = 'Пишу ответ...';
+
+      const systemInstruction = buildQuickAiSystemInstruction();
+      const contents = quickAiChatHistory.slice(-10).map(m => ({
+        role: m.role === 'model' ? 'model' : 'user',
+        parts: [{ text: m.text }]
+      }));
 
       try {
-        const answer = await callGeminiAPI(apiKey, prompt, false);
-        replyBox.style.color = 'var(--ink)';
-        replyBox.textContent = answer;
-        btnClear.style.display = 'inline-flex';
+        const answer = await callGeminiAPI(apiKey, text, false, {
+          systemInstruction,
+          contents,
+          temperature: 0.74
+        });
+        const cleanAnswer = String(answer || '').replace(/\*\*/g, '').trim();
+        quickAiChatHistory.push({ role: 'model', text: cleanAnswer });
+        replyBox.style.display = 'none';
+        replyBox.textContent = '';
+        renderQuickAiThread();
         hapticSuccess();
       } catch (e) {
+        quickAiChatHistory.pop();
+        renderQuickAiThread();
+        inp.value = text;
+        replyBox.style.display = 'block';
         replyBox.style.color = 'var(--rose)';
         replyBox.textContent = String(e.message || e);
         hapticError();
@@ -5627,13 +5971,13 @@ ${text}
     function clearQuickAiChat() {
       const inp = document.getElementById('aiQuickInput');
       const replyBox = document.getElementById('aiQuickReplyBox');
-      const btnClear = document.getElementById('btnClearQuickAi');
+      quickAiChatHistory = [];
       if (inp) inp.value = '';
       if (replyBox) {
         replyBox.textContent = '';
         replyBox.style.display = 'none';
       }
-      if (btnClear) btnClear.style.display = 'none';
+      renderQuickAiThread();
     }
 
     function toggleHelpedTip(tipId, isCustom = false) {
