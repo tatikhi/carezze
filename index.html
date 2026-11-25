@@ -2357,16 +2357,13 @@
           <div class="today-unified-body">
             <!-- Близость, разрядка и овуляция -->
             <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;" id="intimacyBlock">
-              <button type="button" class="icon-stealth-btn" style="padding:0 13px; width:auto; gap:6px; font-size:13.5px; font-weight:600;" id="btnIntimacyToggle" onclick="toggleIntimacy()" aria-label="Близость">
-                <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" stroke="none"/></svg>
-                <span>Близость</span>
-                <svg class="ui-svg ui-svg-sm" id="intimacyCheckIcon" style="display:none;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+              <button type="button" class="icon-stealth-btn" id="btnIntimacyToggle" onclick="toggleIntimacy()" aria-label="Близость">
+                <svg class="ui-svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor" stroke="none"/></svg>
               </button>
 
               <div class="solo-counter-wrap">
-                <button type="button" class="icon-stealth-btn" style="padding:0 13px; width:auto; gap:6px; font-size:13.5px; font-weight:600;" id="btnSoloReset" onclick="incrementSoloReset()" aria-label="Разрядка">
-                  <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/></svg>
-                  <span>Разрядка</span>
+                <button type="button" class="icon-stealth-btn" id="btnSoloReset" onclick="incrementSoloReset()" aria-label="Разрядка">
+                  <svg class="ui-svg" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="currentColor" stroke="none"/></svg>
                   <span id="soloCountLabel" style="display:none; font-weight:700;">1</span>
                 </button>
                 <button type="button" class="solo-reset-mini" id="btnSoloResetZero" style="display:none;" onclick="resetSoloReset()" aria-label="Сбросить счётчик">
@@ -2386,21 +2383,18 @@
               <div class="field-label" style="margin-bottom:8px;">Выделения</div>
               <div id="menstrualDischargeBlock" style="display:none;">
                 <div class="grid-3" id="menstrualFlowSelector">
-                  <div class="choice-btn" data-val="Скудные" onclick="selectDischarge('Скудные')">
-                    <span>Скудные</span>
+                  <div class="choice-btn" data-val="Скудные" aria-label="Скудные" onclick="selectDischarge('Скудные')">
                     <span class="drops-row">
                       <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
                     </span>
                   </div>
-                  <div class="choice-btn active-rose" data-val="Умеренные" onclick="selectDischarge('Умеренные')">
-                    <span>Умеренные</span>
+                  <div class="choice-btn active-rose" data-val="Умеренные" aria-label="Умеренные" onclick="selectDischarge('Умеренные')">
                     <span class="drops-row">
                       <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
                       <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
                     </span>
                   </div>
-                  <div class="choice-btn" data-val="Обильные" onclick="selectDischarge('Обильные')">
-                    <span>Обильные</span>
+                  <div class="choice-btn" data-val="Обильные" aria-label="Обильные" onclick="selectDischarge('Обильные')">
                     <span class="drops-row">
                       <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
                       <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" stroke="none"/></svg>
