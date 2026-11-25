@@ -765,7 +765,7 @@
     textarea {
       width: 100%;
       background: var(--surface-2);
-      border: 1.5px solid transparent;
+      border: 1.5px solid var(--border);
       color: var(--ink);
       -webkit-text-fill-color: var(--ink);
       caret-color: var(--ink);
@@ -776,6 +776,17 @@
       line-height: 1.45;
       outline: none;
       transition: border-color 0.18s ease, background-color 0.18s ease;
+    }
+    input::placeholder,
+    textarea::placeholder,
+    input::-webkit-input-placeholder,
+    textarea::-webkit-input-placeholder {
+      color: var(--ink-3);
+      -webkit-text-fill-color: var(--ink-3);
+      opacity: 1;
+    }
+    #aiQuickChatCard textarea {
+      background: var(--surface);
     }
     textarea { resize: none; min-height: 86px; }
     input:focus, textarea:focus { border-color: var(--accent); background: var(--surface); caret-color: var(--ink); }
