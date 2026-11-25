@@ -2790,7 +2790,6 @@
           <button class="btn-soft" onclick="addCustomHelped()">Добавить</button>
         </div>
 
-        <div class="inspector-box" id="learnedHelpStats" style="display:none;"></div>
       </div>
     </div>
   </div>
@@ -6943,27 +6942,9 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
     }
 
     function renderLearnedHelpStats() {
-      const counts = {};
-      Object.values(state.entries).forEach(e => {
-        (e.helped || []).forEach(h => { counts[h] = (counts[h] || 0) + 1; });
-      });
-      const effectiveEntries = Object.entries(counts)
-        .map(([name, cnt]) => {
-          const eff = helpedEffectiveness[name];
-          const realHelped = eff && typeof eff.helped === 'number' ? eff.helped : cnt;
-          const used = eff && typeof eff.used === 'number' ? Math.max(eff.used, realHelped) : cnt;
-          return [name, realHelped, used];
-        })
-        .filter(([, realHelped]) => realHelped > 0)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
+      // Статистика эффективности способов ведётся под капотом для ИИ-анализа и персональных рекомендаций
       const box = document.getElementById('learnedHelpStats');
-      if (!effectiveEntries.length) {
-        box.style.display = 'none';
-        return;
-      }
-      box.style.display = 'block';
-      box.innerHTML = effectiveEntries.map(([name, realHelped, used]) => `${escapeHtml(name)} · реально помогло ${realHelped} из ${used}`).join('<br/>');
+      if (box) box.style.display = 'none';
     }
 
     function escapeHtml(str) {
@@ -7040,7 +7021,6 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         return `${abs} раз`;
       };
 
-      const stats = getObservedCycleStats();
       const loggedDaysCount = allSortedEntries.length;
 
       const helpCounts = {};
@@ -7050,25 +7030,6 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const topHelp = Object.entries(helpCounts).sort((a, b) => b[1] - a[1])[0];
 
       const blocks = [];
-
-      // 1. Верхние плашки: Средний цикл и Разброс
-      if (stats.avg !== null && stats.lengths.length) {
-        const minObserved = Math.min(...stats.lengths);
-        const maxObserved = Math.max(...stats.lengths);
-        const spreadText = minObserved === maxObserved ? `${minObserved} дн.` : `${minObserved}–${maxObserved} дн.`;
-        blocks.push(`
-          <div class="patterns-metrics-grid">
-            <div class="pattern-stat-pill">
-              <span class="pattern-stat-label">Средний цикл</span>
-              <span class="pattern-stat-value">${escHtml(stats.avg)} дн.</span>
-            </div>
-            <div class="pattern-stat-pill">
-              <span class="pattern-stat-label">Разброс</span>
-              <span class="pattern-stat-value">${escHtml(spreadText)}</span>
-            </div>
-          </div>
-        `);
-      }
 
       // 2. Плашка повторяющихся наблюдений по текущей фазе (без дублирования блока «выручало»)
       const curInfo = getCycleInfo(selectedDate);
