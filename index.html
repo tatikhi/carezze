@@ -2159,6 +2159,94 @@
     }
 
 
+    /* Плашки сводки в карточке «Ритм и закономерности» */
+    .patterns-pills-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .patterns-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .pattern-stat-pill {
+      background: var(--surface-2);
+      border-radius: 16px;
+      padding: 11px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .pattern-stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-2);
+      line-height: 1.25;
+    }
+    .pattern-stat-value {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Plus Jakarta Sans", sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+    }
+    .pattern-insight-pill {
+      background: var(--surface-2);
+      border-radius: 15px;
+      padding: 11px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .pattern-insight-pill.is-accent {
+      background: var(--accent-tint);
+      border: 1px solid var(--accent-bg);
+    }
+    .pattern-insight-pill.is-phase {
+      background: var(--indigo-tint);
+    }
+    .pattern-insight-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .pattern-insight-kicker {
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .pattern-insight-pill.is-phase .pattern-insight-kicker {
+      color: var(--indigo);
+    }
+    .pattern-insight-count {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-bg);
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .pattern-insight-main {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .pattern-insight-muted {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--ink-2);
+      line-height: 1.4;
+    }
+
   </style>
 </head>
 <body>
@@ -2472,7 +2560,7 @@
           <span class="card-title">Ритм и закономерности</span>
           <button type="button" class="btn-edit-small" onclick="openCalendarModal()">Календарь</button>
         </div>
-        <div class="protocol-text" id="analyticsPatternsSummary" style="font-size:14.5px;"></div>
+        <div class="patterns-pills-wrap" id="analyticsPatternsSummary"></div>
       </div>
 
       <!-- График динамики -->
@@ -4659,9 +4747,9 @@
     async function callGeminiAPI(apiKey, promptText, expectJson = true, options = {}) {
       const cleanKey = String(apiKey || '').trim();
       const isExpressKey = cleanKey.startsWith('AQ.');
-      // Для ключей AQ. и стандартных ключей ставим первой более развёрнутую gemini-3.6-flash,
-      // затем gemini-3.8-flash и лёгкую gemini-3.5-flash-lite в резерв (без устаревших -latest алиасов).
-      const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+      // Актуальные модели Gemini 3.x: первой идёт gemini-3.5-flash-lite (поддерживает бесплатный тариф и быстрый отклик),
+      // далее gemini-3.8-flash и gemini-3.6-flash в резерве на случай высокой нагрузки.
+      const models = ['gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-3.6-flash'];
       const retryDelaysMs = [1500, 3500, 7000];
       const maxRetries = retryDelaysMs.length;
       let lastError = 'Ошибка запроса';
@@ -6937,6 +7025,21 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const sumEl = document.getElementById('analyticsPatternsSummary');
       if (!sumEl) return;
 
+      const escHtml = (str) => String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+
+      const pluralTimes = (n) => {
+        const abs = Math.abs(Math.trunc(Number(n) || 0));
+        const mod100 = abs % 100;
+        if (mod100 >= 11 && mod100 <= 19) return `${abs} раз`;
+        const mod10 = abs % 10;
+        if (mod10 >= 2 && mod10 <= 4) return `${abs} раза`;
+        return `${abs} раз`;
+      };
+
       const stats = getObservedCycleStats();
       const loggedDaysCount = allSortedEntries.length;
 
@@ -6946,28 +7049,69 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       }));
       const topHelp = Object.entries(helpCounts).sort((a, b) => b[1] - a[1])[0];
 
-      const notes = [];
+      const blocks = [];
+
+      // 1. Верхние плашки: Средний цикл и Разброс
       if (stats.avg !== null && stats.lengths.length) {
         const minObserved = Math.min(...stats.lengths);
         const maxObserved = Math.max(...stats.lengths);
         const spreadText = minObserved === maxObserved ? `${minObserved} дн.` : `${minObserved}–${maxObserved} дн.`;
-        notes.push(`Средний цикл: ${stats.avg} дн. · Разброс: ${spreadText}.`);
+        blocks.push(`
+          <div class="patterns-metrics-grid">
+            <div class="pattern-stat-pill">
+              <span class="pattern-stat-label">Средний цикл</span>
+              <span class="pattern-stat-value">${escHtml(stats.avg)} дн.</span>
+            </div>
+            <div class="pattern-stat-pill">
+              <span class="pattern-stat-label">Разброс</span>
+              <span class="pattern-stat-value">${escHtml(spreadText)}</span>
+            </div>
+          </div>
+        `);
       }
+
+      // 2. Плашка повторяющихся наблюдений по текущей фазе (без дублирования блока «выручало»)
       const curInfo = getCycleInfo(selectedDate);
-      const localPat = detectLocalPatterns(curInfo);
-      if (localPat) {
-        notes.push(localPat);
-      } else if (loggedDaysCount < 4) {
-        notes.push('Отмечай самочувствие хотя бы 4–5 дней, чтобы здесь появились персональные закономерности по фазам цикла.');
-      } else {
-        notes.push('Продолжай вести отметки по фазам — мы подсветим повторяющиеся симптомы и дни спада энергии.');
+      const rawLocalPat = detectLocalPatterns(curInfo) || '';
+      const phaseOnlyPat = rawLocalPat.replace(/Чаще всего тебя выручало:.*$/, '').trim();
+
+      if (phaseOnlyPat) {
+        blocks.push(`
+          <div class="pattern-insight-pill is-phase">
+            <div class="pattern-insight-top">
+              <span class="pattern-insight-kicker">В этой фазе</span>
+            </div>
+            <div class="pattern-insight-main">${escHtml(phaseOnlyPat)}</div>
+          </div>
+        `);
       }
 
-      if (topHelp && !localPat.includes(topHelp[0])) {
-        notes.push(`Лучше всего помогает: «${topHelp[0]}» (${topHelp[1]} раз).`);
+      // 3. Акцентная плашка: что выручало чаще всего
+      if (topHelp) {
+        blocks.push(`
+          <div class="pattern-insight-pill is-accent">
+            <div class="pattern-insight-top">
+              <span class="pattern-insight-kicker">Чаще всего выручало</span>
+              <span class="pattern-insight-count">${escHtml(pluralTimes(topHelp[1]))}</span>
+            </div>
+            <div class="pattern-insight-main">«${escHtml(topHelp[0])}»</div>
+          </div>
+        `);
       }
 
-      sumEl.textContent = notes.join(' ');
+      // 4. Подсказка, если данных пока мало и плашек ещё нет
+      if (!blocks.length) {
+        const hintText = loggedDaysCount < 4
+          ? 'Отмечай самочувствие хотя бы 4–5 дней, чтобы здесь появились персональные плашки закономерностей по фазам цикла.'
+          : 'Продолжай вести отметки по фазам — здесь появятся повторяющиеся симптомы и дни спада энергии.';
+        blocks.push(`
+          <div class="pattern-insight-pill">
+            <div class="pattern-insight-muted">${escHtml(hintText)}</div>
+          </div>
+        `);
+      }
+
+      sumEl.innerHTML = blocks.join('');
     }
 
     function catmullRomPath(pts) {
