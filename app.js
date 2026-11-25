@@ -503,8 +503,13 @@ const tg = window.Telegram?.WebApp;
     let renderedTipsBuffer = [];
 
     let chartFilter = 'core';
+    let chartRange = '3m'; // 'cycle' | '3m' | 'all'
     let selectedEmotionChartFilter = 'all';
     let hiddenChartSeries = new Set();
+    let tempSleepQuality = ''; // 'poor' | 'ok' | 'good' | ''
+    let tempDayThought = '';
+    let toastHideTimer = null;
+    let toastUndoCallback = null;
 
     let currentBreathPattern = 'spasm';
     let breathTimer = null;
@@ -791,6 +796,26 @@ const tg = window.Telegram?.WebApp;
       return str;
     }
 
+    function serializeMonthSafelyForCloud(monthEntriesObj) {
+      const scales = [1, 0.75, 0.5, 0.3, 0];
+      let serialized = '';
+      for (const scale of scales) {
+        const compacted = {};
+        Object.entries(monthEntriesObj).forEach(([iso, entry]) => {
+          const c = compactEntryForCloud(entry, scale);
+          if (entry.sleepQuality) c.sleepQuality = entry.sleepQuality;
+          if (entry.thought) c.thought = smartTrimText(entry.thought, 140);
+          if (Array.isArray(entry.tried) && entry.tried.length) c.tried = entry.tried.slice(0, 20);
+          compacted[iso] = c;
+        });
+        serialized = JSON.stringify(compacted);
+        if (utf8ByteLength(serialized) <= 3950) {
+          return serialized;
+        }
+      }
+      return serialized;
+    }
+
     async function syncToCloud(specificTargetKey = null) {
       if (!hasTelegramCloud()) {
         document.getElementById('cloudSyncBadge').textContent = '';
@@ -799,15 +824,23 @@ const tg = window.Telegram?.WebApp;
       document.getElementById('cloudSyncBadge').textContent = 'Cloud';
 
       const tasks = [];
-      const entriesList = Object.entries(state.entries);
-
       if (specificTargetKey !== '__meta_only__') {
-        for (const [iso, entry] of entriesList) {
-          if (!specificTargetKey || iso === specificTargetKey || iso.startsWith(specificTargetKey)) {
-            const serialized = serializeDaySafelyForCloud(entry);
-            tasks.push(cloudSet(`carezze2_d_${iso}`, serialized));
+        const targetMonth = (specificTargetKey && /^\d{4}-\d{2}/.test(specificTargetKey))
+          ? specificTargetKey.slice(0, 7)
+          : null;
+
+        const byMonth = {};
+        Object.entries(state.entries).forEach(([iso, entry]) => {
+          const ym = iso.slice(0, 7);
+          if (!targetMonth || ym === targetMonth) {
+            if (!byMonth[ym]) byMonth[ym] = {};
+            byMonth[ym][iso] = entry;
           }
-        }
+        });
+
+        Object.entries(byMonth).forEach(([ym, monthMap]) => {
+          tasks.push(cloudSet(`carezze2_m_${ym}`, serializeMonthSafelyForCloud(monthMap)));
+        });
       }
 
       const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 30) : [];
@@ -900,19 +933,21 @@ const tg = window.Telegram?.WebApp;
       return Number.isFinite(parsed) ? parsed : null;
     }
 
-    function applyIncomingTempToToday(wristTemp, shouldPersist = true) {
+    function applyIncomingTempForDate(wristTemp, targetISO = null, shouldPersist = true) {
       if (wristTemp === null || !Number.isFinite(wristTemp)) return false;
-      const today = getTodayISO(0);
-      selectedDate = today;
-      const existing = state.entries[today] || {
-        date: today,
+      const iso = (targetISO && /^\d{4}-\d{2}-\d{2}$/.test(targetISO)) ? targetISO : getTodayISO(0);
+      selectedDate = iso;
+      const existing = state.entries[iso] || {
+        date: iso,
         scaleMax: 5,
-        isPeriod: isDateInActivePeriodWindow(today),
+        isPeriod: isDateInActivePeriodWindow(iso),
         isOvulation: false,
         intimacy: false,
         soloCount: 0,
         soloReset: false,
         discharge: '',
+        sleepQuality: '',
+        thought: '',
         mood: 3,
         energy: 0,
         pain: 0,
@@ -921,30 +956,48 @@ const tg = window.Telegram?.WebApp;
         emotions: [],
         emotionLevels: createDefaultEmotionLevels(),
         contexts: [],
+        tried: [],
         helped: []
       };
 
       existing.wristTempDelta = wristTemp;
       existing.updatedAt = Date.now();
-      state.entries[today] = existing;
+      state.entries[iso] = existing;
       if (shouldPersist) {
-        persistLocalAndCloud(today);
+        persistLocalAndCloud(iso);
       }
       return true;
     }
 
+    function applyIncomingTempToToday(wristTemp, shouldPersist = true) {
+      return applyIncomingTempForDate(wristTemp, getTodayISO(0), shouldPersist);
+    }
+
     function applyIncomingUrlParams() {
       try {
-        const tgStartParam = tg?.initDataUnsafe?.start_param;
+        const tgStartParam = tg?.initDataUnsafe?.start_param || '';
         const params = new URLSearchParams(window.location.search);
-        const tempParam = tgStartParam || params.get('temp');
-        const wristTemp = parseIncomingTempValue(tempParam);
+        let rawTemp = params.get('temp');
+        let rawDate = params.get('date');
+
+        if (!rawTemp && tgStartParam) {
+          const m = tgStartParam.match(/^(\d{4}-\d{2}-\d{2})_(.+)$/);
+          if (m) {
+            rawDate = m[1];
+            rawTemp = m[2];
+          } else {
+            rawTemp = tgStartParam;
+          }
+        }
+
+        const wristTemp = parseIncomingTempValue(rawTemp);
         if (wristTemp === null) return false;
 
-        importedTempToday = wristTemp;
-        applyIncomingTempToToday(wristTemp, true);
+        const targetISO = (rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) ? rawDate : getTodayISO(0);
+        importedTempToday = { temp: wristTemp, date: targetISO };
+        applyIncomingTempForDate(wristTemp, targetISO, true);
 
-        if (params.has('temp') || params.has('sleep')) {
+        if (params.has('temp') || params.has('date') || params.has('sleep')) {
           window.history.replaceState({}, document.title, window.location.pathname);
         }
         return true;
@@ -1575,12 +1628,113 @@ const tg = window.Telegram?.WebApp;
       if (openBtn) openBtn.textContent = hasKey ? 'Изменить' : 'Настроить';
     }
 
-    function showToast(msg) {
+    function showToast(msg, options = {}) {
       const t = document.getElementById('toast');
-      t.textContent = msg;
+      const txt = document.getElementById('toastText');
+      const undoBtn = document.getElementById('toastUndoBtn');
+      if (!t) return;
+      if (toastHideTimer) clearTimeout(toastHideTimer);
+
+      if (txt) txt.textContent = msg;
+      else t.textContent = msg;
+
+      toastUndoCallback = typeof options.undoFn === 'function' ? options.undoFn : null;
+      if (undoBtn) {
+        if (toastUndoCallback) {
+          undoBtn.style.display = 'inline-block';
+          undoBtn.textContent = options.undoLabel || 'Отменить';
+          undoBtn.onclick = () => {
+            const fn = toastUndoCallback;
+            toastUndoCallback = null;
+            t.classList.remove('show');
+            if (fn) fn();
+          };
+        } else {
+          undoBtn.style.display = 'none';
+          undoBtn.onclick = null;
+        }
+      }
+
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 2100);
+      const duration = toastUndoCallback ? 4500 : 2100;
+      toastHideTimer = setTimeout(() => {
+        t.classList.remove('show');
+        toastUndoCallback = null;
+      }, duration);
       hapticSuccess();
+    }
+
+    function renderSleepQualityButtons() {
+      document.querySelectorAll('#sleepQualitySelector .sleep-btn').forEach(btn => {
+        const val = btn.dataset.sleep;
+        btn.classList.remove('active-poor', 'active-ok', 'active-good');
+        if (val === tempSleepQuality) {
+          btn.classList.add(`active-${val}`);
+        }
+      });
+    }
+
+    function selectSleepQuality(val) {
+      hapticSelect();
+      tempSleepQuality = tempSleepQuality === val ? '' : val;
+      renderSleepQualityButtons();
+      autosaveCurrentDayDraft();
+    }
+
+    function syncManualTempInputUI(tempVal) {
+      const inp = document.getElementById('manualTempInput');
+      const clearBtn = document.getElementById('btnClearManualTemp');
+      const hasVal = typeof tempVal === 'number' && Number.isFinite(tempVal);
+      if (inp && document.activeElement !== inp) {
+        inp.value = hasVal ? (tempVal > 0 && tempVal < 10 ? `+${tempVal}` : String(tempVal)) : '';
+      }
+      if (clearBtn) {
+        clearBtn.style.display = hasVal ? 'inline-flex' : 'none';
+      }
+    }
+
+    function handleManualTempChange() {
+      const inp = document.getElementById('manualTempInput');
+      if (!inp) return;
+      const raw = inp.value.trim();
+      if (!raw) {
+        clearManualTemp();
+        return;
+      }
+      const parsed = parseIncomingTempValue(raw);
+      if (parsed === null || parsed < -5 || parsed > 43) {
+        showToast('Проверь значение температуры');
+        syncManualTempInputUI(state.entries[selectedDate]?.wristTempDelta);
+        return;
+      }
+      if (!state.entries[selectedDate]) {
+        state.entries[selectedDate] = buildLiveDaySnapshot();
+      }
+      state.entries[selectedDate].wristTempDelta = parsed;
+      state.entries[selectedDate].updatedAt = Date.now();
+      syncManualTempInputUI(parsed);
+      updateWatchSummary(true, parsed);
+      showToast('Температура сохранена');
+    }
+
+    function clearManualTemp() {
+      hapticSelect();
+      if (state.entries[selectedDate]) {
+        delete state.entries[selectedDate].wristTempDelta;
+        state.entries[selectedDate].updatedAt = Date.now();
+      }
+      syncManualTempInputUI(null);
+      updateWatchSummary(true, null);
+      showToast('Температура удалена');
+    }
+
+    function handleDayThoughtInput() {
+      const inp = document.getElementById('dayThoughtInput');
+      const cnt = document.getElementById('dayThoughtCounter');
+      if (!inp) return;
+      tempDayThought = inp.value.slice(0, 140);
+      if (cnt) cnt.textContent = String(tempDayThought.length);
+      scheduleEmotionAutosave();
     }
 
     function sleepMs(ms) {
@@ -1609,9 +1763,7 @@ const tg = window.Telegram?.WebApp;
       const isExpressKey = cleanKey.startsWith('AQ.');
       // Для ключей AQ. и стандартных ключей ставим первой более развёрнутую gemini-3.6-flash,
       // затем gemini-3.8-flash и лёгкую gemini-3.5-flash-lite в резерв (без устаревших -latest алиасов).
-      const models = isExpressKey
-        ? ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3.5-flash-lite']
-        : ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3.5-flash-lite'];
+      const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
       const retryDelaysMs = [1500, 3500, 7000];
       const maxRetries = retryDelaysMs.length;
       let lastError = 'Ошибка запроса';
@@ -1836,6 +1988,8 @@ const tg = window.Telegram?.WebApp;
         soloCount: soloCnt,
         soloReset: soloCnt > 0,
         discharge: cleanDischarge,
+        sleepQuality: tempSleepQuality || '',
+        thought: (tempDayThought || '').trim(),
         mood: computeDerivedMood(normalizedLevels, metrics.energy, metrics.pain, metrics.stress),
         energy: metrics.energy,
         pain: metrics.pain,
@@ -2042,6 +2196,25 @@ const tg = window.Telegram?.WebApp;
       return true;
     }
 
+    function getConfirmedOvulationInCurrentCycle() {
+      const startISO = state.settings?.lastPeriodStart;
+      if (!startISO) return null;
+      let foundISO = null;
+      Object.values(state.entries || {}).forEach(e => {
+        if (e && e.date >= startISO && e.isOvulation) {
+          if (!foundISO || e.date > foundISO) foundISO = e.date;
+        }
+      });
+      if (selectedDate >= startISO) {
+        if (tempIsOvulation && (!foundISO || selectedDate > foundISO)) {
+          foundISO = selectedDate;
+        } else if (!tempIsOvulation && foundISO === selectedDate) {
+          foundISO = null;
+        }
+      }
+      return foundISO;
+    }
+
     function getCycleInfo(dateISO) {
       const start = parseLocalISO(state.settings.lastPeriodStart);
       const target = parseLocalISO(dateISO);
@@ -2066,10 +2239,19 @@ const tg = window.Telegram?.WebApp;
       const isSuppressedOvulation = contraception === 'КОК' || contraception === 'Кольцо / пластырь';
       const isHormonalIUD = contraception === 'Гормональная ВМС';
 
+      const confirmedOvulISO = (!isSuppressedOvulation && !isHormonalIUD) ? getConfirmedOvulationInCurrentCycle() : null;
+      const ovulCycleDay = confirmedOvulISO
+        ? Math.round((parseLocalISO(confirmedOvulISO) - start) / 86400000) + 1
+        : null;
+
       const ovulStart = Math.max(pLen + 2, minLen - 15);
       const ovulEnd = Math.max(ovulStart + 1, maxLen - 13);
-      const ovulationDay = Math.round((ovulStart + ovulEnd) / 2);
+      const ovulationDay = ovulCycleDay || Math.round((ovulStart + ovulEnd) / 2);
       const isMidCycleWindow = (cycleD) => !isSuppressedOvulation && cycleD >= Math.max(8, ovulStart - 2) && cycleD <= ovulEnd + 2;
+
+      const expectedMinStartDay = ovulCycleDay ? (ovulCycleDay + 13) : minLen;
+      const expectedMaxStartDay = ovulCycleDay ? (ovulCycleDay + 14) : maxLen;
+      const effectiveMaxLen = Math.max(maxLen, expectedMaxStartDay);
 
       let isDelay = false;
       let isExpectedWindow = false;
@@ -2083,9 +2265,15 @@ const tg = window.Telegram?.WebApp;
 
       if (diffDays >= 0 && !hasExplicitPeriodOnDate && !hasExplicitPeriodAfterStart) {
         cycleDay = diffDays + 1;
-        if (cycleDay > maxLen) {
+        const overdueDays = cycleDay - effectiveMaxLen;
+        if (overdueDays >= 6) {
           isDelay = true;
-          delayDays = cycleDay - maxLen;
+          delayDays = overdueDays;
+        } else if (overdueDays >= 1) {
+          isExpectedWindow = true;
+          delayDays = overdueDays;
+        } else if (cycleDay >= expectedMinStartDay && cycleDay <= expectedMaxStartDay) {
+          isExpectedWindow = true;
         } else if (isVariable && cycleDay >= minLen) {
           isExpectedWindow = true;
         }
@@ -2099,7 +2287,7 @@ const tg = window.Telegram?.WebApp;
       let isPredictedOvulation = false;
 
       const todayDiffDays = Math.round((today - start) / (1000 * 60 * 60 * 24));
-      const hasOngoingDelay = (todayDiffDays + 1) > maxLen && !Object.values(state.entries).some(
+      const hasOngoingDelay = (todayDiffDays + 1) > effectiveMaxLen && !Object.values(state.entries).some(
         e => e.isPeriod && e.date > state.settings.lastPeriodStart && e.date <= getTodayISO(0)
       );
 
@@ -2151,7 +2339,7 @@ const tg = window.Telegram?.WebApp;
           phaseCode = 'late_luteal';
         }
       } else if (isExpectedWindow) {
-        phase = 'Окно нового цикла';
+        phase = delayDays > 0 ? `Ожидание цикла (+${delayDays} дн.)` : 'Окно нового цикла';
         phaseCode = 'late_luteal';
       } else if (cycleDay < ovulStart) {
         phase = !hasStoppedPeriodByDate && cycleDay <= pLen && diffDays >= 0 && diffDays < pLen
@@ -2433,6 +2621,7 @@ const tg = window.Telegram?.WebApp;
           showToast('Отметка снята');
         } else if (currentStartISO && selectedDate > currentStartISO) {
           // Bleeding ended on this day: keep the same cycle start and materialize any unlogged earlier bleeding days
+          const autoFilledDates = [];
           if (diffFromCurrentStart > 0 && diffFromCurrentStart <= 14) {
             for (let d = 0; d < diffFromCurrentStart; d++) {
               const prevDayISO = shiftISOByDays(currentStartISO, d);
@@ -2457,11 +2646,22 @@ const tg = window.Telegram?.WebApp;
                   contexts: [],
                   helped: []
                 };
+                autoFilledDates.push(prevDayISO);
                 persistLocalAndCloud(prevDayISO);
               }
             }
           }
-          showToast('Кровотечение завершено');
+          const prevDischarge = tempDischarge || 'Умеренные';
+          showToast('Кровотечение завершено', {
+            undoFn: () => {
+              autoFilledDates.forEach(iso => { delete state.entries[iso]; });
+              tempIsPeriod = true;
+              tempDischarge = prevDischarge;
+              autosaveCurrentDayDraft();
+              updateHeaderAndContextControls();
+              renderAnalytics();
+            }
+          });
         } else {
           showToast('Отметка снята');
         }
@@ -2593,6 +2793,10 @@ const tg = window.Telegram?.WebApp;
         if (c === 'Чувствительность груди') parts.push('Грудь');
         else parts.push(c);
       });
+      if (tempSleepQuality) {
+        const sleepMap = { poor: 'Сон: плохо', ok: 'Сон: норм', good: 'Сон: хорошо' };
+        parts.push(sleepMap[tempSleepQuality] || '');
+      }
       const activeEmos = getActiveEmotionsFromLevels(emotionLevels);
       activeEmos.slice(0, 2).forEach(em => {
         parts.push(`${em} ${emotionLevels[em]}`);
@@ -2601,9 +2805,11 @@ const tg = window.Telegram?.WebApp;
       if (tempIsOvulation) parts.push('Овуляция');
       if (tempIntimacy) parts.push('Близость');
       if (Number(tempSoloCount) > 0) parts.push(`Разрядка ×${tempSoloCount}`);
+      if ((tempDayThought || '').trim()) parts.push('Мысль');
 
-      if (parts.length) {
-        sumEl.textContent = parts.join(' · ');
+      const filtered = parts.filter(Boolean);
+      if (filtered.length) {
+        sumEl.textContent = filtered.join(' · ');
         sumEl.classList.add('has-data');
       } else {
         sumEl.textContent = 'Ничего не отмечено';
@@ -2672,7 +2878,16 @@ const tg = window.Telegram?.WebApp;
       });
     }
 
+    function flushPendingAutosave() {
+      if (emotionAutosaveTimer) {
+        clearTimeout(emotionAutosaveTimer);
+        emotionAutosaveTimer = null;
+        autosaveCurrentDayDraft();
+      }
+    }
+
     function shiftDate(delta) {
+      flushPendingAutosave();
       hapticImpact('light');
       const d = parseLocalISO(selectedDate);
       d.setDate(d.getDate() + delta);
@@ -2735,6 +2950,8 @@ const tg = window.Telegram?.WebApp;
         tempDischarge = tempIsPeriod
           ? (['Скудные', 'Умеренные', 'Обильные'].includes(existing.discharge) ? existing.discharge : 'Умеренные')
           : (['Сухие / скудные', 'Кремовые', 'Прозрачные', 'Мажущие'].includes(existing.discharge) ? existing.discharge : '');
+        tempSleepQuality = ['poor', 'ok', 'good'].includes(existing.sleepQuality) ? existing.sleepQuality : '';
+        tempDayThought = typeof existing.thought === 'string' ? existing.thought.slice(0, 140) : '';
 
         populateEditableInputs(existing);
       } else {
@@ -2745,10 +2962,13 @@ const tg = window.Telegram?.WebApp;
         tempIntimacy = false;
         tempSoloCount = 0;
         tempDischarge = tempIsPeriod ? 'Умеренные' : '';
+        tempSleepQuality = '';
+        tempDayThought = '';
 
         populateEditableInputs({
           energy: 0, pain: 0, libido: 0, stress: 0,
           intimacy: false, soloCount: 0, soloReset: false, emotionLevels, contexts: [],
+          sleepQuality: '', thought: '',
           wristTempDelta: ''
         });
       }
@@ -2774,7 +2994,14 @@ const tg = window.Telegram?.WebApp;
         }
       });
 
+      renderSleepQualityButtons();
+      const thoughtInp = document.getElementById('dayThoughtInput');
+      const thoughtCnt = document.getElementById('dayThoughtCounter');
+      if (thoughtInp) thoughtInp.value = tempDayThought || '';
+      if (thoughtCnt) thoughtCnt.textContent = String((tempDayThought || '').length);
+
       const loadedTemp = (typeof data.wristTempDelta === 'number' && !isNaN(data.wristTempDelta)) ? data.wristTempDelta : null;
+      syncManualTempInputUI(loadedTemp);
       updateWatchSummary(false, loadedTemp);
 
       renderAllEmotionSliders();
@@ -2816,6 +3043,7 @@ const tg = window.Telegram?.WebApp;
     }
 
     function jumpToToday() {
+      flushPendingAutosave();
       hapticImpact('medium');
       selectedDate = getTodayISO(0);
       calendarViewDate = parseLocalISO(selectedDate);
@@ -2825,6 +3053,7 @@ const tg = window.Telegram?.WebApp;
     }
 
     function selectCalendarDate(iso) {
+      flushPendingAutosave();
       hapticImpact('medium');
       selectedDate = iso;
       clearQuickAiChat();
@@ -4283,6 +4512,28 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       }
     }
 
+    function classifyPainkiller(name) {
+      const low = String(name || '').toLowerCase();
+      const mgMatch = low.match(/(\d+)\s*мг/);
+      const parsedMg = mgMatch ? Number(mgMatch[1]) : null;
+      if (/нурофен|ибупрофен|миг/.test(low)) {
+        return { group: 'НПВС', sub: 'ибупрофен', mg: parsedMg || 400, dailyMax: 1200 };
+      }
+      if (/нимесил|нимесулид|найз/.test(low)) {
+        return { group: 'НПВС', sub: 'нимесулид', mg: parsedMg || 100, dailyMax: 200 };
+      }
+      if (/кетанов|кеторол|кетопрофен|декс|налгезин/.test(low)) {
+        return { group: 'НПВС', sub: 'нпвс', mg: parsedMg || 0, dailyMax: 0 };
+      }
+      if (/парацетамол|панадол|эффералган/.test(low)) {
+        return { group: 'Анальгетик', sub: 'парацетамол', mg: parsedMg || 500, dailyMax: 3000 };
+      }
+      if (/но-?шпа|дротаверин|спазмалгон|бускопан/.test(low)) {
+        return { group: 'Спазмолитик', sub: 'спазмолитик', mg: parsedMg || 40, dailyMax: 240 };
+      }
+      return { group: 'Препарат', sub: low, mg: parsedMg || 0, dailyMax: 0 };
+    }
+
     function updatePainkillerUI() {
       const quickRow = document.getElementById('recentPainkillerBtns');
       if (quickRow) {
@@ -4305,10 +4556,46 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
             uniqueRecent.push(d);
           }
         });
-        quickRow.innerHTML = uniqueRecent.map(item => {
-          const safeName = item.name.replace(/'/g, "\'");
-          return `<button type="button" class="btn-soft" onclick="logPainkiller('${safeName}', ${item.hours})">${escapeHtml(item.name)}</button>`;
-        }).join('');
+        quickRow.innerHTML = uniqueRecent.map((item, i) =>
+          `<button type="button" class="btn-soft" data-quick-med-idx="${i}">${escapeHtml(item.name)}</button>`
+        ).join('');
+        quickRow.querySelectorAll('[data-quick-med-idx]').forEach(btn => {
+          btn.onclick = () => {
+            const item = uniqueRecent[Number(btn.dataset.quickMedIdx)];
+            if (item) logPainkiller(item.name, item.hours);
+          };
+        });
+      }
+
+      const nowMs = Date.now();
+      const last24h = (state.painkillers || []).filter(p => (nowMs - new Date(p.timeISO).getTime()) <= 24 * 3600000);
+      const warnings = [];
+      const nsaidEntries = last24h.filter(p => classifyPainkiller(p.name).group === 'НПВС');
+      const distinctNsaids = new Set(nsaidEntries.map(p => classifyPainkiller(p.name).sub));
+      if (distinctNsaids.size > 1) {
+        warnings.push('За последние 24 часа отмечены разные препараты группы НПВС — их сочетание повышает нагрузку на желудок и почки.');
+      }
+      const bySub = {};
+      last24h.forEach(p => {
+        const info = classifyPainkiller(p.name);
+        if (!bySub[info.sub]) bySub[info.sub] = { totalMg: 0, maxMg: info.dailyMax, label: p.name.split(' ')[0] };
+        bySub[info.sub].totalMg += info.mg;
+      });
+      Object.values(bySub).forEach(st => {
+        if (st.maxMg > 0 && st.totalMg >= st.maxMg) {
+          warnings.push(`${st.label}: принято ${st.totalMg} из ${st.maxMg} мг за 24 ч (достигнут суточный предел).`);
+        }
+      });
+
+      const warnBox = document.getElementById('painkillerWarningBanner');
+      if (warnBox) {
+        if (warnings.length) {
+          warnBox.style.display = 'block';
+          warnBox.innerHTML = `<div class="med-warning-title">Внимание к дозировке за 24 ч</div>${warnings.map(w => `<div>${escapeHtml(w)}</div>`).join('')}`;
+        } else {
+          warnBox.style.display = 'none';
+          warnBox.innerHTML = '';
+        }
       }
 
       const box = document.getElementById('painkillerStatus');
@@ -4318,15 +4605,21 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       }
       box.innerHTML = state.painkillers.slice(0, 12).map((item, idx) => {
         const taken = new Date(item.timeISO);
+        const info = classifyPainkiller(item.name);
         const nextSafe = new Date(taken.getTime() + (item.hours || 4) * 3600000);
         const dayStr = taken.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
         const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const subStats = bySub[info.sub];
+        const doseLine = (subStats && subStats.maxMg > 0 && (nowMs - taken.getTime()) <= 24 * 3600000)
+          ? `<div class="med-dose-24h">За 24 ч: ${subStats.totalMg} из ${subStats.maxMg} мг</div>`
+          : '';
         return `
           <div class="med-item">
             <div class="med-item-info">
-              <div class="med-item-name">${escapeHtml(item.name)}</div>
+              <div class="med-item-name">${escapeHtml(item.name)}<span class="med-group-badge ${info.group === 'НПВС' ? 'is-nsaid' : ''}">${info.group}</span></div>
               <div class="med-item-time">${dayStr}, ${tStr} → след. с ${nStr}</div>
+              ${doseLine}
             </div>
             <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">${SVG_ICONS.cross}</button>
           </div>
@@ -4437,27 +4730,71 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       showToast('Сохранено');
     }
 
-    const SOS_RESET_STEPS = [
-      {
-        kicker: 'Шаг 1 · Тело и выдох',
-        text: 'Разомкни челюсть, опусти плечи и сделай 3 выдоха длиннее вдоха.',
-        prompts: ['Выдох 1', 'Выдох 2', 'Выдох 3']
+    const SOS_RESET_MODES = {
+      anxiety: {
+        label: 'Перезагрузка: Тревога',
+        steps: [
+          { kicker: 'Шаг 1 · Выдох длиннее вдоха', text: 'Разомкни челюсть, опусти плечи и сделай 3 медленных выдоха:', prompts: ['Выдох 1', 'Выдох 2', 'Выдох 3'] },
+          { kicker: 'Шаг 2 · Заземление 5–4–3–2–1', text: 'Назови опоры вокруг, чтобы вернуть внимание из тревожных прогнозов в комнату:', prompts: ['5 предметов', '4 ощущения', '3 звука', '2 запаха', '1 опора под стопами'] },
+          { kicker: 'Шаг 3 · Факт против прогноза', text: 'Отдели реальный факт от мысли-катастрофы и выбери одно простое действие на 10 минут:', prompts: ['Умыться прохладной водой', 'Выйти на 10 мин пройтись', 'Сделать одно мелкое дело'] }
+        ]
       },
-      {
-        kicker: 'Шаг 2 · Заземление 5–4–3–2–1',
-        text: 'Отмечай по очереди опоры вокруг, чтобы вернуть внимание в текущий момент:',
-        prompts: ['5 предметов', '4 ощущения', '3 звука', '2 запаха', '1 опора под стопами']
+      pain: {
+        label: 'Перезагрузка: Острая боль',
+        steps: [
+          { kicker: 'Шаг 1 · Снять защитный зажим', text: 'Когда больно, тело сжимается и усиливает спазм. Мягко расслабь зоны вокруг:', prompts: ['Расслабить живот', 'Разжать челюсть', 'Опустить плечи'] },
+          { kicker: 'Шаг 2 · Тепло и поза', text: 'Создай физическую опору для таза и поясницы на ближайшие 15 минут:', prompts: ['Тёплая грелка / душ', 'Поза на боку с подушкой', 'Тёплая вода'] },
+          { kicker: 'Шаг 3 · Бережный минимум', text: 'Оставь на сегодня только действительно обязательное без чувства вины:', prompts: ['Отменить лишнее', 'Принять обезболивающее по схеме', 'Полежать 20 минут'] }
+        ]
       },
-      {
-        kicker: 'Шаг 3 · Якорь безопасности',
-        text: 'Отдели факт от тревожной мысли («сейчас я в безопасности, это просто волна напряжения») и выбери одно микро-действие на 5 минут:',
-        prompts: ['Тёплая вода', 'Прохладное умывание', 'Лечь и укрыться', 'Открыть окно']
+      selfcrit: {
+        label: 'Перезагрузка: Самокритика и срыв',
+        steps: [
+          { kicker: 'Шаг 1 · Стоп-пауза', text: 'Заметь самокритичную мысль как внутренний шум, а не приговор:', prompts: ['Это мысль, а не факт', 'Я сейчас перегружена', 'Сделать 2 спокойных выдоха'] },
+          { kicker: 'Шаг 2 · Тон подруги', text: 'Что бы ты сказала близкой подруге, если бы она оказалась в твоём сегодняшнем состоянии?', prompts: ['Тебе сейчас правда непросто', 'Ты имеешь право устать', 'Не нужно решать всё сегодня'] },
+          { kicker: 'Шаг 3 · Маленький шаг заботы', text: 'Выбери одно поддерживающее действие без перфекционизма:', prompts: ['Поесть тёплой еды', 'Убрать телефон на 20 мин', 'Лечь спать пораньше'] }
+        ]
       }
-    ];
+    };
 
+    let currentSosResetMode = 'anxiety';
     let sosResetStepIdx = 0;
     let sosResetDone = false;
     let sosResetChecked = { 0: [], 1: [], 2: [] };
+
+    function getActiveSosSteps() {
+      return (SOS_RESET_MODES[currentSosResetMode] || SOS_RESET_MODES.anxiety).steps;
+    }
+
+    function selectSosResetMode(mode) {
+      if (!SOS_RESET_MODES[mode]) return;
+      hapticSelect();
+      currentSosResetMode = mode;
+      sosResetStepIdx = 0;
+      sosResetDone = false;
+      sosResetChecked = { 0: [], 1: [], 2: [] };
+      document.querySelectorAll('#sosModeSelector .sos-mode-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sosMode === mode);
+      });
+      renderSosResetStage();
+    }
+
+    function recordSosResetHelped() {
+      const modeObj = SOS_RESET_MODES[currentSosResetMode] || SOS_RESET_MODES.anxiety;
+      if (!state.entries[selectedDate]) {
+        state.entries[selectedDate] = buildLiveDaySnapshot();
+      }
+      const entry = state.entries[selectedDate];
+      if (!Array.isArray(entry.helped)) entry.helped = [];
+      if (!entry.helped.includes(modeObj.label)) {
+        entry.helped.push(modeObj.label);
+      }
+      entry.updatedAt = Date.now();
+      persistLocalAndCloud(selectedDate);
+      renderAdviceAndSelfCareTab();
+      renderAnalytics();
+      showToast('Добавлено в отчёт дня');
+    }
 
     function toggleSosAnchor(promptIdx) {
       hapticSelect();
@@ -4471,7 +4808,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function nextSosResetStep() {
       hapticImpact('light');
-      if (sosResetStepIdx < SOS_RESET_STEPS.length - 1) {
+      const steps = getActiveSosSteps();
+      if (sosResetStepIdx < steps.length - 1) {
         sosResetStepIdx += 1;
       } else {
         sosResetDone = true;
@@ -4482,9 +4820,10 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function prevSosResetStep() {
       hapticImpact('light');
+      const steps = getActiveSosSteps();
       if (sosResetDone) {
         sosResetDone = false;
-        sosResetStepIdx = SOS_RESET_STEPS.length - 1;
+        sosResetStepIdx = steps.length - 1;
       } else if (sosResetStepIdx > 0) {
         sosResetStepIdx -= 1;
       }
@@ -4505,6 +4844,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const segs = document.querySelectorAll('#sosProgressBar .sos-progress-seg');
       if (!stage) return;
 
+      const steps = getActiveSosSteps();
       segs.forEach((seg, i) => {
         seg.classList.remove('is-done', 'is-active');
         if (sosResetDone || i < sosResetStepIdx) seg.classList.add('is-done');
@@ -4517,15 +4857,16 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           <div class="sos-done-box">
             <div class="sos-done-title">Перезагрузка завершена</div>
             <div class="sos-done-sub">Ты в контакте с телом и текущим моментом. Можно перейти к выбранному микро-действию.</div>
-            <button type="button" class="btn-soft" style="margin-top:4px;" onclick="restartSosReset()">Пройти заново</button>
+            <button type="button" class="btn-accent" style="height:42px; font-size:14px;" onclick="recordSosResetHelped()">Стало легче — добавить в отчёт дня</button>
+            <button type="button" class="btn-soft" style="margin-top:2px;" onclick="restartSosReset()">Пройти заново</button>
           </div>
         `;
         return;
       }
 
-      const step = SOS_RESET_STEPS[sosResetStepIdx];
+      const step = steps[sosResetStepIdx];
       const checked = sosResetChecked[sosResetStepIdx] || [];
-      if (counter) counter.textContent = `Шаг ${sosResetStepIdx + 1} из ${SOS_RESET_STEPS.length}`;
+      if (counter) counter.textContent = `Шаг ${sosResetStepIdx + 1} из ${steps.length}`;
 
       const pillsHtml = step.prompts.map((label, idx) => {
         const isChecked = checked.includes(idx);
@@ -4536,7 +4877,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         `;
       }).join('');
 
-      const isLast = sosResetStepIdx === SOS_RESET_STEPS.length - 1;
+      const isLast = sosResetStepIdx === steps.length - 1;
       stage.innerHTML = `
         <div class="sos-focus-card">
           <div class="sos-focus-kicker">${escapeHtml(step.kicker)}</div>
@@ -4554,7 +4895,17 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function applyImportedBackupObject(parsed) {
       if (parsed && parsed.settings && parsed.entries) {
-        state = { ...state, ...parsed, onboarded: true };
+        const preservedKey = state.settings?.geminiApiKey || '';
+        state = {
+          ...state,
+          ...parsed,
+          settings: {
+            ...state.settings,
+            ...parsed.settings,
+            geminiApiKey: (parsed.settings && parsed.settings.geminiApiKey) ? parsed.settings.geminiApiKey : preservedKey
+          },
+          onboarded: true
+        };
         if (!THEMES[state.settings.palette]) {
           state.settings.palette = 'peach_sage';
         }
@@ -4574,7 +4925,14 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
     }
 
     function exportData() {
-      const jsonStr = JSON.stringify(state, null, 2);
+      const safeClone = {
+        ...state,
+        settings: {
+          ...state.settings,
+          geminiApiKey: ''
+        }
+      };
+      const jsonStr = JSON.stringify(safeClone, null, 2);
       try {
         navigator.clipboard?.writeText(jsonStr);
       } catch (e) {}
@@ -4588,7 +4946,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         a.click();
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showToast('Файл копии скачан');
+        showToast('Копия скачана (без API-ключа)');
       } catch (e) {
         showToast('Скопировано в буфер');
       }
@@ -4799,6 +5157,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
     };
 
     switchTab = function(tab) {
+      flushPendingAutosave();
       hapticImpact('light');
       if (tab !== 'sos' && isBreathing) stopBreathing();
 
