@@ -2159,19 +2159,6 @@
     }
 
 
-  
-    .sleep-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-    .manual-temp-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
-    .manual-temp-row input[type="number"] { height: 42px; padding: 8px 12px; font-size: 15px; }
-    .thought-input-field { width: 100%; background: var(--surface-2); border: 1.5px solid var(--border); color: var(--ink); border-radius: 14px; padding: 10px 12px; font-size: 14.5px; font-family: inherit; }
-    .temp-point-banner { display: none; margin-bottom: 10px; padding: 10px 13px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--border); font-size: 13.5px; font-weight: 600; color: var(--ink); align-items: center; justify-content: space-between; gap: 8px; }
-    .temp-point-banner.visible { display: flex; }
-    .med-item.is-warn { border: 1.5px solid var(--amber); background: var(--amber-tint); }
-    .med-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: var(--surface); color: var(--ink-2); margin-left: 6px; }
-    .med-badge.is-warn { background: var(--amber-bg); color: var(--amber); }
-    .sos-state-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-bottom: 10px; }
-    .toast-action-btn { margin-left: 10px; padding: 3px 9px; border-radius: 999px; border: none; background: var(--accent); color: #fff; font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; pointer-events: auto; }
-
   </style>
 </head>
 <body>
@@ -2427,6 +2414,16 @@
               </div>
             </div>
 
+            <!-- Сон -->
+            <div style="margin-top:14px;">
+              <div class="field-label" style="margin-bottom:8px;">Сон</div>
+              <div class="grid-3" id="sleepQualitySelector">
+                <button type="button" class="choice-btn" data-sleep="Плохо" onclick="selectSleepQuality('Плохо')">Плохо</button>
+                <button type="button" class="choice-btn" data-sleep="Норм" onclick="selectSleepQuality('Норм')">Норм</button>
+                <button type="button" class="choice-btn" data-sleep="Хорошо" onclick="selectSleepQuality('Хорошо')">Хорошо</button>
+              </div>
+            </div>
+
             <!-- Физические ощущения -->
             <div style="margin-top:14px;">
               <div class="field-label" style="margin-bottom:8px;">Физические ощущения</div>
@@ -2437,29 +2434,10 @@
               </div>
             </div>
 
-            <!-- Сон (Плохо / Норм / Хорошо) -->
+            <!-- Короткая мысль или триггер дня (до 140 символов) -->
             <div style="margin-top:14px;">
-              <div class="field-label" style="margin-bottom:8px;">Сон</div>
-              <div class="sleep-grid-3" id="sleepQualitySelector">
-                <button type="button" class="choice-btn" data-val="Плохо" onclick="selectSleepQuality('Плохо')">Плохо</button>
-                <button type="button" class="choice-btn" data-val="Норм" onclick="selectSleepQuality('Норм')">Норм</button>
-                <button type="button" class="choice-btn" data-val="Хорошо" onclick="selectSleepQuality('Хорошо')">Хорошо</button>
-              </div>
-            </div>
-
-            <!-- Ручной ввод / корректировка температуры -->
-            <div style="margin-top:14px;">
-              <div class="field-label" style="margin-bottom:6px;">Температура (°C)</div>
-              <div class="manual-temp-row" style="margin-top:0;">
-                <input type="number" id="manualTempInput" step="0.05" min="-5" max="45" placeholder="Напр. +0.3 или 36.8" oninput="saveManualTempInput()" />
-                <button type="button" class="btn-soft" style="height:42px; padding:0 12px;" onclick="clearManualTempInput()">Сброс</button>
-              </div>
-            </div>
-
-            <!-- Короткая мысль / триггер дня -->
-            <div style="margin-top:14px; width:100%; min-width:0;">
-              <div class="field-label" style="margin-bottom:6px;">Что сейчас в голове / что случилось (до 140 зн.)</div>
-              <input type="text" id="dayThoughtInput" class="thought-input-field" maxlength="140" autocomplete="off" placeholder="Короткая мысль или событие дня..." oninput="scheduleThoughtAutosave()" />
+              <div class="field-label" style="margin-bottom:8px;">Что сейчас в голове / что случилось</div>
+              <input type="text" id="dayThoughtInput" maxlength="140" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="onDayThoughtInput()" placeholder="До 140 символов — триггер, мысль или событие..." />
             </div>
 
             <!-- Эмоции (шкала 1–5 для каждой эмоции) -->
@@ -2504,22 +2482,17 @@
           <span class="card-sub" id="chartEntriesCount"></span>
         </div>
 
-        <div class="filter-row" id="chartRangeFilters" style="margin-bottom:8px;">
-          <button type="button" class="filter-pill" data-range="cycle" onclick="setChartRange('cycle')">Текущий цикл</button>
-          <button type="button" class="filter-pill active" data-range="3m" onclick="setChartRange('3m')">3 месяца</button>
-          <button type="button" class="filter-pill" data-range="all" onclick="setChartRange('all')">Всё время</button>
+        <div class="filter-row" id="chartPeriodFilters">
+          <button class="filter-pill" data-period="cycle" onclick="setAnalyticsPeriod('cycle')">Текущий цикл</button>
+          <button class="filter-pill active" data-period="3m" onclick="setAnalyticsPeriod('3m')">3 месяца</button>
+          <button class="filter-pill" data-period="all" onclick="setAnalyticsPeriod('all')">Всё время</button>
         </div>
-
+        <div id="tempPointInspector" style="display:none; margin-bottom:10px; padding:9px 12px; border-radius:12px; background:var(--surface-2); font-size:13.5px; font-weight:600; color:var(--ink);"></div>
         <div class="filter-row" id="chartFilters">
           <button class="filter-pill active" data-mode="core" onclick="setChartFilter('core')">Основные</button>
           <button class="filter-pill" data-mode="all" onclick="setChartFilter('all')">Все метрики</button>
           <button class="filter-pill" data-mode="emotions" onclick="setChartFilter('emotions')">Эмоции</button>
           <button class="filter-pill" data-mode="temp" onclick="setChartFilter('temp')">Температура</button>
-        </div>
-
-        <div id="tempPointBanner" class="temp-point-banner">
-          <span id="tempPointBannerText"></span>
-          <button type="button" class="btn-edit-small" onclick="hideTempPointBanner()">Скрыть</button>
         </div>
 
         <div class="filter-row" id="emotionSubFilters" style="display:none; margin-top:-2px;"></div>
@@ -2548,7 +2521,6 @@
           <input type="text" id="customMedInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Название препарата..." onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller();}" />
           <button class="btn-soft" onclick="logCustomPainkiller()">Добавить</button>
         </div>
-        <div id="painkiller24hSummary" class="inspector-box" style="display:none; margin-top:10px;"></div>
         <div class="med-list" id="painkillerStatus"></div>
       </div>
 
@@ -2582,11 +2554,6 @@
         <div class="card-top">
           <span class="card-title">Перезагрузка</span>
           <span id="sosStepCounter" style="font-size:12.5px; font-weight:600; color:var(--ink-3);">Шаг 1 из 3</span>
-        </div>
-        <div class="sos-state-row" id="sosStateSelector">
-          <button type="button" class="filter-pill active" data-sos-state="anxiety" onclick="selectSosState('anxiety')">Тревога</button>
-          <button type="button" class="filter-pill" data-sos-state="pain" onclick="selectSosState('pain')">Острая боль</button>
-          <button type="button" class="filter-pill" data-sos-state="criticism" onclick="selectSosState('criticism')">Самокритика</button>
         </div>
         <div class="sos-progress-bar" id="sosProgressBar">
           <div class="sos-progress-seg is-active"></div>
@@ -3429,7 +3396,8 @@
       },
       entries: {},
       painkillers: [],
-      customHelpedPool: []
+      customHelpedPool: [],
+      helpedEffectiveness: {}
     };
 
     let obCycleMin = 24;
@@ -3464,6 +3432,14 @@
     let isBreathing = false;
 
     let importedTempToday = null;
+    let tempSleepQuality = '';
+    let tempDayThought = '';
+    let analyticsPeriodFilter = '3m'; // 'cycle' | '3m' | 'all'
+    let selectedTempPointInfo = null;
+    let lastAutoPeriodUndo = null;
+    let autoPeriodUndoTimer = null;
+    let sosResetStateMode = 'anxiety'; // 'anxiety' | 'pain' | 'self_criticism'
+    let helpedEffectiveness = state.helpedEffectiveness; // tipId -> { used: number, helped: number }
     let isCloudSyncing = false;
     let pendingCloudWritePromise = Promise.resolve();
     let lastLocalWriteTimestamp = 0;
@@ -3630,7 +3606,11 @@
         emotions: Object.keys(compactEmotions),
         emotionLevels: compactEmotions,
         contexts: entry.contexts || [],
-        helped: Array.isArray(entry.helped) ? entry.helped.slice(0, 20) : []
+        helped: Array.isArray(entry.helped) ? entry.helped.slice(0, 20) : [],
+        sleepQuality: ['Плохо', 'Норм', 'Хорошо'].includes(entry.sleepQuality) ? entry.sleepQuality : '',
+        dayThought: aiMaxScale > 0
+          ? smartTrimText(entry.dayThought || '', aiMaxScale >= 1 ? 140 : Math.max(40, Math.round(140 * aiMaxScale)))
+          : ''
       };
       if (typeof entry.wristTempDelta === 'number' && Number.isFinite(entry.wristTempDelta)) {
         clone.wristTempDelta = entry.wristTempDelta;
@@ -3726,6 +3706,12 @@
       } else if (Math.abs(lTime - cTime) < 2000 && Array.isArray(older.helped) && older.helped.length) {
         merged.helped = Array.from(new Set([...merged.helped, ...older.helped]));
       }
+      if (!merged.sleepQuality && older.sleepQuality) {
+        merged.sleepQuality = older.sleepQuality;
+      }
+      if (!merged.dayThought && older.dayThought) {
+        merged.dayThought = older.dayThought;
+      }
       if (!merged.updatedAt) {
         merged.updatedAt = Math.max(cTime, lTime, Date.now());
       }
@@ -3754,31 +3740,82 @@
       const entriesList = Object.entries(state.entries);
 
       if (specificTargetKey !== '__meta_only__') {
+        const monthBuckets = {};
         for (const [iso, entry] of entriesList) {
-          if (!specificTargetKey || iso === specificTargetKey || iso.startsWith(specificTargetKey)) {
-            const serialized = serializeDaySafelyForCloud(entry);
-            tasks.push(cloudSet(`carezze2_d_${iso}`, serialized));
+          const monthKey = iso.slice(0, 7);
+          const shouldTouch = !specificTargetKey
+            || iso === specificTargetKey
+            || monthKey === specificTargetKey
+            || iso.startsWith(specificTargetKey);
+          if (shouldTouch) {
+            if (!monthBuckets[monthKey]) monthBuckets[monthKey] = {};
+            monthBuckets[monthKey][iso] = compactEntryForCloud(entry, 0.85);
           }
+        }
+        for (const [monthKey, bucket] of Object.entries(monthBuckets)) {
+          let payloadObj = { ...bucket };
+          let serialized = JSON.stringify(payloadObj);
+          const keysInBucket = Object.keys(payloadObj).sort();
+          while (keysInBucket.length > 1 && utf8ByteLength(serialized) > 3950) {
+            const oldestIso = keysInBucket.shift();
+            delete payloadObj[oldestIso];
+            serialized = JSON.stringify(payloadObj);
+          }
+          tasks.push(cloudSet(`carezze2_m_${monthKey}`, serialized));
         }
       }
 
       const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 30) : [];
       tasks.push(cloudSet('carezze2_custom_tips', serializeCustomPoolSafely(customPool)));
 
+      const rawEff = (state.helpedEffectiveness && typeof state.helpedEffectiveness === 'object')
+        ? state.helpedEffectiveness
+        : {};
+      const sortedEffEntries = Object.entries(rawEff)
+        .filter(([k, v]) => k && v && typeof v === 'object')
+        .sort((a, b) => (Number(b[1].helped) || 0) - (Number(a[1].helped) || 0) || (Number(b[1].used) || 0) - (Number(a[1].used) || 0));
+      let effLimit = sortedEffEntries.length;
+      const buildEffObj = (limit) => {
+        const obj = {};
+        sortedEffEntries.slice(0, limit).forEach(([k, v]) => {
+          obj[k] = {
+            used: Math.max(0, Math.round(Number(v.used) || 0)),
+            helped: Math.max(0, Math.round(Number(v.helped) || 0))
+          };
+        });
+        return obj;
+      };
+
       let metaPool = customPool.slice(0, 20);
       let metaPayload = JSON.stringify({
         onboarded: state.onboarded,
         settings: state.settings,
         painkillers: state.painkillers.slice(0, 12),
-        customHelpedPool: metaPool
+        customHelpedPool: metaPool,
+        helpedEffectiveness: buildEffObj(effLimit)
       });
-      while (metaPool.length > 0 && utf8ByteLength(metaPayload) > 3950) {
-        metaPool.pop();
+      while ((metaPool.length > 0 || effLimit > 30) && utf8ByteLength(metaPayload) > 3950) {
+        if (effLimit > 30) {
+          effLimit = 30;
+        } else if (metaPool.length > 0) {
+          metaPool.pop();
+        }
         metaPayload = JSON.stringify({
           onboarded: state.onboarded,
           settings: state.settings,
           painkillers: state.painkillers.slice(0, 12),
-          customHelpedPool: metaPool
+          customHelpedPool: metaPool,
+          helpedEffectiveness: buildEffObj(effLimit)
+        });
+      }
+      while (effLimit > 0 && utf8ByteLength(metaPayload) > 3950) {
+        effLimit -= 1;
+        metaPayload = JSON.stringify({
+          onboarded: state.onboarded,
+          settings: state.settings,
+          painkillers: state.painkillers.slice(0, 12),
+          customHelpedPool: metaPool,
+          helpedEffectiveness: buildEffObj(effLimit)
         });
       }
       tasks.push(cloudSet('carezze2_meta', metaPayload));
@@ -3852,10 +3889,12 @@
       return Number.isFinite(parsed) ? parsed : null;
     }
 
-    function applyIncomingTempToToday(wristTemp, shouldPersist = true) {
+    function applyIncomingTempToToday(wristTemp, shouldPersist = true, switchToToday = true) {
       if (wristTemp === null || !Number.isFinite(wristTemp)) return false;
       const today = getTodayISO(0);
-      selectedDate = today;
+      if (switchToToday) {
+        selectedDate = today;
+      }
       const existing = state.entries[today] || {
         date: today,
         scaleMax: 5,
@@ -3948,6 +3987,8 @@
         entry.emotions = getActiveEmotionsFromLevels(entry.emotionLevels);
         entry.soloCount = normalizeSoloCount(entry);
         entry.soloReset = entry.soloCount > 0;
+        entry.sleepQuality = ['Плохо', 'Норм', 'Хорошо'].includes(entry.sleepQuality) ? entry.sleepQuality : '';
+        entry.dayThought = typeof entry.dayThought === 'string' ? entry.dayThought.slice(0, 140) : '';
       });
     }
 
@@ -4028,8 +4069,12 @@
             settings: { ...state.settings, ...(parsed.settings || {}) },
             entries: parsed.entries || {},
             painkillers: parsed.painkillers || [],
-            customHelpedPool: parsed.customHelpedPool || []
+            customHelpedPool: parsed.customHelpedPool || [],
+            helpedEffectiveness: (parsed.helpedEffectiveness && typeof parsed.helpedEffectiveness === 'object')
+              ? parsed.helpedEffectiveness
+              : {}
           };
+          helpedEffectiveness = state.helpedEffectiveness;
           if (!THEMES[state.settings.palette]) {
             state.settings.palette = 'peach_sage';
           }
@@ -4121,6 +4166,20 @@
           if (Array.isArray(meta.customHelpedPool)) {
             state.customHelpedPool = Array.from(new Set([...state.customHelpedPool, ...meta.customHelpedPool]));
           }
+          if (!state.helpedEffectiveness || typeof state.helpedEffectiveness !== 'object') {
+            state.helpedEffectiveness = {};
+          }
+          if (meta.helpedEffectiveness && typeof meta.helpedEffectiveness === 'object') {
+            Object.entries(meta.helpedEffectiveness).forEach(([tipKey, cloudStats]) => {
+              if (!tipKey || !cloudStats || typeof cloudStats !== 'object') return;
+              const localStats = state.helpedEffectiveness[tipKey] || { used: 0, helped: 0 };
+              state.helpedEffectiveness[tipKey] = {
+                used: Math.max(Number(localStats.used) || 0, Number(cloudStats.used) || 0),
+                helped: Math.max(Number(localStats.helped) || 0, Number(cloudStats.helped) || 0)
+              };
+            });
+          }
+          helpedEffectiveness = state.helpedEffectiveness;
         }
 
         // Immediately reveal exact theme and cycle day once meta is loaded (without waiting for full entry history)
@@ -4178,7 +4237,7 @@
         reconcileCycleStartWithEntries();
 
         if (importedTempToday !== null) {
-          applyIncomingTempToToday(importedTempToday, false);
+          applyIncomingTempToToday(importedTempToday, false, false);
         }
 
         ensureOnboardedFlagIfDataExists();
@@ -4527,6 +4586,47 @@
       if (openBtn) openBtn.textContent = hasKey ? 'Изменить' : 'Настроить';
     }
 
+
+    function showUndoAutoPeriodToast() {
+      const t = document.getElementById('toast');
+      if (!t || !lastAutoPeriodUndo) return;
+      if (autoPeriodUndoTimer) clearTimeout(autoPeriodUndoTimer);
+      t.innerHTML = `<span>Проставлены дни цикла</span> <button type="button" onclick="undoAutoPeriodFill()" style="margin-left:10px; padding:3px 9px; border-radius:999px; border:none; background:var(--accent); color:#fff; font-weight:700; font-size:12.5px; cursor:pointer;">Отменить</button>`;
+      t.style.pointerEvents = 'auto';
+      t.classList.add('show');
+      autoPeriodUndoTimer = setTimeout(() => {
+        lastAutoPeriodUndo = null;
+        t.style.pointerEvents = 'none';
+        t.classList.remove('show');
+        t.textContent = 'Сохранено';
+      }, 4000);
+    }
+
+    function undoAutoPeriodFill() {
+      if (!lastAutoPeriodUndo) return;
+      if (autoPeriodUndoTimer) { clearTimeout(autoPeriodUndoTimer); autoPeriodUndoTimer = null; }
+      const { createdDates, endedDate } = lastAutoPeriodUndo;
+      createdDates.forEach(iso => {
+        delete state.entries[iso];
+      });
+      if (endedDate) {
+        tempIsPeriod = true;
+        tempDischarge = 'Умеренные';
+        state.entries[endedDate] = buildLiveDaySnapshot();
+      }
+      lastAutoPeriodUndo = null;
+      const t = document.getElementById('toast');
+      if (t) {
+        t.style.pointerEvents = 'none';
+        t.classList.remove('show');
+        t.textContent = 'Сохранено';
+      }
+      persistLocalAndCloud(null);
+      updateHeaderAndContextControls();
+      renderAnalytics();
+      showToast('Автоотметки отменены');
+    }
+
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -4561,9 +4661,7 @@
       const isExpressKey = cleanKey.startsWith('AQ.');
       // Для ключей AQ. и стандартных ключей ставим первой более развёрнутую gemini-3.6-flash,
       // затем gemini-3.8-flash и лёгкую gemini-3.5-flash-lite в резерв (без устаревших -latest алиасов).
-      const models = isExpressKey
-        ? ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3.5-flash-lite']
-        : ['gemini-3.6-flash', 'gemini-3.8-flash', 'gemini-3.5-flash-lite'];
+      const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
       const retryDelaysMs = [1500, 3500, 7000];
       const maxRetries = retryDelaysMs.length;
       let lastError = 'Ошибка запроса';
@@ -4795,6 +4893,8 @@
         stress: metrics.stress,
         emotions: activeEmos,
         emotionLevels: normalizedLevels,
+        sleepQuality: tempSleepQuality || '',
+        dayThought: String(tempDayThought || '').slice(0, 140),
         contexts,
         ...(wristTempDelta !== null ? { wristTempDelta } : {}),
         helped: prevHelped,
@@ -4915,7 +5015,7 @@
       list.innerHTML = ALL_EMOTIONS.map(emo => {
         const val = typeof emotionLevels[emo] === 'number' ? emotionLevels[emo] : 0;
         const pal = EMOTION_PALETTE[emo] || { color: 'var(--accent)', bg: 'var(--accent-bg)' };
-        const safeEmo = emo.replace(/'/g, "\'");
+        const safeEmo = emo.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         const pillsHtml = [1, 2, 3, 4, 5].map(s => {
           const isAct = s === val;
           const style = isAct ? `style="background:${pal.color}; color:#FFFFFF;"` : '';
@@ -5036,8 +5136,14 @@
       if (diffDays >= 0 && !hasExplicitPeriodOnDate && !hasExplicitPeriodAfterStart) {
         cycleDay = diffDays + 1;
         if (cycleDay > maxLen) {
-          isDelay = true;
-          delayDays = cycleDay - maxLen;
+          const extraDays = cycleDay - maxLen;
+          if (extraDays >= 6) {
+            isDelay = true;
+            delayDays = extraDays;
+          } else {
+            isExpectedWindow = true;
+            delayDays = extraDays;
+          }
         } else if (isVariable && cycleDay >= minLen) {
           isExpectedWindow = true;
         }
@@ -5072,13 +5178,28 @@
         }
       }
 
+      const markedOvulDates = Object.keys(state.entries)
+        .filter(d => d >= state.settings.lastPeriodStart && state.entries[d]?.isOvulation)
+        .sort();
+      if (tempIsOvulation && selectedDate >= state.settings.lastPeriodStart && !markedOvulDates.includes(selectedDate)) {
+        markedOvulDates.push(selectedDate);
+        markedOvulDates.sort();
+      }
+      const anchorOvulISO = markedOvulDates.length ? markedOvulDates[markedOvulDates.length - 1] : null;
+      const ovulAnchoredStart = anchorOvulISO ? shiftISOByDays(anchorOvulISO, 13) : null;
+      const ovulAnchoredEnd = anchorOvulISO ? shiftISOByDays(anchorOvulISO, 15) : null;
+
       if (target > today && !isMarkedPeriod && !hasOngoingDelay) {
-        const projectedDay = ((diffDays % midLen) + midLen) % midLen + 1;
-        const currentCyclePeriodAlreadyEnded = diffDays >= 0 && diffDays < minLen && hasStoppedPeriodByDate;
-        if ((!currentCyclePeriodAlreadyEnded && projectedDay <= pLen) || (isVariable && cycleDay >= minLen && cycleDay <= maxLen)) {
+        if (ovulAnchoredStart && ovulAnchoredEnd && dateISO >= ovulAnchoredStart && dateISO <= ovulAnchoredEnd) {
           isPredictedPeriod = true;
-        } else if (!isSuppressedOvulation && !isHormonalIUD && projectedDay >= ovulStart && projectedDay <= ovulEnd) {
-          isPredictedOvulation = true;
+        } else if (!ovulAnchoredStart) {
+          const projectedDay = ((diffDays % midLen) + midLen) % midLen + 1;
+          const currentCyclePeriodAlreadyEnded = diffDays >= 0 && diffDays < minLen && hasStoppedPeriodByDate;
+          if ((!currentCyclePeriodAlreadyEnded && projectedDay <= pLen) || (isVariable && cycleDay >= minLen && cycleDay <= maxLen)) {
+            isPredictedPeriod = true;
+          } else if (!isSuppressedOvulation && !isHormonalIUD && projectedDay >= ovulStart && projectedDay <= ovulEnd) {
+            isPredictedOvulation = true;
+          }
         }
       }
 
@@ -5103,7 +5224,7 @@
           phaseCode = 'late_luteal';
         }
       } else if (isExpectedWindow) {
-        phase = 'Окно нового цикла';
+        phase = delayDays > 0 ? `Ожидание цикла (+${delayDays} дн.)` : 'Окно нового цикла';
         phaseCode = 'late_luteal';
       } else if (cycleDay < ovulStart) {
         phase = !hasStoppedPeriodByDate && cycleDay <= pLen && diffDays >= 0 && diffDays < pLen
@@ -5384,7 +5505,7 @@
           }
           showToast('Отметка снята');
         } else if (currentStartISO && selectedDate > currentStartISO) {
-          // Bleeding ended on this day: keep the same cycle start and materialize any unlogged earlier bleeding days
+          const createdDates = [];
           if (diffFromCurrentStart > 0 && diffFromCurrentStart <= 14) {
             for (let d = 0; d < diffFromCurrentStart; d++) {
               const prevDayISO = shiftISOByDays(currentStartISO, d);
@@ -5409,11 +5530,17 @@
                   contexts: [],
                   helped: []
                 };
+                createdDates.push(prevDayISO);
                 persistLocalAndCloud(prevDayISO);
               }
             }
           }
-          showToast('Кровотечение завершено');
+          if (createdDates.length > 0) {
+            lastAutoPeriodUndo = { createdDates, endedDate: selectedDate };
+            showUndoAutoPeriodToast();
+          } else {
+            showToast('Кровотечение завершено');
+          }
         } else {
           showToast('Отметка снята');
         }
@@ -5485,6 +5612,27 @@
       updateHeaderAndContextControls();
       renderAdviceAndSelfCareTab();
       renderAnalytics();
+    }
+
+
+    function selectSleepQuality(val) {
+      hapticSelect();
+      tempSleepQuality = (tempSleepQuality === val) ? '' : val;
+      renderSleepQualityButtons();
+      autosaveCurrentDayDraft();
+    }
+
+    function renderSleepQualityButtons() {
+      document.querySelectorAll('#sleepQualitySelector .choice-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.sleep === tempSleepQuality);
+      });
+    }
+
+    function onDayThoughtInput() {
+      const inp = document.getElementById('dayThoughtInput');
+      if (!inp) return;
+      tempDayThought = String(inp.value || '').slice(0, 140);
+      scheduleEmotionAutosave();
     }
 
     function selectDischarge(val) {
@@ -5598,21 +5746,6 @@
       if (e.target && e.target.id === id) closeSheet(id);
     }
 
-    function openTodaySheet(type) {
-      if (type === 'emotions') {
-        openSheet('sheetEmotions');
-      } else if (type === 'temp') {
-        openSheet('sheetTemp');
-      } else {
-        openSheet('sheetBodyContext');
-        if (type === 'discharge') {
-          setTimeout(() => {
-            document.getElementById('dischargeSectionInSheet')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 80);
-        }
-      }
-    }
-
     function setupChips() {
       document.querySelectorAll('#physicalContextChips .chip').forEach(chip => {
         chip.onclick = () => {
@@ -5624,7 +5757,17 @@
       });
     }
 
+    function flushPendingDayAutosave() {
+      if (emotionAutosaveTimer) {
+        clearTimeout(emotionAutosaveTimer);
+        emotionAutosaveTimer = null;
+        state.entries[selectedDate] = buildLiveDaySnapshot();
+        persistLocalAndCloud(selectedDate);
+      }
+    }
+
     function shiftDate(delta) {
+      flushPendingDayAutosave();
       hapticImpact('light');
       const d = parseLocalISO(selectedDate);
       d.setDate(d.getDate() + delta);
@@ -5726,6 +5869,13 @@
         }
       });
 
+      tempSleepQuality = ['Плохо', 'Норм', 'Хорошо'].includes(data.sleepQuality) ? data.sleepQuality : '';
+      renderSleepQualityButtons();
+      tempDayThought = String(data.dayThought || '').slice(0, 140);
+      const thoughtInp = document.getElementById('dayThoughtInput');
+      if (thoughtInp && document.activeElement !== thoughtInp) {
+        thoughtInp.value = tempDayThought;
+      }
       const loadedTemp = (typeof data.wristTempDelta === 'number' && !isNaN(data.wristTempDelta)) ? data.wristTempDelta : null;
       updateWatchSummary(false, loadedTemp);
 
@@ -5768,6 +5918,7 @@
     }
 
     function jumpToToday() {
+      flushPendingDayAutosave();
       hapticImpact('medium');
       selectedDate = getTodayISO(0);
       calendarViewDate = parseLocalISO(selectedDate);
@@ -5777,6 +5928,7 @@
     }
 
     function selectCalendarDate(iso) {
+      flushPendingDayAutosave();
       hapticImpact('medium');
       selectedDate = iso;
       clearQuickAiChat();
@@ -5900,6 +6052,25 @@
           'Отметь самочувствие и выделения, чтобы видеть свой индивидуальный ритм.'
         ];
       }
+      const emosMap = buildLoadedEmotionLevels(entry);
+      const highDistress = (emosMap['Тревога'] ?? 0) >= 3 || (emosMap['Грусть'] ?? 0) >= 3 || (Number(entry.stress) || 0) >= 3;
+      const energyVal = Number(entry.energy) || 0;
+      const painVal = Number(entry.pain) || 0;
+
+      if (painVal >= 3 || (energyVal > 0 && energyVal <= 2)) {
+        return [
+          'Сейчас приоритет — покой и восстановление: сними лишнюю нагрузку и дай телу отдых.',
+          'Выпей тёплую воду и выбери щадящий формат дня без чувства вины.',
+          'Оставь только самое необходимое и ложись отдохнуть пораньше.'
+        ];
+      }
+      if (highDistress && energyVal >= 3) {
+        return [
+          'При нормальной энергии и напряжении/грусти помогает мягкая активация на 10 минут вместо избегания.',
+          'Сделай короткую прогулку, тёплый душ или одно простое завершённое дело.',
+          'После 10 минут оцени состояние без жёстких требований к себе.'
+        ];
+      }
       return [
         'Выбери одно понятное микро-дело на 10 минут — действие запускает интерес и энергию быстрее ожидания.',
         'Сделай короткую паузу на дневной свет и движение в середине дня.',
@@ -5945,7 +6116,7 @@
 
       if (!isAiGenerating) {
         btnRunAi.disabled = false;
-        btnRunAi.innerHTML = '<span>Разбор CareZze</span>';
+        btnRunAi.innerHTML = `<span>${entry.aiAnalysis ? 'Обновить разбор CareZze' : 'Разбор CareZze'}</span>`;
         aiNote.style.display = 'none';
         aiNote.textContent = '';
       }
@@ -6413,7 +6584,10 @@
 - Соло-разрядка (количество раз за день): ${todaySoloCount}
 ${watchToday.length ? `- Температура: ${watchToday.join(', ')}` : ''}
 - Эмоции (интенсивность): ${formattedEmos}
+- Сон: ${current.sleepQuality || 'не указан'}
+- Мысль / триггер дня: ${current.dayThought || 'не указано'}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
+- Правило покой vs активация: при выраженной боли или энергии <= 2/5 предлагай покой и восстановление; при тревоге или грусти с энергией >= 3/5 предлагай мягкую поведенческую активацию на 10 минут (прогулка, душ, одно простое завершённое дело) вместо избегания.
 
 СПОСОБЫ, КОТОРЫЕ ПОМОГАЛИ РАНЬШЕ (счётчик):
 ${JSON.stringify(helpedCounts)}
@@ -6625,11 +6799,17 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       }
       const list = Array.isArray(state.entries[selectedDate].helped) ? [...state.entries[selectedDate].helped] : [];
       const idx = list.indexOf(cleanId);
+      if (!state.helpedEffectiveness) state.helpedEffectiveness = {};
+      helpedEffectiveness = state.helpedEffectiveness;
+      if (!helpedEffectiveness[cleanId]) helpedEffectiveness[cleanId] = { used: 0, helped: 0 };
       if (idx >= 0) {
         list.splice(idx, 1);
+        helpedEffectiveness[cleanId].helped = Math.max(0, (helpedEffectiveness[cleanId].helped || 0) - 1);
         showToast('Отметка снята');
       } else {
         list.push(cleanId);
+        helpedEffectiveness[cleanId].used = (helpedEffectiveness[cleanId].used || 0) + 1;
+        helpedEffectiveness[cleanId].helped = (helpedEffectiveness[cleanId].helped || 0) + 1;
         if (isCustom) {
           if (!Array.isArray(state.customHelpedPool)) state.customHelpedPool = [];
           if (!state.customHelpedPool.includes(cleanId)) {
@@ -6637,7 +6817,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
             state.customHelpedPool = state.customHelpedPool.slice(0, 30);
           }
         }
-        showToast('Сохранено');
+        showToast('Реально помогло');
       }
       state.entries[selectedDate].helped = list;
       state.entries[selectedDate].updatedAt = Date.now();
@@ -6661,6 +6841,11 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const list = Array.isArray(state.entries[selectedDate].helped) ? [...state.entries[selectedDate].helped] : [];
       if (!list.includes(val)) {
         list.push(val);
+        if (!state.helpedEffectiveness) state.helpedEffectiveness = {};
+        helpedEffectiveness = state.helpedEffectiveness;
+        if (!helpedEffectiveness[val]) helpedEffectiveness[val] = { used: 0, helped: 0 };
+        helpedEffectiveness[val].used += 1;
+        helpedEffectiveness[val].helped += 1;
       }
       state.entries[selectedDate].helped = list;
       state.entries[selectedDate].updatedAt = Date.now();
@@ -6674,14 +6859,23 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       Object.values(state.entries).forEach(e => {
         (e.helped || []).forEach(h => { counts[h] = (counts[h] || 0) + 1; });
       });
-      const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const effectiveEntries = Object.entries(counts)
+        .map(([name, cnt]) => {
+          const eff = helpedEffectiveness[name];
+          const realHelped = eff && typeof eff.helped === 'number' ? eff.helped : cnt;
+          const used = eff && typeof eff.used === 'number' ? Math.max(eff.used, realHelped) : cnt;
+          return [name, realHelped, used];
+        })
+        .filter(([, realHelped]) => realHelped > 0)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
       const box = document.getElementById('learnedHelpStats');
-      if (!sorted.length) {
+      if (!effectiveEntries.length) {
         box.style.display = 'none';
         return;
       }
       box.style.display = 'block';
-      box.innerHTML = sorted.map(([name, cnt]) => `${escapeHtml(name)} · ${cnt}`).join('<br/>');
+      box.innerHTML = effectiveEntries.map(([name, realHelped, used]) => `${escapeHtml(name)} · реально помогло ${realHelped} из ${used}`).join('<br/>');
     }
 
     function escapeHtml(str) {
@@ -6715,10 +6909,35 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       renderAnalytics();
     }
 
+    function setAnalyticsPeriod(periodKey) {
+      if (!['cycle', '3m', 'all'].includes(periodKey)) return;
+      hapticSelect();
+      analyticsPeriodFilter = periodKey;
+      selectedTempPointInfo = null;
+      const insp = document.getElementById('tempPointInspector');
+      if (insp) insp.style.display = 'none';
+      document.querySelectorAll('#chartPeriodFilters .filter-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.period === periodKey);
+      });
+      renderAnalytics();
+    }
+
+    function showTempPointBanner(dateISO, val) {
+      hapticSelect();
+      selectedTempPointInfo = { dateISO, val };
+      const insp = document.getElementById('tempPointInspector');
+      if (!insp) return;
+      const isAbsolute = Math.abs(Number(val)) >= 20;
+      const sign = (!isAbsolute && val > 0) ? '+' : '';
+      insp.style.display = 'block';
+      insp.textContent = `${formatHumanDate(dateISO)} · Температура: ${sign}${Number(val).toFixed(1)} °C`;
+    }
+
     function renderAnalyticsPatternsCard(allSortedEntries) {
       const sumEl = document.getElementById('analyticsPatternsSummary');
       if (!sumEl) return;
 
+      const stats = getObservedCycleStats();
       const loggedDaysCount = allSortedEntries.length;
 
       const helpCounts = {};
@@ -6728,6 +6947,12 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const topHelp = Object.entries(helpCounts).sort((a, b) => b[1] - a[1])[0];
 
       const notes = [];
+      if (stats.avg !== null && stats.lengths.length) {
+        const minObserved = Math.min(...stats.lengths);
+        const maxObserved = Math.max(...stats.lengths);
+        const spreadText = minObserved === maxObserved ? `${minObserved} дн.` : `${minObserved}–${maxObserved} дн.`;
+        notes.push(`Средний цикл: ${stats.avg} дн. · Разброс: ${spreadText}.`);
+      }
       const curInfo = getCycleInfo(selectedDate);
       const localPat = detectLocalPatterns(curInfo);
       if (localPat) {
@@ -6833,7 +7058,13 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       let startISO = todayISO;
       let endISO = todayISO;
 
-      if (allSortedEntries.length === 1) {
+      if (analyticsPeriodFilter === 'cycle') {
+        startISO = state.settings.lastPeriodStart || shiftISOByDays(todayISO, -27);
+        endISO = todayISO;
+      } else if (analyticsPeriodFilter === '3m') {
+        startISO = shiftISOByDays(todayISO, -89);
+        endISO = todayISO;
+      } else if (allSortedEntries.length === 1) {
         const onlyISO = allSortedEntries[0].date;
         startISO = shiftISOByDays(onlyISO, -2);
         endISO = shiftISOByDays(onlyISO, 2);
@@ -7052,17 +7283,31 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           const vals = tempPtsRaw.map(p => p.val);
           const rawMin = Math.min(...vals);
           const rawMax = Math.max(...vals);
-          const minT = rawMin === rawMax ? rawMin - 0.5 : rawMin - Math.max(0.15, (rawMax - rawMin) * 0.25);
-          const maxT = rawMin === rawMax ? rawMax + 0.5 : rawMax + Math.max(0.15, (rawMax - rawMin) * 0.25);
+          const isAbsoluteTemp = Math.max(Math.abs(rawMin), Math.abs(rawMax)) >= 20;
+          const minT = isAbsoluteTemp ? (rawMin - 0.15) : (Math.min(rawMin, 0) - 0.15);
+          const maxT = isAbsoluteTemp ? (rawMax + 0.15) : (Math.max(rawMax, 0) + 0.15);
+          const spanT = Math.max(0.1, maxT - minT);
+          const refTemp = isAbsoluteTemp ? 36.6 : 0;
+          const refRatio = (refTemp - minT) / spanT;
+          if (refRatio >= 0 && refRatio <= 1) {
+            const refY = padT + plotH - refRatio * plotH;
+            const refLabel = isAbsoluteTemp ? '36.6 °C' : '0.0 °C';
+            html += `<line x1="${effectivePadL}" y1="${refY.toFixed(1)}" x2="${w - padR}" y2="${refY.toFixed(1)}" stroke="${cAccent}" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.85" />`;
+            html += `<text x="${effectivePadL + 4}" y="${(refY - 4).toFixed(1)}" font-size="10.5" font-weight="700" fill="${cAccent}">${refLabel}</text>`;
+          }
+          html += `<text x="${effectivePadL + 4}" y="${(padT + 11).toFixed(1)}" font-size="10.5" font-weight="600" fill="var(--ink-2)">max ${rawMax.toFixed(1)}°</text>`;
+          html += `<text x="${effectivePadL + 4}" y="${(padT + plotH - 4).toFixed(1)}" font-size="10.5" font-weight="600" fill="var(--ink-2)">min ${rawMin.toFixed(1)}°</text>`;
+
           const pts = tempPtsRaw.map(p => {
-            const ratio = (p.val - minT) / Math.max(0.01, maxT - minT);
+            const ratio = (p.val - minT) / spanT;
             const yPos = padT + plotH - Math.max(0, Math.min(1, ratio)) * plotH;
             return {
               day: p.idx,
               x: idxToX(p.idx),
               baseY: yPos,
               y: yPos,
-              val: p.val
+              val: p.val,
+              dateISO: calendarDates[p.idx]
             };
           });
           renderSeriesCollection([{
@@ -7070,10 +7315,13 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
             color: cAccent,
             gradId: 'gradAccent',
             strokeWidth: 3.1,
-            dotRadius: 4.8
+            dotRadius: 5.2
           }]);
+          pts.forEach(p => {
+            html += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="13" fill="transparent" style="cursor:pointer;" onclick="showTempPointBanner('${p.dateISO}', ${p.val})" />`;
+          });
         }
-        legendEl.innerHTML = `<span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Температура (°C)</span></span>`;
+        legendEl.innerHTML = `<span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Температура (°C) · нажми на точку</span></span>`;
       } else if (chartFilter === 'emotions') {
         const emosToDraw = selectedEmotionChartFilter === 'all'
           ? (trackedEmotions.length ? trackedEmotions.slice(0, 5) : [])
@@ -7120,7 +7368,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
               const c = (EMOTION_PALETTE[em] || { color: cAccent }).color;
               const sKey = `emo:${em}`;
               const isMuted = hiddenChartSeries.has(sKey);
-              return `<button type="button" class="legend-toggle-btn ${isMuted ? 'is-muted' : ''}" style="color:${c};" onclick="toggleChartSeriesVisibility('${sKey.replace(/'/g, "\'")}')">${SVG_ICONS.dot}<span>${escapeHtml(em)}</span></button>`;
+              return `<button type="button" class="legend-toggle-btn ${isMuted ? 'is-muted' : ''}" style="color:${c};" onclick="toggleChartSeriesVisibility('${sKey.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}')">${SVG_ICONS.dot}<span>${escapeHtml(em)}</span></button>`;
             }).join('')
           : '';
       } else {
@@ -7257,10 +7505,15 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
             uniqueRecent.push(d);
           }
         });
-        quickRow.innerHTML = uniqueRecent.map(item => {
-          const safeName = item.name.replace(/'/g, "\'");
-          return `<button type="button" class="btn-soft" onclick="logPainkiller('${safeName}', ${item.hours})">${escapeHtml(item.name)}</button>`;
+        quickRow.innerHTML = uniqueRecent.map((item, idx) => {
+          return `<button type="button" class="btn-soft" data-med-idx="${idx}">${escapeHtml(item.name)}</button>`;
         }).join('');
+        quickRow.querySelectorAll('[data-med-idx]').forEach(btn => {
+          btn.onclick = () => {
+            const item = uniqueRecent[Number(btn.dataset.medIdx)];
+            if (item) logPainkiller(item.name, item.hours);
+          };
+        });
       }
 
       const box = document.getElementById('painkillerStatus');
@@ -7268,16 +7521,61 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         box.innerHTML = '';
         return;
       }
-      box.innerHTML = state.painkillers.slice(0, 12).map((item, idx) => {
+      const nowMs = Date.now();
+      const last24h = state.painkillers.filter(p => {
+        const ts = new Date(p.timeISO).getTime();
+        return Number.isFinite(ts) && (nowMs - ts) <= 24 * 3600000;
+      });
+      const getMedMeta = (rawName) => {
+        const n = String(rawName || '').toLowerCase();
+        const mgMatch = n.match(/(\d+)\s*мг/);
+        const mg = mgMatch ? Number(mgMatch[1]) : (n.includes('нурофен') || n.includes('ибупрофен') ? 400 : 0);
+        const isNsaid = /нурофен|ибупрофен|нимесил|кетанов|кеторол|диклофенак|мелоксикам|напроксен|аспирин|нпвс/.test(n);
+        const isSpasm = /но-шпа|дротаверин|спазмалгон|бускопан|спазмолитик/.test(n);
+        const groupLabel = isNsaid ? 'НПВС' : (isSpasm ? 'Спазмолитик' : 'Обезболивающее');
+        const dailyLimit = n.includes('нурофен') || n.includes('ибупрофен') ? 1200 : (n.includes('нимесил') ? 200 : 0);
+        return { mg, isNsaid, isSpasm, groupLabel, dailyLimit };
+      };
+      const nsaid24h = last24h.filter(p => getMedMeta(p.name).isNsaid);
+      const nsaidMg24h = nsaid24h.reduce((acc, p) => acc + getMedMeta(p.name).mg, 0);
+      const mixedNsaidNames = Array.from(new Set(nsaid24h.map(p => String(p.name || '').trim())));
+      const recentNsaidWithin6h = nsaid24h.length >= 2 && ((nowMs - new Date(nsaid24h[0].timeISO).getTime()) < 6 * 3600000);
+      const warnMessages = [];
+      if (mixedNsaidNames.length > 1) {
+        warnMessages.push(`Сочетание нескольких НПВС за 24 ч (${mixedNsaidNames.join(' + ')}) повышает риск для ЖКТ.`);
+      }
+      if (recentNsaidWithin6h) {
+        warnMessages.push('Повторный приём НПВС раньше 6 часов — проверь интервал дозирования.');
+      }
+      if (nsaidMg24h >= 1200) {
+        warnMessages.push(`Достигнут суточный ориентир НПВС за 24 ч: ${nsaidMg24h} мг.`);
+      }
+      const summaryLines = [];
+      if (last24h.length) {
+        const nuroMg = last24h.filter(p => /нурофен|ибупрофен/i.test(p.name)).reduce((s, p) => s + (getMedMeta(p.name).mg || 400), 0);
+        if (nuroMg > 0) {
+          summaryLines.push(`Нурофен / ибупрофен: ${nuroMg} из 1200 мг за 24 ч`);
+        } else {
+          summaryLines.push(`Приёмов за 24 ч: ${last24h.length}`);
+        }
+      }
+      const warningHtml = warnMessages.length
+        ? `<div class="med-item" style="background:var(--amber-tint); border:1px solid var(--amber); color:var(--ink);"><div class="med-item-info"><div class="med-item-name" style="color:var(--amber);">Внимание по приёму за 24 ч</div><div class="med-item-time" style="color:var(--ink);">${warnMessages.map(escapeHtml).join(' ')}</div></div></div>`
+        : (summaryLines.length
+            ? `<div class="med-item"><div class="med-item-info"><div class="med-item-time" style="font-weight:600; color:var(--ink-2);">${summaryLines.map(escapeHtml).join(' · ')}</div></div></div>`
+            : '');
+
+      box.innerHTML = warningHtml + state.painkillers.slice(0, 12).map((item, idx) => {
         const taken = new Date(item.timeISO);
         const nextSafe = new Date(taken.getTime() + (item.hours || 4) * 3600000);
         const dayStr = taken.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
         const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const meta = getMedMeta(item.name);
         return `
           <div class="med-item">
             <div class="med-item-info">
-              <div class="med-item-name">${escapeHtml(item.name)}</div>
+              <div class="med-item-name">${escapeHtml(item.name)} <span style="font-size:12px; font-weight:600; color:var(--ink-3);">· ${escapeHtml(meta.groupLabel)}</span></div>
               <div class="med-item-time">${dayStr}, ${tStr} → след. с ${nStr}</div>
             </div>
             <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">${SVG_ICONS.cross}</button>
@@ -7389,23 +7687,72 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       showToast('Сохранено');
     }
 
-    const SOS_RESET_STEPS = [
-      {
-        kicker: 'Шаг 1 · Тело и выдох',
-        text: 'Разомкни челюсть, опусти плечи и сделай 3 выдоха длиннее вдоха.',
-        prompts: ['Выдох 1', 'Выдох 2', 'Выдох 3']
+    const SOS_RESET_MODES = {
+      anxiety: {
+        label: 'Тревога',
+        helpTitle: 'Перезагрузка: Тревога',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Тело и выдох',
+            text: 'Разомкни челюсть, опусти плечи и сделай 3 выдоха длиннее вдоха.',
+            prompts: ['Выдох 1', 'Выдох 2', 'Выдох 3']
+          },
+          {
+            kicker: 'Шаг 2 · Заземление 5–4–3–2–1',
+            text: 'Отмечай опоры вокруг, чтобы вернуть внимание в текущий момент:',
+            prompts: ['5 предметов', '4 ощущения', '3 звука', '2 запаха', '1 опора под стопами']
+          },
+          {
+            kicker: 'Шаг 3 · Факт против тревоги',
+            text: 'Отдели факт от пугающего прогноза («сейчас я в безопасности, это волна напряжения») и выбери мягкий шаг:',
+            prompts: ['Тёплая вода', 'Прохладное умывание', 'Короткая прогулка', 'Открыть окно']
+          }
+        ]
       },
-      {
-        kicker: 'Шаг 2 · Заземление 5–4–3–2–1',
-        text: 'Отмечай по очереди опоры вокруг, чтобы вернуть внимание в текущий момент:',
-        prompts: ['5 предметов', '4 ощущения', '3 звука', '2 запаха', '1 опора под стопами']
+      pain: {
+        label: 'Острая боль',
+        helpTitle: 'Перезагрузка: Острая боль',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Снятие зажима',
+            text: 'Не заставляй себя разглядывать предметы вокруг — просто отпусти напряжение в челюсти, плечах и тазовом дне.',
+            prompts: ['Челюсть мягкая', 'Плечи вниз', 'Живот не втягиваю']
+          },
+          {
+            kicker: 'Шаг 2 · Мягкий выдох в боль',
+            text: 'Сделай 4 спокойных выдоха, давая телу сигнал безопасности без борьбы со спазмом:',
+            prompts: ['Выдох 1', 'Выдох 2', 'Выдох 3', 'Выдох 4']
+          },
+          {
+            kicker: 'Шаг 3 · Бережный режим',
+            text: 'Выбери то, что сейчас облегчает спазм без лишних усилий:',
+            prompts: ['Тепло на живот/поясницу', 'Поза эмбриона / укрыться', 'Вода и покой', 'Принять препарат']
+          }
+        ]
       },
-      {
-        kicker: 'Шаг 3 · Якорь безопасности',
-        text: 'Отдели факт от тревожной мысли («сейчас я в безопасности, это просто волна напряжения») и выбери одно микро-действие на 5 минут:',
-        prompts: ['Тёплая вода', 'Прохладное умывание', 'Лечь и укрыться', 'Открыть окно']
+      self_criticism: {
+        label: 'Самокритика и срыв',
+        helpTitle: 'Перезагрузка: Самокритика и срыв',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Стоп-пауза без суда',
+            text: 'Заметь самокритику или срыв как временную волну перегрузки, а не приговор себе:',
+            prompts: ['Заметила волну', 'Пауза на 30 сек', 'Не бью себя словами']
+          },
+          {
+            kicker: 'Шаг 2 · Мысль ≠ факт',
+            text: 'Отдели эмоцию и усталость от реальных фактов сегодняшнего дня:',
+            prompts: ['Это фон цикла/усталости', 'Оценка ≠ факт', 'Достаточно минимума']
+          },
+          {
+            kicker: 'Шаг 3 · Поддержка вместо давления',
+            text: 'Скажи себе то, что сказала бы близкому другу в таком же состоянии:',
+            prompts: ['Умыться прохладной водой', 'Выпить тёплого', '1 дело на 10 мин', 'Лечь отдохнуть']
+          }
+        ]
       }
-    ];
+    };
+    const SOS_RESET_STEPS = SOS_RESET_MODES.anxiety.steps;
 
     let sosResetStepIdx = 0;
     let sosResetDone = false;
@@ -7423,7 +7770,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function nextSosResetStep() {
       hapticImpact('light');
-      if (sosResetStepIdx < SOS_RESET_STEPS.length - 1) {
+      const stepsList = (SOS_RESET_MODES[sosResetStateMode] || SOS_RESET_MODES.anxiety).steps;
+      if (sosResetStepIdx < stepsList.length - 1) {
         sosResetStepIdx += 1;
       } else {
         sosResetDone = true;
@@ -7434,9 +7782,10 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function prevSosResetStep() {
       hapticImpact('light');
+      const stepsList = (SOS_RESET_MODES[sosResetStateMode] || SOS_RESET_MODES.anxiety).steps;
       if (sosResetDone) {
         sosResetDone = false;
-        sosResetStepIdx = SOS_RESET_STEPS.length - 1;
+        sosResetStepIdx = stepsList.length - 1;
       } else if (sosResetStepIdx > 0) {
         sosResetStepIdx -= 1;
       }
@@ -7451,11 +7800,70 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       renderSosResetStage();
     }
 
+    function selectSosResetMode(modeKey) {
+      if (!SOS_RESET_MODES[modeKey]) return;
+      hapticSelect();
+      sosResetStateMode = modeKey;
+      sosResetStepIdx = 0;
+      sosResetDone = false;
+      sosResetChecked = { 0: [], 1: [], 2: [] };
+      renderSosResetStage();
+    }
+
+    function addSosResetToDayReport() {
+      const modeObj = SOS_RESET_MODES[sosResetStateMode] || SOS_RESET_MODES.anxiety;
+      const label = modeObj.helpTitle;
+      const targetDate = getTodayISO(0);
+      if (!state.entries[targetDate]) {
+        state.entries[targetDate] = {
+          date: targetDate,
+          scaleMax: 5,
+          updatedAt: Date.now(),
+          isPeriod: isDateInActivePeriodWindow(targetDate),
+          isOvulation: false,
+          intimacy: false,
+          soloCount: 0,
+          soloReset: false,
+          discharge: '',
+          mood: 3,
+          energy: 0,
+          pain: 0,
+          libido: 0,
+          stress: 0,
+          emotions: [],
+          emotionLevels: createDefaultEmotionLevels(),
+          contexts: [],
+          helped: []
+        };
+      }
+      const list = Array.isArray(state.entries[targetDate].helped) ? [...state.entries[targetDate].helped] : [];
+      if (!list.includes(label)) list.push(label);
+      state.entries[targetDate].helped = list;
+      state.entries[targetDate].updatedAt = Date.now();
+      if (!state.helpedEffectiveness) state.helpedEffectiveness = {};
+      helpedEffectiveness = state.helpedEffectiveness;
+      if (!helpedEffectiveness[label]) helpedEffectiveness[label] = { used: 0, helped: 0 };
+      helpedEffectiveness[label].used += 1;
+      helpedEffectiveness[label].helped += 1;
+      persistLocalAndCloud(targetDate);
+      if (selectedDate === targetDate) renderAdviceAndSelfCareTab();
+      showToast('Добавлено в отчёт дня');
+    }
+
     function renderSosResetStage() {
       const stage = document.getElementById('quickResetStage');
       const counter = document.getElementById('sosStepCounter');
       const segs = document.querySelectorAll('#sosProgressBar .sos-progress-seg');
       if (!stage) return;
+
+      const modeObj = SOS_RESET_MODES[sosResetStateMode] || SOS_RESET_MODES.anxiety;
+      const stepsList = modeObj.steps;
+
+      const modePillsHtml = `<div class="filter-row" style="margin-bottom:10px;">${
+        Object.entries(SOS_RESET_MODES).map(([k, m]) =>
+          `<button type="button" class="filter-pill ${k === sosResetStateMode ? 'active' : ''}" onclick="selectSosResetMode('${k}')">${escapeHtml(m.label)}</button>`
+        ).join('')
+      }</div>`;
 
       segs.forEach((seg, i) => {
         seg.classList.remove('is-done', 'is-active');
@@ -7465,19 +7873,22 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
       if (sosResetDone) {
         if (counter) counter.textContent = 'Готово';
-        stage.innerHTML = `
+        stage.innerHTML = modePillsHtml + `
           <div class="sos-done-box">
             <div class="sos-done-title">Перезагрузка завершена</div>
-            <div class="sos-done-sub">Ты в контакте с телом и текущим моментом. Можно перейти к выбранному микро-действию.</div>
-            <button type="button" class="btn-soft" style="margin-top:4px;" onclick="restartSosReset()">Пройти заново</button>
+            <div class="sos-done-sub">Ты в контакте с телом и текущим моментом. Можно сохранить практику в отчёт дня.</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:4px;">
+              <button type="button" class="btn-accent" style="height:40px; padding:0 14px; font-size:13.5px;" onclick="addSosResetToDayReport()">Стало легче — добавить в отчёт дня</button>
+              <button type="button" class="btn-soft" style="height:40px; padding:0 14px; font-size:13.5px;" onclick="restartSosReset()">Пройти заново</button>
+            </div>
           </div>
         `;
         return;
       }
 
-      const step = SOS_RESET_STEPS[sosResetStepIdx];
+      const step = stepsList[sosResetStepIdx] || stepsList[0];
       const checked = sosResetChecked[sosResetStepIdx] || [];
-      if (counter) counter.textContent = `Шаг ${sosResetStepIdx + 1} из ${SOS_RESET_STEPS.length}`;
+      if (counter) counter.textContent = `Шаг ${sosResetStepIdx + 1} из ${stepsList.length}`;
 
       const pillsHtml = step.prompts.map((label, idx) => {
         const isChecked = checked.includes(idx);
@@ -7488,8 +7899,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         `;
       }).join('');
 
-      const isLast = sosResetStepIdx === SOS_RESET_STEPS.length - 1;
-      stage.innerHTML = `
+      const isLast = sosResetStepIdx === stepsList.length - 1;
+      stage.innerHTML = modePillsHtml + `
         <div class="sos-focus-card">
           <div class="sos-focus-kicker">${escapeHtml(step.kicker)}</div>
           <div class="sos-focus-text">${escapeHtml(step.text)}</div>
@@ -7606,8 +8017,10 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           },
           entries: {},
           painkillers: [],
-          customHelpedPool: []
+          customHelpedPool: [],
+          helpedEffectiveness: {}
         };
+        helpedEffectiveness = state.helpedEffectiveness;
         obCycleMin = 24;
         obCycleMax = 28;
         obPeriodLen = 5;
@@ -7622,33 +8035,6 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       });
     }
 
-    function switchTab(tab) {
-      hapticImpact('light');
-      if (tab !== 'sos' && isBreathing) stopBreathing();
-
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById(`view-${tab}`).classList.add('active');
-      document.querySelectorAll('.tab-item').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-
-      const settingsHeaderBtn = document.getElementById('headerSettingsBtn');
-      if (settingsHeaderBtn) {
-        settingsHeaderBtn.classList.toggle('active', tab === 'settings');
-      }
-
-      if (tab === 'analytics_advice') renderAdviceAndSelfCareTab();
-      if (tab === 'analytics') renderAnalytics();
-      if (tab === 'sos') {
-        clearAllTextInputs();
-        updatePainkillerUI();
-        renderBreathPatternUI();
-        renderSosResetStage();
-      }
-      if (tab === 'settings') {
-        renderThemeSelector();
-        renderProfileViewMode();
-      }
-    }
-
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         syncFromCloudBackground();
@@ -7660,19 +8046,6 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       });
     } catch (e) {}
 
-
-    let currentAnalyticsSubtab = 'advice';
-
-    function switchAnalyticsSubtab(sub) {
-      hapticSelect();
-      currentAnalyticsSubtab = sub === 'chart' ? 'chart' : 'advice';
-      document.getElementById('segBtnAdvice')?.classList.toggle('active', currentAnalyticsSubtab === 'advice');
-      document.getElementById('segBtnChart')?.classList.toggle('active', currentAnalyticsSubtab === 'chart');
-      document.getElementById('view-analytics_advice')?.classList.toggle('active', currentAnalyticsSubtab === 'advice');
-      document.getElementById('view-analytics')?.classList.toggle('active', currentAnalyticsSubtab === 'chart');
-      if (currentAnalyticsSubtab === 'advice') renderAdviceAndSelfCareTab();
-      if (currentAnalyticsSubtab === 'chart') renderAnalytics();
-    }
 
     function stepSettingsValue(inputId, displayId, delta, min, max) {
       hapticSelect();
@@ -7750,7 +8123,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       syncFormattedDates();
     };
 
-    switchTab = function(tab) {
+    function switchTab(tab) {
+      flushPendingDayAutosave();
       hapticImpact('light');
       if (tab !== 'sos' && isBreathing) stopBreathing();
 
@@ -7781,7 +8155,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         renderProfileViewMode();
         syncFormattedDates();
       }
-    };
+    }
 
     window.addEventListener('DOMContentLoaded', () => clearAllTextInputs(true));
     window.addEventListener('load', () => {
@@ -7792,655 +8166,6 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       clearAllTextInputs(true);
       setTimeout(() => clearAllTextInputs(true), 60);
     });
-
-
-    // === ENHANCEMENTS: UI/UX, DEV, GYNECOLOGY, CBT ===
-    let tempSleepQuality = '';
-    let tempThoughtNote = '';
-    let chartRangeFilter = '3m';
-    let sosStateMode = 'anxiety';
-    let periodUndoTimeout = null;
-    let periodUndoSnapshot = null;
-
-    const _origShowToast = showToast;
-    showToast = function(msg, undoCallback = null) {
-      const t = document.getElementById('toast');
-      if (!t) return;
-      if (periodUndoTimeout) {
-        clearTimeout(periodUndoTimeout);
-        periodUndoTimeout = null;
-      }
-      if (typeof undoCallback === 'function') {
-        t.innerHTML = `<span>${escapeHtml(msg)}</span><button type="button" class="toast-action-btn" id="toastUndoBtn">Отменить</button>`;
-        t.classList.add('show');
-        const btn = document.getElementById('toastUndoBtn');
-        if (btn) {
-          btn.onclick = () => {
-            t.classList.remove('show');
-            if (periodUndoTimeout) { clearTimeout(periodUndoTimeout); periodUndoTimeout = null; }
-            undoCallback();
-          };
-        }
-        periodUndoTimeout = setTimeout(() => {
-          t.classList.remove('show');
-          periodUndoSnapshot = null;
-        }, 4000);
-        hapticSuccess();
-        return;
-      }
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => {
-        if (!periodUndoTimeout) t.classList.remove('show');
-      }, 2100);
-      hapticSuccess();
-    };
-
-    function selectSleepQuality(val) {
-      hapticSelect();
-      tempSleepQuality = (tempSleepQuality === val) ? '' : val;
-      renderSleepQualityButtons();
-      autosaveCurrentDayDraft();
-    }
-
-    function renderSleepQualityButtons() {
-      document.querySelectorAll('#sleepQualitySelector .choice-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.val === tempSleepQuality);
-      });
-    }
-
-    function saveManualTempInput() {
-      const inp = document.getElementById('manualTempInput');
-      if (!inp) return;
-      const raw = inp.value.trim();
-      if (!raw) {
-        if (state.entries[selectedDate] && 'wristTempDelta' in state.entries[selectedDate]) {
-          delete state.entries[selectedDate].wristTempDelta;
-        }
-        updateWatchSummary(true, null);
-        return;
-      }
-      const parsed = parseIncomingTempValue(raw);
-      if (parsed === null) return;
-      if (!state.entries[selectedDate]) {
-        state.entries[selectedDate] = buildLiveDaySnapshot();
-      }
-      state.entries[selectedDate].wristTempDelta = parsed;
-      updateWatchSummary(true, parsed);
-    }
-
-    function clearManualTempInput() {
-      hapticSelect();
-      const inp = document.getElementById('manualTempInput');
-      if (inp) inp.value = '';
-      if (state.entries[selectedDate]) {
-        delete state.entries[selectedDate].wristTempDelta;
-      }
-      updateWatchSummary(true, null);
-      showToast('Температура сброшена');
-    }
-
-    function scheduleThoughtAutosave() {
-      const inp = document.getElementById('dayThoughtInput');
-      tempThoughtNote = inp ? inp.value.slice(0, 140) : '';
-      scheduleEmotionAutosave();
-    }
-
-    const _origBuildLiveSnapshot = buildLiveDaySnapshot;
-    buildLiveDaySnapshot = function() {
-      const snap = _origBuildLiveSnapshot();
-      const thoughtEl = document.getElementById('dayThoughtInput');
-      const liveThought = thoughtEl ? thoughtEl.value.slice(0, 140) : tempThoughtNote;
-      snap.sleepQuality = tempSleepQuality || '';
-      snap.thoughtNote = String(liveThought || '').trim();
-      return snap;
-    };
-
-    const _origPopulateEditableInputs = populateEditableInputs;
-    populateEditableInputs = function(data) {
-      _origPopulateEditableInputs(data);
-      tempSleepQuality = ['Плохо', 'Норм', 'Хорошо'].includes(data?.sleepQuality) ? data.sleepQuality : '';
-      renderSleepQualityButtons();
-      tempThoughtNote = String(data?.thoughtNote || '').slice(0, 140);
-      const tInp = document.getElementById('dayThoughtInput');
-      if (tInp) tInp.value = tempThoughtNote;
-      const mInp = document.getElementById('manualTempInput');
-      if (mInp) {
-        mInp.value = (typeof data?.wristTempDelta === 'number' && !isNaN(data.wristTempDelta))
-          ? String(data.wristTempDelta)
-          : '';
-      }
-    };
-
-    const _origUpdateSummaries = updateSummaries;
-    updateSummaries = function() {
-      _origUpdateSummaries();
-      const sumEl = document.getElementById('todayUnifiedSummary');
-      if (!sumEl) return;
-      const extras = [];
-      if (tempSleepQuality) extras.push(`Сон: ${tempSleepQuality}`);
-      if (tempThoughtNote) extras.push(`«${smartTrimText(tempThoughtNote, 24)}»`);
-      if (extras.length) {
-        const base = sumEl.textContent === 'Ничего не отмечено' ? '' : sumEl.textContent + ' · ';
-        sumEl.textContent = base + extras.join(' · ');
-        sumEl.classList.add('has-data');
-      }
-    };
-
-    // Support ?temp=...&date=YYYY-MM-DD
-    const _origApplyIncomingUrlParams = applyIncomingUrlParams;
-    applyIncomingUrlParams = function() {
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const rawTemp = params.get('temp');
-        const rawDate = params.get('date');
-        const parsedTemp = parseIncomingTempValue(rawTemp);
-        if (parsedTemp !== null && rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
-          selectedDate = rawDate;
-          const existing = state.entries[rawDate] || {
-            date: rawDate,
-            scaleMax: 5,
-            isPeriod: isDateInActivePeriodWindow(rawDate),
-            isOvulation: false,
-            intimacy: false,
-            soloCount: 0,
-            soloReset: false,
-            discharge: '',
-            mood: 3,
-            energy: 0,
-            pain: 0,
-            libido: 0,
-            stress: 0,
-            emotions: [],
-            emotionLevels: createDefaultEmotionLevels(),
-            contexts: [],
-            helped: []
-          };
-          existing.wristTempDelta = parsedTemp;
-          existing.updatedAt = Date.now();
-          state.entries[rawDate] = existing;
-          persistLocalAndCloud(rawDate);
-          if (params.has('temp') || params.has('date')) {
-            window.history.replaceState({}, document.title, window.location.pathname);
-          }
-          importedTempToday = parsedTemp;
-          return true;
-        }
-      } catch (e) {}
-      return _origApplyIncomingUrlParams();
-    };
-
-    // Fix Gemini API models to gemini-2.5-flash and gemini-2.5-flash-lite
-    const _origCallGeminiAPI = callGeminiAPI;
-    callGeminiAPI = async function(apiKey, promptText, expectJson = true, options = {}) {
-      const cleanKey = String(apiKey || '').trim();
-      const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
-      const customContents = Array.isArray(options.contents) && options.contents.length
-        ? options.contents
-        : [{ role: 'user', parts: [{ text: promptText }] }];
-      const sysInstText = typeof options.systemInstruction === 'string' ? options.systemInstruction.trim() : '';
-      const tempVal = typeof options.temperature === 'number' ? options.temperature : 0.55;
-      let lastErr = 'Ошибка запроса';
-
-      for (const model of models) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(cleanKey)}`;
-        try {
-          const res = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              ...(sysInstText ? { systemInstruction: { parts: [{ text: sysInstText }] } } : {}),
-              contents: customContents,
-              generationConfig: {
-                temperature: tempVal,
-                maxOutputTokens: 4096,
-                ...(expectJson ? { responseMimeType: 'application/json' } : {})
-              }
-            })
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) {
-            lastErr = data?.error?.message || `HTTP ${res.status}`;
-            if (res.status === 404 || res.status === 429 || res.status === 500 || res.status === 503) {
-              continue;
-            }
-            throw new Error(lastErr);
-          }
-          const candidate = data?.candidates?.[0];
-          const parts = Array.isArray(candidate?.content?.parts) ? candidate.content.parts : [];
-          const rawText = parts
-            .filter(p => !p.thought && typeof p.text === 'string')
-            .map(p => p.text)
-            .join('') || parts[0]?.text || '';
-          if (!expectJson) return rawText.trim();
-          const cleaned = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim();
-          return JSON.parse(cleaned);
-        } catch (e) {
-          lastErr = e.message || String(e);
-        }
-      }
-      throw new Error(lastErr);
-    };
-
-    // Monthly grouping in Telegram CloudStorage (carezze2_m_YYYY-MM)
-    syncToCloud = async function(specificTargetKey = null) {
-      if (!hasTelegramCloud()) {
-        const b = document.getElementById('cloudSyncBadge');
-        if (b) b.textContent = '';
-        return;
-      }
-      const b = document.getElementById('cloudSyncBadge');
-      if (b) b.textContent = 'Cloud';
-
-      const tasks = [];
-      const byMonth = {};
-      Object.entries(state.entries || {}).forEach(([iso, entry]) => {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return;
-        const ym = iso.slice(0, 7);
-        if (specificTargetKey && specificTargetKey !== '__meta_only__') {
-          if (!iso.startsWith(specificTargetKey) && !specificTargetKey.startsWith(iso)) return;
-        }
-        if (!byMonth[ym]) byMonth[ym] = {};
-        byMonth[ym][iso] = compactEntryForCloud(entry, 0.75);
-      });
-
-      if (specificTargetKey !== '__meta_only__') {
-        for (const [ym, monthObj] of Object.entries(byMonth)) {
-          let payload = JSON.stringify(monthObj);
-          const keys = Object.keys(monthObj).sort();
-          while (keys.length > 1 && utf8ByteLength(payload) > 3950) {
-            const oldest = keys.shift();
-            delete monthObj[oldest];
-            payload = JSON.stringify(monthObj);
-          }
-          tasks.push(cloudSet(`carezze2_m_${ym}`, payload));
-        }
-      }
-
-      const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 30) : [];
-      tasks.push(cloudSet('carezze2_custom_tips', serializeCustomPoolSafely(customPool)));
-
-      const metaPayload = JSON.stringify({
-        onboarded: state.onboarded,
-        settings: state.settings,
-        painkillers: state.painkillers.slice(0, 12),
-        customHelpedPool: customPool.slice(0, 20)
-      });
-      tasks.push(cloudSet('carezze2_meta', metaPayload));
-      await Promise.all(tasks);
-    };
-
-    // Flush pending autosave before switching date or tab
-    const _origShiftDate = shiftDate;
-    shiftDate = function(delta) {
-      autosaveCurrentDayDraft();
-      _origShiftDate(delta);
-    };
-
-    const _origSwitchTab = switchTab;
-    switchTab = function(tab) {
-      autosaveCurrentDayDraft();
-      _origSwitchTab(tab);
-    };
-
-    // Gynecologist: ovulation anchor (+13..+15 days) & delay threshold (> 5 days past maxLen)
-    const _origGetCycleInfo = getCycleInfo;
-    getCycleInfo = function(dateISO) {
-      const info = _origGetCycleInfo(dateISO);
-      const startISO = state.settings.lastPeriodStart;
-      const diffDays = Math.round((parseLocalISO(dateISO) - parseLocalISO(startISO)) / 86400000);
-
-      // Delay threshold: days +1..+5 after maxLen are neutral waiting; delay starts at +6
-      if (info.isDelay && info.delayDays <= 5) {
-        info.isDelay = false;
-        info.phase = `Ожидание цикла (+${info.delayDays} дн.)`;
-        info.phaseCode = 'late_luteal';
-      }
-
-      // Anchor expected period window around +13..+15 days after marked ovulation in current cycle
-      if (diffDays >= 0 && !info.isMarkedPeriod) {
-        const ovulDates = Object.keys(state.entries || {})
-          .filter(d => d >= startISO && d <= dateISO && state.entries[d]?.isOvulation)
-          .sort();
-        if (ovulDates.length) {
-          const lastOvulISO = ovulDates[ovulDates.length - 1];
-          const daysSinceOvul = Math.round((parseLocalISO(dateISO) - parseLocalISO(lastOvulISO)) / 86400000);
-          if (daysSinceOvul >= 13 && daysSinceOvul <= 15) {
-            info.isPredictedPeriod = true;
-            info.phase = 'Ожидаемое окно цикла';
-          }
-        }
-      }
-      return info;
-    };
-
-    // Undo toast when ending bleeding auto-fills earlier unlogged days
-    const _origTogglePeriodDay = togglePeriodDay;
-    togglePeriodDay = function() {
-      const wasPeriod = tempIsPeriod;
-      const prevDate = selectedDate;
-      const startISO = state.settings.lastPeriodStart;
-      const diffFromStart = startISO ? Math.round((parseLocalISO(prevDate) - parseLocalISO(startISO)) / 86400000) : 0;
-      const autoFilledDates = [];
-      if (wasPeriod && prevDate > startISO && diffFromStart > 0 && diffFromStart <= 14) {
-        for (let d = 0; d < diffFromStart; d++) {
-          const dayISO = shiftISOByDays(startISO, d);
-          if (!state.entries[dayISO]) autoFilledDates.push(dayISO);
-        }
-      }
-      _origTogglePeriodDay();
-      if (autoFilledDates.length) {
-        periodUndoSnapshot = autoFilledDates;
-        showToast(`Отмечено ${autoFilledDates.length} пред. дн.`, () => {
-          (periodUndoSnapshot || []).forEach(iso => {
-            delete state.entries[iso];
-          });
-          periodUndoSnapshot = null;
-          persistLocalAndCloud(null);
-          renderAnalytics();
-          showToast('Автоотметки отменены');
-        });
-      }
-    };
-
-    // Painkiller 24h dose counter & group warnings (NSAID vs spasmolytic)
-    const _origUpdatePainkillerUI = updatePainkillerUI;
-    updatePainkillerUI = function() {
-      _origUpdatePainkillerUI();
-      const summaryBox = document.getElementById('painkiller24hSummary');
-      const listEl = document.getElementById('painkillerStatus');
-      const nowMs = Date.now();
-      const last24h = (state.painkillers || []).filter(p => {
-        const t = new Date(p.timeISO).getTime();
-        return Number.isFinite(t) && (nowMs - t) <= 24 * 3600000;
-      });
-
-      const classifyDrug = (name) => {
-        const low = String(name || '').toLowerCase();
-        const mgMatch = low.match(/(\d{2,4})\s*мг/);
-        const mg = mgMatch ? Number(mgMatch[1]) : (low.includes('нурофен') || low.includes('ибупрофен') ? 400 : 0);
-        if (low.includes('нурофен') || low.includes('ибупрофен') || low.includes('нимесил') || low.includes('кетанов') || low.includes('кеторол') || low.includes('найз')) {
-          return { group: 'НПВС', mg, max24h: 1200 };
-        }
-        if (low.includes('но-шпа') || low.includes('дротаверин') || low.includes('спазмалгон')) {
-          return { group: 'Спазмолитик', mg, max24h: 240 };
-        }
-        return { group: 'Обезболивающее', mg, max24h: 0 };
-      };
-
-      const nsaidItems = last24h.filter(p => classifyDrug(p.name).group === 'НПВС');
-      const nsaidMg = nsaidItems.reduce((acc, p) => acc + classifyDrug(p.name).mg, 0);
-      const uniqueNsaids = Array.from(new Set(nsaidItems.map(p => String(p.name || '').split(' ')[0].toLowerCase())));
-      const mixedNsaids = uniqueNsaids.length > 1;
-      const nearLimit = nsaidMg >= 1200;
-
-      if (summaryBox) {
-        if (!last24h.length) {
-          summaryBox.style.display = 'none';
-        } else {
-          summaryBox.style.display = 'block';
-          const lines = [`За 24 ч принято доз: ${last24h.length}`];
-          if (nsaidMg > 0) lines.push(`НПВС за 24 ч: ${nsaidMg} мг (ориентир до 1200 мг/сут)`);
-          if (mixedNsaids) lines.push('Внимание: за сутки отмечены разные НПВС — проверь сочетаемость с врачом.');
-          if (nearLimit) lines.push('Внимание: достигнут суточный ориентир по НПВС (1200 мг).');
-          summaryBox.style.color = (mixedNsaids || nearLimit) ? 'var(--amber)' : 'var(--ink-2)';
-          summaryBox.textContent = lines.join(' · ');
-        }
-      }
-
-      if (listEl) {
-        const items = listEl.querySelectorAll('.med-item');
-        items.forEach((el, idx) => {
-          const item = state.painkillers[idx];
-          if (!item) return;
-          const meta = classifyDrug(item.name);
-          const takenMs = new Date(item.timeISO).getTime();
-          const intervalMs = (Number(item.hours) || 4) * 3600000;
-          const tooSoon = (nowMs - takenMs) < intervalMs && idx > 0;
-          const isWarn = tooSoon || (meta.group === 'НПВС' && (mixedNsaids || nearLimit));
-          el.classList.toggle('is-warn', isWarn);
-          const titleEl = el.querySelector('.med-item-name');
-          if (titleEl && !titleEl.querySelector('.med-badge')) {
-            const badge = document.createElement('span');
-            badge.className = `med-badge ${isWarn ? 'is-warn' : ''}`;
-            badge.textContent = meta.group;
-            titleEl.appendChild(badge);
-          }
-        });
-      }
-    };
-
-    // CBT: SOS state selector + save to day's helped report
-    function selectSosState(mode) {
-      hapticSelect();
-      sosStateMode = mode;
-      sosResetStepIdx = 0;
-      sosResetDone = false;
-      sosResetChecked = { 0: [], 1: [], 2: [] };
-      document.querySelectorAll('#sosStateSelector .filter-pill').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.sosState === mode);
-      });
-      renderSosResetStage();
-    }
-
-    function addSosPracticeToDayReport() {
-      const labels = {
-        anxiety: 'Перезагрузка при тревоге',
-        pain: 'Перезагрузка при острой боли',
-        criticism: 'Перезагрузка при самокритике'
-      };
-      const tipName = labels[sosStateMode] || 'Практика перезагрузки';
-      const prevDate = selectedDate;
-      selectedDate = getTodayISO(0);
-      toggleHelpedTip(tipName, true);
-      selectedDate = prevDate;
-      showToast('Добавлено в отчёт дня');
-    }
-
-    const _origRenderSosResetStage = renderSosResetStage;
-    renderSosResetStage = function() {
-      const stateProtocols = {
-        anxiety: [
-          { kicker: 'Шаг 1 · Выдох и тело', text: 'Опусти плечи, разомкни челюсть и сделай 3 медленных выдоха длиннее вдоха.', prompts: ['Выдох 1', 'Выдох 2', 'Выдох 3'] },
-          { kicker: 'Шаг 2 · Опоры вокруг', text: 'Назови про себя или отметь то, что реально присутствует прямо сейчас:', prompts: ['5 предметов', '4 ощущения', '3 звука', '2 запаха', '1 опора под стопами'] },
-          { kicker: 'Шаг 3 · Факт против тревоги', text: 'Отдели факт от прогноза («тревога — это волна напряжения, а не приговор») и выбери 1 шаг:', prompts: ['Тёплая вода', 'Умыться прохладным', 'Прогулка 10 мин'] }
-        ],
-        pain: [
-          { kicker: 'Шаг 1 · Снять лишнее напряжение', text: 'Не пытайся «переключиться на мелочи» через силу — сначала дай телу тепло и покой.', prompts: ['Тепло на живот/поясницу', 'Поза эмбриона / полулёжа', 'Медленный выдох'] },
-          { kicker: 'Шаг 2 · Мягкая волна боли', text: 'Направь внимание на самую спокойную точку тела (стопы, ладони, лоб).', prompts: ['Тёплые ладони', 'Спокойные стопы', 'Расслабить челюсть'] },
-          { kicker: 'Шаг 3 · Бережный шаг', text: 'Оцени, нужна ли поддержка или препарат, и сними с себя лишние дела:', prompts: ['Отметить обезболивающее', 'Тишина и покой', 'Вода рядом'] }
-        ],
-        criticism: [
-          { kicker: 'Шаг 1 · Стоп-кран самокритике', text: 'Заметь жёсткую мысль («я ленивая / всё испортила») как временный голос усталости или ПМС.', prompts: ['Заметила мысль', 'Сделала паузу', 'Смягчила тон'] },
-          { kicker: 'Шаг 2 · Факты без ярлыков', text: 'Что реально произошло сегодня и что ты уже сделала, даже по минимуму?', prompts: ['Реальные факты', 'Что уже сделано', 'Без «должна»'] },
-          { kicker: 'Шаг 3 · Поддержка вместо давления', text: 'Что сказала бы близкой подруге в таком же состоянии? Выбери один бережный шаг:', prompts: ['10 мин прогулки', 'Тёплый душ', 'Отложить решение'] }
-        ]
-      };
-      const customSteps = stateProtocols[sosStateMode];
-      if (customSteps) {
-        SOS_RESET_STEPS.splice(0, SOS_RESET_STEPS.length, ...customSteps);
-      }
-      _origRenderSosResetStage();
-      if (sosResetDone) {
-        const stage = document.getElementById('quickResetStage');
-        if (stage && !document.getElementById('btnAddSosToDay')) {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.id = 'btnAddSosToDay';
-          btn.className = 'btn-accent';
-          btn.style.marginTop = '8px';
-          btn.style.height = '44px';
-          btn.style.fontSize = '14px';
-          btn.textContent = 'Стало легче — добавить в отчёт дня';
-          btn.onclick = addSosPracticeToDayReport;
-          stage.querySelector('.sos-done-box')?.appendChild(btn);
-        }
-      }
-    };
-
-    // CBT: Effectiveness stats in "Что помогло"
-    const _origRenderLearnedHelpStats = renderLearnedHelpStats;
-    renderLearnedHelpStats = function() {
-      _origRenderLearnedHelpStats();
-      const box = document.getElementById('learnedHelpStats');
-      if (!box) return;
-      const stats = {};
-      Object.values(state.entries || {}).forEach(e => {
-        (e.helped || []).forEach(h => {
-          if (!stats[h]) stats[h] = { count: 0, relief: 0 };
-          stats[h].count += 1;
-          if ((Number(e.pain) || 0) <= 2 && (Number(e.stress) || 0) <= 2) {
-            stats[h].relief += 1;
-          }
-        });
-      });
-      const ranked = Object.entries(stats)
-        .sort((a, b) => (b[1].relief - a[1].relief) || (b[1].count - a[1].count))
-        .slice(0, 5);
-      if (ranked.length) {
-        box.style.display = 'block';
-        box.innerHTML = ranked.map(([name, st]) =>
-          `${escapeHtml(name)} · помогло: ${st.count} раз (спокойный фон: ${st.relief})`
-        ).join('<br/>');
-      }
-    };
-
-    // Analytics: real cycle stats + period filter (cycle / 3m / all) + temp baseline & clickable points
-    function setChartRange(rangeKey) {
-      hapticSelect();
-      chartRangeFilter = rangeKey;
-      document.querySelectorAll('#chartRangeFilters .filter-pill').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.range === rangeKey);
-      });
-      hideTempPointBanner();
-      renderAnalytics();
-    }
-
-    function hideTempPointBanner() {
-      const banner = document.getElementById('tempPointBanner');
-      if (banner) banner.classList.remove('visible');
-    }
-
-    function showTempPointBanner(dateISO, val) {
-      const banner = document.getElementById('tempPointBanner');
-      const txt = document.getElementById('tempPointBannerText');
-      if (!banner || !txt) return;
-      const sign = val > 0 ? '+' : '';
-      txt.textContent = `${formatHumanDate(dateISO)} · Температура: ${sign}${val} °C`;
-      banner.classList.add('visible');
-    }
-
-    const _origRenderAnalyticsPatternsCard = renderAnalyticsPatternsCard;
-    renderAnalyticsPatternsCard = function(allSortedEntries) {
-      _origRenderAnalyticsPatternsCard(allSortedEntries);
-      const sumEl = document.getElementById('analyticsPatternsSummary');
-      if (!sumEl) return;
-      const obs = getObservedCycleStats();
-      if (obs.lengths.length) {
-        const minL = Math.min(...obs.lengths);
-        const maxL = Math.max(...obs.lengths);
-        const statLine = `Средний цикл: ${obs.avg} дн. · Разброс: ${minL}–${maxL} дн.`;
-        sumEl.textContent = `${statLine} — ${sumEl.textContent}`;
-      }
-    };
-
-    const _origRenderAnalytics = renderAnalytics;
-    renderAnalytics = function() {
-      const allEntries = Object.values(state.entries || {})
-        .filter(e => e && typeof e.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date))
-        .sort((a, b) => a.date.localeCompare(b.date));
-
-      const todayISO = getTodayISO(0);
-      let filtered = allEntries;
-      if (chartRangeFilter === 'cycle') {
-        const startISO = state.settings.lastPeriodStart || shiftISOByDays(todayISO, -28);
-        filtered = allEntries.filter(e => e.date >= startISO);
-      } else if (chartRangeFilter === '3m') {
-        const cutoff3m = shiftISOByDays(todayISO, -90);
-        filtered = allEntries.filter(e => e.date >= cutoff3m);
-      }
-
-      const backupEntries = state.entries;
-      const tempMap = {};
-      filtered.forEach(e => { tempMap[e.date] = e; });
-      state.entries = tempMap;
-      try {
-        _origRenderAnalytics();
-      } finally {
-        state.entries = backupEntries;
-      }
-
-      // Enhance temperature mode with baseline 0.0°C, axis labels (min / 0 / max), and clickable points
-      if (chartFilter === 'temp') {
-        const svg = document.getElementById('cycleChart');
-        if (svg) {
-          const ptsData = filtered
-            .filter(e => typeof e.wristTempDelta === 'number' && !isNaN(e.wristTempDelta))
-            .map(e => ({ date: e.date, val: Number(e.wristTempDelta) }));
-
-          if (ptsData.length) {
-            const w = Number(svg.getAttribute('width')) || 400;
-            const h = Number(svg.getAttribute('height')) || 390;
-            const padL = 44;
-            const padR = 24;
-            const padT = 44;
-            const padB = 32;
-            const plotH = h - padT - padB;
-            const plotW = w - padL - padR;
-            const vals = ptsData.map(p => p.val);
-            const minV = Math.min(...vals, 0);
-            const maxV = Math.max(...vals, 0);
-            const span = Math.max(0.2, maxV - minV);
-            const yFor = (v) => padT + plotH - ((v - minV) / span) * plotH;
-
-            const yMax = yFor(maxV);
-            const yZero = yFor(0);
-            const yMin = yFor(minV);
-
-            const pathPts = ptsData.map((p, idx) => {
-              const x = ptsData.length === 1 ? padL + plotW / 2 : padL + (idx / (ptsData.length - 1)) * plotW;
-              const y = yFor(p.val);
-              return { ...p, x, y };
-            });
-
-            const lineD = pathPts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-            const circlesHtml = pathPts.map((p, idx) =>
-              `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="6.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2" style="cursor:pointer;" onclick="showTempPointBanner('${p.date}', ${p.val})" />`
-            ).join('');
-
-            const labelsHtml = pathPts.map((p, idx) => {
-              const parts = p.date.split('-');
-              return `<text x="${p.x.toFixed(1)}" y="${h - 9}" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--ink-3)">${parts[2]}.${parts[1]}</text>`;
-            }).join('');
-
-            svg.innerHTML = `
-              <line x1="${padL}" y1="${yMax.toFixed(1)}" x2="${w - padR}" y2="${yMax.toFixed(1)}" stroke="var(--border)" stroke-dasharray="3 3" />
-              <line x1="${padL}" y1="${yZero.toFixed(1)}" x2="${w - padR}" y2="${yZero.toFixed(1)}" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="5 4" />
-              <line x1="${padL}" y1="${yMin.toFixed(1)}" x2="${w - padR}" y2="${yMin.toFixed(1)}" stroke="var(--border)" stroke-dasharray="3 3" />
-              <text x="6" y="${(yMax + 4).toFixed(1)}" font-size="10.5" font-weight="600" fill="var(--ink-2)">${maxV.toFixed(1)}°</text>
-              <text x="6" y="${(yZero + 4).toFixed(1)}" font-size="10.5" font-weight="700" fill="var(--accent)">0.0°</text>
-              <text x="6" y="${(yMin + 4).toFixed(1)}" font-size="10.5" font-weight="600" fill="var(--ink-2)">${minV.toFixed(1)}°</text>
-              ${pathPts.length > 1 ? `<path d="${lineD}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />` : ''}
-              ${circlesHtml}
-              ${labelsHtml}
-            `;
-          }
-        }
-      }
-    };
-
-    // Pass sleepQuality & thoughtNote into AI analysis & quick chat prompts
-    const _origBuildQuickAiSystemInstruction = buildQuickAiSystemInstruction;
-    buildQuickAiSystemInstruction = function() {
-      const base = _origBuildQuickAiSystemInstruction();
-      const cur = getCurrentWorkingEntry();
-      const extra = [];
-      if (cur?.sleepQuality) extra.push(`Сон: ${cur.sleepQuality}`);
-      if (cur?.thoughtNote) extra.push(`Мысль / событие дня: ${cur.thoughtNote}`);
-      return extra.length ? `${base}
-- ${extra.join('
-- ')}` : base;
-    };
 
     setupKeyboardLift();
     initCCSliders();
