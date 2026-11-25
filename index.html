@@ -8,6 +8,120 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    (function bootstrapThemeEarly() {
+      var BOOT_THEMES = {
+        peach_sage: {
+          light: {
+            '--bg': '#FAF8F5', '--surface': '#FFFFFF', '--surface-2': '#F2EFEA',
+            '--ink': '#222320', '--ink-2': '#646860', '--ink-3': '#9A9E96', '--border': '#E6E2DA',
+            '--accent': '#D46A4E', '--accent-bg': '#F9E3DC', '--accent-tint': '#FDF4F1',
+            '--ovul': '#5A7A68', '--ovul-bg': '#E2ECE6', '--ovul-tint': '#F3F8F5',
+            '--rose': '#C8445E', '--rose-solid': '#D94865', '--rose-bg': '#FCE2E7', '--rose-tint': '#FFF3F5',
+            '--indigo': '#5A7A68', '--indigo-bg': '#E2ECE6', '--indigo-tint': '#F3F8F5',
+            '--amber': '#C98236', '--amber-bg': '#FBEBD8', '--amber-tint': '#FEF8F0',
+            '--shadow': '0 4px 20px rgba(34, 35, 32, 0.04)'
+          },
+          dark: {
+            '--bg': '#121316', '--surface': '#1A1C20', '--surface-2': '#24272D',
+            '--ink': '#F5F6F8', '--ink-2': '#B2B6C0', '--ink-3': '#7A7F8C', '--border': '#2F333B',
+            '--accent': '#F08C70', '--accent-bg': 'rgba(240, 140, 112, 0.18)', '--accent-tint': 'rgba(240, 140, 112, 0.11)',
+            '--ovul': '#86B89C', '--ovul-bg': 'rgba(134, 184, 156, 0.18)', '--ovul-tint': 'rgba(134, 184, 156, 0.11)',
+            '--rose': '#F4728C', '--rose-solid': '#D94865', '--rose-bg': 'rgba(244, 114, 140, 0.18)', '--rose-tint': 'rgba(244, 114, 140, 0.11)',
+            '--indigo': '#86B89C', '--indigo-bg': 'rgba(134, 184, 156, 0.18)', '--indigo-tint': 'rgba(134, 184, 156, 0.11)',
+            '--amber': '#ECA85E', '--amber-bg': 'rgba(236, 168, 94, 0.18)', '--amber-tint': 'rgba(236, 168, 94, 0.11)',
+            '--shadow': '0 8px 28px rgba(0, 0, 0, 0.45)'
+          }
+        },
+        dusty_rose: {
+          light: {
+            '--bg': '#FBF8F9', '--surface': '#FFFFFF', '--surface-2': '#F4EEF1',
+            '--ink': '#221A1E', '--ink-2': '#6B5A62', '--ink-3': '#A3929A', '--border': '#ECE2E6',
+            '--accent': '#BE4B66', '--accent-bg': '#F8DFE5', '--accent-tint': '#FDF3F5',
+            '--ovul': '#C47D3B', '--ovul-bg': '#F9EAD8', '--ovul-tint': '#FEF8F0',
+            '--rose': '#D13B5B', '--rose-solid': '#D94865', '--rose-bg': '#FCE0E6', '--rose-tint': '#FFF2F5',
+            '--indigo': '#68598A', '--indigo-bg': '#E7E3F0', '--indigo-tint': '#F5F3FA',
+            '--amber': '#C97742', '--amber-bg': '#FAE7DA', '--amber-tint': '#FEF7F2',
+            '--shadow': '0 4px 20px rgba(34, 26, 30, 0.04)'
+          },
+          dark: {
+            '--bg': '#141115', '--surface': '#1D191F', '--surface-2': '#27222A',
+            '--ink': '#F8F4F7', '--ink-2': '#B8AEB8', '--ink-3': '#807580', '--border': '#332C36',
+            '--accent': '#EC7A96', '--accent-bg': 'rgba(236, 122, 150, 0.18)', '--accent-tint': 'rgba(236, 122, 150, 0.11)',
+            '--ovul': '#E8A864', '--ovul-bg': 'rgba(232, 168, 100, 0.18)', '--ovul-tint': 'rgba(232, 168, 100, 0.11)',
+            '--rose': '#F66F8D', '--rose-solid': '#D94865', '--rose-bg': 'rgba(246, 111, 141, 0.18)', '--rose-tint': 'rgba(246, 111, 141, 0.11)',
+            '--indigo': '#A596CC', '--indigo-bg': 'rgba(165, 150, 204, 0.18)', '--indigo-tint': 'rgba(165, 150, 204, 0.11)',
+            '--amber': '#EA9D6C', '--amber-bg': 'rgba(234, 157, 108, 0.18)', '--amber-tint': 'rgba(234, 157, 108, 0.11)',
+            '--shadow': '0 8px 28px rgba(0, 0, 0, 0.45)'
+          }
+        },
+        blackberry_iris: {
+          light: {
+            '--bg': '#F8F7FA', '--surface': '#FFFFFF', '--surface-2': '#EFECEF',
+            '--ink': '#1E1A24', '--ink-2': '#625A6E', '--ink-3': '#9A92A6', '--border': '#E5E0EC',
+            '--accent': '#6D4C82', '--accent-bg': '#EAE1F0', '--accent-tint': '#F6F2F9',
+            '--ovul': '#536895', '--ovul-bg': '#E2E7F2', '--ovul-tint': '#F3F5FA',
+            '--rose': '#C94E72', '--rose-solid': '#D94865', '--rose-bg': '#FCE2EA', '--rose-tint': '#FFF3F7',
+            '--indigo': '#536895', '--indigo-bg': '#E2E7F2', '--indigo-tint': '#F3F5FA',
+            '--amber': '#B57B45', '--amber-bg': '#F5E7DA', '--amber-tint': '#FCF7F2',
+            '--shadow': '0 4px 20px rgba(30, 26, 36, 0.04)'
+          },
+          dark: {
+            '--bg': '#111117', '--surface': '#191922', '--surface-2': '#23232F',
+            '--ink': '#F5F4FA', '--ink-2': '#B2B0C2', '--ink-3': '#7A788C', '--border': '#2E2E3D',
+            '--accent': '#AD88C6', '--accent-bg': 'rgba(173, 136, 198, 0.18)', '--accent-tint': 'rgba(173, 136, 198, 0.11)',
+            '--ovul': '#8BA2D4', '--ovul-bg': 'rgba(139, 162, 212, 0.18)', '--ovul-tint': 'rgba(139, 162, 212, 0.11)',
+            '--rose': '#F2789C', '--rose-solid': '#D94865', '--rose-bg': 'rgba(242, 120, 156, 0.18)', '--rose-tint': 'rgba(242, 120, 156, 0.11)',
+            '--indigo': '#8BA2D4', '--indigo-bg': 'rgba(139, 162, 212, 0.18)', '--indigo-tint': 'rgba(139, 162, 212, 0.11)',
+            '--amber': '#E3A66E', '--amber-bg': 'rgba(227, 166, 110, 0.18)', '--amber-tint': 'rgba(227, 166, 110, 0.11)',
+            '--shadow': '0 8px 28px rgba(0, 0, 0, 0.45)'
+          }
+        }
+      };
+      var savedSettings = null;
+      try {
+        var keys = ['carezze_v2', 'carezze_v1', 'ritm_clean_v9', 'ritm_clean_v8', 'ritm_clean_v7', 'ritm_clean_v6', 'ritm_clean_v5', 'ritm_clean_v4'];
+        for (var i = 0; i < keys.length; i++) {
+          var raw = localStorage.getItem(keys[i]);
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && parsed.settings) {
+              savedSettings = parsed.settings;
+              break;
+            }
+          }
+        }
+      } catch (e) {}
+
+      var webApp = window.Telegram && window.Telegram.WebApp;
+      var palKey = (savedSettings && BOOT_THEMES[savedSettings.palette]) ? savedSettings.palette : 'peach_sage';
+      var isDark = (savedSettings && typeof savedSettings.darkMode === 'boolean')
+        ? savedSettings.darkMode
+        : Boolean(webApp && webApp.colorScheme === 'dark');
+
+      window.__CAREZZE_BOOT_THEME__ = {
+        hasSavedDarkMode: Boolean(savedSettings && typeof savedSettings.darkMode === 'boolean'),
+        isDark: isDark,
+        palKey: palKey
+      };
+
+      var colors = BOOT_THEMES[palKey][isDark ? 'dark' : 'light'];
+      var root = document.documentElement;
+      root.classList.toggle('dark-mode', isDark);
+      root.style.colorScheme = isDark ? 'dark' : 'light';
+      root.style.backgroundColor = colors['--bg'];
+      Object.keys(colors).forEach(function (k) {
+        root.style.setProperty(k, colors[k]);
+      });
+
+      if (webApp) {
+        try {
+          if (typeof webApp.setBackgroundColor === 'function') webApp.setBackgroundColor(colors['--bg']);
+          if (typeof webApp.setHeaderColor === 'function') webApp.setHeaderColor(colors['--bg']);
+        } catch (e) {}
+      }
+    })();
+  </script>
   <style>
     :root {
       --bg: #FAF8F5;
@@ -53,6 +167,8 @@
       overflow-x: hidden;
       overscroll-behavior-y: none;
       touch-action: pan-y;
+      background-color: var(--bg);
+      color: var(--ink);
     }
 
     body.modal-open {
@@ -73,6 +189,8 @@
       word-wrap: break-word;
       overflow-wrap: break-word;
       -webkit-font-smoothing: antialiased;
+    }
+    body.theme-transitions-ready {
       transition: background-color 0.35s ease, color 0.25s ease;
       padding-top: max(10px, env(safe-area-inset-top));
       padding-bottom: calc(96px + env(safe-area-inset-bottom) + var(--kb-offset));
@@ -111,6 +229,7 @@
     .ambient-glow.phase-delay {
       background: radial-gradient(circle at 50% 35%, var(--amber-bg) 0%, transparent 72%);
     }
+    html.dark-mode .ambient-glow,
     body.dark-mode .ambient-glow {
       opacity: 0.14;
     }
@@ -251,6 +370,8 @@
       justify-content: center;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
     }
+    html.dark-mode .date-arrow,
+    html.dark-mode .date-center-btn,
     body.dark-mode .date-arrow,
     body.dark-mode .date-center-btn {
       background: rgba(255, 255, 255, 0.08);
@@ -1257,6 +1378,7 @@
       z-index: 100;
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
+    html.dark-mode .tab-bar,
     body.dark-mode .tab-bar {
       background: color-mix(in srgb, var(--bg) 84%, transparent);
     }
@@ -3344,13 +3466,25 @@
 
     function applyThemeUI() {
       const colors = getCurrentPaletteColors();
-      const rootStyle = document.documentElement.style;
+      const rootEl = document.documentElement;
+      const rootStyle = rootEl.style;
       Object.entries(colors).forEach(([varName, val]) => {
         rootStyle.setProperty(varName, val);
       });
 
       const isDark = Boolean(state.settings.darkMode);
+      rootEl.classList.toggle('dark-mode', isDark);
+      rootStyle.colorScheme = isDark ? 'dark' : 'light';
+      rootStyle.backgroundColor = colors['--bg'];
       document.body.classList.toggle('dark-mode', isDark);
+
+      if (tg) {
+        try {
+          if (typeof tg.setBackgroundColor === 'function') tg.setBackgroundColor(colors['--bg']);
+          if (typeof tg.setHeaderColor === 'function') tg.setHeaderColor(colors['--bg']);
+        } catch (e) {}
+      }
+
       const settingsModeBtn = document.getElementById('settingsModeToggle');
       if (settingsModeBtn) {
         settingsModeBtn.textContent = isDark ? 'Светлая' : 'Тёмная';
@@ -3808,7 +3942,66 @@
       });
     }
 
+    let isInitialCloudHydrating = false;
+    let initialHydrationTimer = null;
+
+    function finishInitialCloudHydration(shouldRefreshUI = true) {
+      if (initialHydrationTimer) {
+        clearTimeout(initialHydrationTimer);
+        initialHydrationTimer = null;
+      }
+      if (!isInitialCloudHydrating) return;
+      isInitialCloudHydrating = false;
+      if (shouldRefreshUI) {
+        applyThemeUI();
+        syncSettingsInputs();
+        if (!state.onboarded) {
+          document.getElementById('obLastPeriod').value = getTodayISO(0);
+          document.getElementById('onboardingScreen').classList.add('active');
+        } else {
+          document.getElementById('onboardingScreen').classList.remove('active');
+        }
+        loadDayForm();
+        renderAnalytics();
+      }
+    }
+
+    function reconcileCycleStartWithEntries() {
+      let currentStart = state.settings?.lastPeriodStart;
+      if (!currentStart || !state.entries) return false;
+      let changed = false;
+      const sortedDates = Object.keys(state.entries).sort();
+      for (const iso of sortedDates) {
+        if (iso <= currentStart) continue;
+        const entry = state.entries[iso];
+        if (!entry || entry.isPeriod !== true) continue;
+        const prevISO = shiftISOByDays(iso, -1);
+        const prevWasPeriod = Boolean(state.entries[prevISO]?.isPeriod) || prevISO === currentStart;
+        const diffDays = Math.round((parseLocalISO(iso) - parseLocalISO(currentStart)) / 86400000);
+        if (!prevWasPeriod && diffDays >= 14) {
+          state.settings.prevLastPeriodStart = currentStart;
+          state.settings.lastPeriodStart = iso;
+          currentStart = iso;
+          changed = true;
+        }
+      }
+      return changed;
+    }
+
+    async function cloudGetMany(keys, batchSize = 10) {
+      const results = [];
+      for (let i = 0; i < keys.length; i += batchSize) {
+        const chunk = keys.slice(i, i + batchSize);
+        const chunkVals = await Promise.all(chunk.map(k => cloudGet(k)));
+        for (let j = 0; j < chunk.length; j++) {
+          results.push([chunk[j], chunkVals[j]]);
+        }
+      }
+      return results;
+    }
+
     function loadLocalSync() {
+      let hasLocalSnapshot = false;
       try {
         let raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) {
@@ -3818,6 +4011,7 @@
           }
         }
         if (raw) {
+          hasLocalSnapshot = true;
           const parsed = JSON.parse(raw);
           state = {
             ...state,
@@ -3836,20 +4030,35 @@
             state.settings.cycleLengthMax = legacyLen;
           }
           normalizeAllLoadedEntries();
+          reconcileCycleStartWithEntries();
           ensureProfileStructure();
           ensureOnboardedFlagIfDataExists();
+        } else if (window.__CAREZZE_BOOT_THEME__ && !window.__CAREZZE_BOOT_THEME__.hasSavedDarkMode) {
+          state.settings.darkMode = Boolean(window.__CAREZZE_BOOT_THEME__.isDark);
         }
       } catch (e) {}
 
       const hadUrlImport = applyIncomingUrlParams();
 
+      if (hasTelegramCloud()) {
+        isInitialCloudHydrating = true;
+        initialHydrationTimer = setTimeout(() => {
+          finishInitialCloudHydration(true);
+        }, 1500);
+      }
+
       applyThemeUI();
+      requestAnimationFrame(() => {
+        document.body.classList.add('theme-transitions-ready');
+      });
       syncSettingsInputs();
       renderBreathPatternUI();
 
       if (!state.onboarded) {
-        document.getElementById('obLastPeriod').value = getTodayISO(0);
-        document.getElementById('onboardingScreen').classList.add('active');
+        if (!isInitialCloudHydrating || hasLocalSnapshot) {
+          document.getElementById('obLastPeriod').value = getTodayISO(0);
+          document.getElementById('onboardingScreen').classList.add('active');
+        }
       } else {
         document.getElementById('onboardingScreen').classList.remove('active');
       }
@@ -3864,11 +4073,16 @@
     }
 
     async function syncFromCloudBackground() {
-      if (!hasTelegramCloud() || isCloudSyncing) return;
+      if (!hasTelegramCloud()) {
+        finishInitialCloudHydration(false);
+        return;
+      }
+      if (isCloudSyncing) return;
       isCloudSyncing = true;
       try {
         await pendingCloudWritePromise;
         if (Date.now() - lastLocalWriteTimestamp < 4000) {
+          finishInitialCloudHydration(true);
           return;
         }
 
@@ -3890,6 +4104,7 @@
             state.settings.cycleLengthMin = legacyLen;
             state.settings.cycleLengthMax = legacyLen;
           }
+          reconcileCycleStartWithEntries();
           ensureProfileStructure();
           if (Array.isArray(meta.painkillers) && meta.painkillers.length) {
             state.painkillers = meta.painkillers;
@@ -3899,7 +4114,14 @@
           }
         }
 
-        const customTipsRaw = await cloudGet('carezze2_custom_tips');
+        // Immediately reveal exact theme and cycle day once meta is loaded (without waiting for full entry history)
+        finishInitialCloudHydration(true);
+
+        const [customTipsRaw, keys] = await Promise.all([
+          cloudGet('carezze2_custom_tips'),
+          cloudGetKeys()
+        ]);
+
         if (customTipsRaw) {
           try {
             const parsedTips = JSON.parse(customTipsRaw);
@@ -3909,14 +4131,19 @@
           } catch (e) {}
         }
 
-        const keys = await cloudGetKeys();
         const cloudEntriesMap = {};
 
         const monthKeys = keys.filter(k =>
           k.startsWith('carezze2_m_') || k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_')
         );
-        for (const mk of monthKeys) {
-          const mRaw = await cloudGet(mk);
+        const dayKeys = keys.filter(k => k.startsWith('carezze2_d_'));
+
+        const [monthPairs, dayPairs] = await Promise.all([
+          cloudGetMany(monthKeys, 10),
+          cloudGetMany(dayKeys, 12)
+        ]);
+
+        for (const [, mRaw] of monthPairs) {
           if (mRaw) {
             const mEntries = JSON.parse(mRaw);
             Object.entries(mEntries).forEach(([iso, entry]) => {
@@ -3925,9 +4152,7 @@
           }
         }
 
-        const dayKeys = keys.filter(k => k.startsWith('carezze2_d_'));
-        for (const dk of dayKeys) {
-          const dRaw = await cloudGet(dk);
+        for (const [dk, dRaw] of dayPairs) {
           if (dRaw) {
             const dEntry = JSON.parse(dRaw);
             const iso = dEntry.date || dk.replace('carezze2_d_', '');
@@ -3941,6 +4166,7 @@
         });
 
         normalizeAllLoadedEntries();
+        reconcileCycleStartWithEntries();
 
         if (importedTempToday !== null) {
           applyIncomingTempToToday(importedTempToday, false);
@@ -3962,6 +4188,7 @@
         renderAnalytics();
       } catch (e) {
       } finally {
+        finishInitialCloudHydration(true);
         isCloudSyncing = false;
       }
     }
@@ -5024,10 +5251,21 @@
 
     function updateHeaderAndContextControls() {
       const info = getCycleInfo(selectedDate);
-      document.getElementById('heroDay').innerHTML = `<span class="hero-day-num">${info.cycleDay}</span><span class="hero-day-unit">${pluralDaysWord(info.cycleDay)}</span>`;
+      const heroDayEl = document.getElementById('heroDay');
       const phaseStatusEl = document.getElementById('heroPhaseStatus');
-      if (phaseStatusEl) phaseStatusEl.textContent = getPhaseShortHint(info);
-      renderCycleSegmentsBar(info);
+      if (isInitialCloudHydrating && selectedDate === getTodayISO(0)) {
+        if (heroDayEl) heroDayEl.innerHTML = `<span class="hero-day-num" style="opacity:0.4;">—</span><span class="hero-day-unit">день</span>`;
+        if (phaseStatusEl) phaseStatusEl.textContent = 'Синхронизация цикла…';
+        const segBar = document.getElementById('cycleSegmentsBar');
+        if (segBar && !segBar.children.length) {
+          const total = Math.max(1, Number(info.maxLen) || Number(info.len) || 28);
+          segBar.innerHTML = Array.from({ length: total }, () => '<span class="cycle-seg"></span>').join('');
+        }
+      } else {
+        if (heroDayEl) heroDayEl.innerHTML = `<span class="hero-day-num">${info.cycleDay}</span><span class="hero-day-unit">${pluralDaysWord(info.cycleDay)}</span>`;
+        if (phaseStatusEl) phaseStatusEl.textContent = getPhaseShortHint(info);
+        renderCycleSegmentsBar(info);
+      }
 
       document.getElementById('selectedDateLabel').textContent = formatHumanDate(selectedDate);
 
