@@ -3304,19 +3304,19 @@
     const ALL_EMOTIONS = [
       'Спокойствие',
       'Радость',
-      'Усталость',
-      'Туман в голове',
-      'Слезливость',
-      'Раздражение'
+      'Тревога',
+      'Грусть',
+      'Раздражение',
+      'Слезливость'
     ];
 
     const EMOTION_PALETTE = {
       'Спокойствие': { color: '#5FA882', bg: 'rgba(95, 168, 130, 0.20)' },
       'Радость': { color: '#E3AA46', bg: 'rgba(227, 170, 70, 0.20)' },
-      'Усталость': { color: '#A182B8', bg: 'rgba(161, 130, 184, 0.20)' },
-      'Туман в голове': { color: '#A596BD', bg: 'rgba(165, 150, 189, 0.20)' },
-      'Слезливость': { color: '#6CA6C4', bg: 'rgba(108, 166, 196, 0.20)' },
-      'Раздражение': { color: '#E35D78', bg: 'rgba(227, 93, 120, 0.20)' }
+      'Тревога': { color: '#9D7CD8', bg: 'rgba(157, 124, 216, 0.20)' },
+      'Грусть': { color: '#5B8FB9', bg: 'rgba(91, 143, 185, 0.20)' },
+      'Раздражение': { color: '#E35D78', bg: 'rgba(227, 93, 120, 0.20)' },
+      'Слезливость': { color: '#6BB8C9', bg: 'rgba(107, 184, 201, 0.20)' }
     };
 
     function createDefaultEmotionLevels() {
@@ -3345,7 +3345,7 @@
     function computeDerivedMood(levelsObj, energyVal, painVal, stressVal = 0) {
       const posKeys = ['Спокойствие', 'Радость'];
       const posSum = posKeys.reduce((s, k) => s + (levelsObj[k] || 0), 0);
-      const negKeys = ['Усталость', 'Туман в голове', 'Слезливость', 'Раздражение'];
+      const negKeys = ['Тревога', 'Грусть', 'Раздражение', 'Слезливость'];
       const negSum = negKeys.reduce((s, k) => s + (levelsObj[k] || 0), 0) + (Number(stressVal) || 0);
       const raw = 2.8 + (posSum * 0.26) - (negSum * 0.14) + ((energyVal - 2.5) * 0.25) - (painVal * 0.18);
       return Math.max(0, Math.min(5, Math.round(raw)));
@@ -5578,22 +5578,28 @@
       loadDayForm();
     }
 
+    function normalizeLegacyEmotionKey(k) {
+      if (k === 'Интерес') return 'Радость';
+      if (k === 'Напряжение') return 'Тревога';
+      return k;
+    }
+
     function buildLoadedEmotionLevels(entry) {
       const levels = createDefaultEmotionLevels();
       if (entry?.emotionLevels && typeof entry.emotionLevels === 'object') {
         Object.entries(entry.emotionLevels).forEach(([k, v]) => {
-          const normKey = k === 'Интерес' ? 'Радость' : k;
+          const normKey = normalizeLegacyEmotionKey(k);
           const num = Number(v);
           if (normKey in levels && Number.isFinite(num)) {
             const scaled = (entry.scaleMax !== 5 && num > 5) ? Math.round(num / 2) : Math.round(num);
-            levels[normKey] = Math.max(0, Math.min(5, scaled));
+            levels[normKey] = Math.max(levels[normKey], Math.max(0, Math.min(5, scaled)));
           }
         });
       }
       if (Array.isArray(entry?.emotions)) {
         const hasAnySavedVal = Object.values(levels).some(v => v > 0);
         entry.emotions.forEach(em => {
-          const normKey = em === 'Интерес' ? 'Радость' : em;
+          const normKey = normalizeLegacyEmotionKey(em);
           if (normKey in levels && levels[normKey] === 0 && !hasAnySavedVal) {
             levels[normKey] = 3;
           }
@@ -5877,8 +5883,9 @@
       const hasEdema = normContexts.includes('Отёки');
       const hasSleepDebt = normContexts.includes('Недосып');
       const stressVal = entry.stress !== undefined ? Number(entry.stress) : (Number(entry.emotionLevels?.['Стресс']) || 0);
-      const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || (levels['Напряжение'] ?? 0) >= 3 || stressVal >= 3;
-      const hasIrritability = (levels['Раздражение'] ?? 0) >= 3 || (levels['Слезливость'] ?? 0) >= 3;
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || stressVal >= 3;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 3;
+      const hasTearfulness = (levels['Слезливость'] ?? 0) >= 3;
       const hasLowMood = (levels['Грусть'] ?? 0) >= 3;
 
       if (!isAiGenerating) {
@@ -5979,18 +5986,20 @@
         psyH.textContent = emosLabeled.slice(0, 3).join(' · ');
         if (info.isDelay) {
           psyB.textContent = 'Неопределённость запускает тревожные руминации. В КПТ здесь помогает разделение фактов и домыслов: выпиши, что известно точно, и ограничься одним конкретным шагом вместо прокручивания сценариев.';
-        } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety)) {
-          psyB.textContent = 'В эти дни включается ловушка «эмоционального обоснования» — мозг трактует телесный дискомфорт как катастрофу. Назови это состояние вслух («сейчас говорит фон фазы, а не объективная реальность») и отложи резкие выводы на 2–3 дня.';
+        } else if (info.phaseCode === 'late_luteal' && (hasLowMood || hasIrritability || hasAnxiety || hasTearfulness)) {
+          psyB.textContent = 'На фоне спада прогестерона и эстрогенов включается ловушка «эмоционального обоснования» — мозг трактует уязвимость как катастрофу. Назови состояние вслух («сейчас говорит фон фазы, а не объективная реальность») и отложи резкие выводы на 2–3 дня.';
         } else if (hasAnxiety) {
-          psyB.textContent = 'Тревога и напряжение — это режим мобилизации нервной системы, а не сигнал реальной угрозы. Сделай удлинённый выдох, верни внимание в тело через 5 опор вокруг и выгрузи мысли на бумагу, отделив факты от гипотез.';
+          psyB.textContent = 'Тревога — это режим мобилизации нервной системы, а не сигнал реальной угрозы. Сделай удлинённый выдох, верни внимание в тело через 5 опор вокруг и выгрузи мысли на бумагу, отделив факты от гипотез.';
+        } else if (hasTearfulness) {
+          psyB.textContent = 'Слезливость и обострённая чувствительность говорят о высокой эмоциональной проницаемости и усталости нервной системы. Не ругай себя за слёзы: легализуй эмоцию, снизь требования к себе на сегодня и дай телу безопасную разрядку.';
         } else if (entry.pain >= 3 || entry.energy <= 1) {
           psyB.textContent = 'Когда тело болит или истощено, внутренний критик часто требует прежней скорости. Сними требование «сделать всё идеально» и перейди в режим бережного минимума без самокритики.';
         } else if (hasIrritability) {
           psyB.textContent = 'Раздражительность — маркер перегрузки границ или сенсорного шума. Возьми паузу на 10 минут до ответа в сложных диалогах и убери лишние раздражители.';
         } else if (hasLowMood) {
-          psyB.textContent = 'При упадке сил и грусти ожидание «сначала появится настроение, потом начну делать» не работает. В КПТ помогает поведенческая активация: одно крошечное действие на 5–10 минут без оценки результата.';
+          psyB.textContent = 'При грусти и спаде фона ожидание «сначала появится настроение, потом начну делать» не работает. В КПТ помогает поведенческая активация: одно крошечное действие на 5–10 минут без оценки результата.';
         } else {
-          psyB.textContent = 'Эмоциональный фон устойчивый. Отличный момент, чтобы зафиксировать, какие действия и привычки сегодня дают тебе опору и интерес.';
+          psyB.textContent = 'Эмоциональный фон устойчивый. Отличный момент, чтобы зафиксировать, какие действия и привычки сегодня дают тебе опору и радость.';
         }
 
         if (normalizeSoloCount(entry) > 0) {
@@ -6028,8 +6037,9 @@
       const hasBreast = normContexts.includes('Чувствительность груди');
       const hasEdema = normContexts.includes('Отёки');
       const stressVal = entry.stress !== undefined ? Number(entry.stress) : (Number(entry.emotionLevels?.['Стресс']) || 0);
-      const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || (levels['Напряжение'] ?? 0) >= 3 || stressVal >= 3;
-      const hasIrritability = (levels['Раздражение'] ?? 0) >= 3 || (levels['Слезливость'] ?? 0) >= 3;
+      const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || stressVal >= 3;
+      const hasIrritability = (levels['Раздражение'] ?? 0) >= 3;
+      const hasTearfulness = (levels['Слезливость'] ?? 0) >= 3;
       const hasLowMood = (levels['Грусть'] ?? 0) >= 3;
 
       let tips = [];
@@ -6112,7 +6122,7 @@
             isCustom: false
           });
         }
-        if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood) {
+        if (info.phaseCode === 'late_luteal' || hasIrritability || hasLowMood || hasTearfulness) {
           tips.push({
             id: 'Регулярный приём пищи с белком',
             title: 'Регулярный приём пищи с белком',
@@ -7014,7 +7024,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           ? (trackedEmotions.length ? trackedEmotions.slice(0, 5) : [])
           : [selectedEmotionChartFilter];
 
-        const emoWidths = [3.8, 3.1, 2.5, 2.1, 1.8];
+        const emoWidths = [3.8, 3.2, 2.7, 2.3, 2.0, 1.8];
         const seriesList = emosToDraw
           .filter(emo => !hiddenChartSeries.has(`emo:${emo}`))
           .map((emo, idx) => {
