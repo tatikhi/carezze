@@ -1152,6 +1152,89 @@
       flex-shrink: 0;
     }
     .med-del-btn:active { background: var(--rose-tint); color: var(--rose); }
+    .med-item-card {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .med-item-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .med-effect-summary {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    .med-effect-summary.is-none {
+      color: var(--rose);
+    }
+    .med-inline-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding-top: 6px;
+      border-top: 1px solid var(--border);
+    }
+    .med-inline-label {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-2);
+    }
+    .med-score-pills {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .med-mini-pill {
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink-2);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .med-mini-pill.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+    .med-mini-pill.is-rose.is-active {
+      background: var(--rose);
+      border-color: var(--rose);
+      color: #FFFFFF;
+    }
+    .med-rate-btn {
+      height: 30px;
+      padding: 0 11px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent-tint);
+      color: var(--accent);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .med-rate-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 10px;
+    }
     .med-preset-btn {
       position: relative;
       display: flex;
@@ -2629,7 +2712,7 @@
               <div class="field-label" style="margin-bottom:8px;">Сон</div>
               <div class="grid-3" id="sleepQualitySelector">
                 <button type="button" class="choice-btn" data-sleep="Плохо" onclick="selectSleepQuality('Плохо')">Плохо</button>
-                <button type="button" class="choice-btn" data-sleep="Норм" onclick="selectSleepQuality('Норм')">Норм</button>
+                <button type="button" class="choice-btn" data-sleep="Средне" onclick="selectSleepQuality('Средне')">Средне</button>
                 <button type="button" class="choice-btn" data-sleep="Хорошо" onclick="selectSleepQuality('Хорошо')">Хорошо</button>
               </div>
             </div>
@@ -2637,17 +2720,16 @@
             <!-- Физические ощущения -->
             <div style="margin-top:14px;">
               <div class="field-label" style="margin-bottom:8px;">Физические ощущения</div>
-              <div class="chip-grid-3" id="physicalContextChips">
+              <div class="chip-grid" id="physicalContextChips">
                 <div class="chip" data-val="Чувствительность груди">Грудь</div>
                 <div class="chip" data-val="Отёки">Отёки</div>
-                <div class="chip" data-val="Недосып">Недосып</div>
               </div>
             </div>
 
             <!-- Короткая мысль или триггер дня (до 140 символов) -->
             <div style="margin-top:14px;">
-              <div class="field-label" style="margin-bottom:8px;">Что сейчас в голове / что случилось</div>
-              <input type="text" id="dayThoughtInput" maxlength="140" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="onDayThoughtInput()" placeholder="До 140 символов — триггер, мысль или событие..." />
+              <div class="field-label" style="margin-bottom:8px;">Что сейчас в голове</div>
+              <input type="text" id="dayThoughtInput" maxlength="140" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="onDayThoughtInput()" placeholder="До 140 символов" />
             </div>
 
             <!-- Эмоции (шкала 1–5 для каждой эмоции) -->
@@ -2754,6 +2836,10 @@
           <button class="filter-pill" data-pattern="sigh" onclick="selectBreathPattern('sigh')">От тревоги</button>
           <button class="filter-pill" data-pattern="box" onclick="selectBreathPattern('box')">От перегруза</button>
           <button class="filter-pill" data-pattern="sleep" onclick="selectBreathPattern('sleep')">Перед сном</button>
+          <button class="filter-pill" data-pattern="anger" onclick="selectBreathPattern('anger')">Сброс раздражения</button>
+          <button class="filter-pill" data-pattern="balance" onclick="selectBreathPattern('balance')">Ровный баланс</button>
+          <button class="filter-pill" data-pattern="energy" onclick="selectBreathPattern('energy')">Мягкая энергия</button>
+          <button class="filter-pill" data-pattern="gentle" onclick="selectBreathPattern('gentle')">Щадящий ритм</button>
         </div>
         <div class="breath-desc" id="breathPatternDesc"></div>
 
@@ -2897,7 +2983,7 @@
           <span class="card-title" style="font-size:15.5px;">Спросить CareZze</span>
         </div>
         <div id="aiQuickThread" class="ai-chat-thread" style="display:none;"></div>
-        <textarea id="aiQuickInput" rows="2" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="renderQuickAiThread()" placeholder="Уточни самочувствие или задай вопрос..."></textarea>
+        <textarea id="aiQuickInput" rows="2" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="renderQuickAiThread()"></textarea>
         <div style="display:flex; gap:8px; margin-top:8px;">
           <button class="btn-indigo" style="height:44px; font-size:14.5px;" id="btnSendQuickAi" onclick="sendQuickAiQuestion()">
             Спросить
@@ -3408,6 +3494,41 @@
           { label: 'Пауза', cls: 'phase-hold-in', ms: 7000, haptic: 'select' },
           { label: 'Выдох', cls: 'phase-exhale', ms: 8000, haptic: 'light' }
         ]
+      },
+      anger: {
+        name: 'Сброс раздражения',
+        desc: 'Ритм 4–2–8 — вдох 4с, короткая фиксация 2с и долгий выдох 8с тормозят вспышку злости и внутреннего кипения.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 4000, haptic: 'light' },
+          { label: 'Пауза', cls: 'phase-hold-in', ms: 2000, haptic: 'select' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 8000, haptic: 'light' }
+        ]
+      },
+      balance: {
+        name: 'Ровный баланс',
+        desc: 'Ритм 5–5 — плавный вдох 5с и плавный выдох 5с без задержек выравнивают эмоциональные качели и слезливость.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 5000, haptic: 'light' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 5000, haptic: 'select' }
+        ]
+      },
+      energy: {
+        name: 'Мягкая энергия',
+        desc: 'Ритм 5–2–4 — глубокий вдох 5с, пауза 2с и активный выдох 4с мягко тонизируют при вялости и после плохого сна.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 5000, haptic: 'light' },
+          { label: 'Пауза', cls: 'phase-hold-in', ms: 2000, haptic: 'select' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 4000, haptic: 'light' }
+        ]
+      },
+      gentle: {
+        name: 'Щадящий ритм',
+        desc: 'Ритм 3–3–3 — неглубокий вдох 3с, пауза 3с и мягкий выдох 3с при мигрени, тошноте или головокружении.',
+        steps: [
+          { label: 'Вдох', cls: 'phase-inhale', ms: 3000, haptic: 'light' },
+          { label: 'Пауза', cls: 'phase-hold-in', ms: 3000, haptic: 'select' },
+          { label: 'Выдох', cls: 'phase-exhale', ms: 3000, haptic: 'light' }
+        ]
       }
     };
 
@@ -3570,6 +3691,12 @@
       if (label === 'Болезненность груди' || label === 'Боль в груди') return 'Чувствительность груди';
       if (label === 'Отёки / тяга к сладкому') return 'Отёки';
       return label;
+    }
+
+    function normalizeSleepQuality(val) {
+      if (val === 'Норм' || val === 'Средне') return 'Средне';
+      if (val === 'Плохо' || val === 'Хорошо') return val;
+      return '';
     }
 
     function normalizeSoloCount(entry) {
@@ -3829,7 +3956,7 @@
         emotionLevels: compactEmotions,
         contexts: entry.contexts || [],
         helped: Array.isArray(entry.helped) ? entry.helped.slice(0, 20) : [],
-        sleepQuality: ['Плохо', 'Норм', 'Хорошо'].includes(entry.sleepQuality) ? entry.sleepQuality : '',
+        sleepQuality: normalizeSleepQuality(entry.sleepQuality),
         dayThought: aiMaxScale > 0
           ? smartTrimText(entry.dayThought || '', aiMaxScale >= 1 ? 140 : Math.max(40, Math.round(140 * aiMaxScale)))
           : ''
@@ -3841,7 +3968,11 @@
         clone.painkillers = entry.painkillers.slice(0, 8).map(p => ({
           name: smartTrimText(p?.name || '', 60),
           timeISO: String(p?.timeISO || ''),
-          ...(p?.dailyLimitText ? { dailyLimitText: smartTrimText(p.dailyLimitText, 30) } : {})
+          ...(p?.dailyLimitText ? { dailyLimitText: smartTrimText(p.dailyLimitText, 30) } : {}),
+          ...(p?.painBefore !== null && p?.painBefore !== undefined ? { painBefore: Number(p.painBefore) } : {}),
+          ...(p?.painAfter !== null && p?.painAfter !== undefined ? { painAfter: Number(p.painAfter) } : {}),
+          ...(p?.effectMinutes !== null && p?.effectMinutes !== undefined ? { effectMinutes: Number(p.effectMinutes) } : {}),
+          ...(p?.effectStatus ? { effectStatus: String(p.effectStatus) } : {})
         })).filter(p => p.name);
       }
       if (entry.aiAnalysis && aiMaxScale > 0) {
@@ -4244,7 +4375,7 @@
         entry.emotions = getActiveEmotionsFromLevels(entry.emotionLevels);
         entry.soloCount = normalizeSoloCount(entry);
         entry.soloReset = entry.soloCount > 0;
-        entry.sleepQuality = ['Плохо', 'Норм', 'Хорошо'].includes(entry.sleepQuality) ? entry.sleepQuality : '';
+        entry.sleepQuality = normalizeSleepQuality(entry.sleepQuality);
         entry.dayThought = typeof entry.dayThought === 'string' ? entry.dayThought.slice(0, 140) : '';
       });
     }
@@ -5156,6 +5287,7 @@
       const contexts = getSelectedPhysicalContexts();
       const prevEntry = state.entries[selectedDate] || {};
       const prevHelped = Array.isArray(prevEntry.helped) ? [...prevEntry.helped] : [];
+      const prevPainkillers = Array.isArray(prevEntry.painkillers) ? [...prevEntry.painkillers] : [];
       const prevAi = prevEntry.aiAnalysis;
       const existingTemp = prevEntry.wristTempDelta;
       const wristTempDelta = (typeof existingTemp === 'number' && !isNaN(existingTemp)) ? existingTemp : null;
@@ -5181,11 +5313,12 @@
         stress: metrics.stress,
         emotions: activeEmos,
         emotionLevels: normalizedLevels,
-        sleepQuality: tempSleepQuality || '',
+        sleepQuality: normalizeSleepQuality(tempSleepQuality),
         dayThought: String(tempDayThought || '').slice(0, 140),
         contexts,
         ...(wristTempDelta !== null ? { wristTempDelta } : {}),
         helped: prevHelped,
+        ...(prevPainkillers.length ? { painkillers: prevPainkillers } : {}),
         ...(prevAi ? { aiAnalysis: prevAi } : {})
       };
     }
@@ -5912,14 +6045,16 @@
 
     function selectSleepQuality(val) {
       hapticSelect();
-      tempSleepQuality = (tempSleepQuality === val) ? '' : val;
+      const norm = normalizeSleepQuality(val);
+      tempSleepQuality = (normalizeSleepQuality(tempSleepQuality) === norm) ? '' : norm;
       renderSleepQualityButtons();
       autosaveCurrentDayDraft();
     }
 
     function renderSleepQualityButtons() {
+      const currentNorm = normalizeSleepQuality(tempSleepQuality);
       document.querySelectorAll('#sleepQualitySelector .choice-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.sleep === tempSleepQuality);
+        btn.classList.toggle('active', btn.dataset.sleep === currentNorm);
       });
     }
 
@@ -6045,7 +6180,7 @@
       document.querySelectorAll('#physicalContextChips .chip').forEach(chip => {
         chip.onclick = () => {
           hapticSelect();
-          const isRose = ['Чувствительность груди', 'Недосып'].includes(chip.dataset.val);
+          const isRose = chip.dataset.val === 'Чувствительность груди';
           chip.classList.toggle(isRose ? 'active-rose' : 'active');
           autosaveCurrentDayDraft();
         };
@@ -6159,12 +6294,12 @@
       document.querySelectorAll('#physicalContextChips .chip').forEach(c => {
         c.classList.remove('active', 'active-rose');
         if (normContexts.includes(c.dataset.val)) {
-          const isRose = ['Чувствительность груди', 'Недосып'].includes(c.dataset.val);
+          const isRose = c.dataset.val === 'Чувствительность груди';
           c.classList.add(isRose ? 'active-rose' : 'active');
         }
       });
 
-      tempSleepQuality = ['Плохо', 'Норм', 'Хорошо'].includes(data.sleepQuality) ? data.sleepQuality : '';
+      tempSleepQuality = normalizeSleepQuality(data.sleepQuality);
       renderSleepQualityButtons();
       tempDayThought = String(data.dayThought || '').slice(0, 140);
       const thoughtInp = document.getElementById('dayThoughtInput');
@@ -6402,7 +6537,7 @@
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
       const hasEdema = normContexts.includes('Отёки');
-      const hasSleepDebt = normContexts.includes('Недосып');
+      const hasSleepDebt = normalizeSleepQuality(entry.sleepQuality) === 'Плохо' || normContexts.includes('Недосып');
       const stressVal = entry.stress !== undefined ? Number(entry.stress) : (Number(entry.emotionLevels?.['Стресс']) || 0);
       const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || stressVal >= 3;
       const hasIrritability = (levels['Раздражение'] ?? 0) >= 3;
@@ -6818,6 +6953,8 @@
           const stressVal = e.stress !== undefined ? Number(e.stress) : (Number(e.emotionLevels?.['Стресс']) || 0);
           const contextsList = (e.contexts || []).map(normalizeContextLabel);
           const helpedList = e.helped || [];
+          const sleepVal = normalizeSleepQuality(e.sleepQuality)
+            || (contextsList.includes('Недосып') ? 'Плохо' : '');
           return {
             date: e.date,
             cycleDay: ci.cycleDay,
@@ -6826,6 +6963,7 @@
             pain: e.pain,
             libido: e.libido,
             ...(stressVal > 0 ? { stress: stressVal } : {}),
+            ...(sleepVal ? { sleepQuality: sleepVal } : {}),
             ...(e.isPeriod ? { isPeriod: true } : {}),
             ...(e.isOvulation ? { isOvulation: true } : {}),
             ...(e.intimacy ? { intimacy: true } : {}),
@@ -6836,7 +6974,17 @@
             ...(contextsList.length ? { contexts: contextsList } : {}),
             ...(helpedList.length ? { helped: helpedList } : {}),
             ...(Array.isArray(e.painkillers) && e.painkillers.length
-              ? { painkillers: e.painkillers.map(p => p.name) }
+              ? {
+                  painkillers: e.painkillers.map(p => {
+                    if (p.painAfter !== null && p.painAfter !== undefined) {
+                      const effStr = (p.effectStatus === 'not_helped' || p.effectMinutes === -1)
+                        ? 'не помогло'
+                        : (p.effectMinutes ? `за ~${p.effectMinutes} мин` : '');
+                      return `${p.name} (боль ${p.painBefore ?? '?'}→${p.painAfter}/5${effStr ? ', ' + effStr : ''})`;
+                    }
+                    return p.name;
+                  })
+                }
               : {})
           };
         });
@@ -6846,10 +6994,15 @@
         (e.helped || []).forEach(h => { helpedCounts[h] = (helpedCounts[h] || 0) + 1; });
       });
 
-      const hasRichHistory = recentHistory.length >= 3;
+      const cycleStats = getObservedCycleStats();
+      const completedCyclesCount = cycleStats.lengths.length;
+      const isFirstTrackedCycle = completedCyclesCount === 0;
+      const hasEnoughDaysInCurrentCycle = recentHistory.length >= 3;
       const watchToday = [];
       if (typeof current.wristTempDelta === 'number') watchToday.push(`Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C`);
       const todaySoloCount = normalizeSoloCount(current);
+      const todaySleepLabel = normalizeSleepQuality(current.sleepQuality)
+        || ((current.contexts || []).map(normalizeContextLabel).includes('Недосып') ? 'Плохо' : 'не указан');
 
       const prompt = `Ты пишешь как живой, внимательный человек — доказательный врач-гинеколог и КПТ-психолог в одном лице, который общается просто и по делу, на «ты».
 Строго запрещены ИИ-штампы, канцелярит и пустые фразы: не пиши «важно помнить», «в заключение», «комплексный подход», «не стоит забывать», «прислушайся к своему телу», «начни с малого» как общую заглушку. Говори конкретно про факты этого дня и цикла, живым разговорным языком.
@@ -6865,7 +7018,7 @@
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.isVariable ? `плавающий цикл ${info.minLen}–${info.maxLen} дней (медиана ${info.len} дн., колебания в пределах ±${Math.ceil((info.maxLen - info.minLen) / 2)} дн. являются физиологической нормой за счёт вариабельности фолликулярной фазы; дни ${info.minLen}–${info.maxLen} — это нормальное окно ожидания нового цикла, а не задержка; овуляцию оценивай по совокупности симптомов, температуры и выделений)` : pluralDays(info.len)}, длительность месячных: ${pluralDays(info.pLen)}
-- История длительности циклов по отметкам: ${(() => { const st = getObservedCycleStats(); return st.lengths.length ? `${st.lengths.join(', ')} дн. (среднее ${st.avg} дн.)` : 'пока недостаточно завершённых циклов в истории, опирайся на заданный диапазон'; })()}
+- История длительности циклов по отметкам: ${completedCyclesCount > 0 ? `${cycleStats.lengths.join(', ')} дн. (среднее ${cycleStats.avg} дн., зафиксировано завершённых циклов: ${completedCyclesCount})` : 'ПЕРВЫЙ отслеживаемый цикл в базе — завершённых прошлых циклов ещё нет'}
 - Дата: ${selectedDate}
 - День цикла: ${info.cycleDay} (${info.phase}${info.isDelay ? `, задержка ${pluralDays(info.delayDays)}` : ''})
 - Всего записей в базе: ${allSorted.length + 1}
@@ -6882,7 +7035,7 @@
 - Соло-разрядка (количество раз за день): ${todaySoloCount}
 ${watchToday.length ? `- Температура: ${watchToday.join(', ')}` : ''}
 - Эмоции (интенсивность): ${formattedEmos}
-- Сон: ${current.sleepQuality || 'не указан'}
+- Сон: ${todaySleepLabel}
 - Мысль / триггер дня: ${current.dayThought || 'не указано'}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
 - Правило покой vs активация: при выраженной боли или энергии <= 2/5 предлагай покой и восстановление; при тревоге или грусти с энергией >= 3/5 предлагай мягкую поведенческую активацию на 10 минут (прогулка, душ, одно простое завершённое дело) вместо избегания.
@@ -6897,9 +7050,11 @@ ${buildPainkillerHistorySummaryForAI()}
 ${JSON.stringify(recentHistory)}
 
 ЗАДАЧА:
-${hasRichHistory
-  ? 'В базе уже достаточно дней. Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, чувствительности груди, недосыпа, стресса, отёков, температуры, а также как влияли близость и соло-разрядка (включая её частоту за день). В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из прошлых записей и что лучше всего срабатывало).'
-  : 'Пока записей немного, поэтому в "patterns" коротко сравни сегодняшний день с имеющимися записями (или оставь пустую строку, если это первый день).'}
+${isFirstTrackedCycle
+  ? (hasEnoughDaysInCurrentCycle
+    ? 'Сейчас в базе идёт ПЕРВЫЙ отслеживаемый цикл (завершённых прошлых циклов в дневнике ещё НЕТ). СТРОГО ЗАПРЕЩЕНО писать, что это «уже не первый цикл», ссылаться на «прошлые циклы» или утверждать «обычно перед месячными у тебя...». Сравнивай показатели ТОЛЬКО между уже записанными днями текущего цикла: как менялись энергия, боль, эмоции, стресс и качество сна (sleepQuality), как плохой сон сказывался на следующем дне, как срабатывали обезболивающие и способы из helped. В поле "patterns" напиши конкретные связки по уже записанным дням текущего цикла + аккуратный ориентир на ближайшие 2–3 дня текущей фазы без выдумывания статистики прошлых циклов.'
+    : 'База только начинает собираться (идёт первый цикл, записей пока 1–3 дня). СТРОГО ЗАПРЕЩЕНО писать про «не первый цикл» или приписывать повторяющиеся паттерны прошлых циклов. В поле "patterns" честно отметь, что база ещё собирается, и при наличии 1–2 прошлых записей коротко сравни сегодняшний день (включая сон и самочувствие) только с ними, либо оставь пустую строку, если это первый день.')
+  : `В базе уже есть данные по нескольким циклам (завершённых циклов: ${completedCyclesCount}). Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, качества сна (sleepQuality), чувствительности груди, стресса, отёков, температуры, эффективности обезболивающих, а также как влияли близость и соло-разрядка. В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из реальных записей и что лучше всего срабатывало).`}
 
 Верни строго JSON:
 {
@@ -6997,18 +7152,36 @@ ${hasRichHistory
       const stressVal = current.stress !== undefined
         ? Number(current.stress)
         : (Number(current.emotionLevels?.['Стресс']) || 0);
+      const todaySleep = normalizeSleepQuality(current.sleepQuality)
+        || ((current.contexts || []).map(normalizeContextLabel).includes('Недосып') ? 'Плохо' : 'не указан');
+
+      const cycleStats = getObservedCycleStats();
+      const isFirstTrackedCycle = cycleStats.lengths.length === 0;
+
+      const recent7Days = Object.values(state.entries || {})
+        .filter(e => e.date && e.date !== selectedDate)
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 7)
+        .map(e => {
+          const ci = getCycleInfo(e.date);
+          const sq = normalizeSleepQuality(e.sleepQuality)
+            || ((e.contexts || []).map(normalizeContextLabel).includes('Недосып') ? 'Плохо' : '');
+          return `${e.date} (${ci.cycleDay} д.ц., ${ci.phase}): энергия ${e.energy}/5, боль ${e.pain}/5, стресс ${Number(e.stress) || 0}/5${sq ? `, сон: ${sq}` : ''}`;
+        })
+        .join('; ');
 
       return `Ты — опытный, тёплый КПТ-психолог с глубоким пониманием женской физиологии и менструального цикла. Ты общаешься на «ты» — живо, спокойно и по-человечески, как в личной доверительной переписке.
 
 Как ты ведёшь диалог:
 - Сначала по-настоящему откликаешься на то, что девушка написала: называешь её переживание своими словами, опираясь на детали её сообщения и реальное состояние организма сегодня, чтобы она чувствовала живое понимание, а не дежурное утешение.
-- Не обесцениваешь чувства фразой «это просто гормоны», а мягко связываешь контекст: показываешь, как телесный фон (фаза цикла, боль, усталость, недосып) усиливает тревожные или самокритичные мысли.
+- Не обесцениваешь чувства фразой «это просто гормоны», а мягко связываешь контекст: показываешь, как телесный фон (фаза цикла, боль, усталость, качество сна) усиливает тревожные или самокритичные мысли.
 - Работаешь в духе живой когнитивно-поведенческой терапии без учебника и ярлыков: помогаешь аккуратно отделить реальные факты от пугающих прогнозов и автоматических мыслей, не споришь и не читаешь нотаций, а предлагаешь более трезвый угол зрения или задаёшь один точный, бережный вопрос, который помогает ей самой нащупать опору.
 - Если уместно, предлагаешь одно маленькое, реалистичное действие на ближайшие 10–15 минут, строго соразмерное её текущим силам (при низкой энергии или боли — ничего энергозатратного).
 - Если в диалоге уже были реплики, опираешься на нить разговора и не повторяешь уже сказанное.
 
 Строгие запреты:
 - Никаких шаблонных нейросетевых оборотов и канцелярита: не используй фразы «важно помнить», «не стоит забывать», «ты не одна», «я слышу тебя», «это абсолютно нормально», «комплексный подход», «в заключение», «прислушайся к своему телу», «начни с малого».
+- ${isFirstTrackedCycle ? 'Сейчас идёт ПЕРВЫЙ отслеживаемый цикл в базе: строго запрещено писать «уже не первый цикл» или ссылаться на прошлые циклы.' : 'Опирайся только на реальные записи пользователя без выдумывания симптомов.'}
 - Не ставь академических диагнозов мыслям вроде «у тебя когнитивное искажение — катастрофизация» или «это эмоциональное обоснование» — говори обычным человеческим языком.
 - Не пиши списки с буллитами, нумерацией, заголовками и markdown-звёздочками. Только 2–3 коротких, дышащих абзаца обычного текста.
 - По маркерам: близость — партнёрская близость; соло-разрядка — называй её тактично («телесная разрядка» или «снятие напряжения наедине с собой»).
@@ -7019,10 +7192,12 @@ ${hasRichHistory
 Состояние и фон сегодняшнего дня (${selectedDate}, шкала 0–5):
 - День цикла: ${info.cycleDay} из ${info.isVariable ? `${info.minLen}–${info.maxLen} (норма плавающего цикла)` : info.len} (${info.phase})
 - Энергия: ${current.energy}/5, Боль: ${current.pain}/5, Либидо: ${current.libido}/5, Стресс: ${stressVal}/5
+- Сон сегодня: ${todaySleep}
 - Маркеры: близость=${Boolean(current.intimacy)}, соло-разрядка=${soloCnt} раз, овуляция=${Boolean(current.isOvulation)}
 ${typeof current.wristTempDelta === 'number' ? `- Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции: ${formattedEmos || 'не указаны'}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
+- Недавние дни (для оценки сна и динамики): ${recent7Days || 'пока нет предыдущих дней'}
 - Обезболивающие (за 24 ч и из архива циклов): ${buildPainkillerHistorySummaryForAI(true)}`;
     }
 
@@ -7930,9 +8105,19 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       return `${y}-${m}-${day}`;
     }
 
+    let expandedPainkillerEffectId = null;
+    let draftEffectMinutesById = {};
+
+    function parseNullablePainScore(val) {
+      if (val === null || val === undefined || val === '') return null;
+      const n = Number(val);
+      if (!Number.isFinite(n)) return null;
+      return Math.max(0, Math.min(5, Math.round(n)));
+    }
+
     function normalizePainkillerArchiveList(rawList) {
       if (!Array.isArray(rawList)) return [];
-      const seen = new Set();
+      const seen = new Map();
       const out = [];
       rawList.forEach((item, idx) => {
         if (!item || !item.name || !item.timeISO) return;
@@ -7940,10 +8125,27 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         const timeISO = String(item.timeISO).trim();
         if (!name || !timeISO) return;
         const key = `${timeISO}|${name.toLowerCase()}`;
-        if (seen.has(key)) return;
-        seen.add(key);
+        const painBefore = parseNullablePainScore(item.painBefore);
+        const painAfter = parseNullablePainScore(item.painAfter);
+        const effectMinutes = (item.effectMinutes !== null && item.effectMinutes !== undefined && item.effectMinutes !== '')
+          ? Math.round(Number(item.effectMinutes))
+          : null;
+        const effectStatus = (item.effectStatus === 'not_helped' || effectMinutes === -1)
+          ? 'not_helped'
+          : ((item.effectStatus === 'helped' || painAfter !== null) ? 'helped' : '');
+
+        if (seen.has(key)) {
+          const prev = seen.get(key);
+          if (prev.painBefore === null && painBefore !== null) prev.painBefore = painBefore;
+          if (prev.painAfter === null && painAfter !== null) prev.painAfter = painAfter;
+          if (prev.effectMinutes === null && effectMinutes !== null) prev.effectMinutes = effectMinutes;
+          if (!prev.effectStatus && effectStatus) prev.effectStatus = effectStatus;
+          if (!prev.dailyLimitText && item.dailyLimitText) prev.dailyLimitText = String(item.dailyLimitText).trim().slice(0, 32);
+          return;
+        }
+
         const dateISO = item.dateISO || getLocalISODateFromTimestamp(timeISO);
-        out.push({
+        const normObj = {
           id: item.id || `pka_${idx}_${timeISO}`,
           name: name.slice(0, 60),
           timeISO,
@@ -7951,8 +8153,14 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           cycleStartISO: item.cycleStartISO || '',
           cycleDay: Number(item.cycleDay) || 0,
           hours: Number(item.hours) || 4,
-          dailyLimitText: String(item.dailyLimitText || '').trim().slice(0, 32)
-        });
+          dailyLimitText: String(item.dailyLimitText || '').trim().slice(0, 32),
+          painBefore,
+          painAfter,
+          effectMinutes: Number.isFinite(effectMinutes) ? effectMinutes : null,
+          effectStatus
+        };
+        seen.set(key, normObj);
+        out.push(normObj);
       });
       out.sort((a, b) => new Date(b.timeISO).getTime() - new Date(a.timeISO).getTime());
       return out.slice(0, 120);
@@ -7960,6 +8168,41 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function mergePainkillerArchive(localList, cloudList) {
       return normalizePainkillerArchiveList([...(localList || []), ...(cloudList || [])]);
+    }
+
+    function syncPainkillerFieldsEverywhere(record) {
+      const key = `${record.timeISO}|${String(record.name || '').trim().toLowerCase()}`;
+      const dISO = record.dateISO || getLocalISODateFromTimestamp(record.timeISO);
+
+      (state.painkillers || []).forEach(p => {
+        if (`${p.timeISO}|${String(p.name || '').trim().toLowerCase()}` === key) {
+          p.painBefore = record.painBefore;
+          p.painAfter = record.painAfter;
+          p.effectMinutes = record.effectMinutes;
+          p.effectStatus = record.effectStatus;
+        }
+      });
+
+      (state.painkillerArchive || []).forEach(p => {
+        if (`${p.timeISO}|${String(p.name || '').trim().toLowerCase()}` === key) {
+          p.painBefore = record.painBefore;
+          p.painAfter = record.painAfter;
+          p.effectMinutes = record.effectMinutes;
+          p.effectStatus = record.effectStatus;
+        }
+      });
+
+      if (state.entries[dISO] && Array.isArray(state.entries[dISO].painkillers)) {
+        state.entries[dISO].painkillers.forEach(p => {
+          if (`${p.timeISO}|${String(p.name || '').trim().toLowerCase()}` === key) {
+            p.painBefore = record.painBefore;
+            p.painAfter = record.painAfter;
+            p.effectMinutes = record.effectMinutes;
+            p.effectStatus = record.effectStatus;
+          }
+        });
+        state.entries[dISO].updatedAt = Date.now();
+      }
     }
 
     function recordPainkillerInArchiveAndEntry(record) {
@@ -7974,7 +8217,11 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         cycleStartISO: record.cycleStartISO || state.settings.lastPeriodStart || '',
         cycleDay: Number(record.cycleDay) || cInfo.cycleDay || 0,
         hours: Number(record.hours) || 4,
-        dailyLimitText: record.dailyLimitText || ''
+        dailyLimitText: record.dailyLimitText || '',
+        painBefore: parseNullablePainScore(record.painBefore),
+        painAfter: parseNullablePainScore(record.painAfter),
+        effectMinutes: record.effectMinutes !== null && record.effectMinutes !== undefined ? Number(record.effectMinutes) : null,
+        effectStatus: record.effectStatus || ''
       };
       state.painkillerArchive = mergePainkillerArchive([enriched], state.painkillerArchive);
 
@@ -8004,15 +8251,23 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const existingEntry = state.entries[dateISO];
       const list = Array.isArray(existingEntry.painkillers) ? [...existingEntry.painkillers] : [];
       const key = `${enriched.timeISO}|${enriched.name.toLowerCase()}`;
-      if (!list.some(x => `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}` === key)) {
-        list.push({
-          name: enriched.name,
-          timeISO: enriched.timeISO,
-          ...(enriched.dailyLimitText ? { dailyLimitText: enriched.dailyLimitText } : {})
-        });
-        existingEntry.painkillers = list;
-        existingEntry.updatedAt = Date.now();
+      const existingIdx = list.findIndex(x => `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}` === key);
+      const compactItem = {
+        name: enriched.name,
+        timeISO: enriched.timeISO,
+        ...(enriched.dailyLimitText ? { dailyLimitText: enriched.dailyLimitText } : {}),
+        ...(enriched.painBefore !== null ? { painBefore: enriched.painBefore } : {}),
+        ...(enriched.painAfter !== null ? { painAfter: enriched.painAfter } : {}),
+        ...(enriched.effectMinutes !== null ? { effectMinutes: enriched.effectMinutes } : {}),
+        ...(enriched.effectStatus ? { effectStatus: enriched.effectStatus } : {})
+      };
+      if (existingIdx >= 0) {
+        list[existingIdx] = { ...list[existingIdx], ...compactItem };
+      } else {
+        list.push(compactItem);
       }
+      existingEntry.painkillers = list;
+      existingEntry.updatedAt = Date.now();
     }
 
     function archiveAndClearActivePainkillers(cycleStartISO = '') {
@@ -8024,6 +8279,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         });
       });
       state.painkillers = [];
+      expandedPainkillerEffectId = null;
       updatePainkillerUI();
       return activeList;
     }
@@ -8037,18 +8293,131 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const resolvedDailyLimit = String(explicitDailyLimit || customPreset?.dailyLimitText || known?.displayLimit || '').trim();
       const timeISO = new Date().toISOString();
       const dateISO = getLocalISODateFromTimestamp(timeISO);
+
+      const currentDayPain = dateISO === selectedDate
+        ? (Number(metrics.pain) || Number(state.entries[dateISO]?.pain) || 0)
+        : (Number(state.entries[dateISO]?.pain) || 0);
+      const initialPainBefore = currentDayPain > 0 ? Math.max(1, Math.min(5, Math.round(currentDayPain))) : null;
+
       const record = {
         id: `pk_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
         name: cleanName,
         timeISO,
+        dateISO,
         hours: resolvedHours,
-        ...(resolvedDailyLimit ? { dailyLimitText: resolvedDailyLimit } : {})
+        ...(resolvedDailyLimit ? { dailyLimitText: resolvedDailyLimit } : {}),
+        painBefore: initialPainBefore,
+        painAfter: null,
+        effectMinutes: null,
+        effectStatus: ''
       };
       state.painkillers.unshift(record);
       recordPainkillerInArchiveAndEntry(record);
       persistLocalAndCloud(dateISO);
       updatePainkillerUI();
       showToast('Приём записан');
+    }
+
+    function setPainkillerPainBefore(index, score) {
+      hapticSelect();
+      const item = state.painkillers[index];
+      if (!item) return;
+      const val = Math.max(1, Math.min(5, Math.round(Number(score))));
+      item.painBefore = val;
+      const dISO = item.dateISO || getLocalISODateFromTimestamp(item.timeISO);
+      syncPainkillerFieldsEverywhere(item);
+
+      const dayObj = state.entries[dISO];
+      const existingDayPain = dISO === selectedDate
+        ? (Number(metrics.pain) || Number(dayObj?.pain) || 0)
+        : (Number(dayObj?.pain) || 0);
+
+      if (existingDayPain === 0) {
+        if (dISO === selectedDate) {
+          metrics.pain = val;
+          renderAllCCSliders();
+          updateSummaries();
+        }
+        if (state.entries[dISO]) {
+          state.entries[dISO].pain = val;
+          state.entries[dISO].updatedAt = Date.now();
+        }
+      }
+
+      persistLocalAndCloud(dISO);
+      updatePainkillerUI();
+    }
+
+    function togglePainkillerEffectPanel(index) {
+      hapticImpact('light');
+      const item = state.painkillers[index];
+      if (!item) return;
+      const itemKey = item.id || `${item.timeISO}_${index}`;
+      if (expandedPainkillerEffectId === itemKey) {
+        expandedPainkillerEffectId = null;
+      } else {
+        expandedPainkillerEffectId = itemKey;
+        if (item.effectMinutes !== null && item.effectMinutes !== undefined) {
+          draftEffectMinutesById[itemKey] = item.effectMinutes;
+        } else {
+          const elapsed = Math.max(5, Math.min(240, Math.round((Date.now() - new Date(item.timeISO).getTime()) / 60000)));
+          draftEffectMinutesById[itemKey] = elapsed;
+        }
+      }
+      updatePainkillerUI();
+    }
+
+    function selectPainkillerEffectMinutes(index, mins) {
+      hapticSelect();
+      const item = state.painkillers[index];
+      if (!item) return;
+      const itemKey = item.id || `${item.timeISO}_${index}`;
+      draftEffectMinutesById[itemKey] = mins;
+
+      if (mins === -1) {
+        item.effectMinutes = -1;
+        item.effectStatus = 'not_helped';
+        if (item.painAfter === null || item.painAfter === undefined) {
+          item.painAfter = item.painBefore ?? null;
+        }
+        const dISO = item.dateISO || getLocalISODateFromTimestamp(item.timeISO);
+        syncPainkillerFieldsEverywhere(item);
+        persistLocalAndCloud(dISO);
+      }
+      updatePainkillerUI();
+    }
+
+    function savePainkillerPainAfter(index, afterScore) {
+      hapticSuccess();
+      const item = state.painkillers[index];
+      if (!item) return;
+      const itemKey = item.id || `${item.timeISO}_${index}`;
+      const elapsedFallback = Math.max(5, Math.min(240, Math.round((Date.now() - new Date(item.timeISO).getTime()) / 60000)));
+      const chosenMins = draftEffectMinutesById[itemKey] !== undefined ? draftEffectMinutesById[itemKey] : elapsedFallback;
+
+      item.painAfter = Math.max(0, Math.min(5, Math.round(Number(afterScore))));
+      item.effectMinutes = chosenMins;
+      item.effectStatus = chosenMins === -1 ? 'not_helped' : 'helped';
+      expandedPainkillerEffectId = null;
+
+      const dISO = item.dateISO || getLocalISODateFromTimestamp(item.timeISO);
+      syncPainkillerFieldsEverywhere(item);
+      persistLocalAndCloud(dISO);
+      updatePainkillerUI();
+      showToast('Эффект сохранён');
+    }
+
+    function formatPainkillerEffectLine(item) {
+      const hasAfter = item.painAfter !== null && item.painAfter !== undefined;
+      const hasBefore = item.painBefore !== null && item.painBefore !== undefined;
+      if (!hasAfter && item.effectStatus !== 'not_helped') return '';
+      const beforeTxt = hasBefore ? `${item.painBefore}/5` : '?';
+      const afterTxt = hasAfter ? `${item.painAfter}/5` : beforeTxt;
+      if (item.effectStatus === 'not_helped' || item.effectMinutes === -1) {
+        return `Боль ${beforeTxt} → ${afterTxt} · не помогло`;
+      }
+      const minsTxt = item.effectMinutes ? ` за ~${item.effectMinutes} мин` : '';
+      return `Боль ${beforeTxt} → ${afterTxt}${minsTxt}`;
     }
 
     function logCustomPainkiller(alsoLogIntake = true) {
@@ -8246,6 +8615,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           e.painkillers.forEach(pk => {
             if (pk?.name && pk?.timeISO) {
               combined.push({
+                ...pk,
                 name: pk.name,
                 timeISO: pk.timeISO,
                 dateISO: e.date || getLocalISODateFromTimestamp(pk.timeISO),
@@ -8265,9 +8635,13 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         const tStr = new Date(rec.timeISO).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const dayEntry = state.entries[dISO];
         const nextEntry = state.entries[shiftISOByDays(dISO, 1)];
-        const painToday = dayEntry && typeof dayEntry.pain === 'number' ? `, боль в этот день ${dayEntry.pain}/5` : '';
+        const effLine = formatPainkillerEffectLine(rec);
+        const effectPart = effLine
+          ? `, эффект приёма: ${effLine}`
+          : (rec.painBefore !== null && rec.painBefore !== undefined ? `, боль до приёма ${rec.painBefore}/5` : '');
+        const painToday = dayEntry && typeof dayEntry.pain === 'number' ? `, пик боли за день ${dayEntry.pain}/5` : '';
         const painNext = nextEntry && typeof nextEntry.pain === 'number' ? ` -> на след. день ${nextEntry.pain}/5` : '';
-        return `${dISO} (${cDay}-й день цикла, ${tStr}): ${rec.name}${painToday}${painNext}`;
+        return `${dISO} (${cDay}-й день цикла, ${tStr}): ${rec.name}${effectPart}${painToday}${painNext}`;
       }).join('; ');
     }
 
@@ -8463,13 +8837,64 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         const tStr = taken.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const nStr = nextSafe.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         const meta = getPainkillerMedMeta(item.name, item.dailyLimitText);
+        const itemKey = item.id || `${item.timeISO}_${idx}`;
+        const isExpanded = expandedPainkillerEffectId === itemKey;
+        const effectSummary = formatPainkillerEffectLine(item);
+        const isNotHelped = item.effectStatus === 'not_helped' || item.effectMinutes === -1;
+
+        const autoElapsed = Math.max(5, Math.min(240, Math.round((nowMs - taken.getTime()) / 60000)));
+        const selectedMins = draftEffectMinutesById[itemKey] !== undefined ? draftEffectMinutesById[itemKey] : autoElapsed;
+        const timeChoices = [
+          ...([20, 30, 45, 60, 90].includes(autoElapsed) ? [] : [{ val: autoElapsed, label: `~${autoElapsed} мин` }]),
+          { val: 20, label: '20 мин' },
+          { val: 30, label: '30 мин' },
+          { val: 45, label: '45 мин' },
+          { val: 60, label: '1 ч' },
+          { val: 90, label: '1.5 ч+' },
+          { val: -1, label: 'Не помогло', isRose: true }
+        ];
+
+        const beforeBtnsHtml = [1, 2, 3, 4, 5].map(v => `
+          <button type="button" class="med-mini-pill ${Number(item.painBefore) === v ? 'is-active' : ''}" onclick="setPainkillerPainBefore(${idx}, ${v})">${v}</button>
+        `).join('');
+
+        const afterBtnsHtml = [0, 1, 2, 3, 4, 5].map(v => `
+          <button type="button" class="med-mini-pill ${item.painAfter !== null && item.painAfter !== undefined && Number(item.painAfter) === v ? 'is-active' : ''}" onclick="savePainkillerPainAfter(${idx}, ${v})">${v}</button>
+        `).join('');
+
+        const timePillsHtml = timeChoices.map(tc => `
+          <button type="button" class="med-mini-pill ${tc.isRose ? 'is-rose' : ''} ${selectedMins === tc.val ? 'is-active' : ''}" onclick="selectPainkillerEffectMinutes(${idx}, ${tc.val})">${escapeHtml(tc.label)}</button>
+        `).join('');
+
         return `
-          <div class="med-item">
-            <div class="med-item-info">
-              <div class="med-item-name">${escapeHtml(item.name)} <span style="font-size:12px; font-weight:600; color:var(--ink-3);">· ${escapeHtml(meta.groupLabel)}</span></div>
-              <div class="med-item-time">${dayStr}, ${tStr} → след. с ${nStr}</div>
+          <div class="med-item med-item-card">
+            <div class="med-item-head">
+              <div class="med-item-info">
+                <div class="med-item-name">${escapeHtml(item.name)} <span style="font-size:12px; font-weight:600; color:var(--ink-3);">· ${escapeHtml(meta.groupLabel)}</span></div>
+                <div class="med-item-time">${dayStr}, ${tStr} → след. с ${nStr}</div>
+                ${effectSummary ? `<div class="med-effect-summary ${isNotHelped ? 'is-none' : ''}">${escapeHtml(effectSummary)}</div>` : ''}
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <button type="button" class="med-rate-btn" onclick="togglePainkillerEffectPanel(${idx})">${effectSummary ? 'Изменить' : 'Оценить эффект'}</button>
+                <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">${SVG_ICONS.cross}</button>
+              </div>
             </div>
-            <button type="button" class="med-del-btn" onclick="deletePainkiller(${idx})" aria-label="Удалить">${SVG_ICONS.cross}</button>
+            <div class="med-inline-row">
+              <span class="med-inline-label">Боль до:</span>
+              <div class="med-score-pills">${beforeBtnsHtml}</div>
+            </div>
+            ${isExpanded ? `
+              <div class="med-rate-panel">
+                <div>
+                  <div class="med-inline-label" style="margin-bottom:6px;">Время действия:</div>
+                  <div class="med-score-pills">${timePillsHtml}</div>
+                </div>
+                <div>
+                  <div class="med-inline-label" style="margin-bottom:6px;">Боль после (нажми балл, чтобы сохранить):</div>
+                  <div class="med-score-pills">${afterBtnsHtml}</div>
+                </div>
+              </div>
+            ` : ''}
           </div>
         `;
       }).join('');
@@ -8639,6 +9064,90 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
             kicker: 'Шаг 3 · Поддержка вместо давления',
             text: 'Скажи себе то, что сказала бы близкому другу в таком же состоянии:',
             prompts: ['Умыться прохладной водой', 'Выпить тёплого', '1 дело на 10 мин', 'Лечь отдохнуть']
+          }
+        ]
+      },
+      irritation: {
+        label: 'Раздражение и злость',
+        helpTitle: 'Перезагрузка: Раздражение и злость',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Телесный сброс импульса',
+            text: 'Сбрось физическое напряжение до того, как отвечать или принимать решения:',
+            prompts: ['Разжать челюсть и кулаки', 'Умыться прохладной водой', '3 резких выдоха']
+          },
+          {
+            kicker: 'Шаг 2 · Пауза 15 минут',
+            text: 'Не пиши на пике волны — назови триггер одним словом и дай себе 15 минут тишины:',
+            prompts: ['Не пишу на пике волны', 'Назвала триггер 1 словом', 'Пауза 15 минут']
+          },
+          {
+            kicker: 'Шаг 3 · Защита границ',
+            text: 'Убери лишний шум, закрой базовый ресурс и выбери одно спокойное действие:',
+            prompts: ['Убрать лишний шум', 'Попить воды / поесть', 'Одно тихое действие']
+          }
+        ]
+      },
+      tearfulness: {
+        label: 'Слезливость и истощение',
+        helpTitle: 'Перезагрузка: Слезливость и истощение',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Легализация состояния',
+            text: 'Когда накрывает эмоциональный ноль, не трать остаток сил на сдерживание:',
+            prompts: ['Не сдерживать слёзы', 'Снять давящую одежду', 'Укрыться пледом']
+          },
+          {
+            kicker: 'Шаг 2 · Чек-ап базового ресурса',
+            text: 'Проверь воду, еду, сон и день цикла: «это истощение ресурса, а не слабость»:',
+            prompts: ['Стакан воды', 'Тёплая еда', 'Это истощение, а не слабость']
+          },
+          {
+            kicker: 'Шаг 3 · Режим энергосбережения',
+            text: 'Сними всё необязательное на вечер и дай себе тихий отдых:',
+            prompts: ['Отменить необязательное', 'Лечь на 15–20 мин в тишине', 'Без экрана и ленты']
+          }
+        ]
+      },
+      brain_fog: {
+        label: 'Туман и расфокус',
+        helpTitle: 'Перезагрузка: Туман в голове и расфокус',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Выгрузка из головы',
+            text: 'Выпиши 2–3 крутящиеся задачи в заметку, чтобы не держать их в оперативной памяти:',
+            prompts: ['Выписала 2–3 задачи', 'Остальное закрыла до завтра', 'Не держу всё в голове']
+          },
+          {
+            kicker: 'Шаг 2 · Физическое переключение',
+            text: 'Смени положение тела и дай мозгу кислород и воду:',
+            prompts: ['Встать и потянуться', 'Открыть окно', 'Выпить стакан воды']
+          },
+          {
+            kicker: 'Шаг 3 · Правило 5 минут',
+            text: 'Выбери один крошечный шаг на 5 минут без перфекционизма:',
+            prompts: ['Один микрошаг', 'Без перфекционизма', 'Старт на 5 минут']
+          }
+        ]
+      },
+      insomnia: {
+        label: 'Мысли перед сном',
+        helpTitle: 'Перезагрузка: Мысли перед сном',
+        steps: [
+          {
+            kicker: 'Шаг 1 · Парковка дел на завтра',
+            text: 'Мысленно или в заметку закрой список тревог до утра — ночью они не решаются:',
+            prompts: ['Закрыла список тревог до утра', 'Записала 1–2 мысли в заметку', 'Ночью я только отдыхаю']
+          },
+          {
+            kicker: 'Шаг 2 · Поочерёдное расслабление тела',
+            text: 'Медленно пройди вниманием по телу и отпусти зажимы:',
+            prompts: ['Стопы и таз', 'Живот и грудь', 'Плечи и лоб']
+          },
+          {
+            kicker: 'Шаг 3 · Сенсорный покой',
+            text: 'Согрей стопы, убери телефон и не проверяй, сколько осталось спать:',
+            prompts: ['Тепло на стопы', 'Убрать телефон', 'Не проверять, сколько спать']
           }
         ]
       }
