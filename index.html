@@ -3490,7 +3490,7 @@
       </div>
 
       <div style="display:flex; flex-direction:column; gap:10px;">
-        <button class="btn-soft" onclick="forceCloudSync()">Синхронизировать с облаком</button>
+        <button class="btn-soft" id="btnForceCloudSync" onclick="forceCloudSync()">Синхронизировать с облаком</button>
         <button class="btn-soft" onclick="exportData()">Скачать резервную копию (.json)</button>
         <button class="btn-soft" onclick="importDataPrompt()">Восстановить из файла (.json)</button>
         <button class="btn-danger-soft" onclick="clearAllData()">Сбросить все данные</button>
@@ -4133,9 +4133,40 @@
     let sosResetStateMode = 'anxiety'; // 'anxiety' | 'pain' | 'self_criticism'
     let helpedEffectiveness = state.helpedEffectiveness; // tipId -> { used: number, helped: number }
     let isCloudSyncing = false;
+    let queuedCloudPull = false;
+    let queuedCloudPullForce = false;
     let pendingCloudWritePromise = Promise.resolve();
+    let cloudWriteDebounceTimer = null;
+    let pendingCloudTargetKeys = new Set();
+    let pendingCloudFullSync = false;
+    let pendingCloudMetaOnly = false;
     let lastLocalWriteTimestamp = 0;
+    let lastCloudSyncOk = false;
+    let lastKnownCloudRev = '';
+    let lastFullRevFallbackAt = 0;
     let emotionAutosaveTimer = null;
+    const DEVICE_SYNC_ID = (() => {
+      try {
+        const k = 'carezze_v2_device_id';
+        let id = localStorage.getItem(k);
+        if (!id) {
+          id = `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+          localStorage.setItem(k, id);
+        }
+        return id;
+      } catch (e) {
+        return `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
+      }
+    })();
+
+    function touchSettingsUpdatedAt() {
+      if (!state.settings || typeof state.settings !== 'object') state.settings = {};
+      state.settings.updatedAt = Date.now();
+    }
+
+    function touchMedsUpdatedAt() {
+      state.medsUpdatedAt = Date.now();
+    }
 
     function getCurrentPaletteColors() {
       const palKey = THEMES[state.settings.palette] ? state.settings.palette : 'peach_sage';
@@ -4192,8 +4223,9 @@
       if (!THEMES[palKey]) return;
       hapticSelect();
       state.settings.palette = palKey;
+      touchSettingsUpdatedAt();
       applyThemeUI();
-      persistLocalAndCloud(null);
+      persistLocalAndCloud('__meta_only__');
       if (document.getElementById('view-analytics').classList.contains('active')) {
         renderAnalytics();
       }
@@ -4203,8 +4235,9 @@
     function toggleTheme() {
       hapticImpact('light');
       state.settings.darkMode = !state.settings.darkMode;
+      touchSettingsUpdatedAt();
       applyThemeUI();
-      persistLocalAndCloud(null);
+      persistLocalAndCloud('__meta_only__');
       if (document.getElementById('view-analytics').classList.contains('active')) {
         renderAnalytics();
       }
@@ -4288,6 +4321,34 @@
         if (!hasTelegramCloud() || !keys.length) return resolve(false);
         try { tg.CloudStorage.removeItems(keys, () => resolve(true)); } catch (e) { resolve(false); }
       });
+    }
+
+    async function cloudSetMany(pairs, batchSize = 4, delayMs = 45) {
+      const results = [];
+      for (let i = 0; i < pairs.length; i += batchSize) {
+        const chunk = pairs.slice(i, i + batchSize);
+        const chunkRes = await Promise.all(chunk.map(([k, v]) => cloudSet(k, v)));
+        results.push(...chunkRes);
+        if (i + batchSize < pairs.length && delayMs > 0) {
+          await new Promise(r => setTimeout(r, delayMs));
+        }
+      }
+      return results;
+    }
+
+    async function pruneStaleCloudKeys(existingKeys) {
+      if (!hasTelegramCloud() || !Array.isArray(existingKeys) || existingKeys.length < 120) return;
+      const cutoffISO = getTodayISO(-45);
+      const staleKeys = existingKeys.filter(k => {
+        if (k.startsWith('carezze2_d_')) {
+          const iso = k.slice('carezze2_d_'.length);
+          return /^\d{4}-\d{2}-\d{2}$/.test(iso) && iso < cutoffISO;
+        }
+        return k.startsWith('carezze1_') || k.startsWith('ritm9_') || k.startsWith('ritm8_');
+      });
+      if (staleKeys.length > 0) {
+        await cloudRemove(staleKeys.slice(0, 60));
+      }
     }
 
     function smartTrimText(text, maxLen) {
@@ -4486,58 +4547,64 @@
       } else if (Math.abs(lTime - cTime) < 2000 && Array.isArray(older.helped) && older.helped.length) {
         merged.helped = Array.from(new Set([...merged.helped, ...older.helped]));
       }
-      if (!merged.sleepQuality && older.sleepQuality) {
+      const isNearSimultaneous = Math.abs(lTime - cTime) < 2000;
+      if (!merged.sleepQuality && older.sleepQuality && isNearSimultaneous) {
         merged.sleepQuality = older.sleepQuality;
       }
-      if (!merged.dayThought && older.dayThought) {
+      if (!merged.dayThought && older.dayThought && isNearSimultaneous) {
         merged.dayThought = older.dayThought;
       }
 
-      const medMap = new Map();
-      [
-        ...(Array.isArray(older.painkillers) ? older.painkillers : []),
-        ...(Array.isArray(newer.painkillers) ? newer.painkillers : [])
-      ].forEach(x => {
-        if (!x?.name) return;
-        const k = `${x.timeISO || ''}|${String(x.name).trim().toLowerCase()}`;
-        const prev = medMap.get(k);
-        if (!prev) {
-          medMap.set(k, { ...x });
-        } else {
-          medMap.set(k, {
-            ...prev,
-            ...x,
-            painBefore: x.painBefore ?? prev.painBefore ?? null,
-            painAfter: x.painAfter ?? prev.painAfter ?? null,
-            effectMinutes: x.effectMinutes ?? prev.effectMinutes ?? null,
-            effectStatus: x.effectStatus || prev.effectStatus || ''
-          });
-        }
-      });
-      if (medMap.size > 0 || Array.isArray(merged.painkillers)) {
-        merged.painkillers = Array.from(medMap.values());
-      }
-      if ((Array.isArray(older.painLogs) && older.painLogs.length) || (Array.isArray(newer.painLogs) && newer.painLogs.length)) {
-        const combinedLogs = [
-          ...(Array.isArray(older.painLogs) ? older.painLogs : []),
-          ...(Array.isArray(newer.painLogs) ? newer.painLogs : [])
-        ];
-        const seenLogKeys = new Set();
-        const dedupedLogs = [];
-        combinedLogs.forEach((l, idx) => {
-          if (!l?.timeISO) return;
-          const lvl = Math.max(0, Math.min(5, Math.round(Number(l.level) || 0)));
-          const k = `${l.timeISO}|${lvl}`;
-          if (seenLogKeys.has(k)) return;
-          seenLogKeys.add(k);
-          dedupedLogs.push({
-            id: l.id || `pl_${idx}_${new Date(l.timeISO).getTime()}`,
-            timeISO: l.timeISO,
-            level: lvl
-          });
+      if (isNearSimultaneous) {
+        const medMap = new Map();
+        [
+          ...(Array.isArray(older.painkillers) ? older.painkillers : []),
+          ...(Array.isArray(newer.painkillers) ? newer.painkillers : [])
+        ].forEach(x => {
+          if (!x?.name) return;
+          const k = `${x.timeISO || ''}|${String(x.name).trim().toLowerCase()}`;
+          const prev = medMap.get(k);
+          if (!prev) {
+            medMap.set(k, { ...x });
+          } else {
+            medMap.set(k, {
+              ...prev,
+              ...x,
+              painBefore: x.painBefore ?? prev.painBefore ?? null,
+              painAfter: x.painAfter ?? prev.painAfter ?? null,
+              effectMinutes: x.effectMinutes ?? prev.effectMinutes ?? null,
+              effectStatus: x.effectStatus || prev.effectStatus || ''
+            });
+          }
         });
-        dedupedLogs.sort((a, b) => new Date(a.timeISO).getTime() - new Date(b.timeISO).getTime());
-        merged.painLogs = dedupedLogs.slice(-24);
+        if (medMap.size > 0 || Array.isArray(merged.painkillers)) {
+          merged.painkillers = Array.from(medMap.values());
+        }
+        if ((Array.isArray(older.painLogs) && older.painLogs.length) || (Array.isArray(newer.painLogs) && newer.painLogs.length)) {
+          const combinedLogs = [
+            ...(Array.isArray(older.painLogs) ? older.painLogs : []),
+            ...(Array.isArray(newer.painLogs) ? newer.painLogs : [])
+          ];
+          const seenLogKeys = new Set();
+          const dedupedLogs = [];
+          combinedLogs.forEach((l, idx) => {
+            if (!l?.timeISO) return;
+            const lvl = Math.max(0, Math.min(5, Math.round(Number(l.level) || 0)));
+            const k = `${l.timeISO}|${lvl}`;
+            if (seenLogKeys.has(k)) return;
+            seenLogKeys.add(k);
+            dedupedLogs.push({
+              id: l.id || `pl_${idx}_${new Date(l.timeISO).getTime()}`,
+              timeISO: l.timeISO,
+              level: lvl
+            });
+          });
+          dedupedLogs.sort((a, b) => new Date(a.timeISO).getTime() - new Date(b.timeISO).getTime());
+          merged.painLogs = dedupedLogs.slice(-24);
+        }
+      } else {
+        merged.painkillers = Array.isArray(newer.painkillers) ? [...newer.painkillers] : [];
+        merged.painLogs = Array.isArray(newer.painLogs) ? [...newer.painLogs] : [];
       }
       merged.peakPain = computeDayPeakPain(merged, [cloudEntry.peakPain, localEntry.peakPain, cloudEntry.pain, localEntry.pain]);
       if (!merged.updatedAt) {
@@ -4561,15 +4628,23 @@
       const badge = document.getElementById('cloudSyncBadge');
       if (!hasTelegramCloud()) {
         if (badge) badge.textContent = '';
+        lastCloudSyncOk = false;
         return false;
       }
       if (badge) badge.textContent = 'Cloud…';
 
-      const tasks = [];
+      const writePairs = [];
       const entriesList = Object.entries(state.entries);
       const dirtyBefore = getDirtyCloudKeys();
+      const targetSet = Array.isArray(specificTargetKey)
+        ? new Set(specificTargetKey.filter(Boolean))
+        : (typeof specificTargetKey === 'string' && specificTargetKey && specificTargetKey !== '__meta_only__' && specificTargetKey !== '__dirty_retry__'
+            ? new Set([specificTargetKey])
+            : null);
+      const isFullSync = specificTargetKey === null;
+      const isMetaOnly = specificTargetKey === '__meta_only__';
 
-      if (specificTargetKey !== '__meta_only__') {
+      if (!isMetaOnly) {
         const monthBuckets = {};
         const individualDayTargets = new Set();
 
@@ -4577,34 +4652,32 @@
           const monthKey = iso.slice(0, 7);
           const isDirtyDay = dirtyBefore.has(`carezze2_d_${iso}`);
           const isDirtyMonth = dirtyBefore.has(`carezze2_m_${monthKey}`);
-          const shouldTouch = !specificTargetKey
-            || iso === specificTargetKey
-            || monthKey === specificTargetKey
-            || iso.startsWith(specificTargetKey)
+          const matchesTarget = isFullSync
             || isDirtyDay
-            || isDirtyMonth;
+            || isDirtyMonth
+            || (targetSet && (targetSet.has(iso) || targetSet.has(monthKey) || Array.from(targetSet).some(t => iso.startsWith(t))));
 
-          if (shouldTouch) {
+          if (matchesTarget) {
             if (!monthBuckets[monthKey]) monthBuckets[monthKey] = {};
             monthBuckets[monthKey][iso] = compactEntryForCloud(entry, 0.85);
-            if (specificTargetKey === iso || (specificTargetKey && iso.startsWith(specificTargetKey)) || isDirtyDay) {
+            if ((targetSet && (targetSet.has(iso) || Array.from(targetSet).some(t => iso.startsWith(t)))) || isDirtyDay) {
               individualDayTargets.add(iso);
             }
           }
         }
 
-        // При полной синхронизации дополнительно сохраняем последние 60 дней в индивидуальные ключи
-        if (!specificTargetKey) {
+        // При полной синхронизации дополнительно сохраняем последние 45 дней в индивидуальные ключи
+        if (isFullSync) {
           Object.keys(state.entries)
             .sort()
-            .slice(-60)
+            .slice(-45)
             .forEach(iso => individualDayTargets.add(iso));
         }
 
         for (const iso of individualDayTargets) {
           const entry = state.entries[iso];
           if (entry) {
-            tasks.push(cloudSet(`carezze2_d_${iso}`, serializeDaySafelyForCloud(entry)));
+            writePairs.push([`carezze2_d_${iso}`, serializeDaySafelyForCloud(entry)]);
           }
         }
 
@@ -4622,14 +4695,15 @@
             payloadObj[singleIso] = JSON.parse(serializeDaySafelyForCloud(state.entries[singleIso]));
             serialized = JSON.stringify(payloadObj);
           }
-          tasks.push(cloudSet(`carezze2_m_${monthKey}`, serialized));
+          writePairs.push([`carezze2_m_${monthKey}`, serialized]);
         }
       }
 
       const customPool = Array.isArray(state.customHelpedPool) ? state.customHelpedPool.slice(0, 30) : [];
-      tasks.push(cloudSet('carezze2_custom_tips', serializeCustomPoolSafely(customPool)));
+      writePairs.push(['carezze2_custom_tips', serializeCustomPoolSafely(customPool)]);
 
       const medsPayloadObj = {
+        updatedAt: Number(state.medsUpdatedAt) || 0,
         activePainkillers: (Array.isArray(state.painkillers) ? state.painkillers : []).slice(0, 12),
         customPainkillers: normalizeCustomPainkillersList(state.customPainkillers).slice(0, 20),
         deletedCustomPainkillerIds: normalizeDeletedCustomPainkillerIds(state.deletedCustomPainkillerIds).slice(-40),
@@ -4640,7 +4714,7 @@
         medsPayloadObj.painkillerArchive.pop();
         medsStr = JSON.stringify(medsPayloadObj);
       }
-      tasks.push(cloudSet('carezze2_meds', medsStr));
+      writePairs.push(['carezze2_meds', medsStr]);
 
       const rawEff = (state.helpedEffectiveness && typeof state.helpedEffectiveness === 'object')
         ? state.helpedEffectiveness
@@ -4696,7 +4770,7 @@
           helpedEffectiveness: buildEffObj(effLimit)
         });
       }
-      tasks.push(cloudSet('carezze2_meta', metaPayload));
+      writePairs.push(['carezze2_meta', metaPayload]);
 
       const cyclesArchive = buildAllPainCycles().slice(0, 12).map(c => ({
         cycleId: c.cycleId,
@@ -4725,13 +4799,27 @@
         cyclesArchive.pop();
         cyclesStr = JSON.stringify(cyclesArchive);
       }
-      tasks.push(cloudSet('carezze2_pain_cycles', cyclesStr));
+      writePairs.push(['carezze2_pain_cycles', cyclesStr]);
 
-      const results = await Promise.all(tasks);
-      const allOk = results.every(Boolean) && getDirtyCloudKeys().size === 0;
+      const dataResults = await cloudSetMany(writePairs, 4, 45);
+      const dataOk = dataResults.every(Boolean) && getDirtyCloudKeys().size === 0;
+
+      // Записываем ревизию строго ПОСЛЕ успешной записи всех данных, чтобы другое устройство не прочитало недозаписанный снимок
+      let revOk = false;
+      if (dataOk) {
+        const revPayload = JSON.stringify({ rev: Date.now(), src: DEVICE_SYNC_ID });
+        revOk = await cloudSet('carezze2_rev', revPayload);
+        if (revOk) {
+          lastKnownCloudRev = revPayload;
+        }
+      }
+
+      const allOk = dataOk && revOk && getDirtyCloudKeys().size === 0;
+      lastCloudSyncOk = allOk;
       if (badge) {
         badge.textContent = allOk ? 'Cloud' : 'Cloud !';
       }
+      updateTodaySaveStatus(false);
       return allOk;
     }
 
@@ -5052,24 +5140,72 @@
       }
     }
 
-    async function syncFromCloudBackground() {
+    function buildSyncStateFingerprint() {
+      try {
+        const entrySummary = Object.keys(state.entries || {}).sort().map(iso => {
+          const e = state.entries[iso] || {};
+          return `${iso}:${Number(e.updatedAt) || 0}:${e.isPeriod ? 1 : 0}:${e.isOvulation ? 1 : 0}:${e.energy || 0}:${e.pain || 0}:${e.libido || 0}:${e.stress || 0}:${e.dayThought || ''}:${(e.painkillers || []).length}`;
+        }).join('|');
+        const settingsSummary = JSON.stringify({
+          onboarded: state.onboarded,
+          lastPeriodStart: state.settings?.lastPeriodStart,
+          cycleLengthMin: state.settings?.cycleLengthMin,
+          cycleLengthMax: state.settings?.cycleLengthMax,
+          periodLength: state.settings?.periodLength,
+          darkMode: state.settings?.darkMode,
+          palette: state.settings?.palette,
+          profile: state.settings?.profile,
+          painkillersLen: (state.painkillers || []).length,
+          archiveLen: (state.painkillerArchive || []).length,
+          customTipsLen: (state.customHelpedPool || []).length
+        });
+        return `${settingsSummary}#${entrySummary}`;
+      } catch (e) {
+        return String(Date.now());
+      }
+    }
+
+    async function syncFromCloudBackground(options = {}) {
+      const force = Boolean(options && options.force);
       if (!hasTelegramCloud()) {
         finishInitialCloudHydration(false);
-        return;
+        return false;
       }
-      if (isCloudSyncing) return;
+      if (isCloudSyncing) {
+        queuedCloudPull = true;
+        if (force) queuedCloudPullForce = true;
+        return false;
+      }
       isCloudSyncing = true;
+      let stateChanged = false;
       try {
+        await flushPendingCloudWrite();
         await pendingCloudWritePromise;
+
         if (getDirtyCloudKeys().size > 0) {
           await syncToCloud('__dirty_retry__');
         }
-        if (Date.now() - lastLocalWriteTimestamp < 4000) {
+        if (!force && Date.now() - lastLocalWriteTimestamp < 3000) {
           finishInitialCloudHydration(true);
-          return;
+          return false;
         }
 
-        document.getElementById('cloudSyncBadge').textContent = 'Cloud';
+        const badge = document.getElementById('cloudSyncBadge');
+        const revRaw = await cloudGet('carezze2_rev');
+        const now = Date.now();
+        const needsFullFallback = (now - lastFullRevFallbackAt) > 25000;
+        if (!force && !isInitialCloudHydrating && revRaw && revRaw === lastKnownCloudRev && !needsFullFallback) {
+          if (badge) {
+            badge.textContent = getDirtyCloudKeys().size === 0 ? 'Cloud' : 'Cloud !';
+          }
+          return false;
+        }
+        if (needsFullFallback || force || isInitialCloudHydrating) {
+          lastFullRevFallbackAt = now;
+        }
+
+        const beforeFingerprint = buildSyncStateFingerprint();
+
         const metaRaw = (await cloudGet('carezze2_meta'))
           || (await cloudGet('carezze1_meta'))
           || (await cloudGet('ritm9_meta'))
@@ -5078,7 +5214,15 @@
         if (metaRaw) {
           const meta = JSON.parse(metaRaw);
           state.onboarded = Boolean(meta.onboarded) || state.onboarded;
-          state.settings = { ...state.settings, ...(meta.settings || {}) };
+          if (meta.settings && typeof meta.settings === 'object') {
+            const cloudSettingsTs = Number(meta.settings.updatedAt) || 0;
+            const localSettingsTs = Number(state.settings?.updatedAt) || 0;
+            if (cloudSettingsTs >= localSettingsTs || localSettingsTs === 0) {
+              state.settings = { ...state.settings, ...meta.settings };
+            } else {
+              state.settings = { ...meta.settings, ...state.settings };
+            }
+          }
           if (!THEMES[state.settings.palette]) {
             state.settings.palette = 'peach_sage';
           }
@@ -5090,7 +5234,7 @@
           reconcileCycleStartWithEntries();
           ensureProfileStructure();
           if (Array.isArray(meta.painkillers)) {
-            if (meta.painkillers.length || Date.now() - lastLocalWriteTimestamp >= 4000) {
+            if (meta.painkillers.length || Date.now() - lastLocalWriteTimestamp >= 3000) {
               state.painkillers = meta.painkillers;
             }
           }
@@ -5138,6 +5282,8 @@
           try {
             const medsObj = JSON.parse(medsCloudRaw);
             if (medsObj && typeof medsObj === 'object') {
+              const cloudMedsTs = Number(medsObj.updatedAt) || 0;
+              const localMedsTs = Number(state.medsUpdatedAt) || 0;
               if (Array.isArray(medsObj.deletedCustomPainkillerIds)) {
                 state.deletedCustomPainkillerIds = normalizeDeletedCustomPainkillerIds([...(state.deletedCustomPainkillerIds || []), ...medsObj.deletedCustomPainkillerIds]);
               }
@@ -5145,24 +5291,35 @@
                 state.customPainkillers = mergeCustomPainkillers(state.customPainkillers, medsObj.customPainkillers);
               }
               if (Array.isArray(medsObj.painkillerArchive)) {
-                state.painkillerArchive = mergePainkillerArchive(state.painkillerArchive, medsObj.painkillerArchive);
+                if (cloudMedsTs > localMedsTs + 2000 && Date.now() - lastLocalWriteTimestamp >= 3000) {
+                  state.painkillerArchive = normalizePainkillerArchiveList(medsObj.painkillerArchive);
+                } else {
+                  state.painkillerArchive = mergePainkillerArchive(state.painkillerArchive, medsObj.painkillerArchive);
+                }
               }
-              if (Array.isArray(medsObj.activePainkillers) && medsObj.activePainkillers.length && Date.now() - lastLocalWriteTimestamp >= 4000) {
-                const activeMap = new Map();
-                [...medsObj.activePainkillers, ...(state.painkillers || [])].forEach(x => {
-                  if (!x?.name) return;
-                  const k = `${x.timeISO || ''}|${String(x.name).trim().toLowerCase()}`;
-                  const prev = activeMap.get(k);
-                  activeMap.set(k, prev ? {
-                    ...prev,
-                    ...x,
-                    painBefore: x.painBefore ?? prev.painBefore ?? null,
-                    painAfter: x.painAfter ?? prev.painAfter ?? null,
-                    effectMinutes: x.effectMinutes ?? prev.effectMinutes ?? null,
-                    effectStatus: x.effectStatus || prev.effectStatus || ''
-                  } : { ...x });
-                });
-                state.painkillers = Array.from(activeMap.values());
+              if (Array.isArray(medsObj.activePainkillers) && Date.now() - lastLocalWriteTimestamp >= 3000) {
+                if (cloudMedsTs > localMedsTs + 2000) {
+                  state.painkillers = [...medsObj.activePainkillers];
+                } else if (medsObj.activePainkillers.length || cloudMedsTs >= localMedsTs) {
+                  const activeMap = new Map();
+                  [...medsObj.activePainkillers, ...(state.painkillers || [])].forEach(x => {
+                    if (!x?.name) return;
+                    const k = `${x.timeISO || ''}|${String(x.name).trim().toLowerCase()}`;
+                    const prev = activeMap.get(k);
+                    activeMap.set(k, prev ? {
+                      ...prev,
+                      ...x,
+                      painBefore: x.painBefore ?? prev.painBefore ?? null,
+                      painAfter: x.painAfter ?? prev.painAfter ?? null,
+                      effectMinutes: x.effectMinutes ?? prev.effectMinutes ?? null,
+                      effectStatus: x.effectStatus || prev.effectStatus || ''
+                    } : { ...x });
+                  });
+                  state.painkillers = Array.from(activeMap.values());
+                }
+              }
+              if (cloudMedsTs > localMedsTs) {
+                state.medsUpdatedAt = cloudMedsTs;
               }
             }
           } catch (e) {}
@@ -5242,23 +5399,75 @@
         ensureOnboardedFlagIfDataExists();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 
+        if (revRaw) {
+          lastKnownCloudRev = revRaw;
+        }
+        if (badge) {
+          badge.textContent = getDirtyCloudKeys().size === 0 ? 'Cloud' : 'Cloud !';
+        }
+        lastCloudSyncOk = getDirtyCloudKeys().size === 0;
+        updateTodaySaveStatus(false);
+
         if (importedTempToday !== null) {
           await syncToCloud(getTodayISO(0));
         }
 
-        applyThemeUI();
-        syncSettingsInputs();
-        if (state.onboarded) {
-          document.getElementById('onboardingScreen').classList.remove('active');
+        const afterFingerprint = buildSyncStateFingerprint();
+        stateChanged = beforeFingerprint !== afterFingerprint;
+
+        if (stateChanged || force) {
+          applyThemeUI();
+          syncSettingsInputs();
+          if (state.onboarded) {
+            document.getElementById('onboardingScreen').classList.remove('active');
+          }
+          loadDayForm();
+          renderAnalytics();
+          updatePainkillerUI();
+          renderPainTrackerCard();
         }
-        loadDayForm();
-        renderAnalytics();
-        updatePainkillerUI();
+
+        pruneStaleCloudKeys(keys).catch(() => {});
       } catch (e) {
       } finally {
         finishInitialCloudHydration(true);
         isCloudSyncing = false;
+        if (queuedCloudPull) {
+          const nextForce = queuedCloudPullForce;
+          queuedCloudPull = false;
+          queuedCloudPullForce = false;
+          setTimeout(() => {
+            syncFromCloudBackground({ force: nextForce });
+          }, 120);
+        }
       }
+      return stateChanged;
+    }
+
+    function executeCoalescedCloudWrite() {
+      if (cloudWriteDebounceTimer) {
+        clearTimeout(cloudWriteDebounceTimer);
+        cloudWriteDebounceTimer = null;
+      }
+      const isFull = pendingCloudFullSync;
+      const isMetaOnly = pendingCloudMetaOnly && !isFull && pendingCloudTargetKeys.size === 0;
+      const targets = Array.from(pendingCloudTargetKeys);
+      pendingCloudFullSync = false;
+      pendingCloudMetaOnly = false;
+      pendingCloudTargetKeys.clear();
+
+      const arg = isFull ? null : (isMetaOnly ? '__meta_only__' : targets);
+      pendingCloudWritePromise = pendingCloudWritePromise
+        .then(() => syncToCloud(arg))
+        .catch(() => false);
+      return pendingCloudWritePromise;
+    }
+
+    function flushPendingCloudWrite() {
+      if (cloudWriteDebounceTimer) {
+        return executeCoalescedCloudWrite();
+      }
+      return pendingCloudWritePromise;
     }
 
     function persistLocalAndCloud(targetKey = null) {
@@ -5267,18 +5476,52 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       } catch (e) {}
-      pendingCloudWritePromise = pendingCloudWritePromise
-        .then(() => syncToCloud(targetKey))
-        .catch(() => {});
+
+      if (!hasTelegramCloud()) {
+        lastCloudSyncOk = false;
+        return Promise.resolve(false);
+      }
+
+      if (targetKey === null) {
+        pendingCloudFullSync = true;
+      } else if (targetKey === '__meta_only__') {
+        pendingCloudMetaOnly = true;
+      } else if (Array.isArray(targetKey)) {
+        targetKey.forEach(k => { if (k) pendingCloudTargetKeys.add(k); });
+      } else if (targetKey) {
+        pendingCloudTargetKeys.add(targetKey);
+      }
+
+      if (cloudWriteDebounceTimer) {
+        clearTimeout(cloudWriteDebounceTimer);
+      }
+      cloudWriteDebounceTimer = setTimeout(() => {
+        executeCoalescedCloudWrite();
+      }, 320);
+
       return pendingCloudWritePromise;
     }
 
     async function forceCloudSync() {
       hapticImpact('medium');
-      lastLocalWriteTimestamp = 0;
-      await syncToCloud(null);
-      await syncFromCloudBackground();
-      showToast('Сохранено');
+      const btn = document.getElementById('btnForceCloudSync');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Синхронизация…';
+      }
+      try {
+        flushPendingDayAutosave();
+        await flushPendingCloudWrite();
+        lastLocalWriteTimestamp = 0;
+        await syncFromCloudBackground({ force: true });
+        const pushedOk = await syncToCloud(null);
+        showToast(pushedOk ? 'Синхронизировано с облаком' : 'Часть данных не ушла в облако');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Синхронизировать с облаком';
+        }
+      }
     }
 
     function stepObValue(type, delta, min, max) {
@@ -5335,6 +5578,7 @@
       state.settings.cycleLengthMax = maxLen;
       state.settings.cycleLength = Math.round((minLen + maxLen) / 2);
       state.settings.periodLength = obPeriodLen;
+      touchSettingsUpdatedAt();
 
       syncSettingsInputs();
       persistLocalAndCloud(null);
@@ -5419,6 +5663,7 @@
       state.settings.profile.noteItems.push(val);
       state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
       state.settings.profile.saved = true;
+      touchSettingsUpdatedAt();
       inp.value = '';
       editingProfileNoteIndex = -1;
       persistLocalAndCloud(null);
@@ -5455,6 +5700,7 @@
         state.settings.profile.noteItems[idx] = nextVal;
       }
       state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
+      touchSettingsUpdatedAt();
       editingProfileNoteIndex = -1;
       persistLocalAndCloud(null);
       renderProfileNotesList();
@@ -5472,6 +5718,7 @@
       ensureProfileStructure();
       state.settings.profile.noteItems.splice(idx, 1);
       state.settings.profile.notes = state.settings.profile.noteItems.join('\n');
+      touchSettingsUpdatedAt();
       if (editingProfileNoteIndex === idx) editingProfileNoteIndex = -1;
       else if (editingProfileNoteIndex > idx) editingProfileNoteIndex -= 1;
       persistLocalAndCloud(null);
@@ -5538,6 +5785,7 @@
         noteItems,
         notes: noteItems.join('\n')
       };
+      touchSettingsUpdatedAt();
 
       persistLocalAndCloud(null);
       syncSettingsInputs();
@@ -5832,6 +6080,7 @@
       try {
         await callGeminiAPI(key, 'Верни строго JSON: {"ok": true}', true);
         state.settings.geminiApiKey = key;
+        touchSettingsUpdatedAt();
         state.onboarded = true;
         persistLocalAndCloud(null);
         syncSettingsInputs();
@@ -5852,6 +6101,7 @@
     function removeGeminiKey() {
       confirmAction('Удалить сохранённый API-ключ Gemini?', () => {
         state.settings.geminiApiKey = '';
+        touchSettingsUpdatedAt();
         persistLocalAndCloud(null);
         syncSettingsInputs();
         renderAdviceAndSelfCareTab();
@@ -5921,7 +6171,13 @@
         return;
       }
       el.classList.remove('is-saving');
-      el.textContent = hasTelegramCloud() ? 'Сохранено · облако' : 'Сохранено';
+      if (!hasTelegramCloud()) {
+        el.textContent = 'Сохранено';
+      } else if (lastCloudSyncOk && getDirtyCloudKeys().size === 0) {
+        el.textContent = 'Сохранено · облако';
+      } else {
+        el.textContent = 'Сохранено локально';
+      }
     }
 
     function autosaveCurrentDayDraft() {
@@ -5931,9 +6187,12 @@
       }
       updateTodaySaveStatus(true);
       state.entries[selectedDate] = buildLiveDaySnapshot();
-      persistLocalAndCloud(selectedDate).finally(() => {
-        updateTodaySaveStatus(false);
-      });
+      persistLocalAndCloud(selectedDate);
+      setTimeout(() => {
+        flushPendingCloudWrite().finally(() => {
+          updateTodaySaveStatus(false);
+        });
+      }, 340);
       updateQuickPillsUI();
       renderAdviceAndSelfCareTab();
       renderAnalytics();
@@ -6496,6 +6755,7 @@
           if (shouldStartNewCycle) {
             state.settings.prevLastPeriodStart = currentStartISO;
             state.settings.lastPeriodStart = selectedDate;
+            touchSettingsUpdatedAt();
             archiveAndClearActivePainkillers(currentStartISO);
             syncSettingsInputs();
             showToast('Новый цикл · День 1');
@@ -6512,6 +6772,7 @@
           if (fallbackStart && fallbackStart !== selectedDate) {
             state.settings.lastPeriodStart = fallbackStart;
             state.settings.prevLastPeriodStart = null;
+            touchSettingsUpdatedAt();
             syncSettingsInputs();
           }
           showToast('Отметка снята');
@@ -6784,6 +7045,7 @@
         state.entries[selectedDate] = buildLiveDaySnapshot();
         persistLocalAndCloud(selectedDate);
       }
+      flushPendingCloudWrite();
     }
 
     function shiftDate(delta) {
@@ -9660,6 +9922,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
       };
       state.painkillers.unshift(record);
       recordPainkillerInArchiveAndEntry(record);
+      touchMedsUpdatedAt();
       persistLocalAndCloud(dateISO);
       updatePainkillerUI();
       renderPainTrackerCard();
@@ -9733,7 +9996,8 @@ ${buildPainCyclesSummaryForAI(true)}`;
         }
         const dISO = item.dateISO || getLocalISODateFromTimestamp(item.timeISO);
         syncPainkillerFieldsEverywhere(item);
-        persistLocalAndCloud(dISO);
+        touchMedsUpdatedAt();
+      persistLocalAndCloud(dISO);
       }
       updatePainkillerUI();
     }
@@ -9776,6 +10040,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
       entry.peakPain = computeDayPeakPain(entry, [item.painBefore, afterVal]);
       entry.updatedAt = Date.now();
 
+      touchMedsUpdatedAt();
       persistLocalAndCloud(dISO);
       updatePainkillerUI();
       renderPainTrackerCard();
@@ -9885,9 +10150,14 @@ ${buildPainCyclesSummaryForAI(true)}`;
             state.entries[dISO].painkillers = state.entries[dISO].painkillers.filter(
               p => `${p.timeISO || ''}|${String(p.name || '').toLowerCase()}` !== key
             );
+            state.entries[dISO].updatedAt = Date.now();
           }
+          touchMedsUpdatedAt();
+          persistLocalAndCloud(dISO);
+        } else {
+          touchMedsUpdatedAt();
+          persistLocalAndCloud('__meta_only__');
         }
-        persistLocalAndCloud('__meta_only__');
         updatePainkillerUI();
         renderPainTrackerCard();
         renderBleedingPainChart();
@@ -10381,6 +10651,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
       state.settings.cycleLengthMax = maxLen;
       state.settings.cycleLength = Math.round((minLen + maxLen) / 2);
       state.settings.periodLength = Math.max(2, Math.min(10, pl));
+      touchSettingsUpdatedAt();
       state.onboarded = true;
 
       syncSettingsInputs();
@@ -10833,12 +11104,21 @@ ${buildPainCyclesSummaryForAI(true)}`;
     }
 
     let lastCloudPullTriggerAt = 0;
-    function triggerBackgroundCloudPull() {
+    function triggerBackgroundCloudPull(force = false) {
       const now = Date.now();
-      if (now - lastCloudPullTriggerAt < 1500) return;
+      if (!force && now - lastCloudPullTriggerAt < 1500) return;
       lastCloudPullTriggerAt = now;
-      syncFromCloudBackground();
+      syncFromCloudBackground({ force });
     }
+
+    setInterval(() => {
+      if (!hasTelegramCloud()) return;
+      if (document.visibilityState !== 'visible') return;
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return;
+      if (Date.now() - lastLocalWriteTimestamp < 3000) return;
+      syncFromCloudBackground({ force: false });
+    }, 8000);
 
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
@@ -10990,7 +11270,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
     setupChips();
     setupProfileChips();
     loadLocalSync();
-    syncFromCloudBackground();
+    syncFromCloudBackground({ force: true });
   </script>
 </body>
 </html>
