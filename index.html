@@ -2465,6 +2465,293 @@
       line-height: 1.4;
     }
 
+
+    /* Сетка 3x1 для ежедневных метрик (Энергия, Либидо, Стресс) */
+    .metrics-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .metrics-grid-3 .metric-tile {
+      padding: 11px 10px 10px;
+      border-radius: 18px;
+      gap: 7px;
+    }
+    .metrics-grid-3 .metric-tile-title { font-size: 13.5px; }
+    .metrics-grid-3 .metric-tile-score { font-size: 14.5px; }
+    .metrics-grid-3 .metric-tile-hint {
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .metrics-grid-3 .metric-scale-bar { gap: 3px; }
+    .metrics-grid-3 .metric-scale-seg {
+      height: 24px;
+      font-size: 11px;
+      border-radius: 7px;
+    }
+    @media (max-width: 340px) {
+      .metrics-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metrics-grid-3 .metric-tile:last-child { grid-column: 1 / -1; }
+    }
+
+    /* Адаптивная карточка «Боль и спазмы» */
+    .pain-tracker-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 14px 15px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 10px rgba(34, 35, 32, 0.03);
+      transition: all 0.2s ease;
+    }
+    .pain-tracker-card.has-pain {
+      border-color: var(--rose-bg);
+      background: linear-gradient(180deg, var(--rose-tint) 0%, var(--surface) 78%);
+    }
+    .pain-tracker-card.is-locked {
+      background: var(--surface-2);
+      border: 1px dashed var(--border);
+      box-shadow: none;
+      padding: 11px 14px;
+      border-radius: 18px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pain-tracker-card.is-locked:active { transform: scale(0.99); opacity: 0.85; }
+    .pain-locked-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .pain-locked-left {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+    .pain-locked-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink-3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pain-locked-title { font-size: 14px; font-weight: 700; color: var(--ink-2); line-height: 1.2; }
+    .pain-locked-sub { font-size: 11.5px; font-weight: 500; color: var(--ink-3); margin-top: 2px; line-height: 1.25; }
+    .pain-unlock-pill {
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--ink-2);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    .pain-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .pain-card-head-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+    .pain-card-icon {
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--rose-solid);
+      flex-shrink: 0;
+    }
+    .pain-card-title { font-size: 15.5px; font-weight: 700; color: var(--ink); letter-spacing: -0.015em; }
+    .pain-peak-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--ink-2);
+      font-size: 11.5px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .pain-tracker-card.has-pain .pain-peak-badge { background: var(--rose-bg); color: var(--rose); }
+    .pain-card-actions { display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .pain-chart-jump-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: none;
+      background: var(--rose-tint);
+      color: var(--rose);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pain-lock-back-btn {
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 999px;
+      border: none;
+      background: var(--surface-2);
+      color: var(--ink-3);
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pain-entry-controls { display: flex; align-items: center; gap: 7px; }
+    .pain-time-pill {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 34px;
+      padding: 0 9px;
+      border-radius: 11px;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: 12.5px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .pain-time-pill svg { width: 13px; height: 13px; color: var(--ink-3); }
+    .pain-time-pill input[type="time"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      border: none;
+    }
+    .pain-scale-row {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .pain-step-btn {
+      height: 34px;
+      border: none;
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--ink-2);
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pain-step-btn:active { transform: scale(0.92); }
+    .pain-step-btn.is-zero { font-size: 11.5px; color: var(--ink-3); }
+    .pain-step-btn.is-current { background: var(--rose-solid); color: #FFFFFF; }
+    .pain-step-btn.is-zero.is-current { background: var(--ovul); color: #FFFFFF; }
+    .pain-logs-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .pain-log-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px 4px 10px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .pain-log-chip.is-high { background: var(--rose-bg); color: var(--rose); }
+    .pain-log-chip.is-zero { background: var(--ovul-tint); color: var(--ovul); }
+    .pain-log-chip.is-med { background: var(--accent-tint); color: var(--accent); padding-right: 10px; }
+    .pain-log-chip-del {
+      width: 18px;
+      height: 18px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.06);
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .dark-mode .pain-log-chip-del { background: rgba(255, 255, 255, 0.12); }
+    .pain-log-chip-del svg { width: 10px; height: 10px; }
+    .pain-sos-shortcut {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    /* Статистика и пустое состояние графика «Боль при кровотечении» */
+    .bleeding-pain-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .bp-stat-box {
+      background: var(--surface-2);
+      border-radius: 13px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .bp-stat-label { font-size: 11px; font-weight: 600; color: var(--ink-3); }
+    .bp-stat-val { font-size: 14px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .bp-empty-state {
+      padding: 22px 14px;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--ink-2);
+      background: var(--bg);
+      border-radius: 16px;
+    }
   </style>
 </head>
 <body>
@@ -2559,8 +2846,11 @@
           <svg class="ui-svg ui-svg-sm" id="periodBtnCheckIcon" style="display:none;" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
         </button>
 
-        <!-- СОСТОЯНИЯ КАРТОЧКАМИ 2x2 (прямой выбор 1..5 в одно касание) -->
-        <div class="metrics-grid-2x2" id="metricTilesGrid">
+        <!-- АДАПТИВНАЯ КАРТОЧКА «БОЛЬ И СПАЗМЫ» -->
+        <div id="painTrackerCard" class="pain-tracker-card is-locked"></div>
+
+        <!-- СОСТОЯНИЯ КАРТОЧКАМИ 3x1 (прямой выбор 1..5 в одно касание) -->
+        <div class="metrics-grid-3" id="metricTilesGrid">
           <div class="metric-tile" data-key="energy">
             <div class="metric-tile-header" onclick="toggleMetricQuick('energy')">
               <div class="metric-tile-id">
@@ -2578,26 +2868,6 @@
               <button type="button" class="metric-scale-seg" data-step="3" onclick="setMetricDirect('energy', 3)">3</button>
               <button type="button" class="metric-scale-seg" data-step="4" onclick="setMetricDirect('energy', 4)">4</button>
               <button type="button" class="metric-scale-seg" data-step="5" onclick="setMetricDirect('energy', 5)">5</button>
-            </div>
-          </div>
-
-          <div class="metric-tile" data-key="pain">
-            <div class="metric-tile-header" onclick="toggleMetricQuick('pain')">
-              <div class="metric-tile-id">
-                <span class="metric-tile-icon">
-                  <svg class="ui-svg" viewBox="0 0 24 24"><path d="M3 12c2.5-3 5-3 7.5 0s5 3 7.5 0 3-1.5 3-1.5"/></svg>
-                </span>
-                <span class="metric-tile-title">Боль и спазмы</span>
-              </div>
-              <span class="metric-tile-score" id="score-pain">—</span>
-            </div>
-            <div class="metric-tile-hint" id="hint-pain">Не отмечено</div>
-            <div class="metric-scale-bar" id="scale-pain">
-              <button type="button" class="metric-scale-seg" data-step="1" onclick="setMetricDirect('pain', 1)">1</button>
-              <button type="button" class="metric-scale-seg" data-step="2" onclick="setMetricDirect('pain', 2)">2</button>
-              <button type="button" class="metric-scale-seg" data-step="3" onclick="setMetricDirect('pain', 3)">3</button>
-              <button type="button" class="metric-scale-seg" data-step="4" onclick="setMetricDirect('pain', 4)">4</button>
-              <button type="button" class="metric-scale-seg" data-step="5" onclick="setMetricDirect('pain', 5)">5</button>
             </div>
           </div>
 
@@ -2809,6 +3079,29 @@
         </div>
 
         <div id="chartLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-2); margin-top:10px;"></div>
+      </div>
+
+      <!-- Отдельный график: Боль при кровотечении (по часам и дням + приём обезболивающих) -->
+      <div class="card" id="bleedingPainChartCard">
+        <div class="card-top">
+          <span class="card-title">Боль при кровотечении</span>
+          <span class="card-sub" id="bleedingPainChartMeta"></span>
+        </div>
+
+        <div class="filter-row" id="bleedingCyclePills"></div>
+        <div class="filter-row" id="bleedingDayPills" style="display:none; margin-top:-2px;"></div>
+        <div id="bleedingPainInspector" style="display:none; margin-bottom:10px; padding:9px 12px; border-radius:12px; background:var(--surface-2); font-size:13px; font-weight:600; color:var(--ink);"></div>
+
+        <div id="bleedingPainChartContainer">
+          <div class="chart-wrap">
+            <div class="chart-scroll-viewport" id="bleedingPainScrollViewport">
+              <svg id="bleedingPainChart" width="400" height="310" viewBox="0 0 400 310" style="display:block;"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div id="bleedingPainLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-size:12px; color:var(--ink-2); margin-top:10px;"></div>
+        <div id="bleedingPainSummaryRow" class="bleeding-pain-stats" style="display:none;"></div>
       </div>
     </div>
 
@@ -3758,6 +4051,7 @@
       customPainkillers: [],
       deletedCustomPainkillerIds: [],
       painkillerArchive: [],
+      painCycleArchive: [],
       customHelpedPool: [],
       helpedEffectiveness: {}
     };
@@ -3945,6 +4239,13 @@
         Number(entry?.pain) || 0,
         ...extraPainValues.map(v => Number(v) || 0)
       ];
+      if (Array.isArray(entry?.painLogs)) {
+        entry.painLogs.forEach(l => {
+          if (l?.level !== null && l?.level !== undefined) {
+            candidates.push(Number(l.level) || 0);
+          }
+        });
+      }
       if (Array.isArray(entry?.painkillers)) {
         entry.painkillers.forEach(p => {
           if (p?.painBefore !== null && p?.painBefore !== undefined) {
@@ -3997,6 +4298,13 @@
       };
       if (typeof entry.wristTempDelta === 'number' && Number.isFinite(entry.wristTempDelta)) {
         clone.wristTempDelta = entry.wristTempDelta;
+      }
+      if (Array.isArray(entry.painLogs) && entry.painLogs.length) {
+        clone.painLogs = entry.painLogs.slice(-24).map(l => ({
+          id: String(l?.id || ''),
+          timeISO: String(l?.timeISO || ''),
+          level: Math.max(0, Math.min(5, Math.round(Number(l?.level) || 0)))
+        })).filter(l => l.timeISO);
       }
       if (Array.isArray(entry.painkillers) && entry.painkillers.length) {
         clone.painkillers = entry.painkillers.slice(0, 8).map(p => ({
@@ -4117,6 +4425,28 @@
           }
         });
         merged.painkillers = baseList;
+      }
+      if ((Array.isArray(older.painLogs) && older.painLogs.length) || (Array.isArray(newer.painLogs) && newer.painLogs.length)) {
+        const combinedLogs = [
+          ...(Array.isArray(older.painLogs) ? older.painLogs : []),
+          ...(Array.isArray(newer.painLogs) ? newer.painLogs : [])
+        ];
+        const seenLogKeys = new Set();
+        const dedupedLogs = [];
+        combinedLogs.forEach((l, idx) => {
+          if (!l?.timeISO) return;
+          const lvl = Math.max(0, Math.min(5, Math.round(Number(l.level) || 0)));
+          const k = `${l.timeISO}|${lvl}`;
+          if (seenLogKeys.has(k)) return;
+          seenLogKeys.add(k);
+          dedupedLogs.push({
+            id: l.id || `pl_${idx}_${new Date(l.timeISO).getTime()}`,
+            timeISO: l.timeISO,
+            level: lvl
+          });
+        });
+        dedupedLogs.sort((a, b) => new Date(a.timeISO).getTime() - new Date(b.timeISO).getTime());
+        merged.painLogs = dedupedLogs.slice(-24);
       }
       merged.peakPain = computeDayPeakPain(merged, [cloudEntry.peakPain, localEntry.peakPain, cloudEntry.pain, localEntry.pain]);
       if (!merged.updatedAt) {
@@ -4242,6 +4572,35 @@
         });
       }
       tasks.push(cloudSet('carezze2_meta', metaPayload));
+
+      const cyclesArchive = buildAllPainCycles().slice(0, 12).map(c => ({
+        cycleId: c.cycleId,
+        label: c.label,
+        startDate: c.startDate,
+        endDate: c.endDate,
+        isPeriodCycle: c.isPeriodCycle,
+        peakPain: c.peakPain,
+        medCount: c.medCount,
+        events: c.events.slice(-40).map(ev => ({
+          timeISO: ev.timeISO,
+          dateISO: ev.dateISO,
+          cycleDay: ev.cycleDay,
+          level: ev.level,
+          source: ev.source,
+          ...(ev.medName ? { medName: smartTrimText(ev.medName, 36) } : {}),
+          ...(ev.painBefore !== null && ev.painBefore !== undefined ? { painBefore: ev.painBefore } : {}),
+          ...(ev.painAfter !== null && ev.painAfter !== undefined ? { painAfter: ev.painAfter } : {}),
+          ...(ev.effectMinutes !== null && ev.effectMinutes !== undefined ? { effectMinutes: ev.effectMinutes } : {}),
+          ...(ev.effectStatus ? { effectStatus: ev.effectStatus } : {})
+        }))
+      }));
+      state.painCycleArchive = cyclesArchive;
+      let cyclesStr = JSON.stringify(cyclesArchive);
+      while (cyclesArchive.length > 1 && utf8ByteLength(cyclesStr) > 3900) {
+        cyclesArchive.pop();
+        cyclesStr = JSON.stringify(cyclesArchive);
+      }
+      tasks.push(cloudSet('carezze2_pain_cycles', cyclesStr));
 
       await Promise.all(tasks);
     }
@@ -4409,6 +4768,11 @@
         if (isLegacy10 && entry.peakPain !== undefined) {
           entry.peakPain = toFiveScale(entry.peakPain);
         }
+        if (Array.isArray(entry.painLogs)) {
+          const normLogs = normalizePainLogsList(entry.painLogs, entry.date);
+          if (normLogs.length) entry.painLogs = normLogs;
+          else delete entry.painLogs;
+        }
         entry.peakPain = computeDayPeakPain(entry);
         entry.emotionLevels = buildLoadedEmotionLevels(entry);
         entry.emotions = getActiveEmotionsFromLevels(entry.emotionLevels);
@@ -4500,6 +4864,7 @@
             deletedCustomPainkillerIds: normalizeDeletedCustomPainkillerIds(parsed.deletedCustomPainkillerIds),
             customPainkillers: normalizeCustomPainkillersList(parsed.customPainkillers, parsed.deletedCustomPainkillerIds),
             painkillerArchive: normalizePainkillerArchiveList(parsed.painkillerArchive),
+            painCycleArchive: Array.isArray(parsed.painCycleArchive) ? parsed.painCycleArchive : [],
             customHelpedPool: Array.isArray(parsed.customHelpedPool) ? parsed.customHelpedPool : [],
             helpedEffectiveness: (parsed.helpedEffectiveness && typeof parsed.helpedEffectiveness === 'object')
               ? parsed.helpedEffectiveness
@@ -4621,9 +4986,10 @@
         // Immediately reveal exact theme and cycle day once meta is loaded (without waiting for full entry history)
         finishInitialCloudHydration(true);
 
-        const [customTipsRaw, medsCloudRaw, keys] = await Promise.all([
+        const [customTipsRaw, medsCloudRaw, painCyclesRaw, keys] = await Promise.all([
           cloudGet('carezze2_custom_tips'),
           cloudGet('carezze2_meds'),
+          cloudGet('carezze2_pain_cycles'),
           cloudGetKeys()
         ]);
 
@@ -4687,6 +5053,23 @@
         });
 
         normalizeAllLoadedEntries();
+        if (painCyclesRaw) {
+          try {
+            const parsedCycles = JSON.parse(painCyclesRaw);
+            if (Array.isArray(parsedCycles)) {
+              const byId = new Map((state.painCycleArchive || []).map(c => [c.cycleId, c]));
+              parsedCycles.forEach(c => {
+                if (c?.cycleId && (!byId.has(c.cycleId) || (c.events?.length || 0) >= (byId.get(c.cycleId)?.events?.length || 0))) {
+                  byId.set(c.cycleId, c);
+                }
+              });
+              state.painCycleArchive = Array.from(byId.values())
+                .sort((a, b) => String(b.startDate || '').localeCompare(String(a.startDate || '')))
+                .slice(0, 24);
+            }
+          } catch (e) {}
+        }
+        buildAllPainCycles();
         reconcileCycleStartWithEntries();
 
         if (importedTempToday !== null) {
@@ -5327,6 +5710,7 @@
       const prevEntry = state.entries[selectedDate] || {};
       const prevHelped = Array.isArray(prevEntry.helped) ? [...prevEntry.helped] : [];
       const prevPainkillers = Array.isArray(prevEntry.painkillers) ? [...prevEntry.painkillers] : [];
+      const prevPainLogs = Array.isArray(prevEntry.painLogs) ? normalizePainLogsList(prevEntry.painLogs, selectedDate) : [];
       const prevAi = prevEntry.aiAnalysis;
       const existingTemp = prevEntry.wristTempDelta;
       const wristTempDelta = (typeof existingTemp === 'number' && !isNaN(existingTemp)) ? existingTemp : null;
@@ -5334,7 +5718,7 @@
       const cleanDischarge = tempIsPeriod
         ? (['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge) ? tempDischarge : 'Умеренные')
         : (['Сухие / скудные', 'Кремовые', 'Прозрачные', 'Мажущие'].includes(tempDischarge) ? tempDischarge : '');
-      const peakPainVal = computeDayPeakPain({ ...prevEntry, pain: metrics.pain }, [metrics.pain]);
+      const peakPainVal = computeDayPeakPain({ ...prevEntry, pain: metrics.pain, painLogs: prevPainLogs }, [metrics.pain]);
 
       return {
         date: selectedDate,
@@ -5359,6 +5743,7 @@
         contexts,
         ...(wristTempDelta !== null ? { wristTempDelta } : {}),
         helped: prevHelped,
+        ...(prevPainLogs.length ? { painLogs: prevPainLogs } : {}),
         ...(prevPainkillers.length ? { painkillers: prevPainkillers } : {}),
         ...(prevAi ? { aiAnalysis: prevAi } : {})
       };
@@ -6017,6 +6402,7 @@
 
       autosaveCurrentDayDraft();
       updateHeaderAndContextControls();
+      renderPainTrackerCard();
       renderAdviceAndSelfCareTab();
       renderAnalytics();
     }
@@ -6321,6 +6707,7 @@
 
       updateTodaySaveStatus(false);
       updateHeaderAndContextControls();
+      renderPainTrackerCard();
       renderAdviceAndSelfCareTab();
     }
 
@@ -7110,6 +7497,9 @@ ${JSON.stringify(helpedByPhase)}
 ПРИЁМ ОБЕЗБОЛИВАЮЩИХ (архив текущего и прошлых циклов с днём цикла и динамикой боли):
 ${buildPainkillerHistorySummaryForAI()}
 
+ИСТОРИЯ БОЛЕВЫХ ЦИКЛОВ ПО ЧАСАМ (все сохранённые циклы для анализа динамики и эффективности препаратов):
+${buildPainCyclesSummaryForAI(false)}
+
 ИСТОРИЯ (до ${HISTORY_WINDOW_DAYS} дней для сравнения под капотом):
 ${JSON.stringify(recentHistory)}
 
@@ -7272,7 +7662,9 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 - Эмоции: ${formattedEmos || 'не указаны'}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
 - Недавние дни (для оценки сна и динамики): ${recent7Days || 'пока нет предыдущих дней'}
-- Обезболивающие (за 24 ч и из архива циклов): ${buildPainkillerHistorySummaryForAI(true)}`;
+- Обезболивающие (за 24 ч и из архива циклов): ${buildPainkillerHistorySummaryForAI(true)}
+- История болевых циклов по часам (все сохранённые циклы):
+${buildPainCyclesSummaryForAI(true)}`;
     }
 
     async function sendQuickAiQuestion() {
@@ -7964,11 +8356,10 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         const availableMetrics = chartFilter === 'core'
           ? [
               { key: 'energy', label: 'Энергия', color: cIndigo, gradId: 'gradIndigo', width: 3.4, dot: 4.6 },
-              { key: 'pain', label: 'Боль', color: cRose, gradId: null, width: 2.6, dot: 4.2 }
+              { key: 'stress', label: 'Стресс', color: cAccent, gradId: null, width: 2.2, dot: 4.0 }
             ]
           : [
               { key: 'energy', label: 'Энергия', color: cIndigo, gradId: null, width: 3.4, dot: 4.6 },
-              { key: 'pain', label: 'Боль', color: cRose, gradId: null, width: 2.6, dot: 4.2 },
               { key: 'libido', label: 'Либидо', color: cAmber, gradId: null, width: 2.4, dot: 4.2 },
               { key: 'stress', label: 'Стресс', color: cAccent, gradId: null, width: 2.0, dot: 3.8 }
             ];
@@ -8024,6 +8415,669 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       if (scrollViewport && w > scrollViewport.clientWidth && scrollViewport.clientWidth > 0) {
         const targetX = idxToX(latestLoggedIdx);
         scrollViewport.scrollLeft = Math.max(0, targetX - scrollViewport.clientWidth * 0.65);
+      }
+      renderBleedingPainChart();
+    }
+
+    let unlockedPainDates = new Set();
+    let customPainTimeByDate = {};
+    let selectedBleedingCycleId = '';
+    let selectedBleedingDayFilter = 'all';
+
+    function getDefaultTimeHHMM() {
+      const now = new Date();
+      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function buildTimestampForDateAndHHMM(dateISO, hhmm) {
+      const [y, m, d] = dateISO.split('-').map(Number);
+      const parts = String(hhmm || getDefaultTimeHHMM()).split(':').map(Number);
+      const hh = Number.isFinite(parts[0]) ? Math.max(0, Math.min(23, parts[0])) : 12;
+      const mm = Number.isFinite(parts[1]) ? Math.max(0, Math.min(59, parts[1])) : 0;
+      const dt = new Date(y, (m || 1) - 1, d || 1, hh, mm, 0, 0);
+      return dt.toISOString();
+    }
+
+    function formatTimeHHMM(timeISO) {
+      const d = new Date(timeISO);
+      if (!Number.isFinite(d.getTime())) return '12:00';
+      return d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function normalizePainLogsList(rawLogs, dateISO) {
+      if (!Array.isArray(rawLogs)) return [];
+      const seen = new Set();
+      const out = [];
+      rawLogs.forEach((item, idx) => {
+        if (!item) return;
+        const timeISO = item.timeISO || buildTimestampForDateAndHHMM(dateISO, item.time || '12:00');
+        const level = Math.max(0, Math.min(5, Math.round(Number(item.level) || 0)));
+        const key = `${timeISO}|${level}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        out.push({
+          id: item.id || `pl_${idx}_${new Date(timeISO).getTime()}`,
+          timeISO,
+          level
+        });
+      });
+      out.sort((a, b) => new Date(a.timeISO).getTime() - new Date(b.timeISO).getTime());
+      return out.slice(-24);
+    }
+
+    function isPainCardUnlockedForSelectedDate() {
+      const info = getCycleInfo(selectedDate);
+      const entry = state.entries[selectedDate];
+      const hasLogs = Array.isArray(entry?.painLogs) && entry.painLogs.length > 0;
+      const hasMeds = Array.isArray(entry?.painkillers) && entry.painkillers.length > 0;
+      const hasPain = (Number(metrics.pain) || Number(entry?.pain) || Number(entry?.peakPain) || 0) > 0;
+      return Boolean(tempIsPeriod || info.phaseCode === 'menstrual' || hasLogs || hasMeds || hasPain || unlockedPainDates.has(selectedDate));
+    }
+
+    function unlockPainTrackerCard() {
+      hapticImpact('light');
+      unlockedPainDates.add(selectedDate);
+      renderPainTrackerCard();
+    }
+
+    function lockPainTrackerCard() {
+      hapticSelect();
+      unlockedPainDates.delete(selectedDate);
+      renderPainTrackerCard();
+    }
+
+    function onPainTimeInputChange(val) {
+      if (val && /^\d{2}:\d{2}$/.test(val)) {
+        customPainTimeByDate[selectedDate] = val;
+        const labelEl = document.getElementById('painTimeDisplayLabel');
+        if (labelEl) labelEl.textContent = val;
+      }
+    }
+
+    function addPainLogEntry(levelVal) {
+      hapticSelect();
+      const level = Math.max(0, Math.min(5, Math.round(Number(levelVal) || 0)));
+      const chosenHHMM = customPainTimeByDate[selectedDate] || getDefaultTimeHHMM();
+      const timeISO = buildTimestampForDateAndHHMM(selectedDate, chosenHHMM);
+
+      if (!state.entries[selectedDate]) {
+        state.entries[selectedDate] = buildLiveDaySnapshot();
+      }
+      const entry = state.entries[selectedDate];
+      const existingLogs = normalizePainLogsList(entry.painLogs, selectedDate);
+      existingLogs.push({
+        id: `pl_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        timeISO,
+        level
+      });
+      const sortedLogs = normalizePainLogsList(existingLogs, selectedDate);
+
+      entry.painLogs = sortedLogs;
+      metrics.pain = sortedLogs[sortedLogs.length - 1].level;
+      entry.pain = metrics.pain;
+      entry.peakPain = computeDayPeakPain(entry);
+      entry.updatedAt = Date.now();
+
+      delete customPainTimeByDate[selectedDate];
+      unlockedPainDates.add(selectedDate);
+
+      autosaveCurrentDayDraft();
+      renderPainTrackerCard();
+      showToast(level === 0 ? `Боль прошла (0/5) · ${chosenHHMM}` : `Замер ${level}/5 в ${chosenHHMM}`);
+    }
+
+    function deletePainLogEntry(logId) {
+      hapticImpact('light');
+      const entry = state.entries[selectedDate];
+      if (!entry || !Array.isArray(entry.painLogs)) return;
+      entry.painLogs = entry.painLogs.filter(l => l.id !== logId);
+      if (entry.painLogs.length > 0) {
+        metrics.pain = entry.painLogs[entry.painLogs.length - 1].level;
+      } else {
+        metrics.pain = 0;
+      }
+      entry.pain = metrics.pain;
+      entry.peakPain = computeDayPeakPain(entry);
+      entry.updatedAt = Date.now();
+
+      autosaveCurrentDayDraft();
+      renderPainTrackerCard();
+      showToast('Замер удалён');
+    }
+
+    function openBleedingPainChart() {
+      const cycles = buildAllPainCycles();
+      if (cycles.length) {
+        selectedBleedingCycleId = cycles[0].cycleId;
+        selectedBleedingDayFilter = 'all';
+      }
+      switchTab('analytics');
+      setTimeout(() => {
+        const card = document.getElementById('bleedingPainChartCard');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    }
+
+    function renderPainTrackerCard() {
+      const container = document.getElementById('painTrackerCard');
+      if (!container) return;
+
+      const info = getCycleInfo(selectedDate);
+      const entry = state.entries[selectedDate] || {};
+      const painLogs = normalizePainLogsList(entry.painLogs, selectedDate);
+      const dayMeds = Array.isArray(entry.painkillers) ? entry.painkillers : [];
+      const peakVal = computeDayPeakPain({ ...entry, pain: metrics.pain, painLogs, painkillers: dayMeds });
+      const isPeriodContext = Boolean(tempIsPeriod || info.phaseCode === 'menstrual');
+      const isUnlocked = isPainCardUnlockedForSelectedDate();
+
+      if (!isUnlocked) {
+        container.className = 'pain-tracker-card is-locked';
+        container.onclick = unlockPainTrackerCard;
+        container.innerHTML = `
+          <div class="pain-locked-row">
+            <div class="pain-locked-left">
+              <span class="pain-locked-icon">
+                <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+              </span>
+              <div>
+                <div class="pain-locked-title">Боль и спазмы</div>
+                <div class="pain-locked-sub">Активно при месячных · нажми при ПМС или овуляции</div>
+              </div>
+            </div>
+            <span class="pain-unlock-pill">Разблокировать</span>
+          </div>
+        `;
+        return;
+      }
+
+      container.onclick = null;
+      container.className = `pain-tracker-card is-unlocked ${peakVal > 0 ? 'has-pain' : ''}`;
+
+      const timeVal = customPainTimeByDate[selectedDate] || getDefaultTimeHHMM();
+      const currentVal = painLogs.length ? painLogs[painLogs.length - 1].level : (Number(metrics.pain) || -1);
+      const badgeText = peakVal > 0
+        ? (painLogs.length > 1 ? `Пик ${peakVal}/5 · ${painLogs.length} зам.` : `${peakVal}/5`)
+        : (painLogs.length ? '0/5 · прошла' : 'Нет замеров');
+
+      const canLockBack = !isPeriodContext && painLogs.length === 0 && dayMeds.length === 0 && (Number(metrics.pain) || 0) === 0;
+
+      const btnsHtml = [0, 1, 2, 3, 4, 5].map(step => {
+        const isCur = currentVal === step && (painLogs.length > 0 || step > 0);
+        const label = step === 0 ? 'Нет' : String(step);
+        return `<button type="button" class="pain-step-btn ${step === 0 ? 'is-zero' : ''} ${isCur ? 'is-current' : ''}" onclick="addPainLogEntry(${step})">${label}</button>`;
+      }).join('');
+
+      const timelineItems = [];
+      painLogs.forEach(l => {
+        timelineItems.push({
+          ts: new Date(l.timeISO).getTime(),
+          html: `
+            <span class="pain-log-chip ${l.level >= 3 ? 'is-high' : (l.level === 0 ? 'is-zero' : '')}">
+              <span>${formatTimeHHMM(l.timeISO)} · <b>${l.level}/5</b></span>
+              <button type="button" class="pain-log-chip-del" onclick="deletePainLogEntry('${l.id}')" aria-label="Удалить">${SVG_ICONS.cross}</button>
+            </span>
+          `
+        });
+      });
+      dayMeds.forEach(m => {
+        const eff = (m.painAfter !== null && m.painAfter !== undefined)
+          ? ` (${m.painBefore ?? '?'}→${m.painAfter}/5)`
+          : (m.painBefore ? ` (до ${m.painBefore}/5)` : '');
+        timelineItems.push({
+          ts: new Date(m.timeISO).getTime(),
+          html: `<span class="pain-log-chip is-med">💊 ${formatTimeHHMM(m.timeISO)} · ${escapeHtml(m.name)}${eff}</span>`
+        });
+      });
+      timelineItems.sort((a, b) => a.ts - b.ts);
+
+      container.innerHTML = `
+        <div class="pain-card-head">
+          <div class="pain-card-head-left">
+            <span class="pain-card-icon">
+              <svg class="ui-svg" viewBox="0 0 24 24"><path d="M3 12c2.5-3 5-3 7.5 0s5 3 7.5 0 3-1.5 3-1.5"/></svg>
+            </span>
+            <span class="pain-card-title">Боль и спазмы</span>
+            <span class="pain-peak-badge">${badgeText}</span>
+          </div>
+          <div class="pain-card-actions">
+            ${canLockBack ? `<button type="button" class="pain-lock-back-btn" onclick="lockPainTrackerCard()">Свернуть</button>` : ''}
+            <button type="button" class="pain-chart-jump-btn" onclick="openBleedingPainChart()">
+              <span>График</span>
+              <svg class="ui-svg ui-svg-sm" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="pain-entry-controls">
+          <label class="pain-time-pill" title="Время замера">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <span id="painTimeDisplayLabel">${timeVal}</span>
+            <input type="time" value="${timeVal}" onchange="onPainTimeInputChange(this.value)" />
+          </label>
+          <div class="pain-scale-row">${btnsHtml}</div>
+        </div>
+
+        ${timelineItems.length ? `<div class="pain-logs-strip">${timelineItems.map(i => i.html).join('')}</div>` : ''}
+        ${peakVal >= 2 ? `<button type="button" class="pain-sos-shortcut" onclick="switchTab('sos')">Отметить обезболивающее в SOS →</button>` : ''}
+      `;
+    }
+
+    function buildAllPainCycles() {
+      const allEntries = Object.values(state.entries || {})
+        .filter(e => e && /^\d{4}-\d{2}-\d{2}$/.test(e.date))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      const periodDatesSet = new Set();
+      allEntries.forEach(e => {
+        if (e.isPeriod || isDateInActivePeriodWindow(e.date)) periodDatesSet.add(e.date);
+      });
+      if (state.settings?.lastPeriodStart) {
+        periodDatesSet.add(state.settings.lastPeriodStart);
+      }
+
+      const sortedPeriodDates = Array.from(periodDatesSet).sort();
+      const blocks = [];
+      for (const iso of sortedPeriodDates) {
+        if (!blocks.length) {
+          blocks.push({ startDate: iso, endDate: iso, isPeriodCycle: true, dates: [iso] });
+        } else {
+          const prevBlock = blocks[blocks.length - 1];
+          const gap = Math.round((parseLocalISO(iso) - parseLocalISO(prevBlock.endDate)) / 86400000);
+          if (gap <= 4) {
+            prevBlock.endDate = iso;
+            if (!prevBlock.dates.includes(iso)) prevBlock.dates.push(iso);
+          } else {
+            blocks.push({ startDate: iso, endDate: iso, isPeriodCycle: true, dates: [iso] });
+          }
+        }
+      }
+
+      // Добавляем также одиночные эпизоды боли вне кровотечений (ПМС / овуляция)
+      const inPeriodWindow = (iso) => blocks.some(b => iso >= b.startDate && iso <= shiftISOByDays(b.endDate, 1));
+      const nonPeriodPainDates = allEntries
+        .filter(e => !inPeriodWindow(e.date) && (
+          (Array.isArray(e.painLogs) && e.painLogs.length > 0) ||
+          (Number(e.pain) || 0) > 0 ||
+          (Array.isArray(e.painkillers) && e.painkillers.length > 0)
+        ))
+        .map(e => e.date);
+
+      for (const iso of nonPeriodPainDates) {
+        const lastNonPeriod = blocks.find(b => !b.isPeriodCycle && Math.abs(Math.round((parseLocalISO(iso) - parseLocalISO(b.endDate)) / 86400000)) <= 3);
+        if (lastNonPeriod) {
+          if (iso < lastNonPeriod.startDate) lastNonPeriod.startDate = iso;
+          if (iso > lastNonPeriod.endDate) lastNonPeriod.endDate = iso;
+          if (!lastNonPeriod.dates.includes(iso)) lastNonPeriod.dates.push(iso);
+        } else {
+          blocks.push({ startDate: iso, endDate: iso, isPeriodCycle: false, dates: [iso] });
+        }
+      }
+
+      const allMeds = mergePainkillerArchive(state.painkillers || [], state.painkillerArchive || []);
+
+      const built = blocks.map(b => {
+        const cycleId = `${b.isPeriodCycle ? 'p' : 'np'}_${b.startDate}`;
+        const events = [];
+        const medsInBlock = [];
+        const seenMedKeys = new Set();
+
+        const dayDates = [];
+        let cur = b.startDate;
+        let guard = 0;
+        while (cur <= b.endDate && guard < 16) {
+          dayDates.push(cur);
+          cur = shiftISOByDays(cur, 1);
+          guard++;
+        }
+
+        dayDates.forEach((dISO, dIdx) => {
+          const ent = state.entries[dISO];
+          const logs = normalizePainLogsList(ent?.painLogs, dISO);
+          if (logs.length) {
+            logs.forEach(l => {
+              events.push({
+                timeISO: l.timeISO,
+                ts: new Date(l.timeISO).getTime(),
+                dateISO: dISO,
+                cycleDay: dIdx + 1,
+                level: l.level,
+                source: 'manual'
+              });
+            });
+          } else if (ent && Number(ent.pain) > 0) {
+            const fallbackISO = buildTimestampForDateAndHHMM(dISO, '12:00');
+            events.push({
+              timeISO: fallbackISO,
+              ts: new Date(fallbackISO).getTime(),
+              dateISO: dISO,
+              cycleDay: dIdx + 1,
+              level: Number(ent.pain),
+              source: 'legacy'
+            });
+          }
+
+          const dayMeds = [
+            ...(Array.isArray(ent?.painkillers) ? ent.painkillers : []),
+            ...allMeds.filter(m => (m.dateISO || getLocalISODateFromTimestamp(m.timeISO)) === dISO)
+          ];
+
+          dayMeds.forEach(m => {
+            if (!m?.name || !m?.timeISO) return;
+            const mKey = `${m.timeISO}|${m.name.toLowerCase()}`;
+            if (seenMedKeys.has(mKey)) return;
+            seenMedKeys.add(mKey);
+            medsInBlock.push({ ...m, dateISO: dISO, cycleDay: dIdx + 1 });
+
+            const takenTs = new Date(m.timeISO).getTime();
+            if (m.painBefore !== null && m.painBefore !== undefined) {
+              events.push({
+                timeISO: m.timeISO,
+                ts: takenTs,
+                dateISO: dISO,
+                cycleDay: dIdx + 1,
+                level: Number(m.painBefore),
+                source: 'med_before',
+                medName: m.name,
+                painBefore: Number(m.painBefore),
+                painAfter: m.painAfter ?? null,
+                effectMinutes: m.effectMinutes ?? null,
+                effectStatus: m.effectStatus || ''
+              });
+            }
+            if (m.painAfter !== null && m.painAfter !== undefined && Number(m.effectMinutes) > 0) {
+              const afterTs = takenTs + Number(m.effectMinutes) * 60000;
+              events.push({
+                timeISO: new Date(afterTs).toISOString(),
+                ts: afterTs,
+                dateISO: getLocalISODateFromTimestamp(new Date(afterTs).toISOString()),
+                cycleDay: dIdx + 1,
+                level: Number(m.painAfter),
+                source: 'med_after',
+                medName: m.name,
+                painBefore: m.painBefore ?? null,
+                painAfter: Number(m.painAfter),
+                effectMinutes: Number(m.effectMinutes),
+                effectStatus: m.effectStatus || 'helped'
+              });
+            }
+          });
+        });
+
+        events.sort((a, b) => a.ts - b.ts);
+        const peakPain = events.length ? Math.max(...events.map(e => Number(e.level) || 0)) : 0;
+        const startFmt = parseLocalISO(b.startDate).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
+        const endFmt = parseLocalISO(b.endDate).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
+        const baseRange = b.startDate === b.endDate ? startFmt : `${startFmt} – ${endFmt}`;
+        const label = b.isPeriodCycle ? baseRange : `Вне цикла · ${baseRange}`;
+
+        return {
+          cycleId,
+          label,
+          startDate: b.startDate,
+          endDate: b.endDate,
+          dayDates,
+          isPeriodCycle: b.isPeriodCycle,
+          peakPain,
+          medCount: medsInBlock.length,
+          meds: medsInBlock,
+          events
+        };
+      });
+
+      // Подмешиваем сохранённые в архиве прошлые циклы, если их дни были сжаты
+      const existingIds = new Set(built.map(c => c.cycleId));
+      (state.painCycleArchive || []).forEach(arch => {
+        if (arch?.cycleId && !existingIds.has(arch.cycleId) && Array.isArray(arch.events) && arch.events.length) {
+          built.push({
+            ...arch,
+            dayDates: arch.dayDates || Array.from(new Set(arch.events.map(e => e.dateISO))).sort(),
+            meds: arch.meds || [],
+            events: arch.events.map(e => ({ ...e, ts: new Date(e.timeISO).getTime() })).sort((a, b) => a.ts - b.ts)
+          });
+        }
+      });
+
+      built.sort((a, b) => b.startDate.localeCompare(a.startDate));
+      state.painCycleArchive = built.slice(0, 24);
+      return built;
+    }
+
+    function buildPainCyclesSummaryForAI(compact = false) {
+      const cycles = buildAllPainCycles().filter(c => c.events.length > 0 || c.medCount > 0);
+      if (!cycles.length) return 'Почасовых замеров боли в сохранённых циклах пока нет.';
+      const limit = compact ? 4 : 8;
+      return cycles.slice(0, limit).map(c => {
+        const ptsStr = c.events.slice(0, compact ? 10 : 22).map(ev => {
+          const t = formatTimeHHMM(ev.timeISO);
+          if (ev.source === 'med_before') return `Д${ev.cycleDay} ${t} [приём ${ev.medName}, боль ${ev.level}/5]`;
+          if (ev.source === 'med_after') return `Д${ev.cycleDay} ${t} [эффект ${ev.medName}: ${ev.level}/5 за ${ev.effectMinutes}м]`;
+          return `Д${ev.cycleDay} ${t}: ${ev.level}/5`;
+        }).join(' → ');
+        return `Цикл ${c.label} (пик ${c.peakPain}/5, обезбол.: ${c.medCount}): ${ptsStr}`;
+      }).join('\n');
+    }
+
+    function selectBleedingCycle(cycleId) {
+      hapticSelect();
+      selectedBleedingCycleId = cycleId;
+      selectedBleedingDayFilter = 'all';
+      const insp = document.getElementById('bleedingPainInspector');
+      if (insp) insp.style.display = 'none';
+      renderBleedingPainChart();
+    }
+
+    function selectBleedingDayFilter(dayISO) {
+      hapticSelect();
+      selectedBleedingDayFilter = dayISO;
+      const insp = document.getElementById('bleedingPainInspector');
+      if (insp) insp.style.display = 'none';
+      renderBleedingPainChart();
+    }
+
+    function showBleedingPainPointBanner(text) {
+      hapticSelect();
+      const insp = document.getElementById('bleedingPainInspector');
+      if (!insp) return;
+      insp.style.display = 'block';
+      insp.textContent = text;
+    }
+
+    function renderBleedingPainChart() {
+      const svg = document.getElementById('bleedingPainChart');
+      const cyclePillsEl = document.getElementById('bleedingCyclePills');
+      const dayPillsEl = document.getElementById('bleedingDayPills');
+      const metaEl = document.getElementById('bleedingPainChartMeta');
+      const legendEl = document.getElementById('bleedingPainLegendRow');
+      const summaryEl = document.getElementById('bleedingPainSummaryRow');
+      const containerEl = document.getElementById('bleedingPainChartContainer');
+      if (!svg || !cyclePillsEl) return;
+
+      const cycles = buildAllPainCycles();
+      const cyclesWithData = cycles.filter(c => c.events.length > 0 || c.medCount > 0);
+      const displayCycles = cyclesWithData.length ? cyclesWithData : cycles.slice(0, 1);
+
+      if (!displayCycles.length || (!cyclesWithData.length && displayCycles[0].events.length === 0)) {
+        cyclePillsEl.innerHTML = '';
+        if (dayPillsEl) dayPillsEl.style.display = 'none';
+        if (metaEl) metaEl.textContent = '';
+        if (legendEl) legendEl.innerHTML = '';
+        if (summaryEl) summaryEl.style.display = 'none';
+        if (containerEl) {
+          containerEl.innerHTML = `<div class="bp-empty-state">Отмечай боль по часам на экране «Сегодня» во время месячных или приём обезболивающих в SOS — здесь появится почасовой график спазмов и действия препаратов.</div>`;
+        }
+        return;
+      }
+
+      if (!containerEl.querySelector('#bleedingPainChart')) {
+        containerEl.innerHTML = `
+          <div class="chart-wrap">
+            <div class="chart-scroll-viewport" id="bleedingPainScrollViewport">
+              <svg id="bleedingPainChart" width="400" height="310" viewBox="0 0 400 310" style="display:block;"></svg>
+            </div>
+          </div>
+        `;
+      }
+
+      const activeCycle = displayCycles.find(c => c.cycleId === selectedBleedingCycleId) || displayCycles[0];
+      selectedBleedingCycleId = activeCycle.cycleId;
+
+      cyclePillsEl.innerHTML = displayCycles.map(c => `
+        <button type="button" class="filter-pill ${c.cycleId === activeCycle.cycleId ? 'active' : ''}" onclick="selectBleedingCycle('${c.cycleId}')">${escapeHtml(c.label)}</button>
+      `).join('');
+
+      if (dayPillsEl && activeCycle.dayDates.length > 1) {
+        dayPillsEl.style.display = 'flex';
+        dayPillsEl.innerHTML = [
+          `<button type="button" class="filter-pill ${selectedBleedingDayFilter === 'all' ? 'active' : ''}" onclick="selectBleedingDayFilter('all')">Все дни (по часам)</button>`,
+          ...activeCycle.dayDates.map((dISO, idx) => {
+            const p = dISO.split('-');
+            return `<button type="button" class="filter-pill ${selectedBleedingDayFilter === dISO ? 'active' : ''}" onclick="selectBleedingDayFilter('${dISO}')">День ${idx + 1} · ${p[2]}.${p[1]}</button>`;
+          })
+        ].join('');
+      } else if (dayPillsEl) {
+        dayPillsEl.style.display = 'none';
+      }
+
+      const filteredEvents = selectedBleedingDayFilter === 'all'
+        ? activeCycle.events
+        : activeCycle.events.filter(ev => ev.dateISO === selectedBleedingDayFilter);
+
+      const colors = getCurrentPaletteColors();
+      const cRose = colors['--rose-solid'];
+      const cOvul = colors['--ovul'];
+      const cAccent = colors['--accent'];
+
+      const targetSvg = document.getElementById('bleedingPainChart');
+      const padL = 26, padR = 26, padT = 38, padB = 34, h = 310;
+      const plotH = h - padT - padB;
+
+      if (!filteredEvents.length) {
+        targetSvg.setAttribute('width', 400);
+        targetSvg.setAttribute('viewBox', '0 0 400 310');
+        targetSvg.innerHTML = `<text x="200" y="155" text-anchor="middle" font-size="13" fill="var(--ink-2)">За выбранный день замеров пока нет</text>`;
+        if (metaEl) metaEl.textContent = `Пик ${activeCycle.peakPain}/5`;
+        return;
+      }
+
+      const minTs = filteredEvents[0].ts;
+      const maxTs = filteredEvents[filteredEvents.length - 1].ts;
+      const spanHours = Math.max(2, (maxTs - minTs) / 3600000);
+      const w = Math.max(400, Math.min(2200, Math.round(padL + padR + Math.max(filteredEvents.length * 56, spanHours * 16))));
+      const plotW = w - padL - padR;
+
+      targetSvg.setAttribute('width', w);
+      targetSvg.setAttribute('height', h);
+      targetSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      targetSvg.style.width = `${w}px`;
+
+      const tsToX = (ts) => {
+        if (maxTs === minTs) return padL + plotW / 2;
+        return padL + ((ts - minTs) / (maxTs - minTs)) * plotW;
+      };
+      const valToY = (v) => padT + plotH - (Math.max(0, Math.min(5, v)) / 5) * plotH;
+
+      let svgHtml = `<defs>
+        <linearGradient id="gradBleedingPain" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${cRose}" stop-opacity="0.24"/>
+          <stop offset="100%" stop-color="${cRose}" stop-opacity="0"/>
+        </linearGradient>
+      </defs>`;
+
+      // Сетка уровней боли 0..5
+      [0, 1, 2, 3, 4, 5].forEach(v => {
+        const y = valToY(v);
+        svgHtml += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-opacity="${v === 0 || v === 5 ? '0.9' : '0.5'}" stroke-dasharray="${v === 0 || v === 5 ? 'none' : '3 3'}" />`;
+        svgHtml += `<text x="10" y="${(y + 4).toFixed(1)}" font-size="10.5" font-weight="600" fill="var(--ink-3)">${v}</text>`;
+      });
+
+      // Разделители дней при просмотре всего периода
+      if (selectedBleedingDayFilter === 'all' && activeCycle.dayDates.length > 1) {
+        activeCycle.dayDates.forEach((dISO, idx) => {
+          const dayStartTs = parseLocalISO(dISO).setHours(0, 0, 0, 0);
+          if (dayStartTs > minTs && dayStartTs < maxTs) {
+            const dx = tsToX(dayStartTs);
+            svgHtml += `<line x1="${dx.toFixed(1)}" y1="${padT - 12}" x2="${dx.toFixed(1)}" y2="${padT + plotH}" stroke="var(--border)" stroke-width="1.2" stroke-dasharray="4 3" />`;
+            svgHtml += `<text x="${(dx + 5).toFixed(1)}" y="${padT - 16}" font-size="10.5" font-weight="700" fill="var(--ink-2)">День ${idx + 1}</text>`;
+          }
+        });
+      }
+
+      const pts = filteredEvents.map(ev => ({
+        x: tsToX(ev.ts),
+        y: valToY(ev.level),
+        ev
+      }));
+
+      // Заливка и плавная кривая
+      if (pts.length > 1) {
+        const pathD = catmullRomPath(pts);
+        const baseY = padT + plotH;
+        svgHtml += `<path d="${pathD} L ${pts[pts.length - 1].x.toFixed(1)} ${baseY} L ${pts[0].x.toFixed(1)} ${baseY} Z" fill="url(#gradBleedingPain)" />`;
+        svgHtml += `<path d="${pathD}" fill="none" stroke="${cRose}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />`;
+      }
+
+      // Линии действия обезболивающих (до -> после)
+      for (let i = 0; i < pts.length; i++) {
+        const p = pts[i];
+        if (p.ev.source === 'med_after') {
+          const prevBefore = [...pts.slice(0, i)].reverse().find(x => x.ev.source === 'med_before' && x.ev.medName === p.ev.medName);
+          if (prevBefore) {
+            svgHtml += `<line x1="${prevBefore.x.toFixed(1)}" y1="${prevBefore.y.toFixed(1)}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}" stroke="${cOvul}" stroke-width="2.4" stroke-dasharray="4 3" />`;
+          }
+        }
+      }
+
+      // Точки, время по оси X и интерактивные зоны нажатия
+      let lastTickX = -999;
+      pts.forEach(p => {
+        const ev = p.ev;
+        const tStr = formatTimeHHMM(ev.timeISO);
+        const dParts = ev.dateISO.split('-');
+        const bannerText = ev.source === 'med_before'
+          ? `${dParts[2]}.${dParts[1]}, ${tStr} (День ${ev.cycleDay}) · 💊 ${ev.medName} · Боль до: ${ev.level}/5`
+          : (ev.source === 'med_after'
+              ? `${dParts[2]}.${dParts[1]}, ${tStr} (День ${ev.cycleDay}) · 💊 ${ev.medName}: боль ${ev.painBefore ?? '?'}→${ev.level}/5 за ${ev.effectMinutes} мин`
+              : `${dParts[2]}.${dParts[1]}, ${tStr} (День ${ev.cycleDay}) · Боль: ${ev.level}/5`);
+
+        if (p.x - lastTickX >= 42) {
+          svgHtml += `<text x="${p.x.toFixed(1)}" y="${h - 10}" text-anchor="middle" font-size="10.5" font-weight="600" fill="var(--ink-3)">${tStr}</text>`;
+          lastTickX = p.x;
+        }
+
+        if (ev.source === 'med_before') {
+          svgHtml += `<rect x="${(p.x - 6).toFixed(1)}" y="${(p.y - 6).toFixed(1)}" width="12" height="12" rx="3.5" fill="${cAccent}" stroke="var(--surface)" stroke-width="1.8" />`;
+          svgHtml += `<text x="${p.x.toFixed(1)}" y="${(p.y - 10).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="${cAccent}">💊</text>`;
+        } else if (ev.source === 'med_after') {
+          svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5.2" fill="${cOvul}" stroke="var(--surface)" stroke-width="1.8" />`;
+        } else {
+          svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.8" fill="${cRose}" stroke="var(--surface)" stroke-width="1.8" />`;
+        }
+
+        svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="14" fill="transparent" style="cursor:pointer;" onclick="showBleedingPainPointBanner('${bannerText.replace(/'/g, "\\'")}')" />`;
+      });
+
+      targetSvg.innerHTML = svgHtml;
+
+      const manualCount = activeCycle.events.filter(e => e.source === 'manual' || e.source === 'legacy').length;
+      if (metaEl) metaEl.textContent = `Пик ${activeCycle.peakPain}/5 · ${manualCount} зам.`;
+      if (legendEl) {
+        legendEl.innerHTML = `
+          <span class="legend-item" style="color:${cRose};">${SVG_ICONS.dot}<span>Замер боли</span></span>
+          <span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Обезболивающее (SOS)</span></span>
+          <span class="legend-item" style="color:${cOvul};">${SVG_ICONS.dot}<span>После приёма</span></span>
+        `;
+      }
+      if (summaryEl) {
+        summaryEl.style.display = 'grid';
+        const helpedMeds = activeCycle.meds.filter(m => m.painBefore !== null && m.painAfter !== null);
+        const avgDrop = helpedMeds.length
+          ? `ср. -${(helpedMeds.reduce((s, m) => s + Math.max(0, Number(m.painBefore) - Number(m.painAfter)), 0) / helpedMeds.length).toFixed(1)} б.`
+          : 'нет оценки';
+        summaryEl.innerHTML = `
+          <div class="bp-stat-box"><span class="bp-stat-label">Пик цикла</span><span class="bp-stat-val">${activeCycle.peakPain}/5</span></div>
+          <div class="bp-stat-box"><span class="bp-stat-label">Замеров</span><span class="bp-stat-val">${manualCount}</span></div>
+          <div class="bp-stat-box"><span class="bp-stat-label">Обезбол.</span><span class="bp-stat-val">${activeCycle.medCount} (${avgDrop})</span></div>
+        `;
       }
     }
 
@@ -8393,6 +9447,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       recordPainkillerInArchiveAndEntry(record);
       persistLocalAndCloud(dateISO);
       updatePainkillerUI();
+      renderPainTrackerCard();
+      renderBleedingPainChart();
       showToast('Приём записан');
     }
 
@@ -8413,7 +9469,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       if (existingDayPain === 0) {
         if (dISO === selectedDate) {
           metrics.pain = val;
-          renderAllCCSliders();
+          renderPainTrackerCard();
           updateSummaries();
         }
         if (state.entries[dISO]) {
@@ -8424,6 +9480,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
       persistLocalAndCloud(dISO);
       updatePainkillerUI();
+      renderPainTrackerCard();
+      renderBleedingPainChart();
     }
 
     function togglePainkillerEffectPanel(index) {
@@ -8482,6 +9540,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       syncPainkillerFieldsEverywhere(item);
       persistLocalAndCloud(dISO);
       updatePainkillerUI();
+      renderPainTrackerCard();
+      renderBleedingPainChart();
       showToast('Эффект сохранён');
     }
 
@@ -8590,6 +9650,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         }
         persistLocalAndCloud('__meta_only__');
         updatePainkillerUI();
+        renderPainTrackerCard();
+        renderBleedingPainChart();
         showToast('Приём удалён');
       }
     }
@@ -8983,6 +10045,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           </div>
         `;
       }).join('');
+      renderPainTrackerCard();
+      renderBleedingPainChart();
     }
 
     function renderBreathPatternUI() {
@@ -9402,7 +10466,12 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
     function applyImportedBackupObject(parsed) {
       if (parsed && parsed.settings && parsed.entries) {
-        state = { ...state, ...parsed, onboarded: true };
+        state = {
+          ...state,
+          ...parsed,
+          painCycleArchive: Array.isArray(parsed.painCycleArchive) ? parsed.painCycleArchive : [],
+          onboarded: true
+        };
         if (!THEMES[state.settings.palette]) {
           state.settings.palette = 'peach_sage';
         }
@@ -9412,6 +10481,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         syncSettingsInputs();
         persistLocalAndCloud(null);
         loadDayForm();
+        renderPainTrackerCard();
         renderAnalytics();
         closeSheet('sheetDataSettings');
         hapticSuccess();
@@ -9504,6 +10574,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           painkillers: [],
           customPainkillers: [],
           painkillerArchive: [],
+          painCycleArchive: [],
           customHelpedPool: [],
           helpedEffectiveness: {}
         };
