@@ -1211,8 +1211,68 @@
       gap: 8px;
       margin-top: 10px;
     }
+    .med-add-actions {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .med-norm-card {
+      background: var(--surface-2);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .med-norm-card.is-warn {
+      background: var(--amber-tint);
+      border: 1px solid var(--amber);
+    }
+    .med-norm-card.is-over {
+      background: var(--rose-tint);
+      border: 1px solid var(--rose);
+    }
+    .med-norm-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .med-norm-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.3;
+    }
+    .med-norm-title {
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .med-norm-val {
+      font-weight: 600;
+      color: var(--ink-2);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    .med-norm-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .med-norm-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+    .med-norm-fill.is-warn { background: var(--amber); }
+    .med-norm-fill.is-over { background: var(--rose); }
     @media (max-width: 340px) {
-      .med-add-grid { grid-template-columns: 1fr; }
+      .med-add-grid, .med-add-actions { grid-template-columns: 1fr; }
     }
 
     .modal-backdrop {
@@ -2664,20 +2724,23 @@
           <span class="card-title">Обезболивающее</span>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;" id="recentPainkillerBtns">
-          <button type="button" class="med-preset-btn" onclick="logPainkiller('Нурофен 15 мл / 300 мг', 6)">
-            <span class="med-preset-title">Нурофен 15 мл / 300 мг</span>
-            <span class="med-preset-sub">макс. 1200 мг / 60 мл</span>
+          <button type="button" class="med-preset-btn" onclick="logPainkiller('Нурофен 15 мл/300мг', 6)">
+            <span class="med-preset-title">Нурофен 15 мл/300мг</span>
+            <span class="med-preset-sub">до 1200 мг / 60 мл в сут</span>
           </button>
-          <button type="button" class="med-preset-btn" onclick="logPainkiller('Но-шпа 2 табл', 4)">
-            <span class="med-preset-title">Но-шпа 2 табл</span>
-            <span class="med-preset-sub">макс. 6 табл / 240 мг</span>
+          <button type="button" class="med-preset-btn" onclick="logPainkiller('Ношпа 2 табл', 4)">
+            <span class="med-preset-title">Ношпа 2 табл</span>
+            <span class="med-preset-sub">до 6 табл / 240 мг в сут</span>
           </button>
         </div>
         <div class="med-add-grid">
-          <input type="text" id="customMedInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Препарат и доза (Кетанов 1 табл)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller();}" />
-          <input type="text" id="customMedDailyLimitInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Норма/сут (4 табл)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller();}" />
+          <input type="text" id="customMedInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Препарат и доза (Кетанов 1 табл)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller(true);}" />
+          <input type="text" id="customMedDailyLimitInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Норма/сут (4 табл или 400 мг)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller(true);}" />
         </div>
-        <button type="button" class="btn-soft" style="width:100%; margin-top:8px;" onclick="logCustomPainkiller()">Добавить препарат</button>
+        <div class="med-add-actions">
+          <button type="button" class="btn-soft" style="width:100%;" onclick="logCustomPainkiller(true)">Добавить и отметить</button>
+          <button type="button" class="btn-soft" style="width:100%; background:var(--surface-2); color:var(--ink-2);" onclick="logCustomPainkiller(false)">Сохранить окошко</button>
+        </div>
         <div class="med-list" id="painkillerStatus"></div>
       </div>
 
@@ -3553,6 +3616,7 @@
       entries: {},
       painkillers: [],
       customPainkillers: [],
+      deletedCustomPainkillerIds: [],
       painkillerArchive: [],
       customHelpedPool: [],
       helpedEffectiveness: {}
@@ -3947,6 +4011,7 @@
 
       const medsPayloadObj = {
         customPainkillers: normalizeCustomPainkillersList(state.customPainkillers).slice(0, 20),
+        deletedCustomPainkillerIds: normalizeDeletedCustomPainkillerIds(state.deletedCustomPainkillerIds).slice(-40),
         painkillerArchive: normalizePainkillerArchiveList(state.painkillerArchive).slice(0, 45)
       };
       let medsStr = JSON.stringify(medsPayloadObj);
@@ -4262,7 +4327,8 @@
             settings: { ...state.settings, ...(parsed.settings || {}) },
             entries: parsed.entries || {},
             painkillers: Array.isArray(parsed.painkillers) ? parsed.painkillers : [],
-            customPainkillers: normalizeCustomPainkillersList(parsed.customPainkillers),
+            deletedCustomPainkillerIds: normalizeDeletedCustomPainkillerIds(parsed.deletedCustomPainkillerIds),
+            customPainkillers: normalizeCustomPainkillersList(parsed.customPainkillers, parsed.deletedCustomPainkillerIds),
             painkillerArchive: normalizePainkillerArchiveList(parsed.painkillerArchive),
             customHelpedPool: Array.isArray(parsed.customHelpedPool) ? parsed.customHelpedPool : [],
             helpedEffectiveness: (parsed.helpedEffectiveness && typeof parsed.helpedEffectiveness === 'object')
@@ -4403,6 +4469,9 @@
           try {
             const medsObj = JSON.parse(medsCloudRaw);
             if (medsObj && typeof medsObj === 'object') {
+              if (Array.isArray(medsObj.deletedCustomPainkillerIds)) {
+                state.deletedCustomPainkillerIds = normalizeDeletedCustomPainkillerIds([...(state.deletedCustomPainkillerIds || []), ...medsObj.deletedCustomPainkillerIds]);
+              }
               if (Array.isArray(medsObj.customPainkillers)) {
                 state.customPainkillers = mergeCustomPainkillers(state.customPainkillers, medsObj.customPainkillers);
               }
@@ -4468,6 +4537,7 @@
         }
         loadDayForm();
         renderAnalytics();
+        updatePainkillerUI();
       } catch (e) {
       } finally {
         finishInitialCloudHydration(true);
@@ -5704,6 +5774,7 @@
           if (shouldStartNewCycle) {
             state.settings.prevLastPeriodStart = currentStartISO;
             state.settings.lastPeriodStart = selectedDate;
+            archiveAndClearActivePainkillers(currentStartISO);
             syncSettingsInputs();
             showToast('Новый цикл · День 1');
           } else {
@@ -5754,6 +5825,7 @@
             }
           }
           const clearedPainkillersSnapshot = archiveAndClearActivePainkillers(currentStartISO);
+          persistLocalAndCloud('__meta_only__');
           if (createdDates.length > 0) {
             lastAutoPeriodUndo = {
               createdDates,
@@ -7709,15 +7781,15 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
     const DEFAULT_PAINKILLER_PRESETS = [
       {
         id: 'default_nurofen',
-        name: 'Нурофен 15 мл / 300 мг',
-        sub: 'макс. 1200 мг / 60 мл',
+        name: 'Нурофен 15 мл/300мг',
+        sub: 'до 1200 мг / 60 мл в сут',
         hours: 6,
         dailyLimitText: '1200 мг / 60 мл'
       },
       {
         id: 'default_noshpa',
-        name: 'Но-шпа 2 табл',
-        sub: 'макс. 6 табл / 240 мг',
+        name: 'Ношпа 2 табл',
+        sub: 'до 6 табл / 240 мг в сут',
         hours: 4,
         dailyLimitText: '6 табл / 240 мг'
       }
@@ -7743,7 +7815,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       if (!u) return '';
       if (u === 'мг' || u === 'mg') return 'мг';
       if (u === 'мл' || u === 'ml') return 'мл';
-      if (/^(табл|таб|шт)/.test(u)) return 'табл';
+      if (u === 'шт') return 'шт';
+      if (/^(табл|таб)/.test(u)) return 'табл';
       if (/^пак/.test(u)) return 'пак';
       if (/^капс/.test(u)) return 'капс';
       if (/^амп/.test(u)) return 'амп';
@@ -7751,20 +7824,38 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       return u;
     }
 
-    function parseAmountAndUnit(text) {
+    function unitsAreCompatible(u1, u2) {
+      if (!u1 || !u2) return false;
+      if (u1 === u2) return true;
+      const pieceUnits = new Set(['табл', 'шт']);
+      return pieceUnits.has(u1) && pieceUnits.has(u2);
+    }
+
+    function parseAllAmountUnits(text) {
       const str = String(text || '').trim();
-      if (!str) return null;
-      const m = str.match(/(\d+(?:[.,]\d+)?)\s*(мг|mg|мл|ml|табл(?:еток|етки|етка)?|таб|шт|пак(?:етиков|етика|етик|ет)?|капс(?:ул|улы|ула)?|амп(?:ул|улы|ула)?|кап(?:ель|ли|ля)?)/i);
-      if (m) {
+      if (!str) return [];
+      const results = [];
+      const rx = /(\d+(?:[.,]\d+)?)\s*(мг|mg|мл|ml|табл(?:еток|етки|етка)?|таб|шт|пак(?:етиков|етика|етик|ет)?|капс(?:ул|улы|ула)?|амп(?:ул|улы|ула)?|кап(?:ель|ли|ля)?)/gi;
+      let m;
+      while ((m = rx.exec(str)) !== null) {
         const val = parseFloat(m[1].replace(',', '.'));
-        if (Number.isFinite(val) && val > 0) return { val, unit: normalizeDoseUnit(m[2]) };
+        if (Number.isFinite(val) && val > 0) {
+          results.push({ val, unit: normalizeDoseUnit(m[2]) });
+        }
       }
-      const bare = str.match(/^(\d+(?:[.,]\d+)?)$/);
-      if (bare) {
-        const val = parseFloat(bare[1].replace(',', '.'));
-        if (Number.isFinite(val) && val > 0) return { val, unit: '' };
+      if (!results.length) {
+        const bare = str.match(/^(\d+(?:[.,]\d+)?)$/);
+        if (bare) {
+          const val = parseFloat(bare[1].replace(',', '.'));
+          if (Number.isFinite(val) && val > 0) results.push({ val, unit: '' });
+        }
       }
-      return null;
+      return results;
+    }
+
+    function parseAmountAndUnit(text) {
+      const all = parseAllAmountUnits(text);
+      return all.length ? all[0] : null;
     }
 
     function formatDoseNum(n) {
@@ -7777,9 +7868,27 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       return KNOWN_PAINKILLER_NORMS.find(item => item.pattern.test(n)) || null;
     }
 
-    function normalizeCustomPainkillersList(rawList) {
+    function normalizeDeletedCustomPainkillerIds(rawIds) {
+      if (!Array.isArray(rawIds)) return [];
+      const seen = new Set();
+      const out = [];
+      rawIds.forEach(x => {
+        const v = String(x || '').trim();
+        if (!v || seen.has(v)) return;
+        seen.add(v);
+        out.push(v.slice(0, 64));
+      });
+      return out.slice(-60);
+    }
+
+    function normalizeCustomPainkillersList(rawList, deletedIds = null) {
       if (!Array.isArray(rawList)) return [];
-      const defaultNames = new Set(DEFAULT_PAINKILLER_PRESETS.map(d => d.name.toLowerCase()));
+      const deletedSet = new Set(normalizeDeletedCustomPainkillerIds(deletedIds || state.deletedCustomPainkillerIds || []));
+      const defaultNames = new Set([
+        ...DEFAULT_PAINKILLER_PRESETS.map(d => d.name.toLowerCase()),
+        'нурофен 15 мл / 300 мг',
+        'но-шпа 2 табл'
+      ]);
       const seen = new Set();
       const out = [];
       rawList.forEach((item, i) => {
@@ -7787,6 +7896,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         const name = typeof item === 'string' ? item.trim() : String(item.name || '').trim();
         if (!name) return;
         const key = name.toLowerCase();
+        const id = (typeof item === 'object' && item.id) ? String(item.id) : `cmp_${i}_${key.slice(0, 12)}`;
+        if (deletedSet.has(id) || deletedSet.has(`name:${key}`)) return;
         if (defaultNames.has(key) || seen.has(key)) return;
         seen.add(key);
         const known = findKnownPainkillerNorm(name);
@@ -7797,7 +7908,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           ? Number(item.hours)
           : (known ? known.hours : 4);
         out.push({
-          id: (typeof item === 'object' && item.id) ? String(item.id) : `cmp_${i}_${key.slice(0, 12)}`,
+          id,
           name: name.slice(0, 60),
           dailyLimitText,
           hours
@@ -7807,7 +7918,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
     }
 
     function mergeCustomPainkillers(localList, cloudList) {
-      return normalizeCustomPainkillersList([...(localList || []), ...(cloudList || [])]);
+      return normalizeCustomPainkillersList([...(localList || []), ...(cloudList || [])], state.deletedCustomPainkillerIds);
     }
 
     function getLocalISODateFromTimestamp(timeISO) {
@@ -7867,25 +7978,45 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       };
       state.painkillerArchive = mergePainkillerArchive([enriched], state.painkillerArchive);
 
+      if (!state.entries[dateISO]) {
+        state.entries[dateISO] = {
+          date: dateISO,
+          scaleMax: 5,
+          updatedAt: Date.now(),
+          isPeriod: isDateInActivePeriodWindow(dateISO),
+          isOvulation: false,
+          intimacy: false,
+          soloCount: 0,
+          soloReset: false,
+          discharge: '',
+          mood: 3,
+          energy: 0,
+          pain: 0,
+          libido: 0,
+          stress: 0,
+          emotions: [],
+          emotionLevels: createDefaultEmotionLevels(),
+          contexts: [],
+          helped: [],
+          painkillers: []
+        };
+      }
       const existingEntry = state.entries[dateISO];
-      if (existingEntry) {
-        const list = Array.isArray(existingEntry.painkillers) ? [...existingEntry.painkillers] : [];
-        const key = `${enriched.timeISO}|${enriched.name.toLowerCase()}`;
-        if (!list.some(x => `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}` === key)) {
-          list.push({
-            name: enriched.name,
-            timeISO: enriched.timeISO,
-            ...(enriched.dailyLimitText ? { dailyLimitText: enriched.dailyLimitText } : {})
-          });
-          existingEntry.painkillers = list;
-          existingEntry.updatedAt = Date.now();
-        }
+      const list = Array.isArray(existingEntry.painkillers) ? [...existingEntry.painkillers] : [];
+      const key = `${enriched.timeISO}|${enriched.name.toLowerCase()}`;
+      if (!list.some(x => `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}` === key)) {
+        list.push({
+          name: enriched.name,
+          timeISO: enriched.timeISO,
+          ...(enriched.dailyLimitText ? { dailyLimitText: enriched.dailyLimitText } : {})
+        });
+        existingEntry.painkillers = list;
+        existingEntry.updatedAt = Date.now();
       }
     }
 
     function archiveAndClearActivePainkillers(cycleStartISO = '') {
       const activeList = Array.isArray(state.painkillers) ? [...state.painkillers] : [];
-      if (!activeList.length) return [];
       activeList.forEach(item => {
         recordPainkillerInArchiveAndEntry({
           ...item,
@@ -7903,7 +8034,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const customPreset = (state.customPainkillers || []).find(p => p.name.toLowerCase() === cleanName.toLowerCase());
       const known = findKnownPainkillerNorm(cleanName);
       const resolvedHours = Number(hours) || customPreset?.hours || known?.hours || 4;
-      const resolvedDailyLimit = String(explicitDailyLimit || customPreset?.dailyLimitText || '').trim();
+      const resolvedDailyLimit = String(explicitDailyLimit || customPreset?.dailyLimitText || known?.displayLimit || '').trim();
       const timeISO = new Date().toISOString();
       const dateISO = getLocalISODateFromTimestamp(timeISO);
       const record = {
@@ -7915,12 +8046,12 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       };
       state.painkillers.unshift(record);
       recordPainkillerInArchiveAndEntry(record);
-      persistLocalAndCloud(state.entries[dateISO] ? dateISO : '__meta_only__');
+      persistLocalAndCloud(dateISO);
       updatePainkillerUI();
-      showToast('Добавлено');
+      showToast('Приём записан');
     }
 
-    function logCustomPainkiller() {
+    function logCustomPainkiller(alsoLogIntake = true) {
       const inp = document.getElementById('customMedInput');
       const limitInp = document.getElementById('customMedDailyLimitInput');
       const name = (inp?.value || '').trim();
@@ -7941,10 +8072,15 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         normalizedLimit = known.displayLimit;
       }
 
-      const isDefaultPreset = DEFAULT_PAINKILLER_PRESETS.some(d => d.name.toLowerCase() === name.toLowerCase());
+      const nameKey = name.toLowerCase();
+      if (Array.isArray(state.deletedCustomPainkillerIds)) {
+        state.deletedCustomPainkillerIds = state.deletedCustomPainkillerIds.filter(x => x !== `name:${nameKey}`);
+      }
+
+      const isDefaultPreset = DEFAULT_PAINKILLER_PRESETS.some(d => d.name.toLowerCase() === nameKey);
       if (!isDefaultPreset) {
         if (!Array.isArray(state.customPainkillers)) state.customPainkillers = [];
-        const existingIdx = state.customPainkillers.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+        const existingIdx = state.customPainkillers.findIndex(p => p.name.toLowerCase() === nameKey);
         if (existingIdx >= 0) {
           if (normalizedLimit) state.customPainkillers[existingIdx].dailyLimitText = normalizedLimit;
         } else {
@@ -7960,15 +8096,27 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
       if (inp) inp.value = '';
       if (limitInp) limitInp.value = '';
-      logPainkiller(name, resolvedHours, normalizedLimit);
+
+      if (alsoLogIntake) {
+        logPainkiller(name, resolvedHours, normalizedLimit);
+      } else {
+        persistLocalAndCloud('__meta_only__');
+        updatePainkillerUI();
+        showToast('Окошко сохранено');
+      }
     }
 
     function deleteCustomPainkillerPreset(presetId) {
       hapticImpact('light');
       if (!Array.isArray(state.customPainkillers)) return;
+      const target = state.customPainkillers.find(p => p.id === presetId);
       const before = state.customPainkillers.length;
       state.customPainkillers = state.customPainkillers.filter(p => p.id !== presetId);
       if (state.customPainkillers.length !== before) {
+        const delIds = new Set(normalizeDeletedCustomPainkillerIds(state.deletedCustomPainkillerIds));
+        delIds.add(String(presetId));
+        if (target?.name) delIds.add(`name:${target.name.trim().toLowerCase()}`);
+        state.deletedCustomPainkillerIds = Array.from(delIds).slice(-60);
         persistLocalAndCloud('__meta_only__');
         updatePainkillerUI();
         showToast('Окошко удалено');
@@ -7995,7 +8143,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         }
         persistLocalAndCloud('__meta_only__');
         updatePainkillerUI();
-        showToast('Удалено');
+        showToast('Приём удалён');
       }
     }
 
@@ -8016,6 +8164,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
 
       if (isNurofen) {
         if (ml > 0 && !mg) mg = Math.round(ml * 20);
+        if (mg > 0 && !ml && n.includes('нурофен')) ml = Math.round((mg / 20) * 10) / 10;
         if (!mg && !ml) {
           if (n.includes('нурофен')) { mg = 300; ml = 15; }
           else { mg = 400; ml = 0; }
@@ -8023,8 +8172,8 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       } else if (isNoshpa) {
         const perTabMg = n.includes('форте') ? 80 : 40;
         if (!tabs && !mg) {
-          tabs = 1;
-          mg = perTabMg;
+          tabs = 2;
+          mg = 2 * perTabMg;
         } else if (tabs > 0 && !mg) {
           mg = Math.round(tabs * perTabMg);
         } else if (mg > 0 && !tabs) {
@@ -8036,10 +8185,24 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const isSpasm = Boolean(known?.isSpasm) || /но-?шпа|дротаверин|спазмалгон|бускопан|спазмолитик/.test(n);
       const groupLabel = isNsaid ? 'НПВС' : (isSpasm ? 'Спазмолитик' : 'Обезболивающее');
 
-      const parsedDose = parseAmountAndUnit(orig);
+      const parsedDoses = parseAllAmountUnits(orig);
+      const parsedDose = parsedDoses[0] || null;
       const customPreset = (state.customPainkillers || []).find(p => p.name.toLowerCase() === n);
       const limitStr = String(explicitDailyLimit || customPreset?.dailyLimitText || known?.displayLimit || '').trim();
-      const parsedLimit = parseAmountAndUnit(limitStr);
+      const parsedLimits = parseAllAmountUnits(limitStr);
+
+      let matchedLimit = parsedLimits[0] || null;
+      let matchedDose = parsedDose;
+      if (parsedDoses.length && parsedLimits.length) {
+        for (const d of parsedDoses) {
+          const foundLim = parsedLimits.find(l => unitsAreCompatible(d.unit, l.unit));
+          if (foundLim) {
+            matchedDose = d;
+            matchedLimit = foundLim;
+            break;
+          }
+        }
+      }
 
       return {
         name: orig,
@@ -8051,17 +8214,17 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         isNsaid,
         isSpasm,
         groupLabel,
-        parsedDose,
+        parsedDose: matchedDose,
         limitStr,
-        parsedLimit
+        parsedLimit: matchedLimit
       };
     }
 
-    function getLast24hAllIntakes(nowMs = Date.now()) {
-      const combined = [...(state.painkillers || []), ...(state.painkillerArchive || [])];
+    function getActiveLast24hIntakes(nowMs = Date.now()) {
+      const active = Array.isArray(state.painkillers) ? state.painkillers : [];
       const seen = new Set();
       const out = [];
-      combined.forEach(p => {
+      active.forEach(p => {
         if (!p || !p.name || !p.timeISO) return;
         const ts = new Date(p.timeISO).getTime();
         if (!Number.isFinite(ts)) return;
@@ -8120,12 +8283,12 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         `).join('');
 
         const customTilesHtml = customPresets.map(item => {
-          const subText = item.dailyLimitText ? `норма: до ${item.dailyLimitText}` : 'свой препарат';
+          const subText = item.dailyLimitText ? `до ${item.dailyLimitText} в сут` : 'свой препарат';
           return `
             <div class="med-preset-btn has-del" role="button" tabindex="0" data-custom-med-id="${escapeHtml(item.id)}">
               <span class="med-preset-title">${escapeHtml(item.name)}</span>
               <span class="med-preset-sub">${escapeHtml(subText)}</span>
-              <button type="button" class="med-preset-del" data-del-custom-med="${escapeHtml(item.id)}" aria-label="Удалить препарат">${SVG_ICONS.cross}</button>
+              <button type="button" class="med-preset-del" data-del-custom-med="${escapeHtml(item.id)}" aria-label="Удалить окошко">${SVG_ICONS.cross}</button>
             </div>
           `;
         }).join('');
@@ -8156,17 +8319,17 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       if (!box) return;
       const nowMs = Date.now();
       const activeList = Array.isArray(state.painkillers) ? state.painkillers : [];
-      const last24h = getLast24hAllIntakes(nowMs);
+      const active24h = getActiveLast24hIntakes(nowMs);
 
-      if (!activeList.length && !last24h.length) {
+      if (!activeList.length) {
         box.innerHTML = '';
         return;
       }
 
       const warnMessages = [];
-      const summaryLines = [];
+      const normRows = [];
 
-      const nuroItems = last24h.filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNurofen);
+      const nuroItems = active24h.filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNurofen);
       if (nuroItems.length) {
         let totalNuroMg = 0;
         let totalNuroMl = 0;
@@ -8175,35 +8338,41 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           totalNuroMg += m.mg || 300;
           totalNuroMl += m.ml || 0;
         });
-        summaryLines.push(totalNuroMl > 0
-          ? `Нурофен: ${formatDoseNum(totalNuroMg)} из 1200 мг (${formatDoseNum(totalNuroMl)} из 60 мл) за 24 ч`
-          : `Нурофен / ибупрофен: ${formatDoseNum(totalNuroMg)} из 1200 мг за 24 ч`);
+        const pct = Math.min(100, Math.round((totalNuroMg / 1200) * 100));
+        const statusCls = totalNuroMg > 1200 || totalNuroMl > 60 ? 'is-over' : (totalNuroMg >= 1000 ? 'is-warn' : '');
+        const label = totalNuroMl > 0
+          ? `${formatDoseNum(totalNuroMg)} из 1200 мг (${formatDoseNum(totalNuroMl)} из 60 мл)`
+          : `${formatDoseNum(totalNuroMg)} из 1200 мг`;
+        normRows.push({ title: 'Нурофен (норма/сут)', value: label, pct, statusCls });
         if (totalNuroMg > 1200 || totalNuroMl > 60) {
-          warnMessages.push('Превышена суточная норма Нурофена / ибупрофена (макс. 1200 мг / 60 мл за 24 ч).');
+          warnMessages.push('Превышена суточная норма Нурофена (макс. 1200 мг / 60 мл).');
         } else if (totalNuroMg === 1200 || totalNuroMl === 60) {
-          warnMessages.push('Достигнута суточная норма Нурофена / ибупрофена (1200 мг / 60 мл за 24 ч).');
+          warnMessages.push('Достигнута суточная норма Нурофена (1200 мг / 60 мл).');
         }
       }
 
-      const noshpaItems = last24h.filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNoshpa);
+      const noshpaItems = active24h.filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNoshpa);
       if (noshpaItems.length) {
         let totalNoshpaTabs = 0;
         let totalNoshpaMg = 0;
         noshpaItems.forEach(p => {
           const m = getPainkillerMedMeta(p.name, p.dailyLimitText);
-          totalNoshpaTabs += m.tabs || 1;
-          totalNoshpaMg += m.mg || 40;
+          totalNoshpaTabs += m.tabs || 2;
+          totalNoshpaMg += m.mg || 80;
         });
-        summaryLines.push(`Но-шпа: ${formatDoseNum(totalNoshpaTabs)} из 6 табл (${formatDoseNum(totalNoshpaMg)} из 240 мг) за 24 ч`);
+        const pct = Math.min(100, Math.round((totalNoshpaTabs / 6) * 100));
+        const statusCls = totalNoshpaTabs > 6 || totalNoshpaMg > 240 ? 'is-over' : (totalNoshpaTabs >= 5 ? 'is-warn' : '');
+        const label = `${formatDoseNum(totalNoshpaTabs)} из 6 табл (${formatDoseNum(totalNoshpaMg)} из 240 мг)`;
+        normRows.push({ title: 'Ношпа (норма/сут)', value: label, pct, statusCls });
         if (totalNoshpaTabs > 6 || totalNoshpaMg > 240) {
-          warnMessages.push('Превышена суточная норма Но-шпы (макс. 6 табл / 240 мг за 24 ч).');
+          warnMessages.push('Превышена суточная норма Ношпы (макс. 6 табл / 240 мг).');
         } else if (totalNoshpaTabs === 6 || totalNoshpaMg === 240) {
-          warnMessages.push('Достигнута суточная норма Но-шпы (6 табл / 240 мг за 24 ч).');
+          warnMessages.push('Достигнута суточная норма Ношпы (6 табл / 240 мг).');
         }
       }
 
       const otherGroups = new Map();
-      last24h.forEach(p => {
+      active24h.forEach(p => {
         const m = getPainkillerMedMeta(p.name, p.dailyLimitText);
         if (m.isNurofen || m.isNoshpa) return;
         const key = m.name.toLowerCase();
@@ -8222,51 +8391,72 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
           const limVal = m.parsedLimit.val;
           const limUnit = m.parsedLimit.unit;
           let takenVal = grp.count;
-          let displayUnit = limUnit || (m.parsedDose?.unit || 'приёмов');
-          if (m.parsedDose && (!limUnit || m.parsedDose.unit === limUnit)) {
+          let displayUnit = limUnit || (m.parsedDose?.unit || 'шт');
+          if (m.parsedDose && (!limUnit || unitsAreCompatible(m.parsedDose.unit, limUnit))) {
             takenVal = grp.totalDoseVal;
-            displayUnit = m.parsedDose.unit || limUnit || 'ед.';
-          } else if (limUnit) {
-            takenVal = grp.count;
-            displayUnit = limUnit;
+            displayUnit = limUnit || m.parsedDose.unit || 'шт';
           }
-          summaryLines.push(`${grp.displayName}: ${formatDoseNum(takenVal)} из ${formatDoseNum(limVal)} ${displayUnit} за 24 ч`);
+          const pct = Math.min(100, Math.round((takenVal / limVal) * 100));
+          const statusCls = takenVal > limVal ? 'is-over' : (takenVal === limVal ? 'is-warn' : '');
+          normRows.push({
+            title: `${grp.displayName} (норма/сут)`,
+            value: `${formatDoseNum(takenVal)} из ${formatDoseNum(limVal)} ${displayUnit}`,
+            pct,
+            statusCls
+          });
           if (takenVal > limVal) {
             warnMessages.push(`Превышена суточная норма «${grp.displayName}» (${formatDoseNum(takenVal)} из ${formatDoseNum(limVal)} ${displayUnit}).`);
           } else if (takenVal === limVal) {
-            warnMessages.push(`Достигнута суточная норма «${grp.displayName}» (${formatDoseNum(limVal)} ${displayUnit} за 24 ч).`);
+            warnMessages.push(`Достигнута суточная норма «${grp.displayName}» (${formatDoseNum(limVal)} ${displayUnit}).`);
           }
         } else if (m.parsedDose) {
-          summaryLines.push(`${grp.displayName}: ${formatDoseNum(grp.totalDoseVal)} ${m.parsedDose.unit} за 24 ч`);
+          normRows.push({
+            title: grp.displayName,
+            value: `принято ${formatDoseNum(grp.totalDoseVal)} ${m.parsedDose.unit} (норма не задана)`,
+            pct: 0,
+            statusCls: ''
+          });
         } else {
-          summaryLines.push(`${grp.displayName}: ${grp.count} приём(а) за 24 ч`);
+          normRows.push({
+            title: grp.displayName,
+            value: `принято ${grp.count} шт (норма не задана)`,
+            pct: 0,
+            statusCls: ''
+          });
         }
       });
 
-      const nsaid24h = last24h.filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNsaid);
+      const nsaid24h = active24h.filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNsaid);
       const mixedNsaidNames = Array.from(new Set(nsaid24h.map(p => String(p.name || '').trim())));
       if (mixedNsaidNames.length > 1) {
-        warnMessages.push(`Сочетание нескольких НПВС за 24 ч (${mixedNsaidNames.join(' + ')}) повышает риск для ЖКТ.`);
+        warnMessages.push(`Сочетание нескольких НПВС за 24 ч (${mixedNsaidNames.join(' + ')}) повышает нагрузку на ЖКТ.`);
       }
       if (nsaid24h.length >= 2) {
         const newestNsaidTs = new Date(nsaid24h[0].timeISO).getTime();
         const prevNsaidTs = new Date(nsaid24h[1].timeISO).getTime();
         if (Number.isFinite(newestNsaidTs) && Number.isFinite(prevNsaidTs) && (newestNsaidTs - prevNsaidTs) < 6 * 3600000) {
-          warnMessages.push('Повторный приём НПВС раньше 6 часов — проверь интервал дозирования.');
+          warnMessages.push('Повторный приём НПВС раньше 6 часов — проверь интервал.');
         }
       }
 
-      const cycleFinishedNotice = !activeList.length && last24h.length
-        ? ' · цикл завершён, учёт сохраняется 24 ч'
-        : '';
+      const hasOver = normRows.some(r => r.statusCls === 'is-over');
+      const cardCls = hasOver ? 'is-over' : (warnMessages.length ? 'is-warn' : '');
+      const normsHtml = normRows.length ? `
+        <div class="med-norm-card ${cardCls}">
+          ${normRows.map(r => `
+            <div class="med-norm-row">
+              <div class="med-norm-row-top">
+                <span class="med-norm-title">${escapeHtml(r.title)}</span>
+                <span class="med-norm-val">${escapeHtml(r.value)}</span>
+              </div>
+              ${r.pct > 0 ? `<div class="med-norm-bar"><div class="med-norm-fill ${r.statusCls}" style="width:${r.pct}%;"></div></div>` : ''}
+            </div>
+          `).join('')}
+          ${warnMessages.length ? `<div class="med-item-time" style="color:var(--ink); font-weight:600;">${warnMessages.map(escapeHtml).join(' ')}</div>` : ''}
+        </div>
+      ` : '';
 
-      const warningHtml = warnMessages.length
-        ? `<div class="med-item" style="background:var(--amber-tint); border:1px solid var(--amber); color:var(--ink);"><div class="med-item-info"><div class="med-item-name" style="color:var(--amber);">Контроль дозировки за 24 ч${escapeHtml(cycleFinishedNotice)}</div><div class="med-item-time" style="color:var(--ink); margin-top:2px;">${summaryLines.map(escapeHtml).join('<br>')}<br>${warnMessages.map(escapeHtml).join(' ')}</div></div></div>`
-        : (summaryLines.length
-            ? `<div class="med-item"><div class="med-item-info"><div class="med-item-name" style="font-size:13px; color:var(--ink-2);">Норма за 24 ч${escapeHtml(cycleFinishedNotice)}</div><div class="med-item-time" style="font-weight:600; color:var(--ink); margin-top:2px;">${summaryLines.map(escapeHtml).join('<br>')}</div></div></div>`
-            : '');
-
-      box.innerHTML = warningHtml + activeList.slice(0, 12).map((item, idx) => {
+      box.innerHTML = normsHtml + activeList.slice(0, 12).map((item, idx) => {
         const taken = new Date(item.timeISO);
         const nextSafe = new Date(taken.getTime() + (item.hours || 4) * 3600000);
         const dayStr = taken.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' }).replace('.', '');
