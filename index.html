@@ -2474,27 +2474,63 @@
       margin-bottom: 12px;
     }
     .metrics-grid-3 .metric-tile {
-      padding: 11px 10px 10px;
+      min-width: 0;
+      padding: 10px 8px 9px;
       border-radius: 18px;
-      gap: 7px;
+      gap: 6px;
+      overflow: hidden;
     }
-    .metrics-grid-3 .metric-tile-title { font-size: 13.5px; }
-    .metrics-grid-3 .metric-tile-score { font-size: 14.5px; }
-    .metrics-grid-3 .metric-tile-hint {
-      font-size: 11px;
+    .metrics-grid-3 .metric-tile-header {
+      align-items: center;
+      gap: 4px;
+      min-width: 0;
+    }
+    .metrics-grid-3 .metric-tile-id {
+      gap: 4px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+    .metrics-grid-3 .metric-tile-icon {
+      width: 15px;
+      height: 15px;
+    }
+    .metrics-grid-3 .metric-tile-title {
+      font-size: 12.5px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .metrics-grid-3 .metric-scale-bar { gap: 3px; }
+    .metrics-grid-3 .metric-tile-score {
+      font-size: 12.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .metrics-grid-3 .metric-tile-score small {
+      font-size: 10.5px;
+    }
+    .metrics-grid-3 .metric-tile-hint {
+      margin-top: 0;
+      font-size: 10.5px;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .metrics-grid-3 .metric-scale-bar {
+      gap: 2px;
+      margin-top: 2px;
+    }
     .metrics-grid-3 .metric-scale-seg {
-      height: 24px;
+      height: 26px;
+      padding: 0;
+      min-width: 0;
       font-size: 11px;
+      line-height: 1;
       border-radius: 7px;
     }
-    @media (max-width: 340px) {
-      .metrics-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .metrics-grid-3 .metric-tile:last-child { grid-column: 1 / -1; }
+    @media (max-width: 350px) {
+      .metrics-grid-3 { grid-template-columns: 1fr; }
+      .metrics-grid-3 .metric-tile:last-child { grid-column: auto; }
     }
 
     /* Адаптивная карточка «Боль и спазмы» */
@@ -4183,10 +4219,62 @@
         try { tg.CloudStorage.getItem(key, (err, val) => resolve(err ? null : (val || null))); } catch (e) { resolve(null); }
       });
     }
+    const DIRTY_KEYS_STORAGE_KEY = 'carezze_v2_dirty_keys';
+
+    function getDirtyCloudKeys() {
+      try {
+        const raw = localStorage.getItem(DIRTY_KEYS_STORAGE_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return new Set(Array.isArray(arr) ? arr.filter(Boolean) : []);
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function saveDirtyCloudKeys(keysSet) {
+      try {
+        if (!keysSet || keysSet.size === 0) {
+          localStorage.removeItem(DIRTY_KEYS_STORAGE_KEY);
+        } else {
+          localStorage.setItem(DIRTY_KEYS_STORAGE_KEY, JSON.stringify(Array.from(keysSet)));
+        }
+      } catch (e) {}
+    }
+
+    function markCloudKeyDirty(key) {
+      if (!key) return;
+      const set = getDirtyCloudKeys();
+      set.add(key);
+      saveDirtyCloudKeys(set);
+    }
+
+    function clearCloudKeyDirty(key) {
+      if (!key) return;
+      const set = getDirtyCloudKeys();
+      if (set.delete(key)) saveDirtyCloudKeys(set);
+    }
+
     function cloudSet(key, val) {
       return new Promise(resolve => {
         if (!hasTelegramCloud()) return resolve(false);
-        try { tg.CloudStorage.setItem(key, val, (err) => resolve(!err)); } catch (e) { resolve(false); }
+        if (utf8ByteLength(String(val ?? '')) > 4096) {
+          markCloudKeyDirty(key);
+          return resolve(false);
+        }
+        try {
+          tg.CloudStorage.setItem(key, val, (err) => {
+            if (err) {
+              markCloudKeyDirty(key);
+              resolve(false);
+            } else {
+              clearCloudKeyDirty(key);
+              resolve(true);
+            }
+          });
+        } catch (e) {
+          markCloudKeyDirty(key);
+          resolve(false);
+        }
       });
     }
     function cloudGetKeys() {
@@ -4372,18 +4460,8 @@
 
       const merged = { ...older, ...newer };
 
-      const newerLevels = newer.emotionLevels && typeof newer.emotionLevels === 'object' ? newer.emotionLevels : {};
-      const olderLevels = older.emotionLevels && typeof older.emotionLevels === 'object' ? older.emotionLevels : {};
-      const newerHasEmos = Object.values(newerLevels).some(v => Number(v) > 0);
-      const olderHasEmos = Object.values(olderLevels).some(v => Number(v) > 0);
-
-      if (newerHasEmos) {
-        merged.emotionLevels = { ...createDefaultEmotionLevels(), ...newerLevels };
-      } else if (olderHasEmos) {
-        merged.emotionLevels = { ...createDefaultEmotionLevels(), ...olderLevels };
-      } else {
-        merged.emotionLevels = buildLoadedEmotionLevels(newer);
-      }
+      merged.emotionLevels = buildLoadedEmotionLevels(newer);
+      merged.emotions = getActiveEmotionsFromLevels(merged.emotionLevels);
 
       const soloCnt = Math.max(normalizeSoloCount(newer), lTime >= cTime ? 0 : normalizeSoloCount(older));
       merged.soloCount = normalizeSoloCount(newer);
@@ -4414,17 +4492,30 @@
       if (!merged.dayThought && older.dayThought) {
         merged.dayThought = older.dayThought;
       }
-      if (Array.isArray(older.painkillers) && older.painkillers.length) {
-        const baseList = Array.isArray(merged.painkillers) ? [...merged.painkillers] : [];
-        const seenMedKeys = new Set(baseList.map(x => `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}`));
-        older.painkillers.forEach(x => {
-          const k = `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}`;
-          if (x?.name && !seenMedKeys.has(k)) {
-            seenMedKeys.add(k);
-            baseList.push(x);
-          }
-        });
-        merged.painkillers = baseList;
+
+      const medMap = new Map();
+      [
+        ...(Array.isArray(older.painkillers) ? older.painkillers : []),
+        ...(Array.isArray(newer.painkillers) ? newer.painkillers : [])
+      ].forEach(x => {
+        if (!x?.name) return;
+        const k = `${x.timeISO || ''}|${String(x.name).trim().toLowerCase()}`;
+        const prev = medMap.get(k);
+        if (!prev) {
+          medMap.set(k, { ...x });
+        } else {
+          medMap.set(k, {
+            ...prev,
+            ...x,
+            painBefore: x.painBefore ?? prev.painBefore ?? null,
+            painAfter: x.painAfter ?? prev.painAfter ?? null,
+            effectMinutes: x.effectMinutes ?? prev.effectMinutes ?? null,
+            effectStatus: x.effectStatus || prev.effectStatus || ''
+          });
+        }
+      });
+      if (medMap.size > 0 || Array.isArray(merged.painkillers)) {
+        merged.painkillers = Array.from(medMap.values());
       }
       if ((Array.isArray(older.painLogs) && older.painLogs.length) || (Array.isArray(newer.painLogs) && newer.painLogs.length)) {
         const combinedLogs = [
@@ -4467,28 +4558,56 @@
     }
 
     async function syncToCloud(specificTargetKey = null) {
+      const badge = document.getElementById('cloudSyncBadge');
       if (!hasTelegramCloud()) {
-        document.getElementById('cloudSyncBadge').textContent = '';
-        return;
+        if (badge) badge.textContent = '';
+        return false;
       }
-      document.getElementById('cloudSyncBadge').textContent = 'Cloud';
+      if (badge) badge.textContent = 'Cloud…';
 
       const tasks = [];
       const entriesList = Object.entries(state.entries);
+      const dirtyBefore = getDirtyCloudKeys();
 
       if (specificTargetKey !== '__meta_only__') {
         const monthBuckets = {};
+        const individualDayTargets = new Set();
+
         for (const [iso, entry] of entriesList) {
           const monthKey = iso.slice(0, 7);
+          const isDirtyDay = dirtyBefore.has(`carezze2_d_${iso}`);
+          const isDirtyMonth = dirtyBefore.has(`carezze2_m_${monthKey}`);
           const shouldTouch = !specificTargetKey
             || iso === specificTargetKey
             || monthKey === specificTargetKey
-            || iso.startsWith(specificTargetKey);
+            || iso.startsWith(specificTargetKey)
+            || isDirtyDay
+            || isDirtyMonth;
+
           if (shouldTouch) {
             if (!monthBuckets[monthKey]) monthBuckets[monthKey] = {};
             monthBuckets[monthKey][iso] = compactEntryForCloud(entry, 0.85);
+            if (specificTargetKey === iso || (specificTargetKey && iso.startsWith(specificTargetKey)) || isDirtyDay) {
+              individualDayTargets.add(iso);
+            }
           }
         }
+
+        // При полной синхронизации дополнительно сохраняем последние 60 дней в индивидуальные ключи
+        if (!specificTargetKey) {
+          Object.keys(state.entries)
+            .sort()
+            .slice(-60)
+            .forEach(iso => individualDayTargets.add(iso));
+        }
+
+        for (const iso of individualDayTargets) {
+          const entry = state.entries[iso];
+          if (entry) {
+            tasks.push(cloudSet(`carezze2_d_${iso}`, serializeDaySafelyForCloud(entry)));
+          }
+        }
+
         for (const [monthKey, bucket] of Object.entries(monthBuckets)) {
           let payloadObj = { ...bucket };
           let serialized = JSON.stringify(payloadObj);
@@ -4496,6 +4615,11 @@
           while (keysInBucket.length > 1 && utf8ByteLength(serialized) > 3950) {
             const oldestIso = keysInBucket.shift();
             delete payloadObj[oldestIso];
+            serialized = JSON.stringify(payloadObj);
+          }
+          if (keysInBucket.length === 1 && utf8ByteLength(serialized) > 3950) {
+            const singleIso = keysInBucket[0];
+            payloadObj[singleIso] = JSON.parse(serializeDaySafelyForCloud(state.entries[singleIso]));
             serialized = JSON.stringify(payloadObj);
           }
           tasks.push(cloudSet(`carezze2_m_${monthKey}`, serialized));
@@ -4506,6 +4630,7 @@
       tasks.push(cloudSet('carezze2_custom_tips', serializeCustomPoolSafely(customPool)));
 
       const medsPayloadObj = {
+        activePainkillers: (Array.isArray(state.painkillers) ? state.painkillers : []).slice(0, 12),
         customPainkillers: normalizeCustomPainkillersList(state.customPainkillers).slice(0, 20),
         deletedCustomPainkillerIds: normalizeDeletedCustomPainkillerIds(state.deletedCustomPainkillerIds).slice(-40),
         painkillerArchive: normalizePainkillerArchiveList(state.painkillerArchive).slice(0, 45)
@@ -4602,7 +4727,12 @@
       }
       tasks.push(cloudSet('carezze2_pain_cycles', cyclesStr));
 
-      await Promise.all(tasks);
+      const results = await Promise.all(tasks);
+      const allOk = results.every(Boolean) && getDirtyCloudKeys().size === 0;
+      if (badge) {
+        badge.textContent = allOk ? 'Cloud' : 'Cloud !';
+      }
+      return allOk;
     }
 
     function ensureOnboardedFlagIfDataExists() {
@@ -4931,6 +5061,9 @@
       isCloudSyncing = true;
       try {
         await pendingCloudWritePromise;
+        if (getDirtyCloudKeys().size > 0) {
+          await syncToCloud('__dirty_retry__');
+        }
         if (Date.now() - lastLocalWriteTimestamp < 4000) {
           finishInitialCloudHydration(true);
           return;
@@ -5014,6 +5147,23 @@
               if (Array.isArray(medsObj.painkillerArchive)) {
                 state.painkillerArchive = mergePainkillerArchive(state.painkillerArchive, medsObj.painkillerArchive);
               }
+              if (Array.isArray(medsObj.activePainkillers) && medsObj.activePainkillers.length && Date.now() - lastLocalWriteTimestamp >= 4000) {
+                const activeMap = new Map();
+                [...medsObj.activePainkillers, ...(state.painkillers || [])].forEach(x => {
+                  if (!x?.name) return;
+                  const k = `${x.timeISO || ''}|${String(x.name).trim().toLowerCase()}`;
+                  const prev = activeMap.get(k);
+                  activeMap.set(k, prev ? {
+                    ...prev,
+                    ...x,
+                    painBefore: x.painBefore ?? prev.painBefore ?? null,
+                    painAfter: x.painAfter ?? prev.painAfter ?? null,
+                    effectMinutes: x.effectMinutes ?? prev.effectMinutes ?? null,
+                    effectStatus: x.effectStatus || prev.effectStatus || ''
+                  } : { ...x });
+                });
+                state.painkillers = Array.from(activeMap.values());
+              }
             }
           } catch (e) {}
         }
@@ -5053,6 +5203,19 @@
         });
 
         normalizeAllLoadedEntries();
+        (state.painkillers || []).forEach(pk => {
+          const k = `${pk.timeISO || ''}|${String(pk.name || '').trim().toLowerCase()}`;
+          const fromArchive = (state.painkillerArchive || []).find(a => `${a.timeISO || ''}|${String(a.name || '').trim().toLowerCase()}` === k);
+          const dISO = pk.dateISO || getLocalISODateFromTimestamp(pk.timeISO);
+          const fromDay = (state.entries[dISO]?.painkillers || []).find(d => `${d.timeISO || ''}|${String(d.name || '').trim().toLowerCase()}` === k);
+          const src = fromDay || fromArchive;
+          if (src) {
+            pk.painBefore = src.painBefore ?? pk.painBefore ?? null;
+            pk.painAfter = src.painAfter ?? pk.painAfter ?? null;
+            pk.effectMinutes = src.effectMinutes ?? pk.effectMinutes ?? null;
+            pk.effectStatus = src.effectStatus || pk.effectStatus || '';
+          }
+        });
         if (painCyclesRaw) {
           try {
             const parsedCycles = JSON.parse(painCyclesRaw);
@@ -9314,13 +9477,13 @@ ${buildPainCyclesSummaryForAI(true)}`;
           ? 'not_helped'
           : ((item.effectStatus === 'helped' || painAfter !== null) ? 'helped' : '');
 
-        if (seen.has(key)) {
-          const prev = seen.get(key);
-          if (prev.painBefore === null && painBefore !== null) prev.painBefore = painBefore;
-          if (prev.painAfter === null && painAfter !== null) prev.painAfter = painAfter;
-          if (prev.effectMinutes === null && effectMinutes !== null) prev.effectMinutes = effectMinutes;
-          if (!prev.effectStatus && effectStatus) prev.effectStatus = effectStatus;
-          if (!prev.dailyLimitText && item.dailyLimitText) prev.dailyLimitText = String(item.dailyLimitText).trim().slice(0, 32);
+        const prev = seen.get(key);
+        if (prev) {
+          prev.painBefore = painBefore ?? prev.painBefore;
+          prev.painAfter = painAfter ?? prev.painAfter;
+          prev.effectMinutes = Number.isFinite(effectMinutes) ? effectMinutes : prev.effectMinutes;
+          prev.effectStatus = effectStatus || prev.effectStatus;
+          if (item.dailyLimitText) prev.dailyLimitText = String(item.dailyLimitText).trim().slice(0, 32);
           return;
         }
 
@@ -9347,7 +9510,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
     }
 
     function mergePainkillerArchive(localList, cloudList) {
-      return normalizePainkillerArchiveList([...(localList || []), ...(cloudList || [])]);
+      return normalizePainkillerArchiveList([...(cloudList || []), ...(localList || [])]);
     }
 
     function syncPainkillerFieldsEverywhere(record) {
@@ -10669,14 +10832,33 @@ ${buildPainCyclesSummaryForAI(true)}`;
       });
     }
 
+    let lastCloudPullTriggerAt = 0;
+    function triggerBackgroundCloudPull() {
+      const now = Date.now();
+      if (now - lastCloudPullTriggerAt < 1500) return;
+      lastCloudPullTriggerAt = now;
+      syncFromCloudBackground();
+    }
+
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        syncFromCloudBackground();
+      if (document.visibilityState === 'hidden') {
+        flushPendingDayAutosave();
+      } else if (document.visibilityState === 'visible') {
+        triggerBackgroundCloudPull();
       }
+    });
+    window.addEventListener('pagehide', () => {
+      flushPendingDayAutosave();
+    });
+    window.addEventListener('beforeunload', () => {
+      flushPendingDayAutosave();
+    });
+    window.addEventListener('focus', () => {
+      triggerBackgroundCloudPull();
     });
     try {
       tg?.onEvent?.('activated', () => {
-        syncFromCloudBackground();
+        triggerBackgroundCloudPull();
       });
     } catch (e) {}
 
@@ -10800,6 +10982,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
     window.addEventListener('pageshow', () => {
       clearAllTextInputs(true);
       setTimeout(() => clearAllTextInputs(true), 60);
+      triggerBackgroundCloudPull();
     });
 
     setupKeyboardLift();
