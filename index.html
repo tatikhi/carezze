@@ -1461,6 +1461,19 @@
     }
     .filter-pill.active { background: var(--ink); color: var(--bg); }
 
+    .sos-options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .sos-options-grid .filter-pill {
+      white-space: normal;
+      text-align: center;
+      line-height: 1.25;
+      padding: 9px 10px;
+    }
+
     .chart-wrap {
       background: var(--bg);
       border-radius: 18px;
@@ -2831,7 +2844,7 @@
           <span class="card-title">Дыхание</span>
         </div>
 
-        <div class="filter-row" id="breathPatternRow">
+        <div class="sos-options-grid" id="breathPatternRow">
           <button class="filter-pill active" data-pattern="spasm" onclick="selectBreathPattern('spasm')">От спазмов</button>
           <button class="filter-pill" data-pattern="sigh" onclick="selectBreathPattern('sigh')">От тревоги</button>
           <button class="filter-pill" data-pattern="box" onclick="selectBreathPattern('box')">От перегруза</button>
@@ -3926,6 +3939,26 @@
         + tipsLen;
     }
 
+    function computeDayPeakPain(entry, extraPainValues = []) {
+      const candidates = [
+        Number(entry?.peakPain) || 0,
+        Number(entry?.pain) || 0,
+        ...extraPainValues.map(v => Number(v) || 0)
+      ];
+      if (Array.isArray(entry?.painkillers)) {
+        entry.painkillers.forEach(p => {
+          if (p?.painBefore !== null && p?.painBefore !== undefined) {
+            candidates.push(Number(p.painBefore) || 0);
+          }
+          if (p?.painAfter !== null && p?.painAfter !== undefined) {
+            candidates.push(Number(p.painAfter) || 0);
+          }
+        });
+      }
+      const maxVal = Math.max(0, ...candidates.map(v => (Number.isFinite(v) ? Math.round(v) : 0)));
+      return Math.max(0, Math.min(5, maxVal));
+    }
+
     function compactEntryForCloud(entry, aiMaxScale = 1) {
       const compactEmotions = {};
       if (entry.emotionLevels && typeof entry.emotionLevels === 'object') {
@@ -3950,6 +3983,7 @@
         mood: entry.mood,
         energy: entry.energy,
         pain: entry.pain,
+        ...(computeDayPeakPain(entry) > (Number(entry.pain) || 0) ? { peakPain: computeDayPeakPain(entry) } : {}),
         libido: entry.libido,
         stress: Math.max(0, Math.min(5, Math.round(Number(entry.stress) || 0))),
         emotions: Object.keys(compactEmotions),
@@ -4084,6 +4118,7 @@
         });
         merged.painkillers = baseList;
       }
+      merged.peakPain = computeDayPeakPain(merged, [cloudEntry.peakPain, localEntry.peakPain, cloudEntry.pain, localEntry.pain]);
       if (!merged.updatedAt) {
         merged.updatedAt = Math.max(cTime, lTime, Date.now());
       }
@@ -4371,6 +4406,10 @@
           entry.stress = Math.max(0, Math.min(5, Math.round(Number(rawS) || 0)));
         }
         entry.scaleMax = 5;
+        if (isLegacy10 && entry.peakPain !== undefined) {
+          entry.peakPain = toFiveScale(entry.peakPain);
+        }
+        entry.peakPain = computeDayPeakPain(entry);
         entry.emotionLevels = buildLoadedEmotionLevels(entry);
         entry.emotions = getActiveEmotionsFromLevels(entry.emotionLevels);
         entry.soloCount = normalizeSoloCount(entry);
@@ -5295,6 +5334,7 @@
       const cleanDischarge = tempIsPeriod
         ? (['Скудные', 'Умеренные', 'Обильные'].includes(tempDischarge) ? tempDischarge : 'Умеренные')
         : (['Сухие / скудные', 'Кремовые', 'Прозрачные', 'Мажущие'].includes(tempDischarge) ? tempDischarge : '');
+      const peakPainVal = computeDayPeakPain({ ...prevEntry, pain: metrics.pain }, [metrics.pain]);
 
       return {
         date: selectedDate,
@@ -5309,6 +5349,7 @@
         mood: computeDerivedMood(normalizedLevels, metrics.energy, metrics.pain, metrics.stress),
         energy: metrics.energy,
         pain: metrics.pain,
+        peakPain: peakPainVal,
         libido: metrics.libido,
         stress: metrics.stress,
         emotions: activeEmos,
@@ -6416,14 +6457,17 @@
       const allEntries = Object.values(state.entries);
       if (allEntries.length < 4) return '';
 
-      const samePhaseEntries = allEntries.filter(e => e.date !== selectedDate && getCycleInfo(e.date).phaseCode === info.phaseCode);
+      const samePhaseEntries = allEntries.filter(e =>
+        getCycleInfo(e.date).phaseCode === info.phaseCode &&
+        (Number(e.energy) > 0 || Number(e.pain) > 0 || Number(e.peakPain) > 0 || Number(e.libido) > 0 || (e.emotions && e.emotions.length > 0))
+      );
       const notes = [];
 
-      if (samePhaseEntries.length >= 2) {
-        const avgPain = (samePhaseEntries.reduce((s, e) => s + e.pain, 0) / samePhaseEntries.length).toFixed(1);
-        const avgEnergy = (samePhaseEntries.reduce((s, e) => s + e.energy, 0) / samePhaseEntries.length).toFixed(1);
+      if (samePhaseEntries.length >= 3) {
+        const avgPain = (samePhaseEntries.reduce((s, e) => s + computeDayPeakPain(e), 0) / samePhaseEntries.length).toFixed(1);
+        const avgEnergy = (samePhaseEntries.reduce((s, e) => s + (Number(e.energy) || 0), 0) / samePhaseEntries.length).toFixed(1);
         const breastRate = samePhaseEntries.filter(e => (e.contexts || []).map(normalizeContextLabel).includes('Чувствительность груди')).length;
-        notes.push(`В этой фазе у тебя обычно энергия ~${avgEnergy}/5, боль ~${avgPain}/5.`);
+        notes.push(`Среднее по ${samePhaseEntries.length} дням этой фазы: энергия ~${avgEnergy}/5, боль ~${avgPain}/5.`);
         if (breastRate >= 2) {
           notes.push(`Чувствительность груди повторялась в ${breastRate} из ${samePhaseEntries.length} дней этой фазы.`);
         }
@@ -6961,6 +7005,7 @@
             phase: ci.phase,
             energy: e.energy,
             pain: e.pain,
+            ...(computeDayPeakPain(e) > (Number(e.pain) || 0) ? { peakPain: computeDayPeakPain(e) } : {}),
             libido: e.libido,
             ...(stressVal > 0 ? { stress: stressVal } : {}),
             ...(sleepVal ? { sleepQuality: sleepVal } : {}),
@@ -6989,14 +7034,33 @@
           };
         });
 
-      const helpedCounts = {};
+      const helpedByPhase = {};
       Object.values(state.entries).forEach(e => {
-        (e.helped || []).forEach(h => { helpedCounts[h] = (helpedCounts[h] || 0) + 1; });
+        const ph = getCycleInfo(e.date).phase;
+        (e.helped || []).forEach(h => {
+          if (!helpedByPhase[ph]) helpedByPhase[ph] = {};
+          helpedByPhase[ph][h] = (helpedByPhase[ph][h] || 0) + 1;
+        });
       });
 
       const cycleStats = getObservedCycleStats();
+      const cycleStarts = cycleStats.starts;
+      const cyclesWithLogs = cycleStarts.filter((startISO, idx) => {
+        const nextStartISO = cycleStarts[idx + 1] || '9999-12-31';
+        const daysLogged = Object.values(state.entries).filter(
+          e => e.date >= startISO && e.date < nextStartISO && (
+            Number(e.energy) > 0 ||
+            Number(e.pain) > 0 ||
+            Number(e.peakPain) > 0 ||
+            Number(e.libido) > 0 ||
+            Number(e.stress) > 0 ||
+            (e.emotions && e.emotions.length > 0)
+          )
+        ).length;
+        return daysLogged >= 5;
+      });
       const completedCyclesCount = cycleStats.lengths.length;
-      const isFirstTrackedCycle = completedCyclesCount === 0;
+      const isFirstTrackedCycle = cyclesWithLogs.length < 2;
       const hasEnoughDaysInCurrentCycle = recentHistory.length >= 3;
       const watchToday = [];
       if (typeof current.wristTempDelta === 'number') watchToday.push(`Температура: ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C`);
@@ -7018,14 +7082,14 @@
 
 ПАРАМЕТРЫ ЦИКЛА:
 - Длина цикла: ${info.isVariable ? `плавающий цикл ${info.minLen}–${info.maxLen} дней (медиана ${info.len} дн., колебания в пределах ±${Math.ceil((info.maxLen - info.minLen) / 2)} дн. являются физиологической нормой за счёт вариабельности фолликулярной фазы; дни ${info.minLen}–${info.maxLen} — это нормальное окно ожидания нового цикла, а не задержка; овуляцию оценивай по совокупности симптомов, температуры и выделений)` : pluralDays(info.len)}, длительность месячных: ${pluralDays(info.pLen)}
-- История длительности циклов по отметкам: ${completedCyclesCount > 0 ? `${cycleStats.lengths.join(', ')} дн. (среднее ${cycleStats.avg} дн., зафиксировано завершённых циклов: ${completedCyclesCount})` : 'ПЕРВЫЙ отслеживаемый цикл в базе — завершённых прошлых циклов ещё нет'}
+- История длительности циклов по отметкам: ${!isFirstTrackedCycle ? `${cycleStats.lengths.join(', ')} дн. (среднее ${cycleStats.avg} дн., полноценно записанных циклов с дневником: ${cyclesWithLogs.length})` : 'ПЕРВЫЙ отслеживаемый цикл с дневником — двух полноценно записанных циклов в базе ещё нет'}
 - Дата: ${selectedDate}
 - День цикла: ${info.cycleDay} (${info.phase}${info.isDelay ? `, задержка ${pluralDays(info.delayDays)}` : ''})
 - Всего записей в базе: ${allSorted.length + 1}
 
 СЕГОДНЯ (оценка по 5-балльной шкале 0–5):
 - Энергия: ${current.energy}/5
-- Боль: ${current.pain}/5
+- Боль: ${current.pain}/5${computeDayPeakPain(current) > (Number(current.pain) || 0) ? ` (пик за день: ${computeDayPeakPain(current)}/5)` : ''}
 - Либидо: ${current.libido}/5
 - Стресс: ${current.stress !== undefined ? Number(current.stress) : (Number(current.emotionLevels?.['Стресс']) || 0)}/5
 - Месячные: ${current.isPeriod ? `да (${current.discharge || 'умеренные'})` : 'нет'}
@@ -7040,8 +7104,8 @@ ${watchToday.length ? `- Температура: ${watchToday.join(', ')}` : ''}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
 - Правило покой vs активация: при выраженной боли или энергии <= 2/5 предлагай покой и восстановление; при тревоге или грусти с энергией >= 3/5 предлагай мягкую поведенческую активацию на 10 минут (прогулка, душ, одно простое завершённое дело) вместо избегания.
 
-СПОСОБЫ, КОТОРЫЕ ПОМОГАЛИ РАНЬШЕ (счётчик):
-${JSON.stringify(helpedCounts)}
+СПОСОБЫ ПОМОЩИ ПО ФАЗАМ (строго привязаны к фазе, в которой применялись):
+${JSON.stringify(helpedByPhase)}
 
 ПРИЁМ ОБЕЗБОЛИВАЮЩИХ (архив текущего и прошлых циклов с днём цикла и динамикой боли):
 ${buildPainkillerHistorySummaryForAI()}
@@ -7052,9 +7116,9 @@ ${JSON.stringify(recentHistory)}
 ЗАДАЧА:
 ${isFirstTrackedCycle
   ? (hasEnoughDaysInCurrentCycle
-    ? 'Сейчас в базе идёт ПЕРВЫЙ отслеживаемый цикл (завершённых прошлых циклов в дневнике ещё НЕТ). СТРОГО ЗАПРЕЩЕНО писать, что это «уже не первый цикл», ссылаться на «прошлые циклы» или утверждать «обычно перед месячными у тебя...». Сравнивай показатели ТОЛЬКО между уже записанными днями текущего цикла: как менялись энергия, боль, эмоции, стресс и качество сна (sleepQuality), как плохой сон сказывался на следующем дне, как срабатывали обезболивающие и способы из helped. В поле "patterns" напиши конкретные связки по уже записанным дням текущего цикла + аккуратный ориентир на ближайшие 2–3 дня текущей фазы без выдумывания статистики прошлых циклов.'
-    : 'База только начинает собираться (идёт первый цикл, записей пока 1–3 дня). СТРОГО ЗАПРЕЩЕНО писать про «не первый цикл» или приписывать повторяющиеся паттерны прошлых циклов. В поле "patterns" честно отметь, что база ещё собирается, и при наличии 1–2 прошлых записей коротко сравни сегодняшний день (включая сон и самочувствие) только с ними, либо оставь пустую строку, если это первый день.')
-  : `В базе уже есть данные по нескольким циклам (завершённых циклов: ${completedCyclesCount}). Сравни показатели разных дней и фаз цикла под капотом: найди повторяющиеся паттерны эмоций, скачков боли, качества сна (sleepQuality), чувствительности груди, стресса, отёков, температуры, эффективности обезболивающих, а также как влияли близость и соло-разрядка. В поле "patterns" напиши конкретные выводы по паттернам + упреждающее напоминание (чего ждать в ближайшие 2–3 дня цикла исходя из реальных записей и что лучше всего срабатывало).`}
+    ? 'Сейчас в базе НЕТ двух полноценно записанных циклов (идёт первый отслеживаемый цикл с дневником). КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО писать «уже не первый цикл», «в прошлых циклах», «из цикла в цикл» или ссылаться на статистику прошлых циклов. Также ЗАПРЕЩЕНО выдавать советы, которые помогали в лютеиновой/предменструальной фазе (ПМС), за опыт начала цикла — опирайся только на записи текущей фазы и факты сегодняшнего дня. Сравнивай показатели ТОЛЬКО между уже записанными днями текущего цикла: как менялись энергия, боль (включая пик боли peakPain и динамику после обезболивающих), эмоции, стресс и качество сна (sleepQuality).'
+    : 'База только начинает собираться (идёт первый цикл с дневником, записей пока 1–3 дня). КАТЕГОРИЧЕСКИ ЗАПРЕЩЕНО писать «уже не первый цикл», «в прошлых циклах», «из цикла в цикл» или ссылаться на статистику прошлых циклов. Также ЗАПРЕЩЕНО выдавать советы из ПМС за опыт начала цикла. В поле "patterns" честно отметь, что база ещё собирается, и при наличии 1–2 прошлых записей коротко сравни сегодняшний день только с ними, либо оставь пустую строку, если это первый день.')
+  : `В базе есть данные по ${cyclesWithLogs.length} записанным циклам. Сравнивай между собой ТОЛЬКО дни одной и той же фазы цикла (не путай позднюю лютеиновую/ПМС с менструальной или фолликулярной фазой). Найди повторяющиеся паттерны эмоций, скачков боли (учитывая peakPain и эффективность обезболивающих), качества сна (sleepQuality), чувствительности груди, стресса, отёков, температуры, а также близости и соло-разрядки. В поле "patterns" указывай только те способы из helpedByPhase, которые реально срабатывали именно в текущей фазе (${info.phase}), + упреждающее напоминание на ближайшие 2–3 дня этой же фазы.`}
 
 Верни строго JSON:
 {
@@ -7156,7 +7220,17 @@ ${isFirstTrackedCycle
         || ((current.contexts || []).map(normalizeContextLabel).includes('Недосып') ? 'Плохо' : 'не указан');
 
       const cycleStats = getObservedCycleStats();
-      const isFirstTrackedCycle = cycleStats.lengths.length === 0;
+      const cycleStarts = cycleStats.starts;
+      const cyclesWithLogs = cycleStarts.filter((startISO, idx) => {
+        const nextStartISO = cycleStarts[idx + 1] || '9999-12-31';
+        const daysLogged = Object.values(state.entries).filter(
+          e => e.date >= startISO && e.date < nextStartISO && (
+            Number(e.energy) > 0 || Number(e.pain) > 0 || Number(e.peakPain) > 0 || (e.emotions && e.emotions.length > 0)
+          )
+        ).length;
+        return daysLogged >= 5;
+      });
+      const isFirstTrackedCycle = cyclesWithLogs.length < 2;
 
       const recent7Days = Object.values(state.entries || {})
         .filter(e => e.date && e.date !== selectedDate)
@@ -8201,6 +8275,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
             p.effectStatus = record.effectStatus;
           }
         });
+        state.entries[dISO].peakPain = computeDayPeakPain(state.entries[dISO], [record.painBefore, record.painAfter]);
         state.entries[dISO].updatedAt = Date.now();
       }
     }
@@ -8253,8 +8328,10 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const key = `${enriched.timeISO}|${enriched.name.toLowerCase()}`;
       const existingIdx = list.findIndex(x => `${x.timeISO || ''}|${String(x.name || '').toLowerCase()}` === key);
       const compactItem = {
+        ...(enriched.id ? { id: enriched.id } : {}),
         name: enriched.name,
         timeISO: enriched.timeISO,
+        hours: enriched.hours,
         ...(enriched.dailyLimitText ? { dailyLimitText: enriched.dailyLimitText } : {}),
         ...(enriched.painBefore !== null ? { painBefore: enriched.painBefore } : {}),
         ...(enriched.painAfter !== null ? { painAfter: enriched.painAfter } : {}),
@@ -8267,6 +8344,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         list.push(compactItem);
       }
       existingEntry.painkillers = list;
+      existingEntry.peakPain = computeDayPeakPain(existingEntry, [enriched.painBefore, enriched.painAfter]);
       existingEntry.updatedAt = Date.now();
     }
 
@@ -8639,8 +8717,15 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
         const effectPart = effLine
           ? `, эффект приёма: ${effLine}`
           : (rec.painBefore !== null && rec.painBefore !== undefined ? `, боль до приёма ${rec.painBefore}/5` : '');
-        const painToday = dayEntry && typeof dayEntry.pain === 'number' ? `, пик боли за день ${dayEntry.pain}/5` : '';
-        const painNext = nextEntry && typeof nextEntry.pain === 'number' ? ` -> на след. день ${nextEntry.pain}/5` : '';
+        const dayPeak = dayEntry ? computeDayPeakPain(dayEntry) : null;
+        const dayCurrent = dayEntry && typeof dayEntry.pain === 'number' ? dayEntry.pain : null;
+        const painToday = dayPeak !== null
+          ? (dayCurrent !== null && dayCurrent !== dayPeak
+              ? `, пик боли за день ${dayPeak}/5 (позже/к концу дня ${dayCurrent}/5)`
+              : `, пик боли за день ${dayPeak}/5`)
+          : '';
+        const nextPeak = nextEntry ? computeDayPeakPain(nextEntry) : null;
+        const painNext = nextPeak !== null ? ` -> на след. день пик ${nextPeak}/5` : '';
         return `${dISO} (${cDay}-й день цикла, ${tStr}): ${rec.name}${effectPart}${painToday}${painNext}`;
       }).join('; ');
     }
@@ -9259,7 +9344,7 @@ ${typeof current.wristTempDelta === 'number' ? `- Температура: ${curr
       const modeObj = SOS_RESET_MODES[sosResetStateMode] || SOS_RESET_MODES.anxiety;
       const stepsList = modeObj.steps;
 
-      const modePillsHtml = `<div class="filter-row" style="margin-bottom:10px;">${
+      const modePillsHtml = `<div class="sos-options-grid">${
         Object.entries(SOS_RESET_MODES).map(([k, m]) =>
           `<button type="button" class="filter-pill ${k === sosResetStateMode ? 'active' : ''}" onclick="selectSosResetMode('${k}')">${escapeHtml(m.label)}</button>`
         ).join('')
