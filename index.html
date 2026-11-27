@@ -3085,17 +3085,8 @@
       </div>
     </div>
 
-    <!-- VIEW 2: ANALYTICS (Динамика, календарь цикла и закономерности) -->
+    <!-- VIEW 2: ANALYTICS (Динамика и болевые ощущения) -->
     <div id="view-analytics" class="view">
-      <!-- Сводка ритма и повторяющихся паттернов -->
-      <div class="card" id="analyticsPatternsCard">
-        <div class="card-top">
-          <span class="card-title">Ритм и закономерности</span>
-          <button type="button" class="btn-edit-small" onclick="openCalendarModal()">Календарь</button>
-        </div>
-        <div class="patterns-pills-wrap" id="analyticsPatternsSummary"></div>
-      </div>
-
       <!-- График динамики -->
       <div class="card">
         <div class="card-top">
@@ -3127,15 +3118,17 @@
         <div id="chartLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-2); margin-top:10px;"></div>
       </div>
 
-      <!-- Отдельный график: Боль при кровотечении (по часам и дням + приём обезболивающих) -->
+      <!-- Отдельный график: Болевые ощущения -->
       <div class="card" id="bleedingPainChartCard">
         <div class="card-top">
-          <span class="card-title">Боль при кровотечении</span>
-          <span class="card-sub" id="bleedingPainChartMeta"></span>
+          <span class="card-title">Болевые ощущения</span>
         </div>
 
-        <div class="filter-row" id="bleedingCyclePills"></div>
-        <div class="filter-row" id="bleedingDayPills" style="display:none; margin-top:-2px;"></div>
+        <div class="filter-row" id="bleedingPeriodFilters">
+          <button class="filter-pill" data-period="cycle" onclick="setBleedingPainPeriod('cycle')">Текущий цикл</button>
+          <button class="filter-pill active" data-period="3m" onclick="setBleedingPainPeriod('3m')">3 месяца</button>
+          <button class="filter-pill" data-period="all" onclick="setBleedingPainPeriod('all')">Всё время</button>
+        </div>
         <div id="bleedingPainInspector" style="display:none; margin-bottom:10px; padding:9px 12px; border-radius:12px; background:var(--surface-2); font-size:13px; font-weight:600; color:var(--ink);"></div>
 
         <div id="bleedingPainChartContainer">
@@ -3147,7 +3140,6 @@
         </div>
 
         <div id="bleedingPainLegendRow" style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-size:12px; color:var(--ink-2); margin-top:10px;"></div>
-        <div id="bleedingPainSummaryRow" class="bleeding-pain-stats" style="display:none;"></div>
       </div>
     </div>
 
@@ -7384,6 +7376,68 @@
       return notes.join(' ');
     }
 
+    function buildRhythmAndPatternsForAI(info) {
+      const allEntries = Object.values(state.entries || {})
+        .filter(e => e && typeof e.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date))
+        .sort((a, b) => a.date.localeCompare(b.date));
+      const lines = [];
+      const localSummary = detectLocalPatterns(info);
+      if (localSummary) lines.push(localSummary);
+
+      const helpCounts = {};
+      const phaseHelpCounts = {};
+      allEntries.forEach(e => {
+        const pCode = getCycleInfo(e.date).phaseCode;
+        (e.helped || []).forEach(h => {
+          helpCounts[h] = (helpCounts[h] || 0) + 1;
+          if (pCode === info.phaseCode) {
+            phaseHelpCounts[h] = (phaseHelpCounts[h] || 0) + 1;
+          }
+        });
+      });
+
+      const topPhaseHelps = Object.entries(phaseHelpCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([k, v]) => `${k} (${v} раз)`);
+      if (topPhaseHelps.length) {
+        lines.push(`В текущей фазе (${info.phase}) чаще всего помогало: ${topPhaseHelps.join(', ')}.`);
+      }
+
+      const topOverallHelps = Object.entries(helpCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([k, v]) => `${k} (${v} раз)`);
+      if (topOverallHelps.length) {
+        lines.push(`За всё время наблюдения чаще всего выручало: ${topOverallHelps.join(', ')}.`);
+      }
+
+      const phaseNames = {
+        menstrual: 'Менструация',
+        follicular: 'Фолликулярная фаза',
+        ovulation: 'Овуляция',
+        early_luteal: 'Ранняя лютеиновая фаза',
+        late_luteal: 'Поздняя лютеиновая фаза (ПМС)'
+      };
+      Object.entries(phaseNames).forEach(([pCode, pTitle]) => {
+        const pEntries = allEntries.filter(e => getCycleInfo(e.date).phaseCode === pCode);
+        if (pEntries.length >= 2) {
+          const eVals = pEntries.map(e => parseExplicitScaleVal(e.energy)).filter(v => v !== null);
+          const sVals = pEntries.map(e => parseExplicitScaleVal(e.stress)).filter(v => v !== null);
+          const pVals = pEntries.map(e => computeDayPeakPain(e)).filter(v => v > 0);
+          const parts = [`дней: ${pEntries.length}`];
+          if (eVals.length) parts.push(`ср. энергия ${(eVals.reduce((a, b) => a + b, 0) / eVals.length).toFixed(1)}/5`);
+          if (sVals.length) parts.push(`ср. стресс ${(sVals.reduce((a, b) => a + b, 0) / sVals.length).toFixed(1)}/5`);
+          if (pVals.length) parts.push(`ср. пик боли ${(pVals.reduce((a, b) => a + b, 0) / pVals.length).toFixed(1)}/5`);
+          lines.push(`Ритм фазы «${pTitle}»: ${parts.join(', ')}.`);
+        }
+      });
+
+      return lines.length
+        ? lines.join(' ')
+        : 'Накопленных закономерностей по фазам пока немного (менее 2–3 дней в фазе).';
+    }
+
     function buildDefaultSteps(entry, info) {
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
@@ -8012,6 +8066,9 @@ ${watchToday.length ? `- Температура запястья (умные ч�
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ')}
 - Правило покой vs активация: при выраженной боли или энергии <= 2/5 предлагай покой и восстановление; при тревоге или грусти с энергией >= 3/5 предлагай мягкую поведенческую активацию на 10 минут (прогулка, душ, одно простое завершённое дело) вместо избегания.
 
+РИТМ И ЗАКОНОМЕРНОСТИ ПО ФАЗАМ (сводка под капотом для ИИ):
+${buildRhythmAndPatternsForAI(info)}
+
 СПОСОБЫ ПОМОЩИ ПО ФАЗАМ (строго привязаны к фазе, в которой применялись):
 ${JSON.stringify(helpedByPhase)}
 
@@ -8182,6 +8239,7 @@ ${isFirstTrackedCycle
 ${typeof current.wristTempDelta === 'number' ? `- Температура запястья (умные часы, НЕ базальная): ${current.wristTempDelta > 0 ? '+' : ''}${current.wristTempDelta} °C` : ''}
 - Эмоции: ${formattedEmos || 'не указаны'}
 - Физические ощущения: ${(current.contexts || []).map(normalizeContextLabel).join(', ') || 'нет'}
+- Ритм и закономерности по фазам (под капотом для ИИ): ${buildRhythmAndPatternsForAI(info)}
 - Недавние дни (для оценки сна и динамики): ${recent7Days || 'пока нет предыдущих дней'}
 - Обезболивающие (за 24 ч и из архива циклов): ${buildPainkillerHistorySummaryForAI(true)}
 - История болевых циклов по часам (все сохранённые циклы):
@@ -9447,20 +9505,17 @@ ${buildPainCyclesSummaryForAI(true)}`;
       }).join('\n');
     }
 
-    function selectBleedingCycle(cycleId) {
-      hapticSelect();
-      selectedBleedingCycleId = cycleId;
-      selectedBleedingDayFilter = 'all';
-      const insp = document.getElementById('bleedingPainInspector');
-      if (insp) insp.style.display = 'none';
-      renderBleedingPainChart();
-    }
+    let bleedingPainPeriodFilter = '3m';
 
-    function selectBleedingDayFilter(dayISO) {
+    function setBleedingPainPeriod(periodKey) {
+      if (!['cycle', '3m', 'all'].includes(periodKey)) return;
       hapticSelect();
-      selectedBleedingDayFilter = dayISO;
+      bleedingPainPeriodFilter = periodKey;
       const insp = document.getElementById('bleedingPainInspector');
       if (insp) insp.style.display = 'none';
+      document.querySelectorAll('#bleedingPeriodFilters .filter-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.period === periodKey);
+      });
       renderBleedingPainChart();
     }
 
@@ -9472,32 +9527,22 @@ ${buildPainCyclesSummaryForAI(true)}`;
       insp.textContent = text;
     }
 
-    function renderBleedingPainChart() {
-      const svg = document.getElementById('bleedingPainChart');
-      const cyclePillsEl = document.getElementById('bleedingCyclePills');
-      const dayPillsEl = document.getElementById('bleedingDayPills');
-      const metaEl = document.getElementById('bleedingPainChartMeta');
-      const legendEl = document.getElementById('bleedingPainLegendRow');
-      const summaryEl = document.getElementById('bleedingPainSummaryRow');
-      const containerEl = document.getElementById('bleedingPainChartContainer');
-      if (!svg || !cyclePillsEl) return;
-
-      const cycles = buildAllPainCycles();
-      const hasFlowData = (c) => Array.isArray(c.dayFlows) && c.dayFlows.some(f => Number(f.level) > 0);
-      const cyclesWithData = cycles.filter(c => c.events.length > 0 || c.medCount > 0 || hasFlowData(c));
-      const displayCycles = cyclesWithData.length ? cyclesWithData : cycles.slice(0, 1);
-
-      if (!displayCycles.length || (!cyclesWithData.length && displayCycles[0].events.length === 0)) {
-        cyclePillsEl.innerHTML = '';
-        if (dayPillsEl) dayPillsEl.style.display = 'none';
-        if (metaEl) metaEl.textContent = '';
-        if (legendEl) legendEl.innerHTML = '';
-        if (summaryEl) summaryEl.style.display = 'none';
-        if (containerEl) {
-          containerEl.innerHTML = `<div class="bp-empty-state">Отмечай боль по часам и силу выделений на экране «Сегодня» во время месячных или приём обезболивающих в SOS — здесь появится почасовой график спазмов и столбцы силы кровотечения.</div>`;
-        }
-        return;
+    function getDayFlowInfoForChart(dISO, ent) {
+      const rawDis = String(ent?.discharge || '').trim();
+      if (rawDis === 'Обильные') return { level: 3, label: 'Обильные' };
+      if (rawDis === 'Умеренные') return { level: 2, label: 'Умеренные' };
+      if (rawDis === 'Скудные') return { level: 1, label: 'Скудные' };
+      if (rawDis === 'Мажущие') return { level: 0.5, label: 'Мажущие' };
+      if (ent?.isPeriod || isDateInActivePeriodWindow(dISO)) {
+        return { level: 2, label: 'Умеренные' };
       }
+      return { level: 0, label: 'Нет' };
+    }
+
+    function renderBleedingPainChart() {
+      const containerEl = document.getElementById('bleedingPainChartContainer');
+      const legendEl = document.getElementById('bleedingPainLegendRow');
+      if (!containerEl) return;
 
       if (!containerEl.querySelector('#bleedingPainChart')) {
         containerEl.innerHTML = `
@@ -9509,65 +9554,87 @@ ${buildPainCyclesSummaryForAI(true)}`;
         `;
       }
 
-      const activeCycle = displayCycles.find(c => c.cycleId === selectedBleedingCycleId) || displayCycles[0];
-      selectedBleedingCycleId = activeCycle.cycleId;
+      const targetSvg = document.getElementById('bleedingPainChart');
+      const scrollViewport = document.getElementById('bleedingPainScrollViewport');
+      if (!targetSvg) return;
 
-      cyclePillsEl.innerHTML = displayCycles.map(c => `
-        <button type="button" class="filter-pill ${c.cycleId === activeCycle.cycleId ? 'active' : ''}" onclick="selectBleedingCycle('${c.cycleId}')">${escapeHtml(c.label)}</button>
-      `).join('');
-
-      if (dayPillsEl && activeCycle.dayDates.length > 1) {
-        dayPillsEl.style.display = 'flex';
-        dayPillsEl.innerHTML = [
-          `<button type="button" class="filter-pill ${selectedBleedingDayFilter === 'all' ? 'active' : ''}" onclick="selectBleedingDayFilter('all')">Все дни (по часам)</button>`,
-          ...activeCycle.dayDates.map((dISO, idx) => {
-            const p = dISO.split('-');
-            return `<button type="button" class="filter-pill ${selectedBleedingDayFilter === dISO ? 'active' : ''}" onclick="selectBleedingDayFilter('${dISO}')">День ${idx + 1} · ${p[2]}.${p[1]}</button>`;
-          })
-        ].join('');
-      } else if (dayPillsEl) {
-        dayPillsEl.style.display = 'none';
-      }
-
-      const filteredEvents = selectedBleedingDayFilter === 'all'
-        ? activeCycle.events
-        : activeCycle.events.filter(ev => ev.dateISO === selectedBleedingDayFilter);
-
-      const allDayFlows = Array.isArray(activeCycle.dayFlows)
-        ? activeCycle.dayFlows
-        : activeCycle.dayDates.map((dISO, idx) => ({ dateISO: dISO, cycleDay: idx + 1, level: 0, label: 'Нет' }));
-      const filteredFlows = selectedBleedingDayFilter === 'all'
-        ? allDayFlows
-        : allDayFlows.filter(f => f.dateISO === selectedBleedingDayFilter);
-
+      const isDark = Boolean(state.settings.darkMode);
       const colors = getCurrentPaletteColors();
       const cRose = colors['--rose-solid'];
       const cOvul = colors['--ovul'];
       const cAccent = colors['--accent'];
+      const cAmber = colors['--amber'];
 
-      const targetSvg = document.getElementById('bleedingPainChart');
-      const padL = 44, padR = 20, padT = 32, painH = 195, gapBetween = 34, flowH = 74, padB = 34;
+      const allSortedEntries = Object.values(state.entries || {})
+        .filter(e => e && typeof e.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date))
+        .sort((a, b) => a.date.localeCompare(b.date));
+
+      const byDate = {};
+      allSortedEntries.forEach(e => {
+        byDate[e.date] = e;
+      });
+
+      const todayISO = getTodayISO(0);
+      const minDayStep = 44;
+      const viewportW = scrollViewport?.clientWidth || Math.min(window.innerWidth || 390, 480);
+      const futurePadDays = Math.max(7, Math.ceil((viewportW * 0.5) / minDayStep) + 1);
+      let startISO = todayISO;
+      let endISO = shiftISOByDays(todayISO, futurePadDays);
+
+      if (bleedingPainPeriodFilter === 'cycle') {
+        startISO = state.settings.lastPeriodStart || shiftISOByDays(todayISO, -27);
+        endISO = todayISO;
+      } else if (bleedingPainPeriodFilter === '3m') {
+        startISO = shiftISOByDays(todayISO, -89);
+        endISO = shiftISOByDays(todayISO, futurePadDays);
+      } else if (allSortedEntries.length === 1) {
+        const onlyISO = allSortedEntries[0].date;
+        startISO = shiftISOByDays(onlyISO < todayISO ? onlyISO : todayISO, -7);
+        endISO = shiftISOByDays(todayISO, futurePadDays);
+      } else if (allSortedEntries.length > 1) {
+        const firstISO = allSortedEntries[0].date;
+        const lastEntryISO = allSortedEntries[allSortedEntries.length - 1].date;
+        startISO = firstISO < todayISO ? firstISO : shiftISOByDays(todayISO, -7);
+        const minEnd = shiftISOByDays(todayISO, futurePadDays);
+        endISO = lastEntryISO > minEnd ? lastEntryISO : minEnd;
+      } else {
+        startISO = shiftISOByDays(todayISO, -14);
+        endISO = shiftISOByDays(todayISO, futurePadDays);
+      }
+
+      const calendarDates = [];
+      let cursorISO = startISO;
+      let guard = 0;
+      while (cursorISO <= endISO && guard < 730) {
+        calendarDates.push(cursorISO);
+        cursorISO = shiftISOByDays(cursorISO, 1);
+        guard++;
+      }
+      if (calendarDates.length < 2) {
+        calendarDates.push(shiftISOByDays(startISO, 1));
+      }
+
+      const len = calendarDates.length;
+      const calendarSet = new Set(calendarDates);
+      const latestLoggedISO = allSortedEntries.length
+        ? allSortedEntries[allSortedEntries.length - 1].date
+        : todayISO;
+      const latestLoggedIdx = Math.max(0, calendarDates.indexOf(latestLoggedISO));
+
+      const effectivePadL = 24;
+      const padR = 24;
+      const padT = 36;
+      const painH = 190;
+      const gapBetween = 34;
+      const flowH = 74;
+      const padB = 32;
       const h = padT + painH + gapBetween + flowH + padB;
       const painBaseY = padT + painH;
       const flowTopY = painBaseY + gapBetween;
       const flowBaseY = flowTopY + flowH;
 
-      const activeDayDates = selectedBleedingDayFilter === 'all'
-        ? activeCycle.dayDates
-        : [selectedBleedingDayFilter];
-      const dayMinTs = activeDayDates.length
-        ? parseLocalISO(activeDayDates[0]).setHours(0, 0, 0, 0)
-        : (filteredEvents[0]?.ts || Date.now());
-      const dayMaxTs = activeDayDates.length
-        ? parseLocalISO(activeDayDates[activeDayDates.length - 1]).setHours(23, 59, 0, 0)
-        : (filteredEvents[filteredEvents.length - 1]?.ts || dayMinTs + 86400000);
-
-      const minTs = filteredEvents.length ? Math.min(filteredEvents[0].ts, dayMinTs) : dayMinTs;
-      const maxTs = filteredEvents.length ? Math.max(filteredEvents[filteredEvents.length - 1].ts, dayMaxTs) : dayMaxTs;
-      const spanHours = Math.max(6, (maxTs - minTs) / 3600000);
-      const minByDays = activeDayDates.length * 74;
-      const w = Math.max(400, Math.min(2200, Math.round(padL + padR + Math.max(filteredEvents.length * 56, spanHours * 14, minByDays))));
-      const plotW = w - padL - padR;
+      const w = Math.max(400, effectivePadL + padR + (len - 1) * minDayStep);
+      const effectivePlotW = w - effectivePadL - padR;
 
       targetSvg.setAttribute('width', w);
       targetSvg.setAttribute('height', h);
@@ -9575,12 +9642,130 @@ ${buildPainCyclesSummaryForAI(true)}`;
       targetSvg.style.width = `${w}px`;
       targetSvg.style.height = `${h}px`;
 
-      const tsToX = (ts) => {
-        if (maxTs <= minTs) return padL + plotW / 2;
-        return padL + ((ts - minTs) / (maxTs - minTs)) * plotW;
-      };
+      const idxToX = (idx) => effectivePadL + (idx / (len - 1)) * effectivePlotW;
+      const stepPx = effectivePlotW / (len - 1);
       const valToY = (v) => padT + painH - (Math.max(0, Math.min(5, v)) / 5) * painH;
       const flowToY = (lvl) => flowBaseY - (Math.max(0, Math.min(3, lvl)) / 3) * flowH;
+
+      const allMeds = mergePainkillerArchive(state.painkillers || [], state.painkillerArchive || []);
+      const seenMedKeys = new Set();
+      const events = [];
+
+      calendarDates.forEach((dISO, dayIdx) => {
+        const ent = byDate[dISO];
+        const cInfo = getCycleInfo(dISO);
+        const logs = normalizePainLogsList(ent?.painLogs, dISO);
+        const rawDayMeds = [
+          ...(Array.isArray(ent?.painkillers) ? ent.painkillers : []),
+          ...allMeds.filter(m => (m.dateISO || getLocalISODateFromTimestamp(m.timeISO)) === dISO)
+        ];
+
+        const uniqueDayMeds = [];
+        rawDayMeds.forEach(m => {
+          if (!m?.name || !m?.timeISO) return;
+          const mKey = `${m.timeISO}|${m.name.toLowerCase()}`;
+          if (seenMedKeys.has(mKey)) return;
+          seenMedKeys.add(mKey);
+          uniqueDayMeds.push(m);
+
+          const takenTs = new Date(m.timeISO).getTime();
+          if (m.painBefore !== null && m.painBefore !== undefined) {
+            events.push({
+              timeISO: m.timeISO,
+              ts: takenTs,
+              dateISO: dISO,
+              dayIdx,
+              cycleDay: cInfo.cycleDay,
+              level: Number(m.painBefore),
+              source: 'med_before',
+              medName: m.name,
+              painBefore: Number(m.painBefore),
+              painAfter: m.painAfter ?? null,
+              effectMinutes: m.effectMinutes ?? null
+            });
+          }
+          if (m.painAfter !== null && m.painAfter !== undefined && Number(m.effectMinutes) > 0) {
+            const afterTs = takenTs + Number(m.effectMinutes) * 60000;
+            const afterISO = new Date(afterTs).toISOString();
+            const afterDateISO = getLocalISODateFromTimestamp(afterISO);
+            const afterDayIdx = calendarDates.indexOf(afterDateISO);
+            if (afterDayIdx >= 0 || calendarSet.has(dISO)) {
+              events.push({
+                timeISO: afterISO,
+                ts: afterTs,
+                dateISO: afterDayIdx >= 0 ? afterDateISO : dISO,
+                dayIdx: afterDayIdx >= 0 ? afterDayIdx : dayIdx,
+                cycleDay: getCycleInfo(afterDayIdx >= 0 ? afterDateISO : dISO).cycleDay,
+                level: Number(m.painAfter),
+                source: 'med_after',
+                medName: m.name,
+                painBefore: m.painBefore ?? null,
+                painAfter: Number(m.painAfter),
+                effectMinutes: Number(m.effectMinutes)
+              });
+            }
+          }
+        });
+
+        if (logs.length) {
+          logs.forEach(l => {
+            const lTs = new Date(l.timeISO).getTime();
+            const isDuplicateOrStalePostMed = uniqueDayMeds.some(m => {
+              const takenTs = new Date(m.timeISO).getTime();
+              const hasBefore = m.painBefore !== null && m.painBefore !== undefined;
+              const hasAfter = m.painAfter !== null && m.painAfter !== undefined && Number(m.effectMinutes) > 0;
+              const sameAsBefore = hasBefore && l.level === Number(m.painBefore);
+              if (sameAsBefore && Math.abs(lTs - takenTs) < 60000) return true;
+              if (hasAfter && sameAsBefore && lTs >= takenTs) return true;
+              return false;
+            });
+            if (isDuplicateOrStalePostMed) return;
+            events.push({
+              timeISO: l.timeISO,
+              ts: lTs,
+              dateISO: dISO,
+              dayIdx,
+              cycleDay: cInfo.cycleDay,
+              level: l.level,
+              source: 'manual'
+            });
+          });
+        } else if (ent && Number(ent.pain) > 0 && uniqueDayMeds.length === 0) {
+          const fallbackISO = buildTimestampForDateAndHHMM(dISO, '12:00');
+          events.push({
+            timeISO: fallbackISO,
+            ts: new Date(fallbackISO).getTime(),
+            dateISO: dISO,
+            dayIdx,
+            cycleDay: cInfo.cycleDay,
+            level: Number(ent.pain),
+            source: 'legacy'
+          });
+        }
+      });
+
+      const sourcePriority = { legacy: 0, med_before: 1, manual: 2, med_after: 3 };
+      events.sort((a, b) => {
+        const minA = Math.floor(a.ts / 60000);
+        const minB = Math.floor(b.ts / 60000);
+        if (minA !== minB) return a.ts - b.ts;
+        const pA = sourcePriority[a.source] ?? 1;
+        const pB = sourcePriority[b.source] ?? 1;
+        if (pA !== pB) return pA - pB;
+        return a.ts - b.ts;
+      });
+
+      const eventToCalendarX = (ev) => {
+        const dIdx = ev.dayIdx >= 0 ? ev.dayIdx : calendarDates.indexOf(ev.dateISO);
+        if (dIdx < 0) return effectivePadL;
+        const dt = new Date(ev.timeISO);
+        const fracOfDay = Number.isFinite(dt.getTime())
+          ? (dt.getHours() * 60 + dt.getMinutes()) / 1440
+          : 0.5;
+        const dayLeft = idxToX(dIdx) - stepPx / 2;
+        const rawX = dayLeft + Math.max(0.06, Math.min(0.94, fracOfDay)) * stepPx;
+        return Math.max(effectivePadL, Math.min(w - padR, rawX));
+      };
 
       let svgHtml = `<defs>
         <linearGradient id="gradBleedingPain" x1="0" y1="0" x2="0" y2="1">
@@ -9591,79 +9776,94 @@ ${buildPainCyclesSummaryForAI(true)}`;
           <stop offset="0%" stop-color="${cRose}" stop-opacity="0.72"/>
           <stop offset="100%" stop-color="${cRose}" stop-opacity="0.32"/>
         </linearGradient>
+        <clipPath id="bleedingPainPlotClip">
+          <rect x="${effectivePadL - 6}" y="${padT - 6}" width="${effectivePlotW + 12}" height="${painH + 12}" rx="4" />
+        </clipPath>
       </defs>`;
 
-      // Заголовок верхней шкалы боли
-      svgHtml += `<text x="${padL}" y="15" font-size="10.5" font-weight="700" fill="var(--ink-2)">Боль (0–5)</text>`;
+      // Верхняя лента фаз как на основном графике
+      for (let i = 0; i < len; i++) {
+        const iso = calendarDates[i];
+        const e = byDate[iso];
+        const cInfo = getCycleInfo(iso);
+        const xCenter = idxToX(i);
+        const bandLeft = Math.max(effectivePadL, xCenter - stepPx / 2);
+        const bandRight = Math.min(w - padR, xCenter + stepPx / 2);
+        const bandW = Math.max(0, bandRight - bandLeft - 1);
+        if (bandW <= 0) continue;
+
+        let ribbonFill = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(34,35,32,0.06)';
+        if (e?.isPeriod || cInfo.isMarkedPeriod || cInfo.phaseCode === 'menstrual') {
+          ribbonFill = cRose;
+        } else if (e?.isOvulation || cInfo.phaseCode === 'ovulation') {
+          ribbonFill = cOvul;
+        } else if (cInfo.phaseCode === 'late_luteal' || cInfo.isExpectedWindow) {
+          ribbonFill = cAmber;
+        }
+        svgHtml += `<rect x="${bandLeft.toFixed(1)}" y="${padT - 10}" width="${bandW.toFixed(1)}" height="4" rx="2" fill="${ribbonFill}" opacity="0.82" />`;
+      }
 
       // Сетка уровней боли 0..5
       [0, 1, 2, 3, 4, 5].forEach(v => {
         const y = valToY(v);
-        svgHtml += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-opacity="${v === 0 || v === 5 ? '0.9' : '0.5'}" stroke-dasharray="${v === 0 || v === 5 ? 'none' : '3 3'}" />`;
-        svgHtml += `<text x="${padL - 8}" y="${(y + 3.5).toFixed(1)}" text-anchor="end" font-size="10.5" font-weight="600" fill="var(--ink-3)">${v}</text>`;
+        svgHtml += `<line x1="${effectivePadL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-opacity="${v === 0 || v === 5 ? '0.95' : '0.55'}" stroke-dasharray="${v === 0 || v === 5 ? 'none' : '3 3'}" />`;
       });
 
-      // Разделители дней (проходят синхронно через график боли и столбцы кровотечения)
-      if (selectedBleedingDayFilter === 'all' && activeCycle.dayDates.length > 1) {
-        activeCycle.dayDates.forEach((dISO, idx) => {
-          const dayStartTs = parseLocalISO(dISO).setHours(0, 0, 0, 0);
-          if (dayStartTs > minTs && dayStartTs < maxTs) {
-            const dx = tsToX(dayStartTs);
-            svgHtml += `<line x1="${dx.toFixed(1)}" y1="${padT - 8}" x2="${dx.toFixed(1)}" y2="${flowBaseY}" stroke="var(--border)" stroke-width="1.2" stroke-dasharray="4 3" />`;
-            svgHtml += `<text x="${(dx + 5).toFixed(1)}" y="${padT - 12}" font-size="10.5" font-weight="700" fill="var(--ink-2)">День ${idx + 1}</text>`;
-          }
-        });
+      // Вертикальные линии отмеченных дней и подписи дат ДД.ММ внизу как на основном графике
+      for (let i = 0; i < len; i++) {
+        const iso = calendarDates[i];
+        const x = idxToX(i);
+        if (byDate[iso]) {
+          svgHtml += `<line x1="${x.toFixed(1)}" y1="${padT}" x2="${x.toFixed(1)}" y2="${flowBaseY}" stroke="var(--border)" stroke-opacity="0.32" />`;
+        }
+        const parts = iso.split('-');
+        const dateLabel = `${parts[2]}.${parts[1]}`;
+        const isTodayTick = iso === todayISO;
+        svgHtml += `<text x="${x.toFixed(1)}" y="${h - 9}" text-anchor="middle" font-size="10.5" font-weight="${isTodayTick ? '700' : '600'}" fill="${isTodayTick ? cAccent : 'var(--ink-3)'}">${dateLabel}</text>`;
       }
 
-      // Нижняя шкала: Сила кровотечения в виде столбцов
-      svgHtml += `<text x="${padL}" y="${(flowTopY - 9).toFixed(1)}" font-size="10.5" font-weight="700" fill="var(--ink-2)">Сила кровотечения (шкала 1–3)</text>`;
-      [
-        { lvl: 3, short: 'Обил.' },
-        { lvl: 2, short: 'Умер.' },
-        { lvl: 1, short: 'Скудн.' },
-        { lvl: 0, short: '0' }
-      ].forEach(tick => {
-        const fy = flowToY(tick.lvl);
-        svgHtml += `<line x1="${padL}" y1="${fy.toFixed(1)}" x2="${w - padR}" y2="${fy.toFixed(1)}" stroke="var(--border)" stroke-opacity="${tick.lvl === 0 || tick.lvl === 3 ? '0.85' : '0.45'}" stroke-dasharray="${tick.lvl === 0 ? 'none' : '3 3'}" />`;
-        svgHtml += `<text x="${padL - 6}" y="${(fy + 3.5).toFixed(1)}" text-anchor="end" font-size="9.5" font-weight="600" fill="var(--ink-3)">${tick.short}</text>`;
+      // Шкала силы кровотечения (1–3)
+      svgHtml += `<text x="${effectivePadL}" y="${(flowTopY - 9).toFixed(1)}" font-size="10.5" font-weight="700" fill="var(--ink-2)">Сила кровотечения</text>`;
+      [3, 2, 1, 0].forEach(lvl => {
+        const fy = flowToY(lvl);
+        svgHtml += `<line x1="${effectivePadL}" y1="${fy.toFixed(1)}" x2="${w - padR}" y2="${fy.toFixed(1)}" stroke="var(--border)" stroke-opacity="${lvl === 0 || lvl === 3 ? '0.85' : '0.45'}" stroke-dasharray="${lvl === 0 ? 'none' : '3 3'}" />`;
       });
 
-      // Рисуем столбцы силы кровотечения по каждому дню
-      filteredFlows.forEach(fl => {
-        const dStart = parseLocalISO(fl.dateISO).setHours(0, 0, 0, 0);
-        const dEnd = parseLocalISO(fl.dateISO).setHours(23, 59, 0, 0);
-        const x1 = Math.max(padL, tsToX(Math.max(minTs, dStart)));
-        const x2 = Math.min(w - padR, tsToX(Math.min(maxTs, dEnd)));
-        const slotW = Math.max(24, x2 - x1);
-        const barW = Math.max(18, Math.min(54, slotW * 0.62));
-        const barX = x1 + (slotW - barW) / 2;
-        const dParts = fl.dateISO.split('-');
-        const flowBanner = `${dParts[2]}.${dParts[1]} (День ${fl.cycleDay}) · Сила кровотечения: ${fl.label}`;
+      // Столбцы силы кровотечения на всю ширину суток
+      for (let i = 0; i < len; i++) {
+        const iso = calendarDates[i];
+        const ent = byDate[iso];
+        const fl = getDayFlowInfoForChart(iso, ent);
+        const xCenter = idxToX(i);
+        const dayLeft = Math.max(effectivePadL, xCenter - stepPx / 2);
+        const dayRight = Math.min(w - padR, xCenter + stepPx / 2);
+        const fullDayW = Math.max(2, dayRight - dayLeft);
+        const dParts = iso.split('-');
+        const flowBanner = `${dParts[2]}.${dParts[1]} · Сила кровотечения: ${fl.label}`;
 
         if (fl.level > 0) {
           const barTop = flowToY(fl.level);
           const barHeight = Math.max(6, flowBaseY - barTop);
-          svgHtml += `<rect x="${barX.toFixed(1)}" y="${barTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${barHeight.toFixed(1)}" rx="6" fill="url(#gradFlowBar)" stroke="${cRose}" stroke-width="1.2" stroke-opacity="0.65" />`;
-          svgHtml += `<text x="${(barX + barW / 2).toFixed(1)}" y="${(barTop - 4).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="700" fill="${cRose}">${fl.label}</text>`;
-        } else {
-          svgHtml += `<rect x="${barX.toFixed(1)}" y="${(flowBaseY - 4).toFixed(1)}" width="${barW.toFixed(1)}" height="4" rx="2" fill="var(--border)" opacity="0.6" />`;
+          svgHtml += `<rect x="${dayLeft.toFixed(1)}" y="${barTop.toFixed(1)}" width="${fullDayW.toFixed(1)}" height="${barHeight.toFixed(1)}" rx="3" fill="url(#gradFlowBar)" stroke="${cRose}" stroke-width="1" stroke-opacity="0.55" />`;
         }
+        svgHtml += `<rect x="${dayLeft.toFixed(1)}" y="${flowTopY.toFixed(1)}" width="${fullDayW.toFixed(1)}" height="${flowH.toFixed(1)}" fill="transparent" style="cursor:pointer;" onclick="showBleedingPainPointBanner('${flowBanner.replace(/'/g, "\'")}')" />`;
+      }
 
-        // Подпись даты/дня под столбцом на нижней оси X
-        svgHtml += `<text x="${(barX + barW / 2).toFixed(1)}" y="${(flowBaseY + 15).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="600" fill="var(--ink-2)">Д${fl.cycleDay} · ${dParts[2]}.${dParts[1]}</text>`;
-        svgHtml += `<rect x="${x1.toFixed(1)}" y="${flowTopY.toFixed(1)}" width="${slotW.toFixed(1)}" height="${(flowH + 22).toFixed(1)}" fill="transparent" style="cursor:pointer;" onclick="showBleedingPainPointBanner('${flowBanner.replace(/'/g, "\\'")}')" />`;
-      });
-
-      if (!filteredEvents.length) {
-        svgHtml += `<text x="${(padL + plotW / 2).toFixed(1)}" y="${(padT + painH / 2 + 4).toFixed(1)}" text-anchor="middle" font-size="12.5" fill="var(--ink-3)">Почасовых замеров боли пока нет</text>`;
-      } else {
-        const pts = filteredEvents.map(ev => ({
-          x: tsToX(ev.ts),
+      if (events.length) {
+        const pts = events.map(ev => ({
+          x: eventToCalendarX(ev),
           y: valToY(ev.level),
           ev
         }));
 
-        // Заливка и плавная кривая боли
+        // Слегка разводим точки, попавшие в одну минуту
+        for (let i = 1; i < pts.length; i++) {
+          if (Math.abs(pts[i].x - pts[i - 1].x) < 4) {
+            pts[i].x = Math.min(w - padR, pts[i - 1].x + 5);
+          }
+        }
+
+        svgHtml += `<g clip-path="url(#bleedingPainPlotClip)">`;
         if (pts.length > 1) {
           const pathD = catmullRomPath(pts);
           svgHtml += `<path d="${pathD} L ${pts[pts.length - 1].x.toFixed(1)} ${painBaseY} L ${pts[0].x.toFixed(1)} ${painBaseY} Z" fill="url(#gradBleedingPain)" />`;
@@ -9680,61 +9880,54 @@ ${buildPainCyclesSummaryForAI(true)}`;
             }
           }
         }
+        svgHtml += `</g>`;
 
-        // Точки боли, время на оси боли и интерактивные зоны нажатия
-        let lastTickX = -999;
+        // Точки боли и зоны нажатия
         pts.forEach(p => {
           const ev = p.ev;
           const tStr = formatTimeHHMM(ev.timeISO);
           const dParts = ev.dateISO.split('-');
           const bannerText = ev.source === 'med_before'
-            ? `${dParts[2]}.${dParts[1]}, ${tStr} (День ${ev.cycleDay}) · 💊 ${ev.medName} · Боль до: ${ev.level}/5`
+            ? `${dParts[2]}.${dParts[1]}, ${tStr} · 💊 ${ev.medName} · Боль до: ${ev.level}/5`
             : (ev.source === 'med_after'
-                ? `${dParts[2]}.${dParts[1]}, ${tStr} (День ${ev.cycleDay}) · 💊 ${ev.medName}: боль ${ev.painBefore ?? '?'}→${ev.level}/5 за ${ev.effectMinutes} мин`
-                : `${dParts[2]}.${dParts[1]}, ${tStr} (День ${ev.cycleDay}) · Боль: ${ev.level}/5`);
-
-          if (p.x - lastTickX >= 42) {
-            svgHtml += `<text x="${p.x.toFixed(1)}" y="${(painBaseY + 13).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="600" fill="var(--ink-3)">${tStr}</text>`;
-            lastTickX = p.x;
-          }
+                ? `${dParts[2]}.${dParts[1]}, ${tStr} · 💊 ${ev.medName}: боль ${ev.painBefore ?? '?'}→${ev.level}/5 за ${ev.effectMinutes} мин`
+                : `${dParts[2]}.${dParts[1]}, ${tStr} · Боль: ${ev.level}/5`);
 
           if (ev.source === 'med_before') {
-            svgHtml += `<rect x="${(p.x - 6).toFixed(1)}" y="${(p.y - 6).toFixed(1)}" width="12" height="12" rx="3.5" fill="${cAccent}" stroke="var(--surface)" stroke-width="1.8" />`;
-            svgHtml += `<text x="${p.x.toFixed(1)}" y="${(p.y - 10).toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="${cAccent}">💊</text>`;
+            svgHtml += `<rect x="${(p.x - 5.5).toFixed(1)}" y="${(p.y - 5.5).toFixed(1)}" width="11" height="11" rx="3.5" fill="${cAccent}" stroke="var(--surface)" stroke-width="1.6" />`;
           } else if (ev.source === 'med_after') {
-            svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5.2" fill="${cOvul}" stroke="var(--surface)" stroke-width="1.8" />`;
+            svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.8" fill="${cOvul}" stroke="var(--surface)" stroke-width="1.6" />`;
           } else {
-            svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.8" fill="${cRose}" stroke="var(--surface)" stroke-width="1.8" />`;
+            svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="${cRose}" stroke="var(--surface)" stroke-width="1.6" />`;
           }
 
-          svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="14" fill="transparent" style="cursor:pointer;" onclick="showBleedingPainPointBanner('${bannerText.replace(/'/g, "\\'")}')" />`;
+          svgHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="13" fill="transparent" style="cursor:pointer;" onclick="showBleedingPainPointBanner('${bannerText.replace(/'/g, "\'")}')" />`;
         });
       }
 
       targetSvg.innerHTML = svgHtml;
 
-      const manualCount = activeCycle.events.filter(e => e.source === 'manual' || e.source === 'legacy').length;
-      if (metaEl) metaEl.textContent = `Пик боли ${activeCycle.peakPain}/5 · ${manualCount} зам.`;
       if (legendEl) {
         legendEl.innerHTML = `
-          <span class="legend-item" style="color:${cRose};">${SVG_ICONS.dot}<span>Боль (кривая)</span></span>
-          <span class="legend-item" style="color:${cRose};"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${cRose};opacity:0.55;margin-right:4px;vertical-align:middle;"></span><span>Кровотечение (столбцы)</span></span>
+          <span class="legend-item" style="color:${cRose};">${SVG_ICONS.dot}<span>Боль</span></span>
+          <span class="legend-item" style="color:${cRose};"><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${cRose};opacity:0.55;margin-right:4px;vertical-align:middle;"></span><span>Кровотечение</span></span>
           <span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Обезболивающее</span></span>
           <span class="legend-item" style="color:${cOvul};">${SVG_ICONS.dot}<span>После приёма</span></span>
         `;
       }
-      if (summaryEl) {
-        summaryEl.style.display = 'grid';
-        const helpedMeds = activeCycle.meds.filter(m => m.painBefore !== null && m.painAfter !== null);
-        const avgDrop = helpedMeds.length
-          ? `ср. -${(helpedMeds.reduce((s, m) => s + Math.max(0, Number(m.painBefore) - Number(m.painAfter)), 0) / helpedMeds.length).toFixed(1)} б.`
-          : 'нет оценки';
-        summaryEl.innerHTML = `
-          <div class="bp-stat-box"><span class="bp-stat-label">Пик боли</span><span class="bp-stat-val">${activeCycle.peakPain}/5</span></div>
-          <div class="bp-stat-box"><span class="bp-stat-label">Замеров</span><span class="bp-stat-val">${manualCount}</span></div>
-          <div class="bp-stat-box"><span class="bp-stat-label">Обезбол.</span><span class="bp-stat-val">${activeCycle.medCount} (${avgDrop})</span></div>
-        `;
-      }
+
+      const todayIdx = calendarDates.indexOf(todayISO);
+      const centerPainViewport = () => {
+        if (!scrollViewport || w <= scrollViewport.clientWidth || scrollViewport.clientWidth <= 0) return;
+        const anchorIdx = (bleedingPainPeriodFilter === '3m' || bleedingPainPeriodFilter === 'all') && todayIdx >= 0
+          ? todayIdx
+          : latestLoggedIdx;
+        const targetX = idxToX(anchorIdx);
+        scrollViewport.scrollLeft = Math.max(0, targetX - scrollViewport.clientWidth * 0.5);
+      };
+      centerPainViewport();
+      requestAnimationFrame(centerPainViewport);
+      setTimeout(centerPainViewport, 60);
     }
 
     const DEFAULT_PAINKILLER_PRESETS = [
