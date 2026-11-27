@@ -3048,7 +3048,7 @@
             <!-- Короткая мысль или триггер дня (до 140 символов) -->
             <div style="margin-top:14px;">
               <div class="field-label" style="margin-bottom:8px;">Что сейчас в голове</div>
-              <input type="text" id="dayThoughtInput" maxlength="140" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="onDayThoughtInput()" placeholder="До 140 символов" />
+              <input type="text" id="dayThoughtInput" maxlength="140" value="" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" oninput="onDayThoughtInput()" placeholder="До 140 символов" />
             </div>
 
             <!-- Эмоции (шкала 1–5 для каждой эмоции) -->
@@ -3158,8 +3158,8 @@
           </button>
         </div>
         <div class="med-add-grid">
-          <input type="text" id="customMedInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Препарат и доза (Кетанов 1 табл)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller(true);}" />
-          <input type="text" id="customMedDailyLimitInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Норма/сут (4 табл или 400 мг)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller(true);}" />
+          <input type="text" id="customMedInput" value="" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="Препарат и доза (Кетанов 1 табл)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller(true);}" />
+          <input type="text" id="customMedDailyLimitInput" value="" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="Норма/сут (4 табл или 400 мг)" onkeydown="if(event.key==='Enter'){event.preventDefault();logCustomPainkiller(true);}" />
         </div>
         <div class="med-add-actions">
           <button type="button" class="btn-soft" style="width:100%;" onclick="logCustomPainkiller(true)">Добавить и отметить</button>
@@ -3325,7 +3325,7 @@
           <span class="card-title" style="font-size:15.5px;">Спросить CareZze</span>
         </div>
         <div id="aiQuickThread" class="ai-chat-thread" style="display:none;"></div>
-        <textarea id="aiQuickInput" rows="2" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" oninput="renderQuickAiThread()"></textarea>
+        <textarea id="aiQuickInput" rows="2" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" oninput="renderQuickAiThread()"></textarea>
         <div style="display:flex; gap:8px; margin-top:8px;">
           <button class="btn-indigo" style="height:44px; font-size:14.5px;" id="btnSendQuickAi" onclick="sendQuickAiQuestion()">
             Спросить
@@ -3346,7 +3346,7 @@
         <div id="actionableTipsList"></div>
 
         <div style="display:flex; gap:8px; margin-top:10px;">
-          <input type="text" id="customHelpInput" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Добавить свой способ..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomHelped();}" />
+          <input type="text" id="customHelpInput" value="" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="Добавить свой способ..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomHelped();}" />
           <button class="btn-soft" onclick="addCustomHelped()">Добавить</button>
         </div>
 
@@ -3395,12 +3395,14 @@
         <input type="date" id="setProfileBirthDate" onchange="syncFormattedDates();" />
       </div>
 
-      <div class="field-label" style="margin-top:14px; margin-bottom:8px;">Гормональная контрацепция</div>
+      <div class="field-label" style="margin-top:14px; margin-bottom:8px;">Контрацепция</div>
       <div class="grid-2" id="contraceptionSelector">
         <button type="button" class="choice-btn active" data-val="Нет" onclick="selectContraception('Нет')">Нет</button>
         <button type="button" class="choice-btn" data-val="КОК" onclick="selectContraception('КОК')">КОК (таблетки)</button>
         <button type="button" class="choice-btn" data-val="Кольцо / пластырь" onclick="selectContraception('Кольцо / пластырь')">Кольцо / пластырь</button>
+        <button type="button" class="choice-btn" data-val="Чисто прогестиновые (мини-пили / имплант / инъекции)" onclick="selectContraception('Чисто прогестиновые (мини-пили / имплант / инъекции)')">Мини-пили / имплант</button>
         <button type="button" class="choice-btn" data-val="Гормональная ВМС" onclick="selectContraception('Гормональная ВМС')">Горм. ВМС</button>
+        <button type="button" class="choice-btn" data-val="Медная ВМС" onclick="selectContraception('Медная ВМС')">Медная ВМС</button>
       </div>
 
       <div class="field-label" style="margin-top:14px; margin-bottom:8px;">Особенности организма</div>
@@ -3411,12 +3413,14 @@
         <div class="chip" data-val="Эндометриоз">Эндометриоз</div>
         <div class="chip" data-val="Выраженный ПМС">Выраженный ПМС</div>
         <div class="chip" data-val="Чувствительность к кофеину">Чувств. к кофеину</div>
+        <div class="chip" data-val="Грудное вскармливание / послеродовой период">ГВ / после родов</div>
+        <div class="chip" data-val="Перименопауза">Перименопауза</div>
       </div>
 
       <div class="field-label" style="margin-top:14px; margin-bottom:8px;">Дополнительно</div>
       <div id="profileNotesList" class="profile-notes-list"></div>
       <div class="profile-note-add-row">
-        <input type="text" id="setProfileNotes" value="" readonly autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" onpointerdown="this.removeAttribute('readonly')" onfocus="this.removeAttribute('readonly')" placeholder="Добавить строку..." onkeydown="if(event.key==='Enter'){event.preventDefault();addProfileNoteItem();}" />
+        <input type="text" id="setProfileNotes" value="" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="Добавить строку..." onkeydown="if(event.key==='Enter'){event.preventDefault();addProfileNoteItem();}" />
         <button type="button" class="btn-soft" style="height:44px; padding:0 14px; flex-shrink:0;" onclick="addProfileNoteItem()">Добавить</button>
       </div>
 
@@ -3491,6 +3495,10 @@
 
       <div style="display:flex; flex-direction:column; gap:10px;">
         <button class="btn-soft" id="btnForceCloudSync" onclick="forceCloudSync()">Синхронизировать с облаком</button>
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px; background:var(--surface-2); font-size:13.5px; color:var(--ink-2); cursor:pointer;">
+          <input type="checkbox" id="chkExcludeApiKeyBackup" checked style="width:18px; height:18px; accent-color:var(--accent);" />
+          <span>Не включать API-ключ в файл резервной копии</span>
+        </label>
         <button class="btn-soft" onclick="exportData()">Скачать резервную копию (.json)</button>
         <button class="btn-soft" onclick="importDataPrompt()">Восстановить из файла (.json)</button>
         <button class="btn-danger-soft" onclick="clearAllData()">Сбросить все данные</button>
@@ -4008,6 +4016,7 @@
     const ALL_EMOTIONS = [
       'Спокойствие',
       'Радость',
+      'Интерес / Вовлечённость',
       'Тревога',
       'Грусть',
       'Раздражение',
@@ -4017,6 +4026,7 @@
     const EMOTION_PALETTE = {
       'Спокойствие': { color: '#5FA882', bg: 'rgba(95, 168, 130, 0.20)' },
       'Радость': { color: '#E3AA46', bg: 'rgba(227, 170, 70, 0.20)' },
+      'Интерес / Вовлечённость': { color: '#3E9B88', bg: 'rgba(62, 155, 136, 0.20)' },
       'Тревога': { color: '#9D7CD8', bg: 'rgba(157, 124, 216, 0.20)' },
       'Грусть': { color: '#5B8FB9', bg: 'rgba(91, 143, 185, 0.20)' },
       'Раздражение': { color: '#E35D78', bg: 'rgba(227, 93, 120, 0.20)' },
@@ -4053,11 +4063,13 @@
     }
 
     function computeDerivedMood(levelsObj, energyVal, painVal, stressVal = 0) {
-      const posKeys = ['Спокойствие', 'Радость'];
+      const posKeys = ['Спокойствие', 'Радость', 'Интерес / Вовлечённость'];
       const posSum = posKeys.reduce((s, k) => s + (levelsObj[k] || 0), 0);
       const negKeys = ['Тревога', 'Грусть', 'Раздражение', 'Слезливость'];
       const negSum = negKeys.reduce((s, k) => s + (levelsObj[k] || 0), 0) + (Number(stressVal) || 0);
-      const raw = 2.8 + (posSum * 0.26) - (negSum * 0.14) + ((energyVal - 2.5) * 0.25) - (painVal * 0.18);
+      const eNum = typeof energyVal === 'number' ? energyVal : 2.5;
+      const pNum = typeof painVal === 'number' ? painVal : 0;
+      const raw = 2.8 + (posSum * 0.24) - (negSum * 0.14) + ((eNum - 2.5) * 0.25) - (pNum * 0.18);
       return Math.max(0, Math.min(5, Math.round(raw)));
     }
 
@@ -4430,12 +4442,13 @@
         soloCount: soloCnt,
         soloReset: soloCnt > 0,
         discharge: entry.discharge || '',
+        metricsRated: Boolean(entry.metricsRated),
         mood: entry.mood,
-        energy: entry.energy,
-        pain: entry.pain,
+        energy: entry.energy === null || entry.energy === undefined ? null : entry.energy,
+        pain: entry.pain === null || entry.pain === undefined ? null : entry.pain,
         ...(computeDayPeakPain(entry) > (Number(entry.pain) || 0) ? { peakPain: computeDayPeakPain(entry) } : {}),
-        libido: entry.libido,
-        stress: Math.max(0, Math.min(5, Math.round(Number(entry.stress) || 0))),
+        libido: entry.libido === null || entry.libido === undefined ? null : entry.libido,
+        stress: entry.stress === null || entry.stress === undefined ? null : Math.max(0, Math.min(5, Math.round(Number(entry.stress) || 0))),
         emotions: Object.keys(compactEmotions),
         emotionLevels: compactEmotions,
         contexts: entry.contexts || [],
@@ -4646,56 +4659,57 @@
 
       if (!isMetaOnly) {
         const monthBuckets = {};
-        const individualDayTargets = new Set();
+        const affectedMonths = new Set();
 
-        for (const [iso, entry] of entriesList) {
-          const monthKey = iso.slice(0, 7);
+        for (const [iso] of entriesList) {
+          const monthHyphen = iso.slice(0, 7); // YYYY-MM
+          const monthUnder = monthHyphen.replace('-', '_'); // YYYY_MM
           const isDirtyDay = dirtyBefore.has(`carezze2_d_${iso}`);
-          const isDirtyMonth = dirtyBefore.has(`carezze2_m_${monthKey}`);
+          const isDirtyMonth = dirtyBefore.has(`carezze2_ym_${monthUnder}`) || dirtyBefore.has(`carezze2_m_${monthHyphen}`);
           const matchesTarget = isFullSync
             || isDirtyDay
             || isDirtyMonth
-            || (targetSet && (targetSet.has(iso) || targetSet.has(monthKey) || Array.from(targetSet).some(t => iso.startsWith(t))));
-
+            || (targetSet && (targetSet.has(iso) || targetSet.has(monthHyphen) || targetSet.has(monthUnder) || Array.from(targetSet).some(t => iso.startsWith(t))));
           if (matchesTarget) {
-            if (!monthBuckets[monthKey]) monthBuckets[monthKey] = {};
-            monthBuckets[monthKey][iso] = compactEntryForCloud(entry, 0.85);
-            if ((targetSet && (targetSet.has(iso) || Array.from(targetSet).some(t => iso.startsWith(t)))) || isDirtyDay) {
-              individualDayTargets.add(iso);
+            affectedMonths.add(monthUnder);
+          }
+        }
+
+        // Собираем все дни затронутого месяца целиком, чтобы бакет не затирал соседние дни
+        for (const [iso, entry] of entriesList) {
+          const monthUnder = iso.slice(0, 7).replace('-', '_');
+          if (affectedMonths.has(monthUnder)) {
+            if (!monthBuckets[monthUnder]) monthBuckets[monthUnder] = {};
+            monthBuckets[monthUnder][iso] = compactEntryForCloud(entry, 0.85);
+          }
+        }
+
+        for (const [monthUnder, bucket] of Object.entries(monthBuckets)) {
+          const sortedIsos = Object.keys(bucket).sort();
+          let chunkIdx = 1;
+          let currentChunk = {};
+
+          for (const iso of sortedIsos) {
+            const candidate = { ...currentChunk, [iso]: bucket[iso] };
+            if (Object.keys(currentChunk).length > 0 && utf8ByteLength(JSON.stringify(candidate)) > 3900) {
+              const keyName = chunkIdx === 1 ? `carezze2_ym_${monthUnder}` : `carezze2_ym_${monthUnder}_${chunkIdx}`;
+              writePairs.push([keyName, JSON.stringify(currentChunk)]);
+              chunkIdx += 1;
+              currentChunk = { [iso]: bucket[iso] };
+            } else {
+              currentChunk = candidate;
             }
           }
-        }
-
-        // При полной синхронизации дополнительно сохраняем последние 45 дней в индивидуальные ключи
-        if (isFullSync) {
-          Object.keys(state.entries)
-            .sort()
-            .slice(-45)
-            .forEach(iso => individualDayTargets.add(iso));
-        }
-
-        for (const iso of individualDayTargets) {
-          const entry = state.entries[iso];
-          if (entry) {
-            writePairs.push([`carezze2_d_${iso}`, serializeDaySafelyForCloud(entry)]);
+          if (Object.keys(currentChunk).length > 0) {
+            let finalSerialized = JSON.stringify(currentChunk);
+            if (utf8ByteLength(finalSerialized) > 3900 && Object.keys(currentChunk).length === 1) {
+              const singleIso = Object.keys(currentChunk)[0];
+              currentChunk[singleIso] = JSON.parse(serializeDaySafelyForCloud(state.entries[singleIso]));
+              finalSerialized = JSON.stringify(currentChunk);
+            }
+            const keyName = chunkIdx === 1 ? `carezze2_ym_${monthUnder}` : `carezze2_ym_${monthUnder}_${chunkIdx}`;
+            writePairs.push([keyName, finalSerialized]);
           }
-        }
-
-        for (const [monthKey, bucket] of Object.entries(monthBuckets)) {
-          let payloadObj = { ...bucket };
-          let serialized = JSON.stringify(payloadObj);
-          const keysInBucket = Object.keys(payloadObj).sort();
-          while (keysInBucket.length > 1 && utf8ByteLength(serialized) > 3950) {
-            const oldestIso = keysInBucket.shift();
-            delete payloadObj[oldestIso];
-            serialized = JSON.stringify(payloadObj);
-          }
-          if (keysInBucket.length === 1 && utf8ByteLength(serialized) > 3950) {
-            const singleIso = keysInBucket[0];
-            payloadObj[singleIso] = JSON.parse(serializeDaySafelyForCloud(state.entries[singleIso]));
-            serialized = JSON.stringify(payloadObj);
-          }
-          writePairs.push([`carezze2_m_${monthKey}`, serialized]);
         }
       }
 
@@ -4905,10 +4919,11 @@
         soloReset: false,
         discharge: '',
         mood: 3,
-        energy: 0,
-        pain: 0,
-        libido: 0,
-        stress: 0,
+        metricsRated: false,
+        energy: null,
+        pain: null,
+        libido: null,
+        stress: null,
         emotions: [],
         emotionLevels: createDefaultEmotionLevels(),
         contexts: [],
@@ -4976,11 +4991,23 @@
             });
           }
         } else {
-          entry.energy = Math.max(0, Math.min(5, Math.round(Number(entry.energy) || 0)));
-          entry.pain = Math.max(0, Math.min(5, Math.round(Number(entry.pain) || 0)));
-          entry.libido = Math.max(0, Math.min(5, Math.round(Number(entry.libido) || 0)));
-          const rawS = entry.stress !== undefined ? entry.stress : (legacyStressRaw !== undefined ? legacyStressRaw : legacyContextStress);
-          entry.stress = Math.max(0, Math.min(5, Math.round(Number(rawS) || 0)));
+          const hasRatedFlag = entry.metricsRated === true
+            || [entry.energy, entry.pain, entry.libido, entry.stress].some(v => typeof v === 'number' && v > 0)
+            || Object.values(entry.emotionLevels || {}).some(v => Number(v) > 0);
+          entry.metricsRated = hasRatedFlag;
+          entry.energy = entry.energy === null || entry.energy === undefined
+            ? (hasRatedFlag ? 0 : null)
+            : Math.max(0, Math.min(5, Math.round(Number(entry.energy) || 0)));
+          entry.pain = entry.pain === null || entry.pain === undefined
+            ? (hasRatedFlag ? 0 : null)
+            : Math.max(0, Math.min(5, Math.round(Number(entry.pain) || 0)));
+          entry.libido = entry.libido === null || entry.libido === undefined
+            ? (hasRatedFlag ? 0 : null)
+            : Math.max(0, Math.min(5, Math.round(Number(entry.libido) || 0)));
+          const rawS = entry.stress !== undefined && entry.stress !== null
+            ? entry.stress
+            : (legacyStressRaw !== undefined ? legacyStressRaw : (legacyContextStress || (hasRatedFlag ? 0 : null)));
+          entry.stress = rawS === null ? null : Math.max(0, Math.min(5, Math.round(Number(rawS) || 0)));
         }
         entry.scaleMax = 5;
         if (isLegacy10 && entry.peakPain !== undefined) {
@@ -5328,7 +5355,7 @@
         const cloudEntriesMap = {};
 
         const monthKeys = keys.filter(k =>
-          k.startsWith('carezze2_m_') || k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_')
+          k.startsWith('carezze2_ym_') || k.startsWith('carezze2_m_') || k.startsWith('carezze1_m_') || k.startsWith('ritm9_m_') || k.startsWith('ritm8_m_')
         );
         const dayKeys = keys.filter(k => k.startsWith('carezze2_d_'));
 
@@ -6143,6 +6170,7 @@
         soloCount: soloCnt,
         soloReset: soloCnt > 0,
         discharge: cleanDischarge,
+        metricsRated: true,
         mood: computeDerivedMood(normalizedLevels, metrics.energy, metrics.pain, metrics.stress),
         energy: metrics.energy,
         pain: metrics.pain,
@@ -6304,12 +6332,18 @@
       updateSummaries();
     }
 
+    function getCycleMaxCap() {
+      const conds = state.settings?.profile?.conditions || [];
+      return (conds.includes('СПКЯ') || conds.includes('Перименопауза')) ? 90 : 60;
+    }
+
     function getCycleBounds() {
+      const cap = getCycleMaxCap();
       const base = Number(state.settings.cycleLength) || 28;
       const rawMin = state.settings.cycleLengthMin !== undefined ? Number(state.settings.cycleLengthMin) : base;
       const rawMax = state.settings.cycleLengthMax !== undefined ? Number(state.settings.cycleLengthMax) : base;
-      const minLen = Math.max(21, Math.min(45, Math.min(rawMin || base, rawMax || base)));
-      const maxLen = Math.max(21, Math.min(45, Math.max(rawMin || base, rawMax || base)));
+      const minLen = Math.max(21, Math.min(cap, Math.min(rawMin || base, rawMax || base)));
+      const maxLen = Math.max(21, Math.min(cap, Math.max(rawMin || base, rawMax || base)));
       const midLen = Math.round((minLen + maxLen) / 2);
       return { minLen, maxLen, midLen, isVariable: maxLen > minLen };
     }
@@ -6384,8 +6418,45 @@
         : Boolean(savedEntry?.isOvulation);
 
       const contraception = state.settings?.profile?.contraception || 'Нет';
-      const isSuppressedOvulation = contraception === 'КОК' || contraception === 'Кольцо / пластырь';
+      const conditions = state.settings?.profile?.conditions || [];
+      const isCombinedHormonal = contraception === 'КОК' || contraception === 'Кольцо / пластырь';
+      const isProgestinOnly = contraception === 'Чисто прогестиновые (мини-пили / имплант / инъекции)' || contraception === 'Гормональная ВМС';
+      const isSuppressedOvulation = isCombinedHormonal || isProgestinOnly;
       const isHormonalIUD = contraception === 'Гормональная ВМС';
+      const isCopperIUD = contraception === 'Медная ВМС';
+      const isPCOSOrPeri = conditions.includes('СПКЯ') || conditions.includes('Перименопауза');
+      const isLactation = conditions.includes('Грудное вскармливание / послеродовой период');
+      const suppressAlarmDelay = isProgestinOnly || isPCOSOrPeri || isLactation;
+
+      // Поиск подтверждённой овуляции (ручная отметка или устойчивый температурный сдвиг запястья >= +0.25 °C за 3 дня)
+      const markedOvulDates = Object.keys(state.entries)
+        .filter(d => d >= state.settings.lastPeriodStart && state.entries[d]?.isOvulation)
+        .sort();
+      if (tempIsOvulation && selectedDate >= state.settings.lastPeriodStart && !markedOvulDates.includes(selectedDate)) {
+        markedOvulDates.push(selectedDate);
+        markedOvulDates.sort();
+      }
+      let anchorOvulISO = markedOvulDates.length ? markedOvulDates[markedOvulDates.length - 1] : null;
+      if (!anchorOvulISO && !isSuppressedOvulation) {
+        const tempDays = Object.keys(state.entries)
+          .filter(d => d >= state.settings.lastPeriodStart && typeof state.entries[d]?.wristTempDelta === 'number')
+          .sort();
+        for (let idx = 6; idx <= tempDays.length - 3; idx++) {
+          const baseSlice = tempDays.slice(idx - 6, idx).map(d => state.entries[d].wristTempDelta);
+          const baseAvg = baseSlice.reduce((a, b) => a + b, 0) / baseSlice.length;
+          const post3 = tempDays.slice(idx, idx + 3).map(d => state.entries[d].wristTempDelta);
+          if (post3.every(v => v >= baseAvg + 0.25)) {
+            anchorOvulISO = shiftISOByDays(tempDays[idx], -1);
+            break;
+          }
+        }
+      }
+
+      const ovulAnchoredStart = anchorOvulISO ? shiftISOByDays(anchorOvulISO, 13) : null;
+      const ovulAnchoredEnd = anchorOvulISO ? shiftISOByDays(anchorOvulISO, 15) : null;
+      const daysAfterConfirmedOvul = anchorOvulISO
+        ? Math.round((target - parseLocalISO(anchorOvulISO)) / 86400000)
+        : null;
 
       const ovulStart = Math.max(pLen + 2, minLen - 15);
       const ovulEnd = Math.max(ovulStart + 1, maxLen - 13);
@@ -6404,9 +6475,30 @@
 
       if (diffDays >= 0 && !hasExplicitPeriodOnDate && !hasExplicitPeriodAfterStart) {
         cycleDay = diffDays + 1;
-        if (cycleDay > maxLen) {
+        if (daysAfterConfirmedOvul !== null && daysAfterConfirmedOvul >= 0) {
+          if (daysAfterConfirmedOvul <= 15) {
+            isDelay = false;
+            if (daysAfterConfirmedOvul >= 13) {
+              isExpectedWindow = true;
+            }
+          } else {
+            const extraDays = daysAfterConfirmedOvul - 15;
+            if (suppressAlarmDelay) {
+              isDelay = false;
+              isExpectedWindow = true;
+              delayDays = extraDays;
+            } else {
+              isDelay = true;
+              delayDays = extraDays;
+            }
+          }
+        } else if (cycleDay > maxLen) {
           const extraDays = cycleDay - maxLen;
-          if (extraDays >= 6) {
+          if (suppressAlarmDelay) {
+            isDelay = false;
+            isExpectedWindow = true;
+            delayDays = extraDays;
+          } else if (extraDays >= 6) {
             isDelay = true;
             delayDays = extraDays;
           } else {
@@ -6426,7 +6518,14 @@
       let isPredictedOvulation = false;
 
       const todayDiffDays = Math.round((today - start) / (1000 * 60 * 60 * 24));
-      const hasOngoingDelay = (todayDiffDays + 1) > maxLen && !Object.values(state.entries).some(
+      const todayAfterConfirmedOvul = anchorOvulISO
+        ? Math.round((today - parseLocalISO(anchorOvulISO)) / 86400000)
+        : null;
+      const hasOngoingDelay = !suppressAlarmDelay && (
+        todayAfterConfirmedOvul !== null
+          ? todayAfterConfirmedOvul >= 16
+          : (todayDiffDays + 1) > maxLen
+      ) && !Object.values(state.entries).some(
         e => e.isPeriod && e.date > state.settings.lastPeriodStart && e.date <= getTodayISO(0)
       );
 
@@ -6447,18 +6546,7 @@
         }
       }
 
-      const markedOvulDates = Object.keys(state.entries)
-        .filter(d => d >= state.settings.lastPeriodStart && state.entries[d]?.isOvulation)
-        .sort();
-      if (tempIsOvulation && selectedDate >= state.settings.lastPeriodStart && !markedOvulDates.includes(selectedDate)) {
-        markedOvulDates.push(selectedDate);
-        markedOvulDates.sort();
-      }
-      const anchorOvulISO = markedOvulDates.length ? markedOvulDates[markedOvulDates.length - 1] : null;
-      const ovulAnchoredStart = anchorOvulISO ? shiftISOByDays(anchorOvulISO, 13) : null;
-      const ovulAnchoredEnd = anchorOvulISO ? shiftISOByDays(anchorOvulISO, 15) : null;
-
-      if (target > today && !isMarkedPeriod && !hasOngoingDelay) {
+      if (target > today && !isMarkedPeriod && !hasOngoingDelay && !isProgestinOnly) {
         if (ovulAnchoredStart && ovulAnchoredEnd && dateISO >= ovulAnchoredStart && dateISO <= ovulAnchoredEnd) {
           isPredictedPeriod = true;
         } else if (!ovulAnchoredStart) {
@@ -6466,7 +6554,7 @@
           const currentCyclePeriodAlreadyEnded = diffDays >= 0 && diffDays < minLen && hasStoppedPeriodByDate;
           if ((!currentCyclePeriodAlreadyEnded && projectedDay <= pLen) || (isVariable && cycleDay >= minLen && cycleDay <= maxLen)) {
             isPredictedPeriod = true;
-          } else if (!isSuppressedOvulation && !isHormonalIUD && projectedDay >= ovulStart && projectedDay <= ovulEnd) {
+          } else if (!isSuppressedOvulation && projectedDay >= ovulStart && projectedDay <= ovulEnd) {
             isPredictedOvulation = true;
           }
         }
@@ -6476,7 +6564,9 @@
       let phaseCode = '';
 
       if (isMarkedPeriod) {
-        phase = isSuppressedOvulation ? 'Кровотечение отмены' : 'Менструация';
+        phase = isCombinedHormonal
+          ? 'Кровотечение отмены'
+          : (isProgestinOnly ? 'Кровянистые выделения' : 'Менструация');
         phaseCode = 'menstrual';
       } else if (isDelay) {
         phase = `Задержка · ${pluralDays(delayDays)}`;
@@ -6484,7 +6574,7 @@
       } else if (isMarkedOvulation) {
         phase = 'Овуляция';
         phaseCode = 'ovulation';
-      } else if (isSuppressedOvulation) {
+      } else if (isCombinedHormonal) {
         if (cycleDay <= midLen - 7) {
           phase = 'Активные дни приёма';
           phaseCode = 'follicular';
@@ -6492,6 +6582,20 @@
           phase = 'Окно отмены / пауза';
           phaseCode = 'late_luteal';
         }
+      } else if (isProgestinOnly) {
+        phase = 'Непрерывный прогестиновый фон';
+        phaseCode = 'follicular';
+      } else if (daysAfterConfirmedOvul !== null && daysAfterConfirmedOvul >= 0 && daysAfterConfirmedOvul <= 15) {
+        if (daysAfterConfirmedOvul <= 9) {
+          phase = 'Лютеиновая фаза';
+          phaseCode = 'early_luteal';
+        } else {
+          phase = 'Предменструальное окно';
+          phaseCode = 'late_luteal';
+        }
+      } else if ((isPCOSOrPeri || isLactation) && cycleDay > maxLen) {
+        phase = `Удлинённый цикл · ${cycleDay} д.ц.`;
+        phaseCode = 'late_luteal';
       } else if (isExpectedWindow) {
         phase = delayDays > 0 ? `Ожидание цикла (+${delayDays} дн.)` : 'Окно нового цикла';
         phaseCode = 'late_luteal';
@@ -6527,8 +6631,14 @@
         isMarkedPeriod,
         isPredictedPeriod,
         isPredictedOvulation,
+        isCombinedHormonal,
+        isProgestinOnly,
         isSuppressedOvulation,
         isHormonalIUD,
+        isCopperIUD,
+        isPCOSOrPeri,
+        isLactation,
+        anchorOvulISO,
         contraception,
         ovulationDay,
         ovulStart,
@@ -6539,10 +6649,14 @@
 
     function getPhaseShortHint(info) {
       if (info.isDelay) return `Задержка · ${pluralDays(info.delayDays)}`;
+      if (info.isProgestinOnly) return `${info.phase} · без паузы отмены`;
+      if ((info.isPCOSOrPeri || info.isLactation) && info.cycleDay > info.maxLen) {
+        return `${info.phase} · без тревожного порога`;
+      }
       if (info.isExpectedWindow) return `Окно нового цикла (${info.minLen}–${info.maxLen} дн.)`;
       if (tempIsPeriod || info.phaseCode === 'menstrual') {
         const toOvul = info.ovulStart - info.cycleDay;
-        return (!info.isSuppressedOvulation && !info.isHormonalIUD && toOvul > 0)
+        return (!info.isSuppressedOvulation && toOvul > 0)
           ? `${info.phase} · до овуляции ~${pluralDays(toOvul)}`
           : `${info.phase} · бережный режим`;
       }
@@ -6551,7 +6665,7 @@
         return `${info.phase} · до месячных ~${pluralDays(toPeriod)}`;
       }
       if (info.cycleDay < info.ovulStart) {
-        if (!info.isSuppressedOvulation && !info.isHormonalIUD) {
+        if (!info.isSuppressedOvulation) {
           return `${info.phase} · до овуляции ~${pluralDays(info.ovulStart - info.cycleDay)}`;
         }
         const toPause = Math.max(1, info.midLen - 7 - info.cycleDay);
@@ -6793,10 +6907,11 @@
                   soloReset: false,
                   discharge: 'Умеренные',
                   mood: 3,
-                  energy: 0,
-                  pain: 0,
-                  libido: 0,
-                  stress: 0,
+                  metricsRated: false,
+                  energy: null,
+                  pain: null,
+                  libido: null,
+                  stress: null,
                   emotions: [],
                   emotionLevels: createDefaultEmotionLevels(),
                   contexts: [],
@@ -7298,10 +7413,23 @@
     function buildDefaultSteps(entry, info) {
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
+      const hasFeverOrChills = normContexts.includes('Озноб / температура')
+        || (typeof entry.wristTempDelta === 'number' && entry.wristTempDelta >= 38.0);
       const conditions = state.settings?.profile?.conditions || [];
+
+      if (hasFeverOrChills && ((typeof entry.pain === 'number' && entry.pain >= 1) || Boolean(entry.discharge && entry.discharge !== 'Сухо' && entry.discharge !== 'Сухие / скудные'))) {
+        return [
+          'Не прикладывай грелку и не принимай горячую ванну при температуре или ознобе.',
+          'Измерь температуру тела, пей больше чистой воды и отслеживай характер боли и выделений.',
+          'Обратись к гинекологу или за очной медицинской помощью для исключения острого воспаления.'
+        ];
+      }
+
       if (entry.isPeriod || info.phaseCode === 'menstrual') {
         return [
-          'Создай тепло для живота или поясницы и сними лишнюю нагрузку на первые часы.',
+          hasFeverOrChills
+            ? 'Откажись от грелки из-за озноба/температуры и выбери спокойный постельный или полупостельный режим.'
+            : 'Создай мягкое тепло для живота или поясницы и сними лишнюю нагрузку на первые часы.',
           conditions.includes('Низкий ферритин / анемия') || entry.discharge === 'Обильные'
             ? 'Пей достаточно воды и добавь в рацион белок с гемовым железом (мясо, печень, гречка + витамин C).'
             : 'Выпей тёплую воду и добавь еду с железом и белком.',
@@ -7340,8 +7468,8 @@
       }
       const emosMap = buildLoadedEmotionLevels(entry);
       const highDistress = (emosMap['Тревога'] ?? 0) >= 3 || (emosMap['Грусть'] ?? 0) >= 3 || (Number(entry.stress) || 0) >= 3;
-      const energyVal = Number(entry.energy) || 0;
-      const painVal = Number(entry.pain) || 0;
+      const energyVal = typeof entry.energy === 'number' ? entry.energy : 0;
+      const painVal = typeof entry.pain === 'number' ? entry.pain : 0;
 
       if (painVal >= 3 || (energyVal > 0 && energyVal <= 2)) {
         return [
@@ -7436,6 +7564,23 @@
           patBox.style.display = 'none';
         }
 
+        const hasFeverOrChills = normContexts.includes('Озноб / температура')
+          || (typeof entry.wristTempDelta === 'number' && entry.wristTempDelta >= 38.0);
+        const hasPelvicFeverRedFlag = hasFeverOrChills && (
+          (typeof entry.pain === 'number' && entry.pain >= 1) ||
+          Boolean(entry.discharge && entry.discharge !== 'Сухо' && entry.discharge !== 'Сухие / скудные')
+        );
+
+        let consecutiveHeavyDays = 0;
+        for (let back = 0; back < 10; back++) {
+          const checkEnt = state.entries[shiftISOByDays(selectedDate, -back)];
+          if (checkEnt && checkEnt.discharge === 'Обильные') consecutiveHeavyDays += 1;
+          else break;
+        }
+        const heavyFerritinNote = (conditions.includes('Низкий ферритин / анемия') && consecutiveHeavyDays > 2)
+          ? ` Обильные выделения идут уже ${consecutiveHeavyDays}-й день подряд — при склонности к низкому ферритину важно усилить питьевой режим и обсудить с врачом контроль ферритина и приём железа.`
+          : '';
+
         const extraBodyNotes = [];
         if (hasBreast) {
           extraBodyNotes.push('Чувствительность груди связана с реакцией железистой ткани на гормональные колебания и задержку жидкости — помогает мягкое бельё без косточек и отказ от кофеина.');
@@ -7449,52 +7594,72 @@
         if (conditions.includes('Мигрени') && (info.phaseCode === 'late_luteal' || info.phaseCode === 'menstrual' || hasSleepDebt)) {
           extraBodyNotes.push('С учётом склонности к мигреням падение эстрогена и недосып сейчас являются частыми триггерами — держи под рукой свой проверенный препарат раннего купирования.');
         }
-        if (conditions.includes('Эндометриоз') && (entry.pain >= 2 || entry.isPeriod)) {
+        if (conditions.includes('Эндометриоз') && (typeof entry.pain === 'number' && entry.pain >= 2 || entry.isPeriod)) {
           extraBodyNotes.push('При эндометриозе воспалительный отклик тканей выше — не терпи нарастающую боль, лучше снимать спазм на старте.');
         }
-        if (conditions.includes('СПКЯ') && info.isDelay) {
+        if (conditions.includes('СПКЯ') && (info.isDelay || info.cycleDay > info.maxLen)) {
           extraBodyNotes.push('При СПКЯ удлинение фолликулярной фазы и сдвиг овуляции встречаются чаще, но при задержке после близости тест всё равно необходим.');
         }
         if (conditions.includes('Чувствительность к кофеину') && (hasAnxiety || hasBreast || info.phaseCode === 'late_luteal')) {
           extraBodyNotes.push('При чувствительности к кофеину он сейчас может усиливать сердцебиение, тревожность и напряжение в груди.');
         }
+        if (info.isCopperIUD && (entry.isPeriod || (typeof entry.pain === 'number' && entry.pain >= 2))) {
+          extraBodyNotes.push('На фоне медной ВМС менструации и простагландиновые спазмы могут быть более интенсивными — важно следить за объёмом кровопотери и уровнем ферритина.');
+        }
         const extraBodySuffix = extraBodyNotes.length ? ' ' + extraBodyNotes.join(' ') : '';
 
-        if (info.isDelay) {
+        if (hasPelvicFeverRedFlag) {
+          gynH.textContent = 'Важно: температура / озноб на фоне боли или выделений';
+          gynB.textContent = 'Сочетание повышенной температуры или озноба с болью внизу живота или необычными выделениями — красный флаг (возможен острый воспалительный процесс органов малого таза). Грелку на живот прикладывать нельзя — обратись к гинекологу или за очной медицинской помощью.' + extraBodySuffix;
+        } else if (info.isDelay) {
           gynH.textContent = `${info.phase} — тело и цикл`;
           gynB.textContent = (info.delayDays <= 7
             ? 'Цикл сместился: такое бывает при стрессе, недосыпе, болезни или сдвиге овуляции. Если была близость, сделай утренний тест и понаблюдай за самочувствием.'
             : 'Задержка превысила неделю. Лучше не гадать и спокойно сходить к гинекологу на осмотр и УЗИ (а при резкой односторонней боли или головокружении — обратиться срочно).') + extraBodySuffix;
-        } else if (entry.pain >= 3) {
+        } else if (typeof entry.pain === 'number' && entry.pain >= 3) {
           gynH.textContent = 'Выраженные спазмы и боль';
-          gynB.textContent = ('Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают прервать болевой каскад.') + extraBodySuffix;
+          gynB.textContent = (hasFeverOrChills
+            ? 'Простагландины усиливают сокращения матки, из-за чего тянет низ живота или поясницу. Из-за отметки температуры/озноба грелку прикладывать нельзя — прими подходящее обезболивающее и при сохранении симптомов покажись врачу.'
+            : 'Простагландины усиливают сокращения матки, из-за чего тянет низ живота, поясницу или отдаёт в бедро. Тепло и вовремя принятое обезболивающее помогают прервать болевой каскад.') + extraBodySuffix;
         } else if (entry.isOvulation || info.phaseCode === 'ovulation') {
           gynH.textContent = 'Овуляторное окно';
           gynB.textContent = ('Эстрогены на пике, возможны короткие тянущие ощущения с одного бока, чувствительность груди и прозрачные тянущиеся выделения. Тело часто легче откликается на движение и близость.') + extraBodySuffix;
         } else if (entry.isPeriod || info.phaseCode === 'menstrual') {
           gynH.textContent = `${info.phase} · День ${info.cycleDay}`;
-          if (info.isSuppressedOvulation) {
-            gynB.textContent = 'Идёт реакция отмены на паузе/плацебо контрацепции: эндометрий тоньше, чем в естественном цикле, но телу всё равно нужны тепло, вода и щадящий режим.' + extraBodySuffix;
+          if (info.isCombinedHormonal) {
+            gynB.textContent = 'Идёт реакция отмены на паузе/плацебо контрацепции: эндометрий тоньше, чем в естественном цикле, но телу всё равно нужны бережный режим и достаточное питьё.' + heavyFerritinNote + extraBodySuffix;
+          } else if (info.isProgestinOnly) {
+            gynB.textContent = 'На фоне чисто прогестиновой контрацепции возможны нерегулярные мажущие или кровянистые выделения — это типичная реакция адаптации эндометрия.' + heavyFerritinNote + extraBodySuffix;
           } else {
             gynB.textContent = (entry.discharge === 'Обильные'
               ? 'Уровень эстрогена и прогестерона на минимуме. При обильных выделениях важно пить больше воды и восполнять железо (если прокладка/тампон максимальной впитываемости заполняются быстрее чем за 2 часа — это повод показаться врачу).'
-              : 'Гормональный фон на минимуме, организм обновляет эндометрий. Телу нужно больше тепла и восстановления; мягкая прогулка или растяжка без спешки обычно облегчают тянущие ощущения.') + extraBodySuffix;
+              : 'Гормональный фон на минимуме, организм обновляет эндометрий. Телу нужно больше тепла и восстановления; мягкая прогулка или растяжка без спешки обычно облегчают тянущие ощущения.') + heavyFerritinNote + extraBodySuffix;
           }
         } else if (info.phaseCode === 'late_luteal') {
-          gynH.textContent = info.isSuppressedOvulation ? 'Окно отмены / пауза' : 'Предменструальное окно';
-          gynB.textContent = (info.isSuppressedOvulation
+          gynH.textContent = info.isCombinedHormonal
+            ? 'Окно отмены / пауза'
+            : ((info.isPCOSOrPeri || info.isLactation) && info.cycleDay > info.maxLen ? info.phase : 'Предменструальное окно');
+          gynB.textContent = (info.isCombinedHormonal
             ? 'Во время безгормонального интервала уровень синтетических гормонов падает — возможны тянущие ощущения, головная боль или колебания энергии.'
-            : 'Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому и скачки энергии. Организму легче при ровном питании без резких скачков глюкозы.') + extraBodySuffix;
+            : ((info.isPCOSOrPeri || info.isLactation) && info.cycleDay > info.maxLen
+                ? 'При СПКЯ, перименопаузе или грудном вскармливании фолликулярная фаза может быть удлинённой и нерегулярной без признака острой задержки. Ориентируйся на текущее самочувствие и бережный ритм.'
+                : 'Прогестерон начинает снижаться, могут появляться отёчность, тяжесть, тяга к сладкому и скачки энергии. Организму легче при ровном питании без резких скачков глюкозы.')) + extraBodySuffix;
         } else if (info.phaseCode === 'early_luteal') {
           gynH.textContent = 'Лютеиновая фаза';
           gynB.textContent = ('Преобладает прогестерон: температура тела чуть выше, обмен веществ немного замедляется, а потребность в спокойном ритме и регулярном питании растёт.') + extraBodySuffix;
         } else {
-          gynH.textContent = info.isSuppressedOvulation ? 'Активные дни приёма' : 'Фолликулярная фаза';
-          gynB.textContent = (info.isSuppressedOvulation
+          gynH.textContent = info.isCombinedHormonal
+            ? 'Активные дни приёма'
+            : (info.isProgestinOnly ? 'Непрерывный прогестиновый фон' : 'Фолликулярная фаза');
+          gynB.textContent = (info.isCombinedHormonal
             ? 'Ровный гормональный фон за счёт препарата подавляет овуляцию и сглаживает резкие перепады цикла. Хорошее время для стабильного рабочего и тренировочного ритма.'
-            : 'Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся физическая активность, новые задачи и смена обстановки.') + extraBodySuffix;
+            : (info.isProgestinOnly
+                ? 'Чисто прогестиновый метод работает непрерывно без циклической паузы отмены, поэтому привычных фаз подъёма и спада эстрогена может не быть.'
+                : 'Эстроген постепенно растёт, ясность ума и выносливость обычно прибавляются. Телу легче даётся физическая активность, новые задачи и смена обстановки.')) + extraBodySuffix;
         }
 
+        const thoughtText = String(entry.dayThought || '').trim();
+        const hasPositiveAnchor = (levels['Радость'] ?? 0) >= 3 || (levels['Интерес / Вовлечённость'] ?? 0) >= 3;
         psyH.textContent = emosLabeled.slice(0, 3).join(' · ');
         if (info.isDelay) {
           psyB.textContent = 'Неопределённость запускает тревожные руминации. В КПТ здесь помогает разделение фактов и домыслов: выпиши, что известно точно, и ограничься одним конкретным шагом вместо прокручивания сценариев.';
@@ -7504,7 +7669,7 @@
           psyB.textContent = 'Тревога — это режим мобилизации нервной системы, а не сигнал реальной угрозы. Сделай удлинённый выдох, верни внимание в тело через 5 опор вокруг и выгрузи мысли на бумагу, отделив факты от гипотез.';
         } else if (hasTearfulness) {
           psyB.textContent = 'Слезливость и обострённая чувствительность говорят о высокой эмоциональной проницаемости и усталости нервной системы. Не ругай себя за слёзы: легализуй эмоцию, снизь требования к себе на сегодня и дай телу безопасную разрядку.';
-        } else if (entry.pain >= 3 || entry.energy <= 1) {
+        } else if ((typeof entry.pain === 'number' && entry.pain >= 3) || (typeof entry.energy === 'number' && entry.energy > 0 && entry.energy <= 1)) {
           psyB.textContent = 'Когда тело болит или истощено, внутренний критик часто требует прежней скорости. Сними требование «сделать всё идеально» и перейди в режим бережного минимума без самокритики.';
         } else if (hasIrritability) {
           psyB.textContent = 'Раздражительность — маркер перегрузки границ или сенсорного шума. Возьми паузу на 10 минут до ответа в сложных диалогах и убери лишние раздражители.';
@@ -7512,6 +7677,13 @@
           psyB.textContent = 'При грусти и спаде фона ожидание «сначала появится настроение, потом начну делать» не работает. В КПТ помогает поведенческая активация: одно крошечное действие на 5–10 минут без оценки результата.';
         } else {
           psyB.textContent = 'Эмоциональный фон устойчивый. Отличный момент, чтобы зафиксировать, какие действия и привычки сегодня дают тебе опору и радость.';
+        }
+
+        if (thoughtText) {
+          psyB.textContent += ` В заметке дня: «${thoughtText}» — проверь эту мысль на факты: что здесь объективно подтверждено, а что является автоматическим прогнозом или требованием к себе.`;
+        }
+        if (hasPositiveAnchor && (hasAnxiety || hasLowMood || hasIrritability || hasTearfulness)) {
+          psyB.textContent += ' При этом в фоне сохраняются радость или живой интерес — опирайся на то, что сейчас удерживает вовлечённость.';
         }
 
         if (normalizeSoloCount(entry) > 0) {
@@ -7548,6 +7720,8 @@
       const normContexts = (entry.contexts || []).map(normalizeContextLabel);
       const hasBreast = normContexts.includes('Чувствительность груди');
       const hasEdema = normContexts.includes('Отёки');
+      const hasFeverOrChills = normContexts.includes('Озноб / температура')
+        || (typeof entry.wristTempDelta === 'number' && entry.wristTempDelta >= 38.0);
       const stressVal = entry.stress !== undefined ? Number(entry.stress) : (Number(entry.emotionLevels?.['Стресс']) || 0);
       const hasAnxiety = (levels['Тревога'] ?? 0) >= 3 || stressVal >= 3;
       const hasIrritability = (levels['Раздражение'] ?? 0) >= 3;
@@ -7580,7 +7754,7 @@
             isCustom: false
           });
         }
-        if (entry.pain >= 2 || entry.isPeriod) {
+        if ((entry.pain >= 2 || entry.isPeriod) && !hasFeverOrChills) {
           tips.push({
             id: 'Тепло на низ живота или поясницу',
             title: 'Тепло на низ живота или поясницу',
@@ -7588,7 +7762,7 @@
             isCustom: false
           });
         }
-        if (entry.pain >= 2) {
+        if (!hasFeverOrChills && ((typeof entry.pain === 'number' && entry.pain >= 2) || (typeof entry.peakPain === 'number' && entry.peakPain >= 2))) {
           tips.push({
             id: 'Нурофен 15 мл / 300 мг',
             title: 'Нурофен 15 мл / 300 мг',
@@ -7602,7 +7776,7 @@
             isCustom: false
           });
         }
-        if (hasAnxiety || entry.pain >= 3 || normalizeSoloCount(entry) > 0) {
+        if (hasAnxiety || (typeof entry.pain === 'number' && entry.pain >= 3) || normalizeSoloCount(entry) > 0) {
           tips.push({
             id: 'Медленное дыхание',
             title: 'Медленное дыхание',
@@ -7626,7 +7800,7 @@
             isCustom: false
           });
         }
-        if (hasLowMood || entry.energy <= 1) {
+        if (hasLowMood || (typeof entry.energy === 'number' && entry.energy > 0 && entry.energy <= 1)) {
           tips.push({
             id: 'Одно микро-дело на 10 минут',
             title: 'Одно микро-дело на 10 минут',
@@ -7757,9 +7931,13 @@
         parts.push(`Дата рождения: ${prof.birthDate}`);
       }
       if (prof.contraception && prof.contraception !== 'Нет') {
-        parts.push(`Гормональная контрацепция: ${prof.contraception} (учитывай, что собственный овуляторный цикл подавлен или изменён препаратом, а кровотечение является реакцией отмены / действием гормонов)`);
+        if (prof.contraception === 'Медная ВМС') {
+          parts.push('Контрацепция: Медная ВМС (естественный овуляторный цикл сохранён, но менструации и простагландиновые спазмы могут быть обильнее и болезненнее)');
+        } else {
+          parts.push(`Контрацепция: ${prof.contraception} (учитывай, что собственный овуляторный цикл подавлен или изменён методом, а кровотечение является реакцией отмены / действием гормонов)`);
+        }
       } else {
-        parts.push('Гормональная контрацепция: не используется (естественный цикл)');
+        parts.push('Контрацепция: не используется (естественный цикл)');
       }
       if (prof.conditions && prof.conditions.length) {
         parts.push(`Известные особенности: ${prof.conditions.join(', ')}`);
@@ -7980,17 +8158,19 @@ ${isFirstTrackedCycle
 
     function clearAllTextInputs(force = false) {
       const nonce = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-      ['aiQuickInput', 'customMedInput', 'customMedDailyLimitInput', 'customHelpInput', 'setProfileNotes'].forEach(id => {
+      ['dayThoughtInput', 'aiQuickInput', 'customMedInput', 'customMedDailyLimitInput', 'customHelpInput', 'setProfileNotes'].forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
+        el.removeAttribute('readonly');
+        el.setAttribute('autocomplete', 'one-time-code');
+        el.setAttribute('name', `nofill_${id}_${nonce}`);
+        if (id === 'dayThoughtInput') return;
         if (!force && document.activeElement === el) return;
         el.value = '';
         el.defaultValue = '';
         if (el.tagName === 'TEXTAREA') {
           el.textContent = '';
         }
-        el.setAttribute('name', `nofill_${id}_${nonce}`);
-        el.setAttribute('readonly', 'readonly');
       });
       const keyInp = document.getElementById('setGeminiKey');
       if (keyInp && !state.settings.geminiApiKey) {
@@ -8280,7 +8460,58 @@ ${buildPainCyclesSummaryForAI(true)}`;
       const isAbsolute = Math.abs(Number(val)) >= 20;
       const sign = (!isAbsolute && val > 0) ? '+' : '';
       insp.style.display = 'block';
-      insp.textContent = `${formatHumanDate(dateISO)} · Температура: ${sign}${Number(val).toFixed(1)} °C`;
+      insp.innerHTML = `<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <span>${escapeHtml(formatHumanDate(dateISO))} · Температура: ${sign}${Number(val).toFixed(1)} °C</span>
+        <button type="button" class="btn-soft" style="height:30px; padding:0 10px; font-size:12px; flex-shrink:0;" onclick="openAnalyticsDate('${dateISO}')">Открыть день</button>
+      </div>`;
+    }
+
+    function openAnalyticsDate(iso) {
+      if (!iso) return;
+      hapticImpact('light');
+      selectedDate = iso;
+      clearQuickAiChat();
+      loadDayForm();
+      switchTab('today');
+    }
+
+    function showAnalyticsDayBanner(dateISO) {
+      if (!dateISO) return;
+      hapticSelect();
+      const insp = document.getElementById('tempPointInspector');
+      if (!insp) return;
+      const e = state.entries[dateISO];
+      const info = getCycleInfo(dateISO);
+      const summaryParts = [`${info.cycleDay} д.ц. (${info.phase})`];
+      if (e) {
+        if (typeof e.energy === 'number' && e.energy > 0) summaryParts.push(`Энергия ${e.energy}/5`);
+        if (typeof e.stress === 'number' && e.stress > 0) summaryParts.push(`Стресс ${e.stress}/5`);
+        if (typeof e.libido === 'number' && e.libido > 0) summaryParts.push(`Либидо ${e.libido}/5`);
+        const peakP = computeDayPeakPain(e);
+        if (peakP > 0) summaryParts.push(`Боль ${peakP}/5`);
+        if (typeof e.wristTempDelta === 'number' && !isNaN(e.wristTempDelta)) {
+          const isAbs = Math.abs(e.wristTempDelta) >= 20;
+          const sgn = (!isAbs && e.wristTempDelta > 0) ? '+' : '';
+          summaryParts.push(`t° ${sgn}${e.wristTempDelta.toFixed(1)}°`);
+        }
+        const lv = buildLoadedEmotionLevels(e);
+        const topEmos = ALL_EMOTIONS
+          .filter(em => (lv[em] || 0) >= 3)
+          .sort((a, b) => (lv[b] || 0) - (lv[a] || 0))
+          .slice(0, 2)
+          .map(em => `${em.toLowerCase()} ${lv[em]}/5`);
+        if (topEmos.length) summaryParts.push(`эмоции: ${topEmos.join(', ')}`);
+      } else {
+        summaryParts.push('Нет записи');
+      }
+      insp.style.display = 'block';
+      insp.innerHTML = `<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="min-width:0;">
+          <div style="font-weight:700; color:var(--ink);">${escapeHtml(formatHumanDate(dateISO))}</div>
+          <div style="font-size:12.5px; font-weight:500; color:var(--ink-2); margin-top:2px;">${escapeHtml(summaryParts.join(' · '))}</div>
+        </div>
+        <button type="button" class="btn-soft" style="height:32px; padding:0 11px; font-size:12.5px; flex-shrink:0;" onclick="openAnalyticsDate('${dateISO}')">Открыть</button>
+      </div>`;
     }
 
     function renderAnalyticsPatternsCard(allSortedEntries) {
@@ -8517,7 +8748,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
       const subRow = document.getElementById('emotionSubFilters');
       if (chartFilter === 'emotions') {
         subRow.style.display = 'flex';
-        const filterList = trackedEmotions.length ? trackedEmotions : ALL_EMOTIONS.slice(0, 6);
+        const filterList = [...ALL_EMOTIONS];
         if (selectedEmotionChartFilter !== 'all' && !filterList.includes(selectedEmotionChartFilter)) {
           selectedEmotionChartFilter = 'all';
         }
@@ -8715,10 +8946,10 @@ ${buildPainCyclesSummaryForAI(true)}`;
         legendEl.innerHTML = `<span class="legend-item" style="color:${cAccent};">${SVG_ICONS.dot}<span>Температура (°C) · нажми на точку</span></span>`;
       } else if (chartFilter === 'emotions') {
         const emosToDraw = selectedEmotionChartFilter === 'all'
-          ? (trackedEmotions.length ? trackedEmotions.slice(0, 5) : [])
+          ? [...ALL_EMOTIONS]
           : [selectedEmotionChartFilter];
 
-        const emoWidths = [3.8, 3.2, 2.7, 2.3, 2.0, 1.8];
+        const emoWidths = [3.6, 3.1, 2.7, 2.4, 2.1, 1.9, 1.7];
         const seriesList = emosToDraw
           .filter(emo => !hiddenChartSeries.has(`emo:${emo}`))
           .map((emo, idx) => {
@@ -8729,7 +8960,14 @@ ${buildPainCyclesSummaryForAI(true)}`;
               if (e) {
                 const lv = buildLoadedEmotionLevels(e);
                 const val = Math.min(5, lv[emo] ?? 0);
-                if (val > 0 || selectedEmotionChartFilter !== 'all') {
+                const hasAnyDayData = e.metricsRated === true
+                  || Object.values(lv).some(v => v > 0)
+                  || (typeof e.energy === 'number' && e.energy > 0)
+                  || (typeof e.pain === 'number' && e.pain > 0)
+                  || (typeof e.libido === 'number' && e.libido > 0)
+                  || (typeof e.stress === 'number' && e.stress > 0)
+                  || Boolean(e.isPeriod || e.isOvulation || e.intimacy || e.dayThought);
+                if (val > 0 || hasAnyDayData || selectedEmotionChartFilter !== 'all') {
                   const yPos = padT + plotH - (val / 5) * plotH;
                   pts.push({
                     day: i,
@@ -8746,9 +8984,9 @@ ${buildPainCyclesSummaryForAI(true)}`;
               pts,
               color: pal.color,
               gradId: null,
-              strokeWidth: emoWidths[idx] || 2.4,
+              strokeWidth: emoWidths[idx] || 2.2,
               opacity: 0.92,
-              dotRadius: Math.max(3.8, 4.8 - idx * 0.25)
+              dotRadius: Math.max(3.4, 4.6 - idx * 0.2)
             };
           });
 
@@ -8767,7 +9005,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
           const pts = [];
           for (let i = 0; i < len; i++) {
             const e = byDate[calendarDates[i]];
-            if (e && typeof e[key] === 'number') {
+            if (e && typeof e[key] === 'number' && Number.isFinite(e[key])) {
               const val = Math.max(0, Math.min(5, e[key]));
               const yPos = padT + plotH - (val / 5) * plotH;
               pts.push({
@@ -8837,6 +9075,17 @@ ${buildPainCyclesSummaryForAI(true)}`;
               html += `<g transform="translate(${(mx - 6.5).toFixed(1)}, ${my})" fill="${m.color}"><path d="M6.5 1l1.3 4.2L12 6.5 7.8 7.8 6.5 12 5.2 7.8 1 6.5l4.2-1.3L6.5 1z"/></g>`;
             }
           });
+        }
+      }
+
+      if (chartFilter !== 'temp') {
+        for (let i = 0; i < len; i++) {
+          const iso = calendarDates[i];
+          const xCenter = idxToX(i);
+          const colLeft = Math.max(effectivePadL, xCenter - stepPx / 2);
+          const colRight = Math.min(w - padR, xCenter + stepPx / 2);
+          const colW = Math.max(4, colRight - colLeft);
+          html += `<rect x="${colLeft.toFixed(1)}" y="${padT - 12}" width="${colW.toFixed(1)}" height="${plotH + 34}" fill="transparent" style="cursor:pointer;" onclick="showAnalyticsDayBanner('${iso}')" />`;
         }
       }
 
@@ -9843,10 +10092,11 @@ ${buildPainCyclesSummaryForAI(true)}`;
           soloReset: false,
           discharge: '',
           mood: 3,
-          energy: 0,
-          pain: 0,
-          libido: 0,
-          stress: 0,
+          metricsRated: false,
+          energy: null,
+          pain: null,
+          libido: null,
+          stress: null,
           emotions: [],
           emotionLevels: createDefaultEmotionLevels(),
           contexts: [],
@@ -9893,13 +10143,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
       return activeList;
     }
 
-    function logPainkiller(name, hours = 4, explicitDailyLimit = '') {
-      const cleanName = String(name || '').trim();
-      if (!cleanName) return;
-      const customPreset = (state.customPainkillers || []).find(p => p.name.toLowerCase() === cleanName.toLowerCase());
-      const known = findKnownPainkillerNorm(cleanName);
-      const resolvedHours = Number(hours) || customPreset?.hours || known?.hours || 4;
-      const resolvedDailyLimit = String(explicitDailyLimit || customPreset?.dailyLimitText || known?.displayLimit || '').trim();
+    function executeLogPainkillerRecord(cleanName, resolvedHours, resolvedDailyLimit) {
       const timeISO = new Date().toISOString();
       const dateISO = getLocalISODateFromTimestamp(timeISO);
 
@@ -9928,6 +10172,92 @@ ${buildPainCyclesSummaryForAI(true)}`;
       renderPainTrackerCard();
       renderBleedingPainChart();
       showToast('Приём записан');
+    }
+
+    function logPainkiller(name, hours = 4, explicitDailyLimit = '') {
+      const cleanName = String(name || '').trim();
+      if (!cleanName) return;
+      const customPreset = (state.customPainkillers || []).find(p => p.name.toLowerCase() === cleanName.toLowerCase());
+      const known = findKnownPainkillerNorm(cleanName);
+      const resolvedHours = Number(hours) || customPreset?.hours || known?.hours || 4;
+      const resolvedDailyLimit = String(explicitDailyLimit || customPreset?.dailyLimitText || known?.displayLimit || '').trim();
+
+      const newMeta = getPainkillerMedMeta(cleanName, resolvedDailyLimit);
+      const nowMs = Date.now();
+      const active24h = getActiveLast24hIntakes(nowMs);
+      const warnings = [];
+
+      // 1. Проверка раннего повторного приёма того же препарата / МНН
+      const sameDrugRecent = active24h.find(p => {
+        const m = getPainkillerMedMeta(p.name, p.dailyLimitText);
+        const sameInn = newMeta.inn && m.inn && newMeta.inn === m.inn;
+        const sameName = p.name.toLowerCase() === cleanName.toLowerCase();
+        if (!sameInn && !sameName) return false;
+        const minGapMs = (Number(p.hours) || resolvedHours) * 3600000;
+        return (nowMs - new Date(p.timeISO).getTime()) < minGapMs;
+      });
+      if (sameDrugRecent) {
+        const diffMins = Math.max(1, Math.round((nowMs - new Date(sameDrugRecent.timeISO).getTime()) / 60000));
+        const hrs = Math.floor(diffMins / 60);
+        const mins = diffMins % 60;
+        const agoStr = hrs > 0 ? `${hrs} ч ${mins} мин` : `${mins} мин`;
+        warnings.push(`Препарат с тем же действующим веществом (${newMeta.inn || cleanName}) уже принимался ${agoStr} назад (рекомендуемый интервал — ${sameDrugRecent.hours || resolvedHours} ч).`);
+      }
+
+      // 2. Проверка сочетания разных НПВС за последние 24 часа
+      if (newMeta.isNsaid) {
+        const otherNsaid = active24h.find(p => {
+          const m = getPainkillerMedMeta(p.name, p.dailyLimitText);
+          if (!m.isNsaid) return false;
+          if (newMeta.inn && m.inn) return newMeta.inn !== m.inn;
+          return p.name.toLowerCase() !== cleanName.toLowerCase();
+        });
+        if (otherNsaid) {
+          const otherMeta = getPainkillerMedMeta(otherNsaid.name, otherNsaid.dailyLimitText);
+          warnings.push(`За последние 24 ч уже был приём другого НПВС (${otherNsaid.name}${otherMeta.inn ? ` · ${otherMeta.inn}` : ''}). Сочетание разных НПВС повышает риск раздражения ЖКТ и побочных эффектов.`);
+        }
+      }
+
+      // 3. Проверка превышения суточной нормы по Нурофену / Но-шпе
+      if (newMeta.isNurofen) {
+        const prevMg = active24h
+          .filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNurofen)
+          .reduce((sum, p) => sum + (getPainkillerMedMeta(p.name, p.dailyLimitText).mg || 300), 0);
+        const nextMg = prevMg + (newMeta.mg || 300);
+        if (nextMg > 1200) {
+          warnings.push(`С учётом этого приёма доза ибупрофена за 24 ч составит ${nextMg} мг (превышает суточный максимум 1200 мг).`);
+        }
+      } else if (newMeta.isNoshpa) {
+        const prevTabs = active24h
+          .filter(p => getPainkillerMedMeta(p.name, p.dailyLimitText).isNoshpa)
+          .reduce((sum, p) => sum + (getPainkillerMedMeta(p.name, p.dailyLimitText).tabs || 2), 0);
+        const nextTabs = prevTabs + (newMeta.tabs || 2);
+        if (nextTabs > 6) {
+          warnings.push(`С учётом этого приёма будет ${formatDoseNum(nextTabs)} табл. дротаверина за 24 ч (превышает суточный максимум 6 табл. / 240 мг).`);
+        }
+      }
+
+      // 4. Учёт профиля: ГВ / послеродовой период
+      const conds = state.settings?.profile?.conditions || [];
+      if (conds.includes('Грудное вскармливание / послеродовой период')) {
+        const innLow = newMeta.inn.toLowerCase();
+        if (/кеторолак|нимесулид|метамизол|ацетилсалицил|комбинированный/.test(innLow)) {
+          warnings.push(`В профиле отмечено грудное вскармливание: ${newMeta.inn || cleanName} обычно не относят к препаратам первого выбора при лактации — сверься со справочником совместимости (e-lactancia) или врачом.`);
+        }
+      }
+
+      if (warnings.length) {
+        confirmAction(`${warnings.join('
+
+')}
+
+Всё равно записать приём «${cleanName}»?`, () => {
+          executeLogPainkillerRecord(cleanName, resolvedHours, resolvedDailyLimit);
+        });
+        return;
+      }
+
+      executeLogPainkillerRecord(cleanName, resolvedHours, resolvedDailyLimit);
     }
 
     function setPainkillerPainBefore(index, score) {
@@ -10165,6 +10495,25 @@ ${buildPainCyclesSummaryForAI(true)}`;
       }
     }
 
+    function detectPainkillerINN(rawName) {
+      const n = String(rawName || '').toLowerCase();
+      if (/нурофен|ибупрофен|миг|фаспик|бруфен/.test(n)) return 'Ибупрофен';
+      if (/но-?шпа|дротаверин/.test(n)) return 'Дротаверин';
+      if (/парацетамол|панадол|эффералган|цефекон/.test(n)) return 'Парацетамол';
+      if (/нимесил|нимесулид|найз|нимика/.test(n)) return 'Нимесулид';
+      if (/кетанов|кеторол|кеторолак/.test(n)) return 'Кеторолак';
+      if (/дексалгин|декскетопрофен/.test(n)) return 'Декскетопрофен';
+      if (/напроксен|налгезин/.test(n)) return 'Напроксен';
+      if (/диклофенак|вольтарен/.test(n)) return 'Диклофенак';
+      if (/мелоксикам|мовалис/.test(n)) return 'Мелоксикам';
+      if (/спазмалгон|спазган|брал/.test(n)) return 'Метамизол + спазмолитик';
+      if (/анальгин|метамизол/.test(n)) return 'Метамизол натрия';
+      if (/пенталгин/.test(n)) return 'Комбинированный (парацетамол/напроксен/дротаверин)';
+      if (/цитрамон/.test(n)) return 'АСК + парацетамол + кофеин';
+      if (/аспирин|ацетилсалицил/.test(n)) return 'Ацетилсалициловая кислота';
+      return '';
+    }
+
     function getPainkillerMedMeta(rawName, explicitDailyLimit = '') {
       const orig = String(rawName || '').trim();
       const n = orig.toLowerCase();
@@ -10224,6 +10573,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
 
       return {
         name: orig,
+        inn: detectPainkillerINN(orig),
         mg,
         ml,
         tabs,
@@ -10569,12 +10919,31 @@ ${buildPainCyclesSummaryForAI(true)}`;
 
     function selectBreathPattern(patternKey) {
       if (!BREATH_PATTERNS[patternKey]) return;
-      hapticSelect();
-      if (isBreathing) {
-        stopBreathing();
+      const pat = BREATH_PATTERNS[patternKey];
+      const hasBreathHold = Array.isArray(pat.steps) && pat.steps.some(s => s.cls === 'phase-hold-in' || s.cls === 'phase-hold-out');
+      const currentAnxiety = Math.max(
+        Number(emotionLevels['Тревога']) || 0,
+        Number(metrics.stress) || 0
+      );
+
+      const applyPattern = () => {
+        hapticSelect();
+        if (isBreathing) {
+          stopBreathing();
+        }
+        currentBreathPattern = patternKey;
+        renderBreathPatternUI();
+      };
+
+      if (hasBreathHold && currentAnxiety >= 4) {
+        confirmAction(
+          `В ритме «${pat.name}» есть пауза (задержка дыхания). При сильной тревоге (сейчас ${currentAnxiety}/5) задержка воздуха иногда усиливает чувство нехватки вдоха — комфортнее бывает ритм без задержек («От тревоги» или «От спазмов»). Оставить выбранный ритм?`,
+          applyPattern
+        );
+        return;
       }
-      currentBreathPattern = patternKey;
-      renderBreathPatternUI();
+
+      applyPattern();
     }
 
     function stopBreathing() {
@@ -10885,10 +11254,11 @@ ${buildPainCyclesSummaryForAI(true)}`;
           soloReset: false,
           discharge: '',
           mood: 3,
-          energy: 0,
-          pain: 0,
-          libido: 0,
-          stress: 0,
+          metricsRated: false,
+          energy: null,
+          pain: null,
+          libido: null,
+          stress: null,
           emotions: [],
           emotionLevels: createDefaultEmotionLevels(),
           contexts: [],
@@ -10959,10 +11329,18 @@ ${buildPainCyclesSummaryForAI(true)}`;
       }).join('');
 
       const isLast = sosResetStepIdx === stepsList.length - 1;
+      const todayThoughtRaw = String(state.entries[getTodayISO(0)]?.dayThought || '').trim();
+      const thoughtCalloutHtml = (isLast && todayThoughtRaw)
+        ? `<div style="margin:8px 0 10px; padding:9px 11px; border-radius:12px; background:var(--surface-2); font-size:12.5px; line-height:1.4; color:var(--ink-2);">
+            <strong style="color:var(--ink);">Твоя мысль дня:</strong> «${escapeHtml(todayThoughtRaw)}» — отдели подтверждённый факт от тревожного прогноза.
+          </div>`
+        : '';
+
       stage.innerHTML = modePillsHtml + `
         <div class="sos-focus-card">
           <div class="sos-focus-kicker">${escapeHtml(step.kicker)}</div>
           <div class="sos-focus-text">${escapeHtml(step.text)}</div>
+          ${thoughtCalloutHtml}
           <div class="sos-anchor-pills">${pillsHtml}</div>
           <div class="sos-nav-row">
             ${sosResetStepIdx > 0 ? '<button type="button" class="btn-soft" style="flex:1;" onclick="prevSosResetStep()">Назад</button>' : ''}
@@ -11002,7 +11380,18 @@ ${buildPainCyclesSummaryForAI(true)}`;
     }
 
     function exportData() {
-      const jsonStr = JSON.stringify(state, null, 2);
+      const chkEl = document.getElementById('chkExcludeApiKeyBackup');
+      const excludeKey = chkEl ? Boolean(chkEl.checked) : true;
+      const exportPayload = excludeKey
+        ? {
+            ...state,
+            settings: {
+              ...state.settings,
+              geminiApiKey: ''
+            }
+          }
+        : state;
+      const jsonStr = JSON.stringify(exportPayload, null, 2);
       try {
         navigator.clipboard?.writeText(jsonStr);
       } catch (e) {}
@@ -11016,9 +11405,9 @@ ${buildPainCyclesSummaryForAI(true)}`;
         a.click();
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showToast('Файл копии скачан');
+        showToast(excludeKey ? 'Копия скачана (без API-ключа)' : 'Копия скачана (с API-ключом)');
       } catch (e) {
-        showToast('Скопировано в буфер');
+        showToast(excludeKey ? 'Скопировано в буфер (без API-ключа)' : 'Скопировано в буфер');
       }
     }
 
@@ -11184,15 +11573,16 @@ ${buildPainCyclesSummaryForAI(true)}`;
 
     function stepCycleRange(which, delta) {
       hapticSelect();
+      const cap = getCycleMaxCap();
       const minInp = document.getElementById('setCycleMin');
       const maxInp = document.getElementById('setCycleMax');
       let curMin = Number(minInp?.value) || 24;
       let curMax = Number(maxInp?.value) || 28;
       if (which === 'min') {
-        curMin = Math.max(21, Math.min(45, curMin + delta));
+        curMin = Math.max(21, Math.min(cap, curMin + delta));
         if (curMin > curMax) curMax = curMin;
       } else {
-        curMax = Math.max(21, Math.min(45, curMax + delta));
+        curMax = Math.max(21, Math.min(cap, curMax + delta));
         if (curMax < curMin) curMin = curMax;
       }
       if (minInp) minInp.value = curMin;
