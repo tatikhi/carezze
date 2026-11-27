@@ -6,8 +6,9 @@
   <title>CareZze</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" /></noscript>
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
   <script>
     (function bootstrapThemeEarly() {
       var BOOT_THEMES = {
@@ -3573,14 +3574,23 @@
   </nav>
 
 <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.ready();
-      tg.expand();
-      if (typeof tg.disableVerticalSwipes === 'function') {
-        tg.disableVerticalSwipes();
+    let tg = window.Telegram?.WebApp;
+    function initTelegramWebApp() {
+      tg = window.Telegram?.WebApp;
+      if (tg) {
+        tg.ready();
+        tg.expand();
+        if (typeof tg.disableVerticalSwipes === 'function') {
+          tg.disableVerticalSwipes();
+        }
+        try {
+          tg.onEvent?.('activated', () => {
+            triggerBackgroundCloudPull();
+          });
+        } catch (e) {}
       }
     }
+    initTelegramWebApp();
 
     let _touchStartY = 0;
     document.addEventListener('touchstart', (e) => {
@@ -5059,7 +5069,9 @@
         }
         loadDayForm();
         updatePainkillerUI();
-        renderAnalytics();
+        if (document.getElementById('view-analytics')?.classList.contains('active')) {
+          renderAnalytics();
+        }
       }
     }
 
@@ -5169,7 +5181,6 @@
       }
 
       loadDayForm();
-      renderAnalytics();
       renderSosResetStage();
       clearAllTextInputs();
       if (hadUrlImport) {
@@ -5459,7 +5470,9 @@
             document.getElementById('onboardingScreen').classList.remove('active');
           }
           loadDayForm();
-          renderAnalytics();
+          if (document.getElementById('view-analytics')?.classList.contains('active')) {
+            renderAnalytics();
+          }
           updatePainkillerUI();
           renderPainTrackerCard();
         }
@@ -11420,10 +11433,20 @@ ${buildPainCyclesSummaryForAI(true)}`;
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => clearAllTextInputs(true));
+    window.addEventListener('DOMContentLoaded', () => {
+      clearAllTextInputs(true);
+      if (!tg && window.Telegram?.WebApp) {
+        initTelegramWebApp();
+        applyThemeUI();
+        syncFromCloudBackground({ force: true });
+      }
+    });
     window.addEventListener('load', () => {
       clearAllTextInputs(true);
       setTimeout(() => clearAllTextInputs(true), 60);
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
     });
     window.addEventListener('pageshow', () => {
       clearAllTextInputs(true);
