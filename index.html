@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" /></noscript>
-  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
     (function bootstrapThemeEarly() {
       var BOOT_THEMES = {
@@ -3577,6 +3577,7 @@
         }
         try {
           tg.onEvent?.('activated', () => {
+            applyIncomingUrlParams(true);
             triggerBackgroundCloudPull();
           });
         } catch (e) {}
@@ -4908,9 +4909,37 @@
       }
     }
 
+    let lastHandledIncomingTempToken = '';
+
+    function extractTelegramStartParam() {
+      if (tg?.initDataUnsafe?.start_param) {
+        return tg.initDataUnsafe.start_param;
+      }
+      try {
+        const hash = window.location.hash.replace(/^#/, '');
+        if (!hash) return null;
+        const hashParams = new URLSearchParams(hash);
+        const direct = hashParams.get('tgWebAppStartParam');
+        if (direct) return direct;
+
+        const initDataRaw = hashParams.get('tgWebAppData');
+        if (initDataRaw) {
+          const initParams = new URLSearchParams(initDataRaw);
+          return initParams.get('start_param');
+        }
+      } catch (e) {}
+      return null;
+    }
+
     function parseIncomingTempValue(rawVal) {
       if (rawVal === undefined || rawVal === null) return null;
-      const cleaned = String(rawVal).trim().replace(/_/g, '.').replace(/,/g, '.');
+      let cleaned = decodeURIComponent(String(rawVal))
+        .trim()
+        .replace(/^temp[_=-]?/i, '')
+        .replace(/°\s*[CF]/gi, '')
+        .replace(/\s+/g, '')
+        .replace(/_/g, '.')
+        .replace(/,/g, '.');
       if (!cleaned) return null;
       const parsed = Number(cleaned);
       return Number.isFinite(parsed) ? parsed : null;
@@ -4951,19 +4980,35 @@
       return true;
     }
 
-    function applyIncomingUrlParams() {
+    function applyIncomingUrlParams(refreshUi = false) {
       try {
-        const tgStartParam = tg?.initDataUnsafe?.start_param;
+        const tgStartParam = extractTelegramStartParam();
         const params = new URLSearchParams(window.location.search);
         const tempParam = tgStartParam || params.get('temp');
         const wristTemp = parseIncomingTempValue(tempParam);
         if (wristTemp === null) return false;
 
+        const today = getTodayISO(0);
+        const token = `${today}:${String(tempParam).trim()}`;
+        const existingVal = state.entries[today]?.wristTempDelta;
+        if (refreshUi && token === lastHandledIncomingTempToken && existingVal === wristTemp) {
+          return false;
+        }
+        lastHandledIncomingTempToken = token;
+
         importedTempToday = wristTemp;
-        applyIncomingTempToToday(wristTemp, true);
+        applyIncomingTempToToday(wristTemp, true, true);
 
         if (params.has('temp') || params.has('sleep')) {
-          window.history.replaceState({}, document.title, window.location.pathname);
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+        }
+        if (refreshUi) {
+          loadDayForm();
+          if (document.getElementById('view-analytics')?.classList.contains('active')) {
+            renderAnalytics();
+          }
+          flushPendingCloudWrite();
+          showToast('Температура синхронизирована');
         }
         return true;
       } catch (e) {}
@@ -11492,10 +11537,14 @@ ${buildPainCyclesSummaryForAI(true)}`;
       syncFromCloudBackground({ force: false });
     }, 8000);
 
+    window.addEventListener('hashchange', () => {
+      applyIncomingUrlParams(true);
+    });
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
         flushPendingDayAutosave();
       } else if (document.visibilityState === 'visible') {
+        applyIncomingUrlParams(true);
         triggerBackgroundCloudPull();
       }
     });
@@ -11506,13 +11555,9 @@ ${buildPainCyclesSummaryForAI(true)}`;
       flushPendingDayAutosave();
     });
     window.addEventListener('focus', () => {
+      applyIncomingUrlParams(true);
       triggerBackgroundCloudPull();
     });
-    try {
-      tg?.onEvent?.('activated', () => {
-        triggerBackgroundCloudPull();
-      });
-    } catch (e) {}
 
 
     function stepSettingsValue(inputId, displayId, delta, min, max) {
@@ -11631,6 +11676,7 @@ ${buildPainCyclesSummaryForAI(true)}`;
       if (!tg && window.Telegram?.WebApp) {
         initTelegramWebApp();
         applyThemeUI();
+        applyIncomingUrlParams(true);
         syncFromCloudBackground({ force: true });
       }
     });
